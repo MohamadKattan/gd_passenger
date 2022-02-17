@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "440140528829",
+    "project_id": "garanti-8c780",
+    "storage_bucket": "garanti-8c780.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440140528829:android:288073616fcd777e44cbd4",
+        "android_client_info": {
+          "package_name": "com.garantidriver.gd_passenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440140528829-61ct7r8vmv89fp1a3fsun7rrrka5v97l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt7etvZRY_OrzFcCsawNb22jqSzE2mRDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440140528829-61ct7r8vmv89fp1a3fsun7rrrka5v97l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
