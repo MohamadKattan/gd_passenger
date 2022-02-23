@@ -47,6 +47,7 @@ dependencies:
   google_maps_flutter: ^2.1.1
   image_picker: ^0.8.4+9
   firebase_storage: ^10.2.7
+  sliding_sheet: ^0.5.2
 
 
 dev_dependencies:
@@ -78,10 +79,15 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/taxi.png
+    - assets/smallTexi.png
+    - assets/van.png
+    - assets/veto.png
+
 
   # To add assets to your application, add an assets section, like this:
 #   assets:
-#     - images/a_dot_burr.jpeg
+#     - assets/taxi.png
 #     - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -94,7 +94,7 @@ Widget customDrawer(BuildContext context) {
             ),
             ListTile(
               onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UserInfoScreen())),
+                  MaterialPageRoute(builder: (context) => LanguageScreen())),
               leading: const Icon(Icons.language, color: Colors.black45),
               title: const Text(
                 "Language",

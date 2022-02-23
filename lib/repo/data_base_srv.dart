@@ -1,7 +1,6 @@
 //this class for database methods
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
@@ -56,8 +55,8 @@ class DataBaseSrv {
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => HomeScreen()));
+         Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
       });
     } catch (ex) {
       Provider.of<TrueFalse>(context, listen: false)
