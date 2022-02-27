@@ -2,10 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:gd_passenger/my_provider/app_data.dart';
+import 'package:gd_passenger/my_provider/derictionDetails_provide.dart';
 import 'package:gd_passenger/my_provider/double_value.dart';
 import 'package:gd_passenger/my_provider/lineTaxiProvider.dart';
 import 'package:gd_passenger/my_provider/opictyProvider.dart';
 import 'package:gd_passenger/my_provider/pick_image_provider.dart';
+import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:gd_passenger/my_provider/position_v_chnge.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
@@ -20,7 +23,7 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
   FlutterNativeSplash.removeAfter(initialization);
-    await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -44,6 +47,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LineTaxi()),
         ChangeNotifierProvider(create: (context) => OpacityChang()),
         ChangeNotifierProvider(create: (context) => PositionChang()),
+        ChangeNotifierProvider(create: (context) => AppData()),
+        ChangeNotifierProvider(create: (context) => PlaceDetailsDropProvider()),
+        ChangeNotifierProvider(create: (context) => DerictionDetails()),
       ],
       builder: (context, _) {
         return MaterialApp(

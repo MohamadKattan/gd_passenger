@@ -48,6 +48,9 @@ dependencies:
   image_picker: ^0.8.4+9
   firebase_storage: ^10.2.7
   sliding_sheet: ^0.5.2
+  geolocator: ^8.2.0
+  uuid: ^3.0.6
+  flutter_polyline_points: ^1.0.0
 
 
 dev_dependencies:

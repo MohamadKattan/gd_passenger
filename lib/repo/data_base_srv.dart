@@ -22,9 +22,9 @@ class DataBaseSrv {
       String uid,
       BuildContext context,
       String phoneNumber,
-      XFile imageFile) async {
+      XFile imageFile, TextEditingController email) async {
     await ref.child("users").child(uid).putFile(File(imageFile.path)).whenComplete(
-        () => downloadURL(firstname, lastname, uid, context, phoneNumber));
+        () => downloadURL(firstname, lastname, uid, context, phoneNumber,email));
   }
 
   Future<void> downloadURL(
@@ -32,10 +32,10 @@ class DataBaseSrv {
       TextEditingController lastname,
       String uid,
       BuildContext context,
-      String phoneNumber) async {
+      String phoneNumber, TextEditingController email) async {
     String url = await ref.child("users").child(uid).getDownloadURL();
     print("urllll${url}");
-    setUserinfoToDataBase(url, uid, firstname, lastname, context, phoneNumber);
+    setUserinfoToDataBase(url, uid, firstname, lastname, context, phoneNumber,email);
   }
 
   Future<void> setUserinfoToDataBase(
@@ -44,13 +44,14 @@ class DataBaseSrv {
       TextEditingController firstname,
       TextEditingController lastname,
       BuildContext context,
-      String phoneNumber) async {
+      String phoneNumber, TextEditingController email) async {
     try {
       await refuser.child(uid).set({
         "user_id": uid.toString(),
         "image_profile": url.toString(),
         "first_name": firstname.text,
         "last_name": lastname.text,
+        "email":email.text.trim(),
         "phone_number": phoneNumber.toString()
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)

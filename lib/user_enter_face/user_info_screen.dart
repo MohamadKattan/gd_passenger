@@ -1,23 +1,27 @@
 // add name photo after auth
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/my_provider/pick_image_provider.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
+import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 class UserInfoScreen extends StatelessWidget {
   const UserInfoScreen({Key? key}) : super(key: key);
-  static late XFile imageFile;
+  static late XFile? imageFile;
   static final ImagePicker _picker = ImagePicker();
+  static CircularInductorCostem _inductorCostem =CircularInductorCostem();
 
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
+     final picked=  Provider.of<PickImageProvide>(context).ImageProvider;
     bool ProviderTrue = Provider.of<TrueFalse>(context).isTrue;
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
@@ -37,19 +41,17 @@ class UserInfoScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () => showSheetCamerOrGallary(context: context),
                       child: Container(
+                        height: 60,
+                        width: 60,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
                             color: Color(0xFFFFD54F)),
-                        child: Stack(
-                          children: [
-                            Icon(
-                              Icons.add_a_photo_outlined,
-                              size: 25,
-                              color: Colors.white,
-                            ),
-                            // Image.file(File(imageFile.path))
-                          ],
-                        ),
+                        child:
+                          picked==null?Icon(
+                            Icons.add_a_photo_outlined,
+                            size: 25,
+                            color: Colors.white,
+                          ):Image(image: FileImage(File(picked.path)),fit: BoxFit.contain,)
                       ),
                     ),
                     SizedBox(
@@ -87,13 +89,29 @@ class UserInfoScreen extends StatelessWidget {
                         keyboardType: TextInputType.name,
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: email,
+                        maxLength: 20,
+                        showCursor: true,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                        cursorColor: Color(0xFFFFD54F),
+                        decoration: InputDecoration(
+                          fillColor: Color(0xFFFFD54F),
+                          label: Text("Email"),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ),
                     SizedBox(height: 60),
                     GestureDetector(
                       onTap: () => checkBeforeSet(
                           context,
                           userProvider.getUser.uid,
                           userProvider.getUser.phoneNumber.toString(),
-                          imageFile),
+                          imageFile!),
                       child: Container(
                         child: Center(
                             child: Text(
@@ -124,26 +142,8 @@ class UserInfoScreen extends StatelessWidget {
                       opacity: 0.9,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              color: Color(0xFFFFD54F),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              "Wait ...",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )
-                          ],
-                        ),
-                        decoration: (BoxDecoration(
-                          color: Colors.black,
-                        )),
+                        decoration: (BoxDecoration(color: Colors.black,)),
+                        child: _inductorCostem.circularInductorCostem(context),
                       ),
                     )
                   : Text("")
@@ -159,21 +159,50 @@ class UserInfoScreen extends StatelessWidget {
       final XFile? _file = await _picker.pickImage(
           source: source, maxWidth: 40.0, maxHeight: 40.0, imageQuality: 50);
       imageFile = _file!;
-      Provider.of<PickImageProvide>(context, listen: false)
-          .listingToPickImage(imageFile);
+     Provider.of<PickImageProvide>(context, listen: false)
+         .listingToPickImage(imageFile!);
     } catch (e) {}
   }
 
   checkBeforeSet(
       BuildContext context, String uid, String phoneNumber, XFile imageFile) {
-    if (firstname.text.isEmpty) {
-      tools.toastMsg("First name is squared");
+    if(imageFile.path == ""){
+      tools.toastMsg("image profile is required");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('image profile is required'),
+        ),
+      );
+    }
+   else if (firstname.text.isEmpty) {
+      tools.toastMsg("First name is required");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('First name is required'),
+        ),
+      );
+
     } else if (lastname.text.isEmpty) {
-      tools.toastMsg("Last name is squared");
-    } else {
+      tools.toastMsg("Last name is required");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Last name is required'),
+        ),
+      );
+    }
+    else if ( email.text.characters.runtimeType != "@") {
+      tools.toastMsg("Email is required");
+      tools.toastMsg("check your email address");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('check your email address'),
+        ),
+      );
+
+    }else {
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       srv.setImageToStorage(
-          firstname, lastname, uid, context, phoneNumber, imageFile);
+          firstname, lastname, uid, context, phoneNumber, imageFile,email);
     }
   }
 
@@ -193,62 +222,65 @@ class UserInfoScreen extends StatelessWidget {
             height: 400,
             child: Material(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Pick a photo",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black54),
+                    child: Center(
+                      child: Text(
+                        "Pick a photo",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54),
+                      ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () => getImage(context, ImageSource.camera),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width * 0.50,
-                            decoration:
-                                BoxDecoration(color: Colors.white, boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 6.0,
-                                  spreadRadius: 0.5,
-                                  color: Colors.black54,
-                                  offset: Offset(0.7, 0.7))
-                            ]),
-                            child: Text("Camera"),
-                          ),
-                        ),
+                  SizedBox(height: 20,),
+                  GestureDetector(
+                    onTap: () {
+                      getImage(context, ImageSource.camera);
+
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * 0.60,
+                        decoration:
+                            BoxDecoration(color: Colors.white, boxShadow: [
+                          BoxShadow(
+                              blurRadius: 6.0,
+                              spreadRadius: 0.5,
+                              color: Colors.black54,
+                              offset: Offset(0.7, 0.7))
+                        ]),
+                        child: Center(child: Text("Camera")),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          getImage(context, ImageSource.gallery);
-                          print("heeelelle");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width * 0.45,
-                            decoration:
-                                BoxDecoration(color: Colors.white, boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 6.0,
-                                  spreadRadius: 0.5,
-                                  color: Colors.black54,
-                                  offset: Offset(0.7, 0.7))
-                            ]),
-                            child: Text("gallery"),
-                          ),
-                        ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      getImage(context, ImageSource.gallery);
+                      Navigator.pop(context);
+
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * 0.60,
+                        decoration:
+                            BoxDecoration(color: Colors.white, boxShadow: [
+                          BoxShadow(
+                              blurRadius: 6.0,
+                              spreadRadius: 0.5,
+                              color: Colors.black54,
+                              offset: Offset(0.7, 0.7))
+                        ]),
+                        child: Center(child: Text("gallery")),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),

@@ -2,6 +2,7 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
+import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class AuthScreen extends StatelessWidget {
   static String? resultCodeCon = "+90";
   static final TextEditingController phoneNumber = TextEditingController();
   static AuthSev authSev = AuthSev();
+  static CircularInductorCostem _inductorCostem =CircularInductorCostem();
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +149,7 @@ class AuthScreen extends StatelessWidget {
                             );
                           } else {
                             result = "${resultCodeCon}${phoneNumber.text}";
-                           await authSev.signUpWithPhone(result, context);
+                            await authSev.signUpWithPhone(result, context);
                             FocusScope.of(context).requestFocus(FocusNode());
                             Provider.of<TrueFalse>(context,listen: false).changeStateBooling(true);
                           }
@@ -190,18 +192,19 @@ class AuthScreen extends StatelessWidget {
                 opacity: 0.9,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(color: Color(0xFFFFD54F),),
-                      SizedBox(height: 15,),
-                      Text("Wait ...",style: TextStyle(color: Colors.white,fontSize: 20),)
-                    ],
-                  ),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     CircularProgressIndicator(color: Color(0xFFFFD54F),),
+                  //     SizedBox(height: 15,),
+                  //     Text("Wait ...",style: TextStyle(color: Colors.white,fontSize: 20),)
+                  //   ],
+                  // ),
                   decoration: (BoxDecoration(
                     color: Colors.black,
                   )),
+                  child: _inductorCostem.circularInductorCostem(context),
                 ),
               ):Text("")
             ],
