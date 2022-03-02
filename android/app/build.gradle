@@ -47,6 +47,7 @@ android {
         applicationId "com.garantidriver.gd_passenger"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -69,4 +70,5 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
+    implementation "androidx.multidex:multidex:2.0.1"
 }

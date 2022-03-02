@@ -60,7 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 iconColor:Colors.white ,
                 hintText: "Where to?",
                 contentPadding: EdgeInsets.all(10.0),
-                hintStyle:   TextStyle(fontSize: 25,color:Color(0xFFFFD54F),fontWeight: FontWeight.bold,letterSpacing: 1.0),
+                hintStyle:   TextStyle(fontSize: 25,color:Colors.grey,fontWeight: FontWeight.bold,letterSpacing: 1.0),
                 hoverColor: Color(0xFFFFD54F),
               ),
               keyboardType: TextInputType.text,

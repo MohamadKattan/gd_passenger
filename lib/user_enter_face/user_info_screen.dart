@@ -12,16 +12,15 @@ import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 class UserInfoScreen extends StatelessWidget {
-  const UserInfoScreen({Key? key}) : super(key: key);
   static late XFile? imageFile;
   static final ImagePicker _picker = ImagePicker();
-  static CircularInductorCostem _inductorCostem =CircularInductorCostem();
+  static CircularInductorCostem _inductorCostem = CircularInductorCostem();
 
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
-     final picked=  Provider.of<PickImageProvide>(context).ImageProvider;
+    final picked = Provider.of<PickImageProvide>(context).ImageProvider;
     bool ProviderTrue = Provider.of<TrueFalse>(context).isTrue;
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
@@ -51,7 +50,7 @@ class UserInfoScreen extends StatelessWidget {
                             Icons.add_a_photo_outlined,
                             size: 25,
                             color: Colors.white,
-                          ):Image(image: FileImage(File(picked.path)),fit: BoxFit.contain,)
+                          ):Image(image: FileImage(File(picked.path)),fit: BoxFit.fill,)
                       ),
                     ),
                     SizedBox(
@@ -61,7 +60,7 @@ class UserInfoScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
                         controller: firstname,
-                        maxLength: 15,
+                        maxLength: 20,
                         showCursor: true,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
@@ -77,7 +76,7 @@ class UserInfoScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
                         controller: lastname,
-                        maxLength: 15,
+                        maxLength: 20,
                         showCursor: true,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
@@ -93,7 +92,7 @@ class UserInfoScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
                         controller: email,
-                        maxLength: 20,
+                        maxLength: 40,
                         showCursor: true,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
@@ -107,11 +106,17 @@ class UserInfoScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 60),
                     GestureDetector(
-                      onTap: () => checkBeforeSet(
-                          context,
-                          userProvider.getUser.uid,
-                          userProvider.getUser.phoneNumber.toString(),
-                          imageFile!),
+                      onTap: () {
+                        if (picked == null) {
+                          tools.toastMsg("image profile is required");
+                        } else {
+                          checkBeforeSet(
+                              context,
+                              userProvider.getUser.uid,
+                              userProvider.getUser.phoneNumber.toString(),
+                              imageFile!);
+                        }
+                      },
                       child: Container(
                         child: Center(
                             child: Text(
@@ -142,7 +147,9 @@ class UserInfoScreen extends StatelessWidget {
                       opacity: 0.9,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        decoration: (BoxDecoration(color: Colors.black,)),
+                        decoration: (BoxDecoration(
+                          color: Colors.black,
+                        )),
                         child: _inductorCostem.circularInductorCostem(context),
                       ),
                     )
@@ -159,50 +166,33 @@ class UserInfoScreen extends StatelessWidget {
       final XFile? _file = await _picker.pickImage(
           source: source, maxWidth: 40.0, maxHeight: 40.0, imageQuality: 50);
       imageFile = _file!;
-     Provider.of<PickImageProvide>(context, listen: false)
-         .listingToPickImage(imageFile!);
-    } catch (e) {}
+      Provider.of<PickImageProvide>(context, listen: false)
+          .listingToPickImage(imageFile!);
+    } catch (e) {
+      tools.toastMsg("image profile is required");
+      tools.toastMsg(e.toString());
+    }
   }
 
   checkBeforeSet(
-      BuildContext context, String uid, String phoneNumber, XFile imageFile) {
-    if(imageFile.path == ""){
-      tools.toastMsg("image profile is required");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('image profile is required'),
-        ),
-      );
-    }
-   else if (firstname.text.isEmpty) {
+      BuildContext context, String uid, String phoneNumber, XFile? imageFile) {
+
+    if (firstname.text.isEmpty) {
       tools.toastMsg("First name is required");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('First name is required'),
-        ),
-      );
-
-    } else if (lastname.text.isEmpty) {
-      tools.toastMsg("Last name is required");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Last name is required'),
-        ),
-      );
     }
-    else if ( email.text.characters.runtimeType != "@") {
+   else if (lastname.text.isEmpty) {
+      tools.toastMsg("Last name is required");
+    }
+  else  if (email.text.isEmpty) {
       tools.toastMsg("Email is required");
-      tools.toastMsg("check your email address");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('check your email address'),
-        ),
-      );
-
-    }else {
+    }
+    else if (!email.text.contains("@") && !email.text.endsWith(".com")) {
+       tools.toastMsg("check your email address some thing wrong");
+     }
+    else {
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       srv.setImageToStorage(
-          firstname, lastname, uid, context, phoneNumber, imageFile,email);
+          firstname, lastname, uid, context, phoneNumber, imageFile!, email);
     }
   }
 
@@ -236,11 +226,12 @@ class UserInfoScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   GestureDetector(
                     onTap: () {
                       getImage(context, ImageSource.camera);
-
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -255,7 +246,17 @@ class UserInfoScreen extends StatelessWidget {
                               color: Colors.black54,
                               offset: Offset(0.7, 0.7))
                         ]),
-                        child: Center(child: Text("Camera")),
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera, color: Color(0xFFFFD54F)),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Text("Camera"),
+                          ],
+                        )),
                       ),
                     ),
                   ),
@@ -263,7 +264,6 @@ class UserInfoScreen extends StatelessWidget {
                     onTap: () {
                       getImage(context, ImageSource.gallery);
                       Navigator.pop(context);
-
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -278,7 +278,17 @@ class UserInfoScreen extends StatelessWidget {
                               color: Colors.black54,
                               offset: Offset(0.7, 0.7))
                         ]),
-                        child: Center(child: Text("gallery")),
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.image, color: Color(0xFFFFD54F)),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Text("gallery"),
+                          ],
+                        )),
                       ),
                     ),
                   ),

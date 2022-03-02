@@ -15,7 +15,7 @@ class AuthScreen extends StatelessWidget {
   static String? resultCodeCon = "+90";
   static final TextEditingController phoneNumber = TextEditingController();
   static AuthSev authSev = AuthSev();
-  static CircularInductorCostem _inductorCostem =CircularInductorCostem();
+  static CircularInductorCostem _inductorCostem = CircularInductorCostem();
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,7 @@ class AuthScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 40),
                       child: GestureDetector(
-                        onTap: () async{
+                        onTap: () async {
                           if (phoneNumber.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -151,7 +151,8 @@ class AuthScreen extends StatelessWidget {
                             result = "${resultCodeCon}${phoneNumber.text}";
                             await authSev.signUpWithPhone(result, context);
                             FocusScope.of(context).requestFocus(FocusNode());
-                            Provider.of<TrueFalse>(context,listen: false).changeStateBooling(true);
+                            Provider.of<TrueFalse>(context, listen: false)
+                                .changeStateBooling(true);
                           }
                         },
                         child: Container(
@@ -188,25 +189,18 @@ class AuthScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              myTimerProvider?Opacity(
-                opacity: 0.9,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     CircularProgressIndicator(color: Color(0xFFFFD54F),),
-                  //     SizedBox(height: 15,),
-                  //     Text("Wait ...",style: TextStyle(color: Colors.white,fontSize: 20),)
-                  //   ],
-                  // ),
-                  decoration: (BoxDecoration(
-                    color: Colors.black,
-                  )),
-                  child: _inductorCostem.circularInductorCostem(context),
-                ),
-              ):Text("")
+              myTimerProvider
+                  ? Opacity(
+                      opacity: 0.9,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: (BoxDecoration(
+                          color: Colors.black,
+                        )),
+                        child: _inductorCostem.circularInductorCostem(context),
+                      ),
+                    )
+                  : Text("")
             ],
           ),
         ),

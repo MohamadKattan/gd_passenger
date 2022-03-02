@@ -146,7 +146,7 @@ class AuthSev {
           codeAutoRetrievalTimeout: (String verificationId) {
             Provider.of<TrueFalse>(context, listen: false)
                 .changeStateBooling(false);
-            _tools.toastMsg(verificationId);
+           // _tools.toastMsg(verificationId);
             _tools.toastMsg("try again");
           });
     } catch (ex) {

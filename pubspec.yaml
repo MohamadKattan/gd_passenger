@@ -50,6 +50,7 @@ dependencies:
   sliding_sheet: ^0.5.2
   geolocator: ^8.2.0
   uuid: ^3.0.6
+  font_awesome_flutter: ^9.2.0
   flutter_polyline_points: ^1.0.0
 
 

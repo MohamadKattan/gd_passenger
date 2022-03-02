@@ -4,7 +4,9 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/google_map_methods.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
+import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
 import 'package:gd_passenger/my_provider/double_value.dart';
+import 'package:gd_passenger/my_provider/dropBottom_value.dart';
 import 'package:gd_passenger/my_provider/lineTaxiProvider.dart';
 import 'package:gd_passenger/my_provider/opictyProvider.dart';
 import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
@@ -16,6 +18,7 @@ import 'package:gd_passenger/user_enter_face/search_screen.dart';
 import 'package:gd_passenger/widget/bottom_sheet.dart';
 import 'package:gd_passenger/widget/coustom_drawer.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
+import 'package:gd_passenger/widget/custom_drop_bottom.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +35,8 @@ class HomeScreen extends StatefulWidget {
 GlobalKey<ScaffoldState> _globalKey = new GlobalKey<ScaffoldState>();
 Set<Polyline> polylineSet = {};
 List<LatLng> polylineCoordinates = [];
+Set<Marker> markersSet = {};
+Set<Circle> circlesSet = {};
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -45,6 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final opacityVan = Provider.of<OpacityChang>(context).isOpacityVan;
     final opacityVeto = Provider.of<OpacityChang>(context).isOpacityVeto;
     final postionChang = Provider.of<PositionChang>(context).val;
+    final carTuprPro=  Provider.of<CarTypeProvider>(context).carType;
+    final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
     return Scaffold(
@@ -54,449 +61,595 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Stack(
               children: [
                 customDrawer(context),
-                TweenAnimationBuilder(
-                    tween: Tween<double>(begin: 0.0, end: value),
-                    duration: Duration(milliseconds: 900),
-                    builder: (_, double val, __) {
-                      return Transform(
-                        transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
-                          ..setEntry(0, 3, 300 * val)
-                          ..rotateY((pi / 6) * val),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          color: Colors.white,
-                          child: Stack(
-                            children: [
-                              GoogleMap(
-                                mapType: MapType.normal,
-                                initialCameraPosition:
-                                    HomeScreen._logicGoogleMap.kGooglePlex,
-                                myLocationButtonEnabled: true,
-                                myLocationEnabled: true,
-                                zoomGesturesEnabled: true,
-                                zoomControlsEnabled: true,
-                                liteModeEnabled: false,
-                                trafficEnabled: false,
-                                compassEnabled: true,
-                                buildingsEnabled: true,
-                                polylines: polylineSet,
-                                onMapCreated: (GoogleMapController controller) {
-                                  HomeScreen._logicGoogleMap.controllerGoogleMap
-                                      .complete(controller);
-                                  newGoogleMapController = controller;
-                                  HomeScreen._logicGoogleMap
-                                      .locationPosition(context);
-                                },
-                              ),
-                              Positioned(
-                                bottom: 0.0,
-                                right: 0.0,
-                                left: 0.0,
-                                child: GestureDetector(
-                                  onTap: () => Provider.of<PositionChang>(
-                                          context,
-                                          listen: false)
-                                      .changValue(0.0),
-                                  child: Container(
-                                    height: 35,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0)),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.arrow_circle_up,
-                                        size: 40,
-                                        color: Colors.blueAccent,
+                GestureDetector(
+                  onTap: (){
+                    Provider.of<DoubleValue>(context, listen: false)
+                        .value0Or1(0);
+                    Provider.of<TrueFalse>(context, listen: false)
+                        .changeStateBooling(false);
+                  },
+                  child: TweenAnimationBuilder(
+                      tween: Tween<double>(begin: 0.0, end: value),
+                      duration: Duration(milliseconds: 400),
+                      builder: (_, double val, __) {
+                        return Transform(
+                          transform: Matrix4.identity()
+                            ..setEntry(3, 2, 0.001)
+                            ..setEntry(0, 3, 300 * val)
+                            ..rotateY((pi / 3) * val),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            color: Colors.white,
+                            child: Stack(
+                              children: [
+                                GoogleMap(
+                                  mapType: MapType.normal,
+                                  initialCameraPosition:
+                                      HomeScreen._logicGoogleMap.kGooglePlex,
+                                  myLocationButtonEnabled: true,
+                                  myLocationEnabled: true,
+                                  zoomGesturesEnabled: true,
+                                  zoomControlsEnabled: true,
+                                  liteModeEnabled: false,
+                                  trafficEnabled: false,
+                                  compassEnabled: true,
+                                  buildingsEnabled: true,
+                                  polylines: polylineSet,
+                                  markers: markersSet,
+                                  circles: circlesSet,
+                                  onMapCreated: (GoogleMapController controller) {
+                                    HomeScreen._logicGoogleMap.controllerGoogleMap
+                                        .complete(controller);
+                                    newGoogleMapController = controller;
+                                    HomeScreen._logicGoogleMap
+                                        .locationPosition(context);
+                                  },
+                                ),
+                                Positioned(
+                                  bottom: 0.0,
+                                  right: 0.0,
+                                  left: 0.0,
+                                  child: GestureDetector(
+                                    onTap: () => Provider.of<PositionChang>(
+                                            context,
+                                            listen: false)
+                                        .changValue(0.0),
+                                    child: Container(
+                                      height: 45,
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(16.0)),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.arrow_circle_up,
+                                          size: 40,
+                                          color: Colors.purple,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                  right: 0.0,
-                                  left: 0.0,
-                                  bottom: postionChang,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        50 /
-                                        100,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              blurRadius: 6.0,
-                                              spreadRadius: 0.5,
-                                              color: Colors.black54,
-                                              offset: Offset(0.7, 0.7))
-                                        ],
-                                        color: Colors.white),
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              final res = await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SearchScreen()));
-                                              if (res == "dataDir") {
-                                                await getPlaceDerction(context);
-                                              }
-                                            },
-
-                                            /// customBottomSheet.showSheetWhereto(context,addressModle,placeModle),
-                                            child: Container(
-                                              color: Colors.transparent,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  100,
-                                              child: Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Icon(
-                                                      Icons.search,
-                                                      color: Colors.black54,
-                                                      size: 35,
+                                AnimatedPositioned(
+                                    duration: Duration(seconds: 1),
+                                    right: 0.0,
+                                    left: 0.0,
+                                    bottom: postionChang,
+                                    child: Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          45 /
+                                          100,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20.0),
+                                              topRight: Radius.circular(20.0)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 6.0,
+                                                spreadRadius: 0.5,
+                                                color: Colors.black54,
+                                                offset: Offset(0.7, 0.7))
+                                          ],
+                                          color: Colors.white),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                final res = await Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SearchScreen()));
+                                                if (res == "dataDir") {
+                                                  await getPlaceDerction(context);
+                                                  await Provider.of<
+                                                              PositionChang>(
+                                                          context,
+                                                          listen: false)
+                                                      .changValue(-500.0);
+                                                }
+                                              },
+                                              child: Container(
+                                                color: Colors.transparent,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    100,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    15.0 /
+                                                    100,
+                                                child: Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Icon(
+                                                        Icons.search,
+                                                        color: Colors.black54,
+                                                        size: 35,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    "Where to ?",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            50 /
-                                                            100,
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      Icons
-                                                          .arrow_circle_down_outlined,
-                                                      color: Colors.blueAccent,
+                                                    Text(
+                                                      "Where to ?",
+                                                      style: TextStyle(
+                                                          color: Colors.black38,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    onPressed: () {
-                                                      Provider.of<PositionChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changValue(-500.0);
-                                                    },
-                                                  ),
-                                                ],
+                                                    SizedBox(
+                                                        width:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .width *
+                                                                50 /
+                                                                100),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons
+                                                            .arrow_circle_down_outlined,
+                                                        color: Colors.purple,
+                                                        size: 35,
+                                                      ),
+                                                      onPressed: () {
+                                                        Provider.of<PositionChang>(
+                                                                context,
+                                                                listen: false)
+                                                            .changValue(-500.0);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              HomeScreen._customWidget
-                                                  .containerBox(
-                                                      Icon(Icons.home_outlined),
-                                                      "Home",
-                                                      context),
-                                              HomeScreen._customWidget
-                                                  .containerBox(
-                                                      Icon(Icons.work_outline),
-                                                      "Work",
-                                                      context),
-                                            ],
-                                          ),
-                                          HomeScreen._customWidget
-                                              .customDivider(),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: Row(children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineTaxi(true);
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineVan(false);
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineVeto(false);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityTaxi(true);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityVan(false);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityVeto(false);
-                                                },
-                                                onLongPress: () => HomeScreen
-                                                    .customBottomSheet
-                                                    .showSheetCarInfo(
-                                                        context: context,
-                                                        image: Image(
-                                                          image: AssetImage(
-                                                              "assets/smallTexi.png"),
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                        title: "Regular Taxi",
-                                                        des:
-                                                            "sedan car: Hyundai,Renault,Fiat,Toyota etc...",
-                                                        iconM: Icons.money,
-                                                        price: "15.0",
-                                                        iconP: Icons.person,
-                                                        person: "4"),
-                                                child: Column(
-                                                  children: [
-                                                    Opacity(
-                                                        opacity:
-                                                            opacityTaxi == true
-                                                                ? 1
-                                                                : 0.3,
-                                                        child: HomeScreen
-                                                            ._customWidget
-                                                            .carTypeBox(
-                                                                Image(
-                                                                    image: AssetImage(
-                                                                        "assets/smallTexi.png"),
-                                                                    height: 55,
-                                                                    width: 90,
-                                                                    fit: BoxFit
-                                                                        .contain),
-                                                                "Taxi",
-                                                                "",
-                                                                context)),
-                                                    Container(
-                                                      height: 4,
-                                                      width: 90,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(2),
-                                                        color: taxiLine == true
-                                                            ? Colors.black
-                                                            : Colors
-                                                                .transparent,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineVan(true);
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineTaxi(false);
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineVeto(false);
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                HomeScreen._customWidget
+                                                    .containerBox(
+                                                        Icon(Icons.home_outlined),
+                                                        "Home",
+                                                        context),
+                                                HomeScreen._customWidget
+                                                    .containerBox(
+                                                        Icon(Icons.work_outline),
+                                                        "Work",
+                                                        context),
+                                              ],
+                                            ),
+                                            HomeScreen._customWidget
+                                                .customDivider(),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 8.0),
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineTaxi(true);
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineVan(false);
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineVeto(false);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityTaxi(true);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityVan(false);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityVeto(
+                                                              false);
 
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityVan(true);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityTaxi(false);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityVeto(false);
-                                                },
-                                                onLongPress: () => HomeScreen
-                                                    .customBottomSheet
-                                                    .showSheetCarInfo(
-                                                        context: context,
-                                                        image: Image(
-                                                            image: AssetImage(
-                                                                "assets/van.png")),
-                                                        title: "Medium",
-                                                        des:
-                                                            "Medium commercial car",
-                                                        iconM: Icons.money,
-                                                        price: "20.0",
-                                                        iconP: Icons.person,
-                                                        person: "6-10"),
-                                                child: Column(
-                                                  children: [
-                                                    Opacity(
-                                                        opacity:
-                                                            opacityVan == true
-                                                                ? 1
-                                                                : 0.3,
-                                                        child: HomeScreen
-                                                            ._customWidget
-                                                            .carTypeBox(
-                                                                Image(
-                                                                    image: AssetImage(
-                                                                        "assets/van.png"),
-                                                                    height: 50,
-                                                                    width: 90,
-                                                                    fit: BoxFit
-                                                                        .contain),
-                                                                "Medium ",
-                                                                "commercial",
-                                                                context)),
-                                                    Container(
-                                                      height: 4,
-                                                      width: 90,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(2),
-                                                        color: vanLine == true
-                                                            ? Colors.black
-                                                            : Colors
-                                                                .transparent,
-                                                      ),
+                                                      Provider.of<CarTypeProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .updateCarType("Taxi");
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Opacity(
+                                                            opacity:
+                                                                opacityTaxi ==
+                                                                        true
+                                                                    ? 1
+                                                                    : 0.3,
+                                                            child: HomeScreen
+                                                                ._customWidget
+                                                                .carTypeBox(
+                                                                    Image(
+                                                                        image: AssetImage(
+                                                                            "assets/smallTexi.png"),
+                                                                        fit: BoxFit
+                                                                            .contain),
+                                                                    "Taxi",
+                                                                    context)),
+                                                        Positioned(
+                                                            right: -10.0,
+                                                            top: -10.0,
+                                                            child: IconButton(
+                                                                onPressed: () => HomeScreen
+                                                                    .customBottomSheet
+                                                                    .showSheetCarInfo(
+                                                                        context:
+                                                                            context,
+                                                                        image:
+                                                                            Image(
+                                                                          image: AssetImage(
+                                                                              "assets/smallTexi.png"),
+                                                                          fit: BoxFit
+                                                                              .contain,
+                                                                        ),
+                                                                        title:
+                                                                            "Regular Taxi",
+                                                                        des:
+                                                                            "sedan car: Hyundai,Renault,Fiat,Toyota etc...",
+                                                                        iconM: Icons
+                                                                            .money,
+                                                                        price:
+                                                                            "15.0",
+                                                                        iconP: Icons
+                                                                            .person,
+                                                                        person:
+                                                                            "4"),
+                                                                icon:
+                                                                    opacityTaxi ==
+                                                                            true
+                                                                        ? Icon(
+                                                                            Icons
+                                                                                .info_outline,
+                                                                            color:
+                                                                                Colors.purple,
+                                                                            size:
+                                                                                20,
+                                                                          )
+                                                                        : Text(
+                                                                            ""))),
+                                                        Positioned(
+                                                          right: 0.0,
+                                                          left: 0.0,
+                                                          bottom: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.15 /
+                                                              100,
+                                                          child: Container(
+                                                            height: 4,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          2),
+                                                              color: taxiLine ==
+                                                                      true
+                                                                  ? Colors.black
+                                                                  : Colors
+                                                                      .transparent,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineVeto(true);
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineVan(false);
-                                                  Provider.of<LineTaxi>(context,
-                                                          listen: false)
-                                                      .changelineTaxi(false);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityVeto(true);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityVan(false);
-                                                  Provider.of<OpacityChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changOpacityTaxi(false);
-                                                },
-                                                onLongPress: () => HomeScreen
-                                                    .customBottomSheet
-                                                    .showSheetCarInfo(
-                                                        context: context,
-                                                        image: Image(
-                                                            image: AssetImage(
-                                                                "assets/veto.png")),
-                                                        title: "Big commercial",
-                                                        des:
-                                                            "Big commercial car: veto etc...",
-                                                        iconM: Icons.money,
-                                                        price: "25.0",
-                                                        iconP: Icons.person,
-                                                        person: "11-19"),
-                                                child: Column(
-                                                  children: [
-                                                    Opacity(
-                                                        opacity:
-                                                            opacityVeto == true
-                                                                ? 1.0
-                                                                : 0.3,
-                                                        child: HomeScreen
-                                                            ._customWidget
-                                                            .carTypeBox(
-                                                                Image(
-                                                                    image: AssetImage(
-                                                                        "assets/veto.png"),
-                                                                    height: 50,
-                                                                    width: 90,
-                                                                    fit: BoxFit
-                                                                        .contain),
-                                                                "Big",
-                                                                "commercial",
-                                                                context)),
-                                                    Container(
-                                                      height: 4,
-                                                      width: 90,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(2),
-                                                        color: vetoLine == true
-                                                            ? Colors.black
-                                                            : Colors
-                                                                .transparent,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ]),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                                onTap: () => null,
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      10 /
-                                                      100,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      70 /
-                                                      100,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xFFFFD54F),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0),
                                                   ),
-                                                  child: Center(
-                                                      child: Text(
-                                                    "Request a Taxi",
-                                                    style:
-                                                        TextStyle(fontSize: 18),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineVan(true);
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineTaxi(false);
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineVeto(false);
+
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityVan(true);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityTaxi(
+                                                              false);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityVeto(
+                                                              false);
+
+                                                      Provider.of<CarTypeProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .updateCarType(
+                                                              "MediumCommercial");
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Opacity(
+                                                            opacity:
+                                                                opacityVan == true
+                                                                    ? 1
+                                                                    : 0.3,
+                                                            child: HomeScreen
+                                                                ._customWidget
+                                                                .carTypeBox(
+                                                                    Image(
+                                                                        image: AssetImage(
+                                                                            "assets/van.png"),
+                                                                        fit: BoxFit
+                                                                            .contain),
+                                                                    "MediumCommercial",
+                                                                    context)),
+                                                        Positioned(
+                                                            right: -10.0,
+                                                            top: -10.0,
+                                                            child: IconButton(
+                                                                onPressed: () => HomeScreen.customBottomSheet.showSheetCarInfo(
+                                                                    context:
+                                                                        context,
+                                                                    image: Image(
+                                                                        image: AssetImage(
+                                                                            "assets/van.png")),
+                                                                    title:
+                                                                        "Medium",
+                                                                    des:
+                                                                        "Medium commercial car",
+                                                                    iconM: Icons
+                                                                        .money,
+                                                                    price: "20.0",
+                                                                    iconP: Icons
+                                                                        .person,
+                                                                    person:
+                                                                        "6-10"),
+                                                                icon:
+                                                                    opacityVan ==
+                                                                            true
+                                                                        ? Icon(
+                                                                            Icons
+                                                                                .info_outline,
+                                                                            color:
+                                                                                Colors.purple,
+                                                                            size:
+                                                                                20,
+                                                                          )
+                                                                        : Text(
+                                                                            ""))),
+                                                        Positioned(
+                                                          right: 0.0,
+                                                          left: 0.0,
+                                                          bottom: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.15 /
+                                                              100,
+                                                          child: Container(
+                                                            height: 4,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          2),
+                                                              color: vanLine ==
+                                                                      true
+                                                                  ? Colors.black
+                                                                  : Colors
+                                                                      .transparent,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineVeto(true);
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineVan(false);
+                                                      Provider.of<LineTaxi>(
+                                                              context,
+                                                              listen: false)
+                                                          .changelineTaxi(false);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityVeto(true);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityVan(false);
+                                                      Provider.of<OpacityChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changOpacityTaxi(
+                                                              false);
+
+                                                      Provider.of<CarTypeProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .updateCarType(
+                                                              "Big Commercial");
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Opacity(
+                                                            opacity:
+                                                                opacityVeto ==
+                                                                        true
+                                                                    ? 1.0
+                                                                    : 0.3,
+                                                            child: HomeScreen
+                                                                ._customWidget
+                                                                .carTypeBox(
+                                                                    Image(
+                                                                        image: AssetImage(
+                                                                            "assets/veto.png"),
+                                                                        fit: BoxFit
+                                                                            .contain),
+                                                                    "Big Commercial",
+                                                                    context)),
+                                                        Positioned(
+                                                            right: -10.0,
+                                                            top: -10.0,
+                                                            child: IconButton(
+                                                                onPressed: () => HomeScreen.customBottomSheet.showSheetCarInfo(
+                                                                    context:
+                                                                        context,
+                                                                    image: Image(
+                                                                        image: AssetImage(
+                                                                            "assets/veto.png")),
+                                                                    title:
+                                                                        "Big commercial",
+                                                                    des:
+                                                                        "Big commercial car: veto etc...",
+                                                                    iconM: Icons
+                                                                        .money,
+                                                                    price: "25.0",
+                                                                    iconP: Icons
+                                                                        .person,
+                                                                    person:
+                                                                        "11-19"),
+                                                                icon:
+                                                                    opacityVeto ==
+                                                                            true
+                                                                        ? Icon(
+                                                                            Icons
+                                                                                .info_outline,
+                                                                            color:
+                                                                                Colors.purple,
+                                                                            size:
+                                                                                20,
+                                                                          )
+                                                                        : Text(
+                                                                            ""))),
+                                                        Positioned(
+                                                          right: 0.0,
+                                                          left: 0.0,
+                                                          bottom: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.15 /
+                                                              100,
+                                                          child: Container(
+                                                            height: 4,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          2),
+                                                              color: vetoLine ==
+                                                                      true
+                                                                  ? Colors.black
+                                                                  : Colors
+                                                                      .transparent,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            CustomDropBottom().DropBottomCustom(
+                                                context, dropBottomProvider),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: GestureDetector(
+                                                  onTap: () => null,
+                                                  child: Container(
+                                                    height: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        6.5 /
+                                                        100,
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        70 /
+                                                        100,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xFFFFD54F),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Request a Taxi",
+                                                      style:
+                                                          TextStyle(fontSize: 18),
+                                                    )),
                                                   )),
-                                                )),
-                                          ),
-                                        ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  )),
-                            ],
+                                    )),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                ),
                 isTrue == false
                     ? Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -543,23 +696,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getPlaceDerction(BuildContext context) async {
-    final currentLocation =
+    final initialPos =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
-    final dropOfLocation =
+    final finalPos =
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
 
-    final paickLatling =
-        LatLng(currentLocation.latitude, currentLocation.longitude);
-    final dropLatling =
-        LatLng(dropOfLocation.latitude, dropOfLocation.longitude);
+    final pickUpLatling = LatLng(initialPos.latitude, initialPos.longitude);
+    final dropOfLatling = LatLng(finalPos.latitude, finalPos.longitude);
     showDialog(
         context: context,
         builder: (context) =>
             CircularInductorCostem().circularInductorCostem(context));
 
     final details = await ApiSrvDir.obtainPlaceDirectionDetails(
-        paickLatling, dropLatling, context);
+        pickUpLatling, dropOfLatling, context);
     Navigator.pop(context);
 
     /// PolylinePoints method
@@ -576,7 +727,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     polylineSet.clear();
     setState(() {
-      ///property
+      ///property PolylinePoints
       Polyline polyline = Polyline(
           polylineId: PolylineId("polylineId"),
           color: Colors.red,
@@ -590,21 +741,70 @@ class _HomeScreenState extends State<HomeScreen> {
       ///set from above
       polylineSet.add(polyline);
     });
-    ///for fit line on map
+
+    ///for fit line on map PolylinePoints
     LatLngBounds latLngBounds;
-    if(paickLatling.latitude > dropLatling.latitude && paickLatling.longitude > dropLatling.longitude){
-      latLngBounds = LatLngBounds(southwest: dropLatling, northeast: paickLatling);
+    if (pickUpLatling.latitude > dropOfLatling.latitude &&
+        pickUpLatling.longitude > dropOfLatling.longitude) {
+      latLngBounds =
+          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
+          northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
+    } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
+          northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
+    } else {
+      latLngBounds =
+          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
     }
-    else if(paickLatling.longitude > dropLatling.longitude){
-      latLngBounds = LatLngBounds(southwest:LatLng(paickLatling.latitude,dropLatling.longitude), northeast:LatLng(dropLatling.latitude,paickLatling.longitude));
-    }
-    else if(paickLatling.latitude > dropLatling.latitude){
-      latLngBounds = LatLngBounds(southwest:LatLng(dropLatling.latitude,paickLatling.longitude), northeast:LatLng(paickLatling.latitude,dropLatling.longitude));
-    }
-    else{
-      latLngBounds = LatLngBounds(southwest: dropLatling, northeast: paickLatling);
-    }
-    newGoogleMapController?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+    newGoogleMapController
+        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+
+    ///Marker
+    Marker markerPickUpLocation = Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+        infoWindow:
+            InfoWindow(title: initialPos.placeName, snippet: "My Location"),
+        position: LatLng(pickUpLatling.latitude, pickUpLatling.longitude),
+        markerId: MarkerId("pickUpId"));
+
+    Marker markerDropOfLocation = Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueRed,
+        ),
+        infoWindow:
+            InfoWindow(title: finalPos.placeName, snippet: "Drop off Location"),
+        position: LatLng(dropOfLatling.latitude, dropOfLatling.longitude),
+        markerId: MarkerId("dropOfId"));
+
+    setState(() {
+      markersSet.add(markerPickUpLocation);
+      markersSet.add(markerDropOfLocation);
+    });
+
+    ///Circle
+    Circle pickUpLocCircle = Circle(
+        fillColor: Colors.white,
+        radius: 14.0,
+        center: pickUpLatling,
+        strokeWidth: 2,
+        strokeColor: Colors.grey,
+        circleId: CircleId("pickUpId"));
+
+    Circle dropOffLocCircle = Circle(
+        fillColor: Colors.white,
+        radius: 14.0,
+        center: dropOfLatling,
+        strokeWidth: 2,
+        strokeColor: Colors.grey,
+        circleId: CircleId("dropOfId"));
+    setState(() {
+      circlesSet.add(pickUpLocCircle);
+      circlesSet.add(dropOffLocCircle);
+    });
     print("this is details enCodingPoints:::::: ${details.enCodingPoints}");
   }
 }

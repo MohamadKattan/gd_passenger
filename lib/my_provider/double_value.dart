@@ -1,4 +1,4 @@
-// this class for listing double val drawer
+// this class for listing double val for close open  drawer
 import 'package:flutter/material.dart';
 
 class DoubleValue extends ChangeNotifier {
