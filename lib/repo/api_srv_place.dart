@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/model/address.dart';
+import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
 import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
+import 'package:gd_passenger/my_provider/position_v_chnge.dart';
 import 'package:gd_passenger/tools/get_url.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +44,7 @@ class DropPlaceDetails {
       print("Drop location  nNNn is :::: ${address.placeName}");
       print("Drop location  nNNn is :::: ${address.placeName}");
       print("Drop location  nNNn is :::: ${address.placeName}");
+      Provider.of<CarTypeProvider>(context,listen: false).updateCarType("Taxi");
       Navigator.pop(context,"dataDir");
     }
   }

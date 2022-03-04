@@ -7,11 +7,13 @@ import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
 import 'package:gd_passenger/my_provider/derictionDetails_provide.dart';
 import 'package:gd_passenger/my_provider/double_value.dart';
 import 'package:gd_passenger/my_provider/dropBottom_value.dart';
+import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
 import 'package:gd_passenger/my_provider/lineTaxiProvider.dart';
 import 'package:gd_passenger/my_provider/opictyProvider.dart';
 import 'package:gd_passenger/my_provider/pick_image_provider.dart';
 import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:gd_passenger/my_provider/position_v_chnge.dart';
+import 'package:gd_passenger/my_provider/posotoion_cancel_request.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
@@ -54,6 +56,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DerictionDetails()),
         ChangeNotifierProvider(create: (context) => DropBottomValue()),
         ChangeNotifierProvider(create: (context) => CarTypeProvider()),
+        ChangeNotifierProvider(create: (context) => PosotionCancelReq()),
+        ChangeNotifierProvider(create: (context) => UserAllInfoDatabase()),
       ],
       builder: (context, _) {
         return MaterialApp(

@@ -3,25 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/google_map_methods.dart';
+import 'package:gd_passenger/model/directions_details.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
 import 'package:gd_passenger/my_provider/double_value.dart';
 import 'package:gd_passenger/my_provider/dropBottom_value.dart';
+import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
 import 'package:gd_passenger/my_provider/lineTaxiProvider.dart';
 import 'package:gd_passenger/my_provider/opictyProvider.dart';
 import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:gd_passenger/my_provider/position_v_chnge.dart';
+import 'package:gd_passenger/my_provider/posotoion_cancel_request.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/repo/api_srv_dir.dart';
+import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:gd_passenger/user_enter_face/search_screen.dart';
 import 'package:gd_passenger/widget/bottom_sheet.dart';
 import 'package:gd_passenger/widget/coustom_drawer.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:gd_passenger/widget/custom_drop_bottom.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
+import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -37,6 +43,7 @@ Set<Polyline> polylineSet = {};
 List<LatLng> polylineCoordinates = [];
 Set<Marker> markersSet = {};
 Set<Circle> circlesSet = {};
+DirectionDetails? tripDirectionDetails;
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -50,7 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final opacityVan = Provider.of<OpacityChang>(context).isOpacityVan;
     final opacityVeto = Provider.of<OpacityChang>(context).isOpacityVeto;
     final postionChang = Provider.of<PositionChang>(context).val;
-    final carTuprPro=  Provider.of<CarTypeProvider>(context).carType;
+    final carTypePro = Provider.of<CarTypeProvider>(context).carType;
+    final postionCancel=Provider.of<PosotionCancelReq>(context).value;
     final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
@@ -62,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 customDrawer(context),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Provider.of<DoubleValue>(context, listen: false)
                         .value0Or1(0);
                     Provider.of<TrueFalse>(context, listen: false)
@@ -98,8 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   polylines: polylineSet,
                                   markers: markersSet,
                                   circles: circlesSet,
-                                  onMapCreated: (GoogleMapController controller) {
-                                    HomeScreen._logicGoogleMap.controllerGoogleMap
+                                  onMapCreated:
+                                      (GoogleMapController controller) {
+                                    HomeScreen
+                                        ._logicGoogleMap.controllerGoogleMap
                                         .complete(controller);
                                     newGoogleMapController = controller;
                                     HomeScreen._logicGoogleMap
@@ -138,9 +148,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     left: 0.0,
                                     bottom: postionChang,
                                     child: Container(
-                                      height: MediaQuery.of(context).size.height *
-                                          45 /
-                                          100,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              45 /
+                                              100,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20.0),
@@ -164,12 +175,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         builder: (context) =>
                                                             SearchScreen()));
                                                 if (res == "dataDir") {
-                                                  await getPlaceDerction(context);
-                                                  await Provider.of<
-                                                              PositionChang>(
-                                                          context,
-                                                          listen: false)
-                                                      .changValue(-500.0);
+                                                  await getPlaceDerction(
+                                                      context);
                                                 }
                                               },
                                               child: Container(
@@ -189,23 +196,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       padding:
                                                           const EdgeInsets.all(
                                                               8.0),
-                                                      child: Icon(
-                                                        Icons.search,
-                                                        color: Colors.black54,
-                                                        size: 35,
-                                                      ),
+                                                      child: searchIconOrCancelBottom(
+                                                          tripDirectionDetails),
                                                     ),
-                                                    Text(
-                                                      "Where to ?",
-                                                      style: TextStyle(
-                                                          color: Colors.black38,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    SizedBox(
-                                                        width:
-                                                            MediaQuery.of(context)
+                                                    changeTextWhereToOrTollpasses(
+                                                        tripDirectionDetails),
+                                                    tripDirectionDetails != null
+                                                        ? SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                5 /
+                                                                100)
+                                                        : SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
                                                                     .size
                                                                     .width *
                                                                 50 /
@@ -218,17 +224,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         size: 35,
                                                       ),
                                                       onPressed: () {
-                                                        Provider.of<PositionChang>(
-                                                                context,
-                                                                listen: false)
-                                                            .changValue(-500.0);
+                                                        Provider.of<PositionChang>(context, listen: false).changValue(-500.0);
                                                       },
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                             ),
-                                            Row(
+                                         tripDirectionDetails!=null?Text(""):
+                                         Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               mainAxisAlignment:
@@ -236,12 +240,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                               children: [
                                                 HomeScreen._customWidget
                                                     .containerBox(
-                                                        Icon(Icons.home_outlined),
+                                                        Icon(Icons
+                                                            .home_outlined),
                                                         "Home",
                                                         context),
                                                 HomeScreen._customWidget
                                                     .containerBox(
-                                                        Icon(Icons.work_outline),
+                                                        Icon(
+                                                            Icons.work_outline),
                                                         "Work",
                                                         context),
                                               ],
@@ -249,62 +255,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                             HomeScreen._customWidget
                                                 .customDivider(),
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.only(top: 8.0),
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0),
                                               child: SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
+                                                scrollDirection:
+                                                    Axis.horizontal,
                                                 child: Row(children: [
                                                   GestureDetector(
-                                                    onTap: () {
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineTaxi(true);
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineVan(false);
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineVeto(false);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityTaxi(true);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityVan(false);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityVeto(
-                                                              false);
-
-                                                      Provider.of<CarTypeProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .updateCarType("Taxi");
-                                                    },
+                                                    onTap: () =>
+                                                        changeAllProClickTaxiBox(),
                                                     child: Stack(
                                                       children: [
                                                         Opacity(
-                                                            opacity:
-                                                                opacityTaxi ==
-                                                                        true
-                                                                    ? 1
-                                                                    : 0.3,
-                                                            child: HomeScreen
-                                                                ._customWidget
-                                                                .carTypeBox(
-                                                                    Image(
-                                                                        image: AssetImage(
-                                                                            "assets/smallTexi.png"),
-                                                                        fit: BoxFit
-                                                                            .contain),
-                                                                    "Taxi",
-                                                                    context)),
+                                                            opacity: opacityTaxi ==
+                                                                    true
+                                                                ? 1
+                                                                : 0.3,
+                                                            child: HomeScreen._customWidget.carTypeBox(
+                                                                Image(
+                                                                    image: AssetImage(
+                                                                        "assets/smallTexi.png"),
+                                                                    fit: BoxFit
+                                                                        .contain),
+                                                                tripDirectionDetails !=
+                                                                            null &&
+                                                                        carTypePro !=
+                                                                            "" &&
+                                                                        carTypePro ==
+                                                                            "Taxi"
+                                                                    ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
+                                                                    : "Taxi",
+                                                                context)),
                                                         Positioned(
                                                             right: -10.0,
                                                             top: -10.0,
@@ -316,8 +297,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             context,
                                                                         image:
                                                                             Image(
-                                                                          image: AssetImage(
-                                                                              "assets/smallTexi.png"),
+                                                                          image:
+                                                                              AssetImage("assets/smallTexi.png"),
                                                                           fit: BoxFit
                                                                               .contain,
                                                                         ),
@@ -328,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         iconM: Icons
                                                                             .money,
                                                                         price:
-                                                                            "15.0",
+                                                                            "Start:15.00",
                                                                         iconP: Icons
                                                                             .person,
                                                                         person:
@@ -337,8 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     opacityTaxi ==
                                                                             true
                                                                         ? Icon(
-                                                                            Icons
-                                                                                .info_outline,
+                                                                            Icons.info_outline,
                                                                             color:
                                                                                 Colors.purple,
                                                                             size:
@@ -375,58 +355,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                   ),
                                                   GestureDetector(
-                                                    onTap: () {
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineVan(true);
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineTaxi(false);
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineVeto(false);
-
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityVan(true);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityTaxi(
-                                                              false);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityVeto(
-                                                              false);
-
-                                                      Provider.of<CarTypeProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .updateCarType(
-                                                              "MediumCommercial");
-                                                    },
+                                                    onTap: () =>
+                                                        changeAllProClickVanBox(),
                                                     child: Stack(
                                                       children: [
                                                         Opacity(
-                                                            opacity:
-                                                                opacityVan == true
-                                                                    ? 1
-                                                                    : 0.3,
-                                                            child: HomeScreen
-                                                                ._customWidget
-                                                                .carTypeBox(
-                                                                    Image(
-                                                                        image: AssetImage(
-                                                                            "assets/van.png"),
-                                                                        fit: BoxFit
-                                                                            .contain),
-                                                                    "MediumCommercial",
-                                                                    context)),
+                                                            opacity: opacityVan ==
+                                                                    true
+                                                                ? 1
+                                                                : 0.3,
+                                                            child: HomeScreen._customWidget.carTypeBox(
+                                                                Image(
+                                                                    image: AssetImage(
+                                                                        "assets/van.png"),
+                                                                    fit: BoxFit
+                                                                        .contain),
+                                                                tripDirectionDetails !=
+                                                                            null &&
+                                                                        carTypePro !=
+                                                                            "" &&
+                                                                        carTypePro ==
+                                                                            "MediumCommercial"
+                                                                    ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
+                                                                    : "MediumCommercial",
+                                                                context)),
                                                         Positioned(
                                                             right: -10.0,
                                                             top: -10.0,
@@ -443,7 +395,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "Medium commercial car",
                                                                     iconM: Icons
                                                                         .money,
-                                                                    price: "20.0",
+                                                                    price:
+                                                                        "20.0",
                                                                     iconP: Icons
                                                                         .person,
                                                                     person:
@@ -452,8 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     opacityVan ==
                                                                             true
                                                                         ? Icon(
-                                                                            Icons
-                                                                                .info_outline,
+                                                                            Icons.info_outline,
                                                                             color:
                                                                                 Colors.purple,
                                                                             size:
@@ -491,56 +443,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineVeto(true);
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineVan(false);
-                                                      Provider.of<LineTaxi>(
-                                                              context,
-                                                              listen: false)
-                                                          .changelineTaxi(false);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityVeto(true);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityVan(false);
-                                                      Provider.of<OpacityChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changOpacityTaxi(
-                                                              false);
-
-                                                      Provider.of<CarTypeProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .updateCarType(
-                                                              "Big Commercial");
+                                                      changeAllProClickVetoBox();
                                                     },
                                                     child: Stack(
                                                       children: [
                                                         Opacity(
-                                                            opacity:
-                                                                opacityVeto ==
-                                                                        true
-                                                                    ? 1.0
-                                                                    : 0.3,
-                                                            child: HomeScreen
-                                                                ._customWidget
-                                                                .carTypeBox(
-                                                                    Image(
-                                                                        image: AssetImage(
-                                                                            "assets/veto.png"),
-                                                                        fit: BoxFit
-                                                                            .contain),
-                                                                    "Big Commercial",
-                                                                    context)),
+                                                            opacity: opacityVeto ==
+                                                                    true
+                                                                ? 1.0
+                                                                : 0.3,
+                                                            child: HomeScreen._customWidget.carTypeBox(
+                                                                Image(
+                                                                    image: AssetImage(
+                                                                        "assets/veto.png"),
+                                                                    fit: BoxFit
+                                                                        .contain),
+                                                                tripDirectionDetails !=
+                                                                            null &&
+                                                                        carTypePro !=
+                                                                            "" &&
+                                                                        carTypePro ==
+                                                                            "Big Commercial"
+                                                                    ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
+                                                                    : "Big Commercial",
+                                                                context)),
                                                         Positioned(
                                                             right: -10.0,
                                                             top: -10.0,
@@ -557,7 +483,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "Big commercial car: veto etc...",
                                                                     iconM: Icons
                                                                         .money,
-                                                                    price: "25.0",
+                                                                    price:
+                                                                        "25.0",
                                                                     iconP: Icons
                                                                         .person,
                                                                     person:
@@ -566,8 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     opacityVeto ==
                                                                             true
                                                                         ? Icon(
-                                                                            Icons
-                                                                                .info_outline,
+                                                                            Icons.info_outline,
                                                                             color:
                                                                                 Colors.purple,
                                                                             size:
@@ -612,20 +538,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                             CustomDropBottom().DropBottomCustom(
                                                 context, dropBottomProvider),
                                             Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: (){
+                                                    DataBaseSrv().currentOnlineUserInfo();
+                                                    Provider.of<PosotionCancelReq>(context,listen: false).updateValue(0.0);
+                                                    Provider.of<PositionChang>(context, listen: false).changValue(- 500.0);
+                                                  },
                                                   child: Container(
-                                                    height: MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        6.5 /
-                                                        100,
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        70 /
-                                                        100,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            6.5 /
+                                                            100,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            70 /
+                                                            100,
                                                     decoration: BoxDecoration(
                                                       color: Color(0xFFFFD54F),
                                                       borderRadius:
@@ -635,8 +568,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     child: Center(
                                                         child: Text(
                                                       "Request a Taxi",
-                                                      style:
-                                                          TextStyle(fontSize: 18),
+                                                      style: TextStyle(
+                                                          fontSize: 18),
                                                     )),
                                                   )),
                                             ),
@@ -644,6 +577,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     )),
+                                AnimatedPositioned(
+                                  duration: Duration(seconds: 1),
+                                  right: 0.0,
+                                  left: 0.0,
+                                  bottom: postionCancel,
+                                  child: CancelTaxi().cancelTaxiRequest(
+                                      context: context,
+                                      voidCallback: ()=>null),
+                                ),
                               ],
                             ),
                           ),
@@ -695,9 +637,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
+  ///this them main logic for diretion + marker+ polline conect with class api
   Future<void> getPlaceDerction(BuildContext context) async {
+    /// from api geo
     final initialPos =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
+
+    ///from api srv place
     final finalPos =
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
@@ -709,8 +655,12 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) =>
             CircularInductorCostem().circularInductorCostem(context));
 
+    ///from api dir
     final details = await ApiSrvDir.obtainPlaceDirectionDetails(
         pickUpLatling, dropOfLatling, context);
+    setState(() {
+      tripDirectionDetails = details;
+    });
     Navigator.pop(context);
 
     /// PolylinePoints method
@@ -806,5 +756,91 @@ class _HomeScreenState extends State<HomeScreen> {
       circlesSet.add(dropOffLocCircle);
     });
     print("this is details enCodingPoints:::::: ${details.enCodingPoints}");
+  }
+
+  // this method for clean
+  void restApp() {
+    setState(() {
+      polylineSet.clear();
+      markersSet.clear();
+      circlesSet.clear();
+      polylineCoordinates.clear();
+      tripDirectionDetails = null;
+    });
+    HomeScreen._logicGoogleMap.locationPosition(context);
+  }
+
+  // this method for switch text where to OR toll passes
+  changeTextWhereToOrTollpasses(DirectionDetails? tripDirectionDetails) {
+    if (tripDirectionDetails != null) {
+      return Expanded(
+          child: Text(
+        "Not:if found toll passes arn\'t include!",
+        style:
+            TextStyle(color: Colors.white, backgroundColor: Colors.redAccent),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ));
+    } else {
+      return Text(
+        "Where to ?",
+        style: TextStyle(
+            color: Colors.black38, fontSize: 20, fontWeight: FontWeight.bold),
+      );
+    }
+  }
+
+  // this method for switch if cancel bottom or search icon
+  searchIconOrCancelBottom(DirectionDetails? tripDirectionDetails) {
+    if (tripDirectionDetails != null) {
+      return IconButton(
+          onPressed: () => restApp(),
+          icon: Icon(
+            Icons.cancel,
+            color: Colors.redAccent,
+            size: 35,
+          ));
+    } else {
+      return Icon(
+        Icons.search,
+        color: Colors.black54,
+        size: 35,
+      );
+    }
+  }
+
+  // this method for change all provider state when click taxiBox
+  void changeAllProClickTaxiBox() {
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
+    Provider.of<CarTypeProvider>(context, listen: false).updateCarType("Taxi");
+  }
+
+  // this method will change all provider state when click on van box
+  void changeAllProClickVanBox() {
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("MediumCommercial");
+  }
+
+  // this method will change all provider state when click on Veto box
+  void changeAllProClickVetoBox() {
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Big Commercial");
   }
 }
