@@ -1,15 +1,18 @@
 // this class for container user cancel his request a taxi
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/my_provider/position_v_chnge.dart';
 import 'package:gd_passenger/my_provider/posotoion_cancel_request.dart';
+import 'package:gd_passenger/my_provider/user_id_provider.dart';
+import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class CancelTaxi {
   Widget cancelTaxiRequest(
-      {required BuildContext context, required VoidCallback voidCallback}) {
+      {required BuildContext context,
+      required UserIdProvider userIdProvider,
+      required VoidCallback voidCallback}) {
     return Container(
       height: MediaQuery.of(context).size.height * 40 / 100,
       decoration: BoxDecoration(
@@ -30,7 +33,7 @@ class CancelTaxi {
               padding: const EdgeInsets.only(top: 10.0),
               child: Center(
                   child: Lottie.asset('assets/71796-searching-taxi.json',
-                      height: 150, width: 250,fit: BoxFit.contain)),
+                      height: 150, width: 250, fit: BoxFit.contain)),
             ),
             Text(
               "Searching a driver...",
@@ -38,10 +41,12 @@ class CancelTaxi {
             ),
             GestureDetector(
                 onTap: () {
-                  voidCallback;
+                  voidCallback();
+                  DataBaseSrv().cancelRiderRequest(userIdProvider);
                   Provider.of<PosotionCancelReq>(context, listen: false)
                       .updateValue(-400.0);
-                  Provider.of<PositionChang>(context, listen: false).changValue(0.0);
+                  Provider.of<PositionChang>(context, listen: false)
+                      .changValue(0.0);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),

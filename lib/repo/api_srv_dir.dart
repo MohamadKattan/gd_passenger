@@ -1,7 +1,6 @@
 //this class will use direction api between current location and drop of location
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/model/directions_details.dart';

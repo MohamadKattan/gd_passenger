@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/model/address.dart';
@@ -28,70 +27,89 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final addressModle = Provider.of<AppData>(context).pickUpLocation;
-    return Scaffold(
-        body: SingleChildScrollView(
-            child: Container(
-                child: Column(
-      children: [
-        Container(
-          height: 120,
-          decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10.0),
-                  bottomRight: Radius.circular(10.0))),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 40.0,left: 10.0),
-            child: TextField(
-              maxLength: 25,
-              onChanged: (val) {
-                finedPlace(val, addressModle, context);
-              },
-              controller: whereEdit,
-              showCursor: true,
-              mouseCursor: MouseCursor.defer,
-              enabled: true,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600,fontStyle: FontStyle.italic,color: Colors.white),
-              cursorColor: Color(0xFFFFD54F),
-              decoration: InputDecoration(
-                fillColor: Color(0xFFFFD54F),
-                border:InputBorder.none,
-                icon: Icon(Icons.search,color: Colors.white,size: 35,),
-                iconColor:Colors.white ,
-                hintText: "Where to?",
-                contentPadding: EdgeInsets.all(10.0),
-                hintStyle:   TextStyle(fontSize: 25,color:Colors.grey,fontWeight: FontWeight.bold,letterSpacing: 1.0),
-                hoverColor: Color(0xFFFFD54F),
-              ),
-              keyboardType: TextInputType.text,
-            ),
-          ),
-        ),
-        placePredictionsList.length > 0
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
+    return GestureDetector(
+      onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
+      child: SafeArea(
+        child: Scaffold(
+            body: SingleChildScrollView(
                 child: Container(
-                  child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return PredictionsTitle(
-                          predictions: placePredictionsList[index]);
-                    },
-                    separatorBuilder: (context, index) =>
-                        customWidget.customDivider(),
-                    itemCount: placePredictionsList.length,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
+                    child: Column(
+          children: [
+            Container(
+              height: 120,
+              decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10.0),
+                      bottomRight: Radius.circular(10.0))),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40.0, left: 10.0),
+                child: TextField(
+                  maxLength: 25,
+                  onChanged: (val) {
+                    finedPlace(val, addressModle, context);
+                  },
+                  controller: whereEdit,
+                  showCursor: true,
+                  mouseCursor: MouseCursor.uncontrolled,
+                  autofocus: true,
+                  cursorWidth: 4.0,
+                  enabled: true,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
+                  cursorColor: Color(0xFFFFD54F),
+                  decoration: InputDecoration(
+                    fillColor: Color(0xFFFFD54F),
+                    border: InputBorder.none,
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                    iconColor: Colors.white,
+                    hintText: "Where to?",
+                    contentPadding: EdgeInsets.all(10.0),
+                    hintStyle: TextStyle(
+                        fontSize: 25,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0),
+                    hoverColor: Color(0xFFFFD54F),
                   ),
+                  keyboardType: TextInputType.text,
                 ),
-              )
-            : Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: Center(
-                    child: Lottie.asset('assets/lf30_editor_jobovyne.json',
-                        height: 350, width: 350)),
-              )
-      ],
-    ))));
+              ),
+            ),
+            placePredictionsList.length > 0
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          return PredictionsTitle(
+                              predictions: placePredictionsList[index]);
+                        },
+                        separatorBuilder: (context, index) =>
+                            customWidget.customDivider(),
+                        itemCount: placePredictionsList.length,
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 40.0),
+                    child: Center(
+                        child: Lottie.asset('assets/lf30_editor_jobovyne.json',
+                            height: 350, width: 350)),
+                  )
+          ],
+        )))),
+      ),
+    );
   }
 
 // place api
@@ -130,7 +148,8 @@ class PredictionsTitle extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: GestureDetector(
-        onTap: ()=>dropPlaceDetails.getPlaceAddressDetails(predictions.place_id, context),
+        onTap: () => dropPlaceDetails.getPlaceAddressDetails(
+            predictions.place_id, context),
         child: Container(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
