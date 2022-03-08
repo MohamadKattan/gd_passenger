@@ -18,6 +18,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
+
 class DataBaseSrv {
   Tools _tools = Tools();
 
@@ -84,26 +85,27 @@ class DataBaseSrv {
   }
 
   // this method for got user id/phone/image/name from user collection in database real time and send to saveRiderRequest method
-  currentOnlineUserInfo(BuildContext context) async {
+  Future<void>  currentOnlineUserInfo(BuildContext context) async {
     try {
-      User? firebaseUser = FirebaseAuth.instance.currentUser;
+      User? firebaseUser = await FirebaseAuth.instance.currentUser;
       String userId = firebaseUser!.uid;
       DatabaseReference ref = FirebaseDatabase.instance.ref().child("users").child(userId);
       TransactionResult result = await ref.runTransaction((Object? user) {
         Map<String, dynamic> _user = Map<String, dynamic>.from(user as Map);
-        Users infoUser = Users.fromMap(_user);
-        print("lllllllllll" + infoUser.user_id);
-        Provider.of<UserAllInfoDatabase>(context, listen: false).updateUser(infoUser);
+        if(_user.values.isNotEmpty){
+          Users  infoUser = Users.fromMap(_user);
+          print("lllllllllll" + infoUser.first_name);
+          Provider.of<UserAllInfoDatabase>(context, listen: false).updateUser(infoUser);
+        }
         return Transaction.success(_user);
-      }).whenComplete(() =>saveRiderRequest(context));
+      });
     } catch (ex) {
-      _tools.toastMsg(ex.toString());
+      Tools().toastMsg("Welcome");
     }
-    return null;
   }
 
 // this method will set all info when rider order a taxi in Ride Request collection
- Future <void> saveRiderRequest(BuildContext context)async {
+ void saveRiderRequest(BuildContext context)async {
     /// from api geo
     final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
     print("pickUpLoc:::::: "+ pickUpLoc.placeName);
@@ -149,6 +151,7 @@ class DataBaseSrv {
       _tools.toastMsg(ex.toString());
     }
   }
+
   // this method for cancel rider Request
  void cancelRiderRequest(UserIdProvider userIdProvider){
     print("id is::::" + userIdProvider.getUser.uid);

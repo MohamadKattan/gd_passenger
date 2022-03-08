@@ -15,3 +15,40 @@ Tools tools = Tools();
 DataBaseSrv srv = DataBaseSrv();
 String mapKey= "AIzaSyBt7etvZRY_OrzFcCsawNb22jqSzE2mRDg";
 GoogleMapController? newGoogleMapController;
+
+// Future<void> checkIfRegisterBefore(
+//     String resultPhone, BuildContext context) async {
+//
+//   try {
+//
+//     Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);
+//     DatabaseReference ref = FirebaseDatabase.instance
+//         .ref()
+//         .child("users")
+//         .child("");
+//     TransactionResult result = await ref.runTransaction((Object? user) {
+//       Map<String, dynamic> _user = Map<String, dynamic>.from(user as Map);
+//       Users infoUser = Users.fromMap(_user);
+//       if (resultPhone == infoUser.phone_number.toString()) {
+//         print(infoUser.first_name);
+//         Provider.of<UserIdProvider>(context, listen: false)
+//             .updateUser(infoUser);
+//
+//         Provider.of<TrueFalse>(context, listen: false)
+//             .changeStateBooling(false);
+//         // Navigator.push(
+//         //     context, MaterialPageRoute(builder: (context) => HomeScreen()));
+//       } else if (resultPhone != infoUser.phone_number) {
+//         // authSev.signUpWithPhone(resultPhone, context);
+//         FocusScope.of(context).requestFocus(FocusNode());
+//         Provider.of<TrueFalse>(context, listen: false)
+//             .changeStateBooling(true);
+//       }
+//       return Transaction.success(_user);
+//     });
+//     return null;
+//   } catch (ex) {
+//     Tools().toastMsg(ex.toString());
+//   }
+//
+// }

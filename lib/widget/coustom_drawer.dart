@@ -1,18 +1,20 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gd_passenger/my_provider/buttom_color_pro.dart';
 import 'package:gd_passenger/my_provider/double_value.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
-import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/user_enter_face/language_screen.dart';
 import 'package:gd_passenger/user_enter_face/profile_screen.dart';
+import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 Widget customDrawer(BuildContext context) {
   return GestureDetector(
     onTap: () {
       Provider.of<DoubleValue>(context, listen: false).value0Or1(0);
-      Provider.of<TrueFalse>(context, listen: false)
-          .changeStateBooling(false);
+      Provider.of<ChangeColor>(context, listen: false).updateState(false);
     },
     child: Container(
       width: MediaQuery.of(context).size.width,
@@ -38,28 +40,12 @@ Widget customDrawer(BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Provider.of<UserAllInfoDatabase>(context, listen: false)
-                                .users
-                                ?.image_profile !=
-                            null
-                        ? Container(
-                            child: Image.network(
-                                "${Provider.of<UserAllInfoDatabase>(context, listen: false).users?.image_profile}"),
-                          )
-                        : CircleAvatar(
-                            radius: 50,
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.person,
-                              color: Colors.black12,
-                              size: 35,
-                            ),
-                          ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      "User",
-                      style: TextStyle(color: Colors.black45, fontSize: 25),
+                    showImage(context),
+                    SizedBox(
+                      height: 8.0,
                     ),
+                    showUserName(context),
+                    showUserPhone(context),
                   ],
                 ),
               ),
@@ -70,83 +56,133 @@ Widget customDrawer(BuildContext context) {
               const SizedBox(
                 height: 4.0,
               ),
-              ListTile(
-                leading:
-                    const Icon(Icons.car_rental_sharp, color: Colors.black45),
-                title: GestureDetector(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileScreen())),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: const Text(
-                      "My Bookings",
-                      style: TextStyle(color: Colors.black45),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    child:
+                    GestureDetector(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen())),
+                  child: Row(children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Icon(Icons.car_rental_sharp, color: Colors.black45,size: 30,),
+                    ),
+                    SizedBox(width: 8.0),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                        child: const Text(
+                          "My Bookings",
+                          style: TextStyle(color: Colors.black45,fontSize: 16.0),
+                        ))
+                  ]),
+                )),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              CustomWidget().customDivider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ProfileScreen())),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: const Icon(Icons.person, color: Colors.black45,size: 30),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        const Text(
+                          "My profile",
+                          style: TextStyle(color: Colors.black45,fontSize: 16),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
               const SizedBox(
-                height: 4.0,
+                height: 8.0,
               ),
-              ListTile(
-                leading: const Icon(Icons.person, color: Colors.black45),
-                title: GestureDetector(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileScreen())),
-                  child: const Text(
-                    "My profile",
-                    style: TextStyle(color: Colors.black45),
+              CustomWidget().customDivider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: GestureDetector(
+                    onTap: () => null,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: const Icon(Icons.mail, color: Colors.black45,size: 30,),
+                        ),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        const Text(
+                          "Call us",
+                          style: TextStyle(color: Colors.black45,fontSize: 16.0),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
               const SizedBox(
-                height: 4.0,
+                height: 8.0,
               ),
-              ListTile(
-                leading: const Icon(Icons.mail, color: Colors.black45),
-                title: GestureDetector(
-                  onTap: () => null,
-                  child: const Text(
-                    "Call us",
-                    style: TextStyle(color: Colors.black45),
+              CustomWidget().customDivider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    child: GestureDetector(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LanguageScreen())),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: const Icon(Icons.language, color: Colors.black45,size: 30,),
+                      ),
+                      SizedBox(width: 8.0),
+                      const Text(
+                        "Language",
+                        style: TextStyle(color: Colors.black45,fontSize: 16.0),
+                      ),
+                    ],
                   ),
-                ),
+                )),
               ),
               const SizedBox(
-                height: 4.0,
+                height: 8.0,
               ),
-              ListTile(
-                leading: const Icon(Icons.language, color: Colors.black45),
-                title: GestureDetector(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LanguageScreen())),
-                  child: const Text(
-                    "Language",
-                    style: TextStyle(color: Colors.black45),
+              CustomWidget().customDivider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: GestureDetector(
+                    onTap: () => SystemNavigator.pop(),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: const Icon(Icons.exit_to_app, color: Colors.black45,size: 30.0,),
+                        ),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        Text("Exit",style: TextStyle(color: Colors.black45,fontSize: 16.0),),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 4.0,
-              ),
-              ListTile(
-                leading: const Icon(Icons.exit_to_app, color: Colors.black45),
-                title: GestureDetector(
-                  onTap: () {
-                    SystemNavigator.pop();
-                  },
-                  child: const Text(
-                    "Exit",
-                    style: TextStyle(color: Colors.black45),
-                  ),
-                ),
-              )
+              CustomWidget().customDivider(),
             ],
           ),
         ],
@@ -155,5 +191,51 @@ Widget customDrawer(BuildContext context) {
   );
 }
 
-void showImage() {
+Widget showImage(BuildContext context) {
+  final userInfoRealTime =
+      Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+  return userInfoRealTime?.image_profile != null
+      ? Expanded(
+          child: CachedNetworkImage(
+            imageBuilder: (context, imageProvider) => Container(
+              width: 60.0,
+              height: 60.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+              ),
+            ),
+            imageUrl: "${userInfoRealTime?.image_profile}",
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.person),
+          ),
+        )
+      : Expanded(
+          flex: 0,
+          child: CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.person,
+              color: Colors.black12,
+              size: 35,
+            ),
+          ),
+        );
+}
+
+Widget showUserName(BuildContext context) {
+  final userInfoRealTime =
+      Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+  return userInfoRealTime?.first_name != null
+      ? Text("Hi ${userInfoRealTime?.first_name}")
+      : Expanded(child: Text("Welcome back"));
+}
+
+Widget showUserPhone(BuildContext context) {
+  final userInfoRealTime =
+      Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+  return userInfoRealTime?.phone_number != null
+      ? Text("${userInfoRealTime?.phone_number}")
+      : Text("");
 }

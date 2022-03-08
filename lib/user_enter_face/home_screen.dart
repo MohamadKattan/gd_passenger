@@ -4,16 +4,17 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/google_map_methods.dart';
 import 'package:gd_passenger/model/directions_details.dart';
+import 'package:gd_passenger/model/user.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
 import 'package:gd_passenger/my_provider/double_value.dart';
 import 'package:gd_passenger/my_provider/dropBottom_value.dart';
+import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
 import 'package:gd_passenger/my_provider/lineTaxiProvider.dart';
 import 'package:gd_passenger/my_provider/opictyProvider.dart';
 import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:gd_passenger/my_provider/position_v_chnge.dart';
 import 'package:gd_passenger/my_provider/posotoion_cancel_request.dart';
-import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/repo/api_srv_dir.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
@@ -28,26 +29,31 @@ import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../my_provider/buttom_color_pro.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-  static CustomWidget _customWidget = CustomWidget();
-  static CustomBottomSheet customBottomSheet = CustomBottomSheet();
-  static LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
+  const HomeScreen( {Key? key}) : super(key: key);
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-Set<Polyline> polylineSet = {};
-List<LatLng> polylineCoordinates = [];
-Set<Marker> markersSet = {};
-Set<Circle> circlesSet = {};
-DirectionDetails? tripDirectionDetails;
-
 class _HomeScreenState extends State<HomeScreen> {
+  CustomWidget _customWidget = CustomWidget();
+  CustomBottomSheet customBottomSheet = CustomBottomSheet();
+  LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
+  Set<Polyline> polylineSet = {};
+  List<LatLng> polylineCoordinates = [];
+  Set<Marker> markersSet = {};
+  Set<Circle> circlesSet = {};
+  DirectionDetails? tripDirectionDetails;
+   @override
+  void initState() {
+     DataBaseSrv().currentOnlineUserInfo(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final value = Provider.of<DoubleValue>(context).value;
-    final isTrue = Provider.of<TrueFalse>(context).isTrue;
     final taxiLine = Provider.of<LineTaxi>(context).islineTaxi;
     final vanLine = Provider.of<LineTaxi>(context).islineVan;
     final vetoLine = Provider.of<LineTaxi>(context).islineVeto;
@@ -57,25 +63,29 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     final postionCancel = Provider.of<PosotionCancelReq>(context).value;
-    final dropBottomProvider =
-        Provider.of<DropBottomValue>(context).valueDropBottom;
+    final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
+    final infoUserDataReal= Provider.of<UserAllInfoDatabase>(context).users;
+    final changeColor= Provider.of<ChangeColor>(context).isTrue;
+
     return Scaffold(
         body: Builder(
-      builder: (context) => SafeArea(
+      builder: (context) =>
+          SafeArea(
         child: Stack(
           children: [
             customDrawer(context),
             GestureDetector(
               onTap: () {
+              //  infoUserDataReal == null? DataBaseSrv.currentOnlineUserInfo(context) :Text("");
                 Provider.of<DoubleValue>(context, listen: false).value0Or1(0);
-                Provider.of<TrueFalse>(context, listen: false)
-                    .changeStateBooling(false);
+                Provider.of<ChangeColor>(context, listen: false)
+                    .updateState(false);
               },
               child: TweenAnimationBuilder(
                   tween: Tween<double>(begin: 0.0, end: value),
-                  duration: Duration(milliseconds: 400),
+                  duration: Duration(milliseconds: 500),
                   builder: (_, double val, __) {
                     return Transform(
                       transform: Matrix4.identity()
@@ -90,8 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             GoogleMap(
                               mapType: MapType.normal,
-                              initialCameraPosition:
-                                  HomeScreen._logicGoogleMap.kGooglePlex,
+                              initialCameraPosition: _logicGoogleMap.kGooglePlex,
                               myLocationButtonEnabled: true,
                               myLocationEnabled: true,
                               zoomGesturesEnabled: true,
@@ -104,10 +113,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               markers: markersSet,
                               circles: circlesSet,
                               onMapCreated: (GoogleMapController controller) {
-                                HomeScreen._logicGoogleMap.controllerGoogleMap
+                                _logicGoogleMap.controllerGoogleMap
                                     .complete(controller);
                                 newGoogleMapController = controller;
-                                HomeScreen._logicGoogleMap
+                                _logicGoogleMap
                                     .locationPosition(context);
                               },
                             ),
@@ -169,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         SearchScreen()));
                                             if (res == "dataDir") {
                                               await getPlaceDerction(context);
+                                              checkAllUserInfoReal(infoUserDataReal,context);
                                             }
                                           },
                                           child: Container(
@@ -235,13 +245,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     MainAxisAlignment
                                                         .spaceEvenly,
                                                 children: [
-                                                  HomeScreen._customWidget
+                                                  _customWidget
                                                       .containerBox(
                                                           Icon(Icons
                                                               .home_outlined),
                                                           "Home",
                                                           context),
-                                                  HomeScreen._customWidget
+                                                  _customWidget
                                                       .containerBox(
                                                           Icon(Icons
                                                               .work_outline),
@@ -249,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           context),
                                                 ],
                                               ),
-                                        HomeScreen._customWidget
+                                        _customWidget
                                             .customDivider(),
                                         Padding(
                                           padding:
@@ -267,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 true
                                                             ? 1
                                                             : 0.3,
-                                                        child: HomeScreen._customWidget.carTypeBox(
+                                                        child: _customWidget.carTypeBox(
                                                             Image(
                                                                 image: AssetImage(
                                                                     "assets/smallTexi.png"),
@@ -286,8 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         right: -10.0,
                                                         top: -10.0,
                                                         child: IconButton(
-                                                            onPressed: () => HomeScreen
-                                                                .customBottomSheet
+                                                            onPressed: () =>customBottomSheet
                                                                 .showSheetCarInfo(
                                                                     context:
                                                                         context,
@@ -357,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             opacityVan == true
                                                                 ? 1
                                                                 : 0.3,
-                                                        child: HomeScreen._customWidget.carTypeBox(
+                                                        child: _customWidget.carTypeBox(
                                                             Image(
                                                                 image: AssetImage(
                                                                     "assets/van.png"),
@@ -376,8 +385,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         right: -10.0,
                                                         top: -10.0,
                                                         child: IconButton(
-                                                            onPressed: () => HomeScreen
-                                                                .customBottomSheet
+                                                            onPressed: () =>
+                                                                customBottomSheet
                                                                 .showSheetCarInfo(
                                                                     context:
                                                                         context,
@@ -444,7 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 true
                                                             ? 1.0
                                                             : 0.3,
-                                                        child: HomeScreen._customWidget.carTypeBox(
+                                                        child: _customWidget.carTypeBox(
                                                             Image(
                                                                 image: AssetImage(
                                                                     "assets/veto.png"),
@@ -463,8 +472,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         right: -10.0,
                                                         top: -10.0,
                                                         child: IconButton(
-                                                            onPressed: () => HomeScreen
-                                                                .customBottomSheet
+                                                            onPressed: () => customBottomSheet
                                                                 .showSheetCarInfo(
                                                                     context:
                                                                         context,
@@ -532,13 +540,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: GestureDetector(
-                                              onTap: () {
+                                              onTap: () async{
                                                 if(tripDirectionDetails==null){
                                                   Tools().toastMsg("Choose to where before your request");
                                                 }else{
-                                                  DataBaseSrv()
-                                                      .currentOnlineUserInfo(
-                                                      context);
+                                             //   await DataBaseSrv().currentOnlineUserInfo(context).whenComplete(() =>
+                                             // infoUserDataReal!= null?
+                                             //       DataBaseSrv().saveRiderRequest(context):
+                                             //     Text(""),
+                                             //   );
+                                                  DataBaseSrv().saveRiderRequest(context);
                                                   Provider.of<PosotionCancelReq>(
                                                       context,
                                                       listen: false)
@@ -593,19 +604,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }),
             ),
-            isTrue == false
+            changeColor == false
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: CircleAvatar(
-                      radius: 25,
+                      radius: 30,
                       backgroundColor: Color(0xFFFFD54F),
                       child: IconButton(
-                          onPressed: () {
-                            Provider.of<DoubleValue>(context, listen: false)
-                                .value0Or1(1);
-                            Provider.of<TrueFalse>(context, listen: false)
-                                .changeStateBooling(true);
-                          },
+                          onPressed: (){
+                            checkAllUserInfoReal(infoUserDataReal, context);
+                          Provider.of<DoubleValue>(context, listen: false)
+                              .value0Or1(1);
+                          Provider.of<ChangeColor>(context, listen: false)
+                              .updateState(true);},
                           icon: Icon(
                             Icons.format_list_numbered_rtl_rounded,
                             color: Colors.black54,
@@ -622,8 +633,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             Provider.of<DoubleValue>(context, listen: false)
                                 .value0Or1(0);
-                            Provider.of<TrueFalse>(context, listen: false)
-                                .changeStateBooling(false);
+                            Provider.of<ChangeColor>(context, listen: false)
+                                .updateState(false);
                           },
                           icon: Icon(
                             Icons.format_list_numbered_rtl_rounded,
@@ -768,7 +779,8 @@ class _HomeScreenState extends State<HomeScreen> {
       polylineCoordinates.clear();
       tripDirectionDetails = null;
     });
-    HomeScreen._logicGoogleMap.locationPosition(context);
+    _logicGoogleMap.locationPosition(context);
+
   }
 
   // this method for switch text where to OR toll passes
@@ -843,5 +855,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Big Commercial");
+  }
+  void checkAllUserInfoReal(Users? infoUserDataReal, BuildContext context){
+   if(infoUserDataReal==null){
+     DataBaseSrv().currentOnlineUserInfo(context);
+   }else{
+     return;
+   }
   }
 }

@@ -39,7 +39,6 @@ dependencies:
   firebase_database: ^9.0.6
   http: ^0.13.4
   lottie: ^1.2.2
-  flutter_native_splash: ^2.0.4
   country_list_pick: ^1.0.1+5
   provider: ^6.0.2
   fluttertoast: ^8.0.8
@@ -50,16 +49,13 @@ dependencies:
   sliding_sheet: ^0.5.2
   geolocator: ^8.2.0
   uuid: ^3.0.6
-  font_awesome_flutter: ^9.2.0
   flutter_polyline_points: ^1.0.0
+  cached_network_image: ^3.2.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-flutter_native_splash:
-  color: "#F7EB57"
-  image: assets/splash.png
 
 
 

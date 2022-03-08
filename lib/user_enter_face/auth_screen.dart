@@ -189,7 +189,7 @@ class AuthScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              myTimerProvider
+              myTimerProvider==true
                   ? Opacity(
                       opacity: 0.9,
                       child: Container(

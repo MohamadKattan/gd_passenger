@@ -164,7 +164,7 @@ class UserInfoScreen extends StatelessWidget {
   Future<void> getImage(BuildContext context, ImageSource source) async {
     try {
       final XFile? _file = await _picker.pickImage(
-          source: source, maxWidth: 40.0, maxHeight: 40.0, imageQuality: 50);
+          source: source, maxWidth: 40.0, maxHeight: 40.0, imageQuality: 30);
       imageFile = _file!;
       Provider.of<PickImageProvide>(context, listen: false)
           .listingToPickImage(imageFile!);

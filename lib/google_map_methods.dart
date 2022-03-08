@@ -2,16 +2,12 @@
 import 'dart:async';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gd_passenger/config.dart';
-import 'package:gd_passenger/model/address.dart';
-import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/repo/api_srv_geo.dart';
-import 'package:gd_passenger/tools/tools.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 class LogicGoogleMap {
-  Tools _tools = Tools();
+
   ApiSrvGeo _apiMethods =ApiSrvGeo();
   late Position currentPosition;
   var geolocator = Geolocator();
