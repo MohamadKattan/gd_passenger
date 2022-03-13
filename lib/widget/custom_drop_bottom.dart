@@ -11,7 +11,7 @@ class CustomDropBottom {
     return Padding(
       padding: const EdgeInsets.only(right: 4.0, left: 4.0),
       child: Container(
-        padding: EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(4.0),
         height: MediaQuery.of(context).size.height * 6 / 100,
         width: MediaQuery.of(context).size.width * 100,
         decoration: BoxDecoration(
@@ -31,8 +31,8 @@ class CustomDropBottom {
                   value: value,
                   child: Row(
                     children: [
-                     value=="Cash"? Icon(Icons.money,color: Colors.green,):Icon(Icons.credit_card,color: Colors.black38,),
-                      SizedBox(width: 10.0),
+                     value=="Cash"? const Icon(Icons.money,color: Colors.green,):const Icon(Icons.credit_card,color: Colors.black38,),
+                      const SizedBox(width: 10.0),
                       Text(value),
                     ],
                   ),
@@ -44,7 +44,7 @@ class CustomDropBottom {
                   Provider.of<DropBottomValue>(context, listen: false)
                       .updateValue(value!);
                 } else {
-                  return null;
+                  return;
                 }
               }),
         ),

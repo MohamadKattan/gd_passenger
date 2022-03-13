@@ -1,4 +1,4 @@
-// this class for change color buttom in main screen
+// this class for change color bottom in main screen
 
 import 'package:flutter/cupertino.dart';
 

@@ -15,7 +15,7 @@ class AuthScreen extends StatelessWidget {
   static String? resultCodeCon = "+90";
   static final TextEditingController phoneNumber = TextEditingController();
   static AuthSev authSev = AuthSev();
-  static CircularInductorCostem _inductorCostem = CircularInductorCostem();
+  static final CircularInductorCostem _inductorCostem = CircularInductorCostem();
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,10 @@ class AuthScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Text(
+                    const Text(
                       "Log in to Garanti driver taxi",
                       style: TextStyle(
                           fontSize: 18,
@@ -44,10 +44,10 @@ class AuthScreen extends StatelessWidget {
                           color: Colors.black,
                           overflow: TextOverflow.fade),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "Enter your number to be able to log in or create a new account",
                       style: TextStyle(
                           fontSize: 14,
@@ -55,10 +55,10 @@ class AuthScreen extends StatelessWidget {
                           color: Colors.black26,
                           overflow: TextOverflow.fade),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
-                    Text(
+                    const Text(
                       "Enter your phone number",
                       style: TextStyle(
                           fontSize: 20,
@@ -66,7 +66,7 @@ class AuthScreen extends StatelessWidget {
                           color: Colors.black,
                           overflow: TextOverflow.fade),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     Padding(
@@ -80,7 +80,7 @@ class AuthScreen extends StatelessWidget {
                             child: CountryListPick(
                                 appBar: AppBar(
                                   backgroundColor: Colors.amber[200],
-                                  title: Text('Pick your country'),
+                                  title: const Text('Pick your country'),
                                 ),
                                 theme: CountryTheme(
                                   isShowFlag: true,
@@ -90,7 +90,7 @@ class AuthScreen extends StatelessWidget {
                                   showEnglishName: false,
                                   labelColor: Colors.black54,
                                   alphabetSelectedBackgroundColor:
-                                      Color(0xFFFFD54F),
+                                      const Color(0xFFFFD54F),
                                   alphabetTextColor: Colors.deepOrange,
                                   alphabetSelectedTextColor: Colors.deepPurple,
                                 ),
@@ -101,7 +101,7 @@ class AuthScreen extends StatelessWidget {
                                 useUiOverlay: true,
                                 useSafeArea: false),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Expanded(
@@ -110,12 +110,12 @@ class AuthScreen extends StatelessWidget {
                               controller: phoneNumber,
                               maxLength: 15,
                               showCursor: true,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600),
-                              cursorColor: Color(0xFFFFD54F),
-                              decoration: InputDecoration(
+                              cursorColor: const Color(0xFFFFD54F),
+                              decoration: const InputDecoration(
                                 icon: Padding(
-                                  padding: const EdgeInsets.only(top: 15.0),
+                                  padding: EdgeInsets.only(top: 15.0),
                                   child: Icon(
                                     Icons.phone,
                                     color: Color(0xFFFFD54F),
@@ -130,7 +130,7 @@ class AuthScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                       child: Text("Verification code will send by a massage"),
                     ),
@@ -156,7 +156,7 @@ class AuthScreen extends StatelessWidget {
                           }
                         },
                         child: Container(
-                          child: Center(
+                          child: const Center(
                               child: Text(
                             "SignUp",
                             style: TextStyle(
@@ -167,9 +167,9 @@ class AuthScreen extends StatelessWidget {
                           width: 180,
                           height: 60,
                           decoration: BoxDecoration(
-                              color: Color(0xFFFFD54F),
+                              color: const Color(0xFFFFD54F),
                               borderRadius: BorderRadius.circular(4.0),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                     color: Colors.black45,
                                     offset: Offset(0.10, 0.7),
@@ -194,13 +194,13 @@ class AuthScreen extends StatelessWidget {
                       opacity: 0.9,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        decoration: (BoxDecoration(
+                        decoration: (const BoxDecoration(
                           color: Colors.black,
                         )),
                         child: _inductorCostem.circularInductorCostem(context),
                       ),
                     )
-                  : Text("")
+                  : const Text("")
             ],
           ),
         ),

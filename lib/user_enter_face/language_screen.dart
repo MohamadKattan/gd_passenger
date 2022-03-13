@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gd_passenger/my_provider/app_data.dart';
-import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
 import 'package:gd_passenger/my_provider/dropBottom_value.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
-import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:provider/provider.dart';
 
 class LanguageScreen extends StatelessWidget {
@@ -18,7 +15,7 @@ class LanguageScreen extends StatelessWidget {
         child: Column(
           children: [
             Text("${info?.email}"),
-            Text("$dropBottomProvider"),
+            Text(dropBottomProvider),
           ],
         ),
       ),

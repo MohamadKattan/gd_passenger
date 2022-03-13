@@ -22,16 +22,16 @@ class _SplashScreenState extends State<SplashScreen>
         lowerBound: 0.8,
         upperBound: 0.9);
     _animationController.forward();
-    _animationController.addStatusListener((status) async{
+    _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Navigator.push(
           context,
-       await   MaterialPageRoute(builder: (context) {
+       MaterialPageRoute(builder: (context) {
             if (AuthSev().auth.currentUser?.uid != null) {
               DataBaseSrv().currentOnlineUserInfo(context);
-              return HomeScreen();
+              return const HomeScreen();
             } else {
-              return AuthScreen();
+              return const AuthScreen();
             }
           }),
         );
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color(0xFFFFD54F),
+      backgroundColor: const Color(0xFFFFD54F),
       body: SafeArea(
         child: ScaleTransition(
           scale: _animationController,
@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
             height: _height,
             width: _width,
             child: Container(
-                color: Color(0xFFFFD54F),
+                color: const Color(0xFFFFD54F),
                 child: Image.asset("assets/splash.png")),
           ),
         ),

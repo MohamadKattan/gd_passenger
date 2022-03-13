@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 
 
 class PickImageProvide extends ChangeNotifier{
-  late XFile?ImageProvider=null  ;
+  late XFile?ImageProvider=null ;
 
   listingToPickImage(XFile picked){
     ImageProvider = picked;

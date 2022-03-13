@@ -31,7 +31,7 @@ Widget customDrawer(BuildContext context) {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 20 / 100,
             child: DrawerHeader(
               child: Padding(
@@ -41,7 +41,7 @@ Widget customDrawer(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     showImage(context),
-                    SizedBox(
+                    const SizedBox(
                       height: 8.0,
                     ),
                     showUserName(context),
@@ -58,52 +58,22 @@ Widget customDrawer(BuildContext context) {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    child:
-                    GestureDetector(
+                child: GestureDetector(
                   onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfileScreen())),
-                  child: Row(children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Icon(Icons.car_rental_sharp, color: Colors.black45,size: 30,),
-                    ),
-                    SizedBox(width: 8.0),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                        child: const Text(
-                          "My Bookings",
-                          style: TextStyle(color: Colors.black45,fontSize: 16.0),
-                        ))
+                  MaterialPageRoute(builder: (context) => const ProfileScreen())),
+                  child: Row(children: const [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.car_rental_sharp, color: Colors.black45,size: 30,),
+                ),
+                SizedBox(width: 8.0),
+                Padding(
+                    padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                    child: Text(
+                      "My Bookings",
+                      style: TextStyle(color: Colors.black45,fontSize: 16.0),
+                    ))
                   ]),
-                )),
-              ),
-              const SizedBox(
-                height: 8.0,
-              ),
-              CustomWidget().customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: GestureDetector(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProfileScreen())),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: const Icon(Icons.person, color: Colors.black45,size: 30),
-                        ),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        const Text(
-                          "My profile",
-                          style: TextStyle(color: Colors.black45,fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(
@@ -112,51 +82,50 @@ Widget customDrawer(BuildContext context) {
               CustomWidget().customDivider(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: GestureDetector(
-                    onTap: () => null,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: const Icon(Icons.mail, color: Colors.black45,size: 30,),
-                        ),
-                        SizedBox(
-                          width: 8.0,
-                        ),
-                        const Text(
-                          "Call us",
-                          style: TextStyle(color: Colors.black45,fontSize: 16.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 8.0,
-              ),
-              CustomWidget().customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    child: GestureDetector(
+                child: GestureDetector(
                   onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LanguageScreen())),
+                      MaterialPageRoute(builder: (context) => const ProfileScreen())),
                   child: Row(
-                    children: [
+                    children: const [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: const Icon(Icons.language, color: Colors.black45,size: 30,),
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.person, color: Colors.black45,size: 30),
                       ),
-                      SizedBox(width: 8.0),
-                      const Text(
-                        "Language",
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Text(
+                        "My profile",
+                        style: TextStyle(color: Colors.black45,fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              CustomWidget().customDivider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () => null,
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.mail, color: Colors.black45,size: 30,),
+                      ),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Text(
+                        "Call us",
                         style: TextStyle(color: Colors.black45,fontSize: 16.0),
                       ),
                     ],
                   ),
-                )),
+                ),
               ),
               const SizedBox(
                 height: 8.0,
@@ -164,21 +133,43 @@ Widget customDrawer(BuildContext context) {
               CustomWidget().customDivider(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: GestureDetector(
-                    onTap: () => SystemNavigator.pop(),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: const Icon(Icons.exit_to_app, color: Colors.black45,size: 30.0,),
-                        ),
-                        SizedBox(
-                          width: 8.0,
-                        ),
-                        Text("Exit",style: TextStyle(color: Colors.black45,fontSize: 16.0),),
-                      ],
-                    ),
+                child: GestureDetector(
+                  onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LanguageScreen())),
+                  child: Row(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.language, color: Colors.black45,size: 30,),
+                  ),
+                  SizedBox(width: 8.0),
+                  Text(
+                    "Language",
+                    style: TextStyle(color: Colors.black45,fontSize: 16.0),
+                  ),
+                ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              CustomWidget().customDivider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () => SystemNavigator.pop(),
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.exit_to_app, color: Colors.black45,size: 30.0,),
+                      ),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Text("Exit",style: TextStyle(color: Colors.black45,fontSize: 16.0),),
+                    ],
                   ),
                 ),
               ),
@@ -194,7 +185,7 @@ Widget customDrawer(BuildContext context) {
 Widget showImage(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime?.image_profile != null
+  return userInfoRealTime?.imageProfile != null
       ? Expanded(
           child: CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Container(
@@ -205,12 +196,12 @@ Widget showImage(BuildContext context) {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
-            imageUrl: "${userInfoRealTime?.image_profile}",
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.person),
+            imageUrl: "${userInfoRealTime?.imageProfile}",
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.person),
           ),
         )
-      : Expanded(
+      : const Expanded(
           flex: 0,
           child: CircleAvatar(
             radius: 30,
@@ -227,15 +218,15 @@ Widget showImage(BuildContext context) {
 Widget showUserName(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime?.first_name != null
-      ? Text("Hi ${userInfoRealTime?.first_name}")
-      : Expanded(child: Text("Welcome back"));
+  return userInfoRealTime?.firstName != null
+      ? Text("Hi ${userInfoRealTime?.firstName}")
+      : const Expanded(child: Text("Welcome back"));
 }
 
 Widget showUserPhone(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime?.phone_number != null
-      ? Text("${userInfoRealTime?.phone_number}")
-      : Text("");
+  return userInfoRealTime?.phoneNumber != null
+      ? Text("${userInfoRealTime?.phoneNumber}")
+      : const Text("");
 }

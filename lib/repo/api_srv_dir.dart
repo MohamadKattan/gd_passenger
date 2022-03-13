@@ -27,7 +27,6 @@ class ApiSrvDir {
           distanceVale: 0,
           durationVale: 0,
           enCodingPoints: "");
-
       directionDetails.enCodingPoints =
           res["routes"][0]["overview_polyline"]["points"];
       directionDetails.durationText =
@@ -38,11 +37,13 @@ class ApiSrvDir {
           res["routes"][0]["legs"][0]["distance"]["text"];
       directionDetails.distanceVale =
           res["routes"][0]["legs"][0]["distance"]["value"];
-      Provider.of<DerictionDetails>(context, listen: false)
-          .updateDerictionDetails(directionDetails);
+      Provider.of<DirectionDetailsPro>(context, listen: false)
+          .updateDirectionDetails(directionDetails);
 
       return directionDetails;
     }
+    /// new add
+    return null;
   }
   //this method for caulc total price
 

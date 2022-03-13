@@ -1,4 +1,4 @@
-// this class for listing to booling
+// this class for listing to bowling
 
 import 'package:flutter/material.dart';
 

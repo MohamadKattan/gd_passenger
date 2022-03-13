@@ -14,14 +14,16 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 class UserInfoScreen extends StatelessWidget {
   static late XFile? imageFile;
   static final ImagePicker _picker = ImagePicker();
-  static CircularInductorCostem _inductorCostem = CircularInductorCostem();
+  static final CircularInductorCostem _inductorCostem = CircularInductorCostem();
+
+  const UserInfoScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
     final picked = Provider.of<PickImageProvide>(context).ImageProvider;
-    bool ProviderTrue = Provider.of<TrueFalse>(context).isTrue;
+    bool providerTrue = Provider.of<TrueFalse>(context).isTrue;
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -33,8 +35,8 @@ class UserInfoScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 60),
-                    Text("Profile",
+                    const SizedBox(height: 60),
+                    const Text("Profile",
                         style: TextStyle(fontSize: 30, color: Colors.black54)),
                     SizedBox(height: 40),
                     GestureDetector(
@@ -44,16 +46,16 @@ class UserInfoScreen extends StatelessWidget {
                         width: 60,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color: Color(0xFFFFD54F)),
+                            color: const Color(0xFFFFD54F)),
                         child:
-                          picked==null?Icon(
+                          picked==null?const Icon(
                             Icons.add_a_photo_outlined,
                             size: 25,
                             color: Colors.white,
                           ):Image(image: FileImage(File(picked.path)),fit: BoxFit.fill,)
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -62,10 +64,10 @@ class UserInfoScreen extends StatelessWidget {
                         controller: firstname,
                         maxLength: 20,
                         showCursor: true,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
-                        cursorColor: Color(0xFFFFD54F),
-                        decoration: InputDecoration(
+                        cursorColor: const Color(0xFFFFD54F),
+                        decoration: const InputDecoration(
                           fillColor: Color(0xFFFFD54F),
                           label: Text("First name"),
                         ),
@@ -78,10 +80,10 @@ class UserInfoScreen extends StatelessWidget {
                         controller: lastname,
                         maxLength: 20,
                         showCursor: true,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
-                        cursorColor: Color(0xFFFFD54F),
-                        decoration: InputDecoration(
+                        cursorColor: const Color(0xFFFFD54F),
+                        decoration: const InputDecoration(
                           fillColor: Color(0xFFFFD54F),
                           label: Text("Last name"),
                         ),
@@ -94,17 +96,17 @@ class UserInfoScreen extends StatelessWidget {
                         controller: email,
                         maxLength: 40,
                         showCursor: true,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
-                        cursorColor: Color(0xFFFFD54F),
-                        decoration: InputDecoration(
+                        cursorColor: const Color(0xFFFFD54F),
+                        decoration: const InputDecoration(
                           fillColor: Color(0xFFFFD54F),
                           label: Text("Email"),
                         ),
                         keyboardType: TextInputType.emailAddress,
                       ),
                     ),
-                    SizedBox(height: 60),
+                    const SizedBox(height: 60),
                     GestureDetector(
                       onTap: () {
                         if (picked == null) {
@@ -118,7 +120,7 @@ class UserInfoScreen extends StatelessWidget {
                         }
                       },
                       child: Container(
-                        child: Center(
+                        child: const Center(
                             child: Text(
                           "Save",
                           style: TextStyle(
@@ -129,9 +131,9 @@ class UserInfoScreen extends StatelessWidget {
                         width: 180,
                         height: 60,
                         decoration: BoxDecoration(
-                            color: Color(0xFFFFD54F),
+                            color: const Color(0xFFFFD54F),
                             borderRadius: BorderRadius.circular(4.0),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                   color: Colors.black45,
                                   offset: Offset(0.10, 0.7),
@@ -142,18 +144,18 @@ class UserInfoScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              ProviderTrue
+              providerTrue
                   ? Opacity(
                       opacity: 0.9,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        decoration: (BoxDecoration(
+                        decoration: (const BoxDecoration(
                           color: Colors.black,
                         )),
                         child: _inductorCostem.circularInductorCostem(context),
                       ),
                     )
-                  : Text("")
+                  : const Text("")
             ],
           ),
         ),
@@ -214,8 +216,8 @@ class UserInfoScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
                         "Pick a photo",
@@ -226,7 +228,7 @@ class UserInfoScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
@@ -239,7 +241,7 @@ class UserInfoScreen extends StatelessWidget {
                         height: 60,
                         width: MediaQuery.of(context).size.width * 0.60,
                         decoration:
-                            BoxDecoration(color: Colors.white, boxShadow: [
+                            const BoxDecoration(color: Colors.white, boxShadow: [
                           BoxShadow(
                               blurRadius: 6.0,
                               spreadRadius: 0.5,
@@ -249,7 +251,7 @@ class UserInfoScreen extends StatelessWidget {
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(Icons.camera, color: Color(0xFFFFD54F)),
                             SizedBox(
                               width: 5.0,
@@ -271,7 +273,7 @@ class UserInfoScreen extends StatelessWidget {
                         height: 60,
                         width: MediaQuery.of(context).size.width * 0.60,
                         decoration:
-                            BoxDecoration(color: Colors.white, boxShadow: [
+                            const BoxDecoration(color: Colors.white, boxShadow: [
                           BoxShadow(
                               blurRadius: 6.0,
                               spreadRadius: 0.5,
@@ -281,7 +283,7 @@ class UserInfoScreen extends StatelessWidget {
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(Icons.image, color: Color(0xFFFFD54F)),
                             SizedBox(
                               width: 5.0,

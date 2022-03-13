@@ -23,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserAllInfoDatabase>(context).users;
-    bool isTrue =  Provider.of<IndectorProfileScreen>(context).isTrue;
+    bool isTrue =  Provider.of<InductorProfileScreen>(context).isTrue;
    final imageProvider= Provider.of<PickImageProvide>(context).ImageProvider;
     return SafeArea(
       child: Scaffold(
@@ -31,102 +31,100 @@ class ProfileScreen extends StatelessWidget {
         Stack(
           children: [
             SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 40.0),
-                    GestureDetector(
-                        onTap: () => showSheetCamerOrGallary(context: context),
-                        child: showImage(context)),
-                    SizedBox(height: MediaQuery.of(context).size.height * 15 / 100),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        style: TextStyle(color: Colors.black, fontSize: 16.0),
-                        controller: name,
-                        maxLength: 40,
-                        maxLines: 1,
-                        keyboardType: TextInputType.name,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.edit, size: 30.0),
-                          hintText: "${userInfo?.first_name}",
-                          hintStyle: TextStyle(color: Colors.black54, fontSize: 16),
-                        ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40.0),
+                  GestureDetector(
+                      onTap: () => showSheetCamerOrGallary(context: context),
+                      child: showImage(context)),
+                  SizedBox(height: MediaQuery.of(context).size.height * 15 / 100),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
+                      controller: name,
+                      maxLength: 40,
+                      maxLines: 1,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.edit, size: 30.0),
+                        hintText: "${userInfo?.firstName}",
+                        hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
                       ),
                     ),
-                    SizedBox(height: 10.0),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        style: TextStyle(color: Colors.black, fontSize: 16.0),
-                        controller: lastName,
-                        maxLength: 40,
-                        maxLines: 1,
-                        keyboardType: TextInputType.name,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.edit, size: 30.0),
-                          hintText: "${userInfo?.last_name}",
-                          hintStyle: TextStyle(color: Colors.black54, fontSize: 16),
-                        ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
+                      controller: lastName,
+                      maxLength: 40,
+                      maxLines: 1,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.edit, size: 30.0),
+                        hintText: "${userInfo?.lastName}",
+                        hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
                       ),
                     ),
-                    SizedBox(height: 10.0),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        style: TextStyle(color: Colors.black, fontSize: 16.0),
-                        controller: email,
-                        maxLength: 40,
-                        maxLines: 1,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.edit, size: 30.0),
-                          hintText: "${userInfo?.email}",
-                          hintStyle: TextStyle(color: Colors.black54, fontSize: 16),
-                        ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
+                      controller: email,
+                      maxLength: 40,
+                      maxLines: 1,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.edit, size: 30.0),
+                        hintText: "${userInfo?.email}",
+                        hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
                       ),
                     ),
-                    SizedBox(height: 10.0),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: GestureDetector(
-                        onTap: (){
-                          if(imageProvider==null){
-                            Tools().toastMsg("Up date your image first");
-                          }else{
-                            Provider.of<IndectorProfileScreen>(context,listen: false).updateState(true);
-                            startUpdateInfoUser(
-                                userInfo!, name, lastName, email, imageFile,context);
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xFFFFD54F),
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          height: MediaQuery.of(context).size.height * 10 / 100,
-                          width: MediaQuery.of(context).size.width * 80 / 100,
-                          child: Center(
-                            child: Text(
-                              "Update",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
-                              ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: GestureDetector(
+                      onTap: (){
+                        if(imageProvider==null){
+                          Tools().toastMsg("Up date your image first");
+                        }else{
+                          Provider.of<InductorProfileScreen>(context,listen: false).updateState(true);
+                          startUpdateInfoUser(
+                              userInfo!, name, lastName, email, imageFile,context);
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFD54F),
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        height: MediaQuery.of(context).size.height * 10 / 100,
+                        width: MediaQuery.of(context).size.width * 80 / 100,
+                        child: const Center(
+                          child: Text(
+                            "Update",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-           isTrue==true?CircularInductorCostem().circularInductorCostem(context):Text(""),
+           isTrue==true?CircularInductorCostem().circularInductorCostem(context):const Text(""),
           ],
         ),
       ),
@@ -163,8 +161,8 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
                         "Pick a photo",
@@ -175,7 +173,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
@@ -188,7 +186,7 @@ class ProfileScreen extends StatelessWidget {
                         height: 60,
                         width: MediaQuery.of(context).size.width * 0.60,
                         decoration:
-                            BoxDecoration(color: Colors.white, boxShadow: [
+                            const BoxDecoration(color: Colors.white, boxShadow: [
                           BoxShadow(
                               blurRadius: 6.0,
                               spreadRadius: 0.5,
@@ -198,7 +196,7 @@ class ProfileScreen extends StatelessWidget {
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(Icons.camera, color: Color(0xFFFFD54F)),
                             SizedBox(
                               width: 5.0,
@@ -220,7 +218,7 @@ class ProfileScreen extends StatelessWidget {
                         height: 60,
                         width: MediaQuery.of(context).size.width * 0.60,
                         decoration:
-                            BoxDecoration(color: Colors.white, boxShadow: [
+                            const BoxDecoration(color: Colors.white, boxShadow: [
                           BoxShadow(
                               blurRadius: 6.0,
                               spreadRadius: 0.5,
@@ -230,7 +228,7 @@ class ProfileScreen extends StatelessWidget {
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(Icons.image, color: Color(0xFFFFD54F)),
                             SizedBox(
                               width: 5.0,
@@ -253,7 +251,7 @@ class ProfileScreen extends StatelessWidget {
   Widget showImage(BuildContext context) {
     final userInfoRealTime =
         Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-    return userInfoRealTime?.image_profile != null
+    return userInfoRealTime?.imageProfile != null
         ? Stack(
             children: [
               CachedNetworkImage(
@@ -266,11 +264,11 @@ class ProfileScreen extends StatelessWidget {
                         image: imageProvider, fit: BoxFit.cover),
                   ),
                 ),
-                imageUrl: "${userInfoRealTime?.image_profile}",
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.person),
+                imageUrl: "${userInfoRealTime?.imageProfile}",
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.person),
               ),
-              Positioned(
+              const Positioned(
                   left: 60.0,
                   right: 0.0,
                   bottom: 85.0,
@@ -279,7 +277,7 @@ class ProfileScreen extends StatelessWidget {
                       size: 35, color: Colors.redAccent)),
             ],
           )
-        : CircleAvatar(
+        : const CircleAvatar(
             radius: 30,
             backgroundColor: Colors.white,
             child: Icon(
@@ -303,21 +301,21 @@ class ProfileScreen extends StatelessWidget {
     firebase_storage.Reference refStorage = firebase_storage.FirebaseStorage.instance.ref();
     await refStorage
         .child("users")
-        .child(userInfo.user_id)
+        .child(userInfo.userId)
         .putFile(File(imageFile.path));
 
-       String url = await refStorage.child("users").child(userInfo.user_id).getDownloadURL();
+       String url = await refStorage.child("users").child(userInfo.userId).getDownloadURL();
 
 
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref().child("users").child(userInfo.user_id);
+        FirebaseDatabase.instance.ref().child("users").child(userInfo.userId);
     await ref.update({
-      "image_profile": url.isEmpty?userInfo.image_profile:url.toString(),
-      "first_name": name.text.isEmpty?userInfo.first_name:name.text,
-      "last_name": lastName.text.isEmpty?userInfo.last_name:lastName.text,
+      "imageProfile": url.isEmpty?userInfo.imageProfile:url.toString(),
+      "firstName": name.text.isEmpty?userInfo.firstName:name.text,
+      "lastName": lastName.text.isEmpty?userInfo.lastName:lastName.text,
       "email": email.text.isEmpty?userInfo.email:email.text.trim(),
     }).whenComplete((){
-      Provider.of<IndectorProfileScreen>(context,listen: false).updateState(false);
+      Provider.of<InductorProfileScreen>(context,listen: false).updateState(false);
     });
   }
 }

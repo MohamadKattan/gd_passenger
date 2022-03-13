@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gd_passenger/model/address.dart';
 
 class PlaceDetailsDropProvider extends ChangeNotifier {
-  Address dropOfLocation = new Address(
+  Address dropOfLocation = Address(
       placeFormattedAddress: "",
       placeName: "",
       placeId: "",

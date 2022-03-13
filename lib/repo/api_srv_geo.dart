@@ -1,6 +1,7 @@
 // this class api GeoCoding  for make address  read able
 
-import 'package:flutter/src/widgets/framework.dart';
+
+import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/model/address.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
@@ -9,14 +10,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class ApiSrvGeo {
-  GetUrl _getUrl = GetUrl();
+  final GetUrl _getUrl = GetUrl();
 
   // this method for got geocoding api for current position address readable
   Future<dynamic> searchCoordinatesAddress(
       Position position, BuildContext context) async {
     String placeAddress = "";
     String st1, st2, st3, st4;
-    var url = Uri.parse("https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=${mapKey}");
+    var url = Uri.parse("https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey");
     final response = await _getUrl.getUrlMethod(url);
     if (response != "failed") {
       st1 = response["results"][0]["address_components"][3]["long_name"];
@@ -26,7 +27,7 @@ class ApiSrvGeo {
 
       placeAddress = st1 + "" + st2 + "" + st3 + "" + st4 ;
       //from module
-      Address userPickUpAddrees = new Address(
+      Address userPickUpAddress =  Address(
           placeFormattedAddress: "",
           placeName: placeAddress,
           placeId: "",
@@ -34,7 +35,7 @@ class ApiSrvGeo {
           longitude: position.longitude);
       //for update
       Provider.of<AppData>(context, listen: false)
-          .updatePickUpLocationAddress(userPickUpAddrees);
+          .updatePickUpLocationAddress(userPickUpAddress);
       print(":::::::"+placeAddress.toString());
     }
     return placeAddress;

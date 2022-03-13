@@ -38,9 +38,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  CustomWidget _customWidget = CustomWidget();
+  final CustomWidget _customWidget = CustomWidget();
   CustomBottomSheet customBottomSheet = CustomBottomSheet();
-  LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
+  final LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
   Set<Polyline> polylineSet = {};
   List<LatLng> polylineCoordinates = [];
   Set<Marker> markersSet = {};
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final opacityVeto = Provider.of<OpacityChang>(context).isOpacityVeto;
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
-    final postionCancel = Provider.of<PosotionCancelReq>(context).value;
+    final postionCancel = Provider.of<PositionCancelReq>(context).value;
     final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: TweenAnimationBuilder(
                   tween: Tween<double>(begin: 0.0, end: value),
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                   builder: (_, double val, __) {
                     return Transform(
                       transform: Matrix4.identity()
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Colors.white,
                                       borderRadius:
                                           BorderRadius.circular(16.0)),
-                                  child: Center(
+                                  child: const Center(
                                     child: Icon(
                                       Icons.arrow_circle_up,
                                       size: 40,
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             AnimatedPositioned(
-                                duration: Duration(seconds: 1),
+                                duration: const Duration(seconds: 1),
                                 right: 0.0,
                                 left: 0.0,
                                 bottom: postionChang,
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: MediaQuery.of(context).size.height *
                                       45 /
                                       100,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(20.0),
                                           topRight: Radius.circular(20.0)),
@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        SearchScreen()));
+                                                        const SearchScreen()));
                                             if (res == "dataDir") {
                                               await getPlaceDerction(context);
                                               checkAllUserInfoReal(infoUserDataReal,context);
@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             50 /
                                                             100),
                                                 IconButton(
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     Icons
                                                         .arrow_circle_down_outlined,
                                                     color: Colors.purple,
@@ -247,13 +247,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 children: [
                                                   _customWidget
                                                       .containerBox(
-                                                          Icon(Icons
+                                                          const Icon(Icons
                                                               .home_outlined),
                                                           "Home",
                                                           context),
                                                   _customWidget
                                                       .containerBox(
-                                                          Icon(Icons
+                                                          const Icon(Icons
                                                               .work_outline),
                                                           "Work",
                                                           context),
@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             ? 1
                                                             : 0.3,
                                                         child: _customWidget.carTypeBox(
-                                                            Image(
+                                                            const Image(
                                                                 image: AssetImage(
                                                                     "assets/smallTexi.png"),
                                                                 fit: BoxFit
@@ -301,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     context:
                                                                         context,
                                                                     image:
-                                                                        Image(
+                                                                        const Image(
                                                                       image: AssetImage(
                                                                           "assets/smallTexi.png"),
                                                                       fit: BoxFit
@@ -321,14 +321,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "4"),
                                                             icon: opacityTaxi ==
                                                                     true
-                                                                ? Icon(
+                                                                ? const Icon(
                                                                     Icons
                                                                         .info_outline,
                                                                     color: Colors
                                                                         .purple,
                                                                     size: 20,
                                                                   )
-                                                                : Text(""))),
+                                                                : const Text(""))),
                                                     Positioned(
                                                       right: 0.0,
                                                       left: 0.0,
@@ -367,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 ? 1
                                                                 : 0.3,
                                                         child: _customWidget.carTypeBox(
-                                                            Image(
+                                                            const Image(
                                                                 image: AssetImage(
                                                                     "assets/van.png"),
                                                                 fit: BoxFit
@@ -391,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     context:
                                                                         context,
                                                                     image:
-                                                                        Image(
+                                                                        const Image(
                                                                             image: AssetImage(
                                                                                 "assets/van.png")),
                                                                     title:
@@ -408,14 +408,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "6-10"),
                                                             icon: opacityVan ==
                                                                     true
-                                                                ? Icon(
+                                                                ? const Icon(
                                                                     Icons
                                                                         .info_outline,
                                                                     color: Colors
                                                                         .purple,
                                                                     size: 20,
                                                                   )
-                                                                : Text(""))),
+                                                                : const Text(""))),
                                                     Positioned(
                                                       right: 0.0,
                                                       left: 0.0,
@@ -454,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             ? 1.0
                                                             : 0.3,
                                                         child: _customWidget.carTypeBox(
-                                                            Image(
+                                                            const Image(
                                                                 image: AssetImage(
                                                                     "assets/veto.png"),
                                                                 fit: BoxFit
@@ -477,7 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     context:
                                                                         context,
                                                                     image:
-                                                                        Image(
+                                                                        const Image(
                                                                             image: AssetImage(
                                                                                 "assets/veto.png")),
                                                                     title:
@@ -494,14 +494,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "11-19"),
                                                             icon: opacityVeto ==
                                                                     true
-                                                                ? Icon(
+                                                                ? const Icon(
                                                                     Icons
                                                                         .info_outline,
                                                                     color: Colors
                                                                         .purple,
                                                                     size: 20,
                                                                   )
-                                                                : Text(""))),
+                                                                : const Text(""))),
                                                     Positioned(
                                                       right: 0.0,
                                                       left: 0.0,
@@ -532,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ]),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 10,
                                         ),
                                         CustomDropBottom().DropBottomCustom(
@@ -544,13 +544,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 if(tripDirectionDetails==null){
                                                   Tools().toastMsg("Choose to where before your request");
                                                 }else{
-                                             //   await DataBaseSrv().currentOnlineUserInfo(context).whenComplete(() =>
-                                             // infoUserDataReal!= null?
-                                             //       DataBaseSrv().saveRiderRequest(context):
-                                             //     Text(""),
-                                             //   );
                                                   DataBaseSrv().saveRiderRequest(context);
-                                                  Provider.of<PosotionCancelReq>(
+                                                  Provider.of<PositionCancelReq>(
                                                       context,
                                                       listen: false)
                                                       .updateValue(0.0);
@@ -561,7 +556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 }
                                               },
                                               child: AnimatedContainer(
-                                                duration: Duration(seconds: 1),
+                                                duration: const Duration(seconds: 1),
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *
@@ -578,7 +573,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       BorderRadius.circular(
                                                           15.0),
                                                 ),
-                                                child: Center(
+                                                child: const Center(
                                                     child: Text(
                                                   "Request a Taxi",
                                                   style:
@@ -591,7 +586,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )),
                             AnimatedPositioned(
-                                duration: Duration(seconds: 1),
+                                duration: const Duration(seconds: 1),
                                 right: 0.0,
                                 left: 0.0,
                                 bottom: postionCancel,
@@ -609,7 +604,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: CircleAvatar(
                       radius: 30,
-                      backgroundColor: Color(0xFFFFD54F),
+                      backgroundColor: const Color(0xFFFFD54F),
                       child: IconButton(
                           onPressed: (){
                             checkAllUserInfoReal(infoUserDataReal, context);
@@ -617,7 +612,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               .value0Or1(1);
                           Provider.of<ChangeColor>(context, listen: false)
                               .updateState(true);},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.format_list_numbered_rtl_rounded,
                             color: Colors.black54,
                             size: 25,
@@ -636,7 +631,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Provider.of<ChangeColor>(context, listen: false)
                                 .updateState(false);
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.format_list_numbered_rtl_rounded,
                             color: Colors.black54,
                             size: 25,
@@ -682,10 +677,11 @@ class _HomeScreenState extends State<HomeScreen> {
     polylineCoordinates.clear();
 
     if (decodedPolylineResult.isNotEmpty) {
-      decodedPolylineResult.forEach((PointLatLng pointLatLng) {
+      ///new add
+      for (var pointLatLng in decodedPolylineResult) {
         polylineCoordinates
             .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
-      });
+      }
     }
     polylineSet.clear();
     setState(() {
@@ -731,7 +727,7 @@ class _HomeScreenState extends State<HomeScreen> {
         infoWindow:
             InfoWindow(title: initialPos.placeName, snippet: "My Location"),
         position: LatLng(pickUpLatling.latitude, pickUpLatling.longitude),
-        markerId: MarkerId("pickUpId"));
+        markerId: const MarkerId("pickUpId"));
 
     Marker markerDropOfLocation = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(
@@ -740,7 +736,7 @@ class _HomeScreenState extends State<HomeScreen> {
         infoWindow:
             InfoWindow(title: finalPos.placeName, snippet: "Drop off Location"),
         position: LatLng(dropOfLatling.latitude, dropOfLatling.longitude),
-        markerId: MarkerId("dropOfId"));
+        markerId: const MarkerId("dropOfId"));
 
     setState(() {
       markersSet.add(markerPickUpLocation);
@@ -754,7 +750,7 @@ class _HomeScreenState extends State<HomeScreen> {
         center: pickUpLatling,
         strokeWidth: 2,
         strokeColor: Colors.grey,
-        circleId: CircleId("pickUpId"));
+        circleId: const CircleId("pickUpId"));
 
     Circle dropOffLocCircle = Circle(
         fillColor: Colors.white,
@@ -762,7 +758,7 @@ class _HomeScreenState extends State<HomeScreen> {
         center: dropOfLatling,
         strokeWidth: 2,
         strokeColor: Colors.grey,
-        circleId: CircleId("dropOfId"));
+        circleId: const CircleId("dropOfId"));
     setState(() {
       circlesSet.add(pickUpLocCircle);
       circlesSet.add(dropOffLocCircle);
@@ -786,16 +782,16 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method for switch text where to OR toll passes
   changeTextWhereToOrTollpasses(DirectionDetails? tripDirectionDetails) {
     if (tripDirectionDetails != null) {
-      return Expanded(
+      return const Expanded(
           child: Text(
-        "Not:if found toll passes arn\'t include!",
+        "Not:if found toll passes aren't include!",
         style:
             TextStyle(color: Colors.white, backgroundColor: Colors.redAccent),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ));
     } else {
-      return Text(
+      return const Text(
         "Where to ?",
         style: TextStyle(
             color: Colors.black38, fontSize: 20, fontWeight: FontWeight.bold),
@@ -808,13 +804,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (tripDirectionDetails != null) {
       return IconButton(
           onPressed: () => restApp(),
-          icon: Icon(
+          icon: const Icon(
             Icons.cancel,
             color: Colors.redAccent,
             size: 35,
           ));
     } else {
-      return Icon(
+      return const Icon(
         Icons.search,
         color: Colors.black54,
         size: 35,

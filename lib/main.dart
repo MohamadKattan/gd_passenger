@@ -49,12 +49,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PositionChang()),
         ChangeNotifierProvider(create: (context) => AppData()),
         ChangeNotifierProvider(create: (context) => PlaceDetailsDropProvider()),
-        ChangeNotifierProvider(create: (context) => DerictionDetails()),
+        ChangeNotifierProvider(create: (context) => DirectionDetailsPro()),
         ChangeNotifierProvider(create: (context) => DropBottomValue()),
         ChangeNotifierProvider(create: (context) => CarTypeProvider()),
-        ChangeNotifierProvider(create: (context) => PosotionCancelReq()),
+        ChangeNotifierProvider(create: (context) => PositionCancelReq()),
         ChangeNotifierProvider(create: (context) => UserAllInfoDatabase()),
-        ChangeNotifierProvider(create: (context) => IndectorProfileScreen()),
+        ChangeNotifierProvider(create: (context) => InductorProfileScreen()),
         ChangeNotifierProvider(create: (context) => ChangeColor()),
       ],
       builder: (context, _) {
@@ -66,3 +66,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+//<bitmap android:gravity="center" android:src="@drawable/splash"/>

@@ -18,13 +18,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-
 class DataBaseSrv {
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
 
-  firebase_storage.Reference refStorage = firebase_storage.FirebaseStorage.instance.ref();
+  firebase_storage.Reference refStorage =
+      firebase_storage.FirebaseStorage.instance.ref();
 
-// set image to storage befor set user info to database
+// set image to storage before set user info to database
   Future<void> setImageToStorage(
       TextEditingController firstname,
       TextEditingController lastname,
@@ -40,6 +40,7 @@ class DataBaseSrv {
         .whenComplete(() =>
             downloadURL(firstname, lastname, uid, context, phoneNumber, email));
   }
+
 // got url image to set in database
   Future<void> downloadURL(
       TextEditingController firstname,
@@ -63,20 +64,21 @@ class DataBaseSrv {
       BuildContext context,
       String phoneNumber,
       TextEditingController email) async {
-    DatabaseReference refuser = FirebaseDatabase.instance.ref().child("users").child(uid);
+    DatabaseReference refuser =
+        FirebaseDatabase.instance.ref().child("users").child(uid);
     try {
       await refuser.set({
-        "user_id": uid.toString(),
-        "image_profile": url.toString(),
-        "first_name": firstname.text,
-        "last_name": lastname.text,
+        "userId": uid.toString(),
+        "imageProfile": url.toString(),
+        "firstName": firstname.text,
+        "lastName": lastname.text,
         "email": email.text.trim(),
-        "phone_number": phoneNumber.toString()
+        "phoneNumber": phoneNumber.toString()
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       });
     } catch (ex) {
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);
@@ -85,17 +87,19 @@ class DataBaseSrv {
   }
 
   // this method for got user id/phone/image/name from user collection in database real time and send to saveRiderRequest method
-  Future<void>  currentOnlineUserInfo(BuildContext context) async {
+  Future<void> currentOnlineUserInfo(BuildContext context) async {
     try {
-      User? firebaseUser = await FirebaseAuth.instance.currentUser;
+      User? firebaseUser = FirebaseAuth.instance.currentUser;
       String userId = firebaseUser!.uid;
-      DatabaseReference ref = FirebaseDatabase.instance.ref().child("users").child(userId);
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref().child("users").child(userId);
       TransactionResult result = await ref.runTransaction((Object? user) {
         Map<String, dynamic> _user = Map<String, dynamic>.from(user as Map);
-        if(_user.values.isNotEmpty){
-          Users  infoUser = Users.fromMap(_user);
-          print("lllllllllll" + infoUser.first_name);
-          Provider.of<UserAllInfoDatabase>(context, listen: false).updateUser(infoUser);
+        if (_user.values.isNotEmpty) {
+          Users infoUser = Users.fromMap(_user);
+          print("lllllllllll" + infoUser.firstName);
+          Provider.of<UserAllInfoDatabase>(context, listen: false)
+              .updateUser(infoUser);
         }
         return Transaction.success(_user);
       });
@@ -105,57 +109,72 @@ class DataBaseSrv {
   }
 
 // this method will set all info when rider order a taxi in Ride Request collection
- void saveRiderRequest(BuildContext context)async {
+  void saveRiderRequest(BuildContext context) async {
     /// from api geo
-    final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
-    print("pickUpLoc:::::: "+ pickUpLoc.placeName);
-    ///from api srv place
-    final dropOffLoc = Provider.of<PlaceDetailsDropProvider>(context, listen: false).dropOfLocation;
-    print("pickUpLoc:::::: "+ dropOffLoc.placeName);
-    ///from user model
-    final currentUserInfoOnline=Provider.of<UserAllInfoDatabase>(context,listen: false).users;
-    print("currentUserInfoOnline:::::: "+ currentUserInfoOnline!.first_name);
+    final pickUpLoc =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    print("pickUpLoc:::::: " + pickUpLoc.placeName);
 
-    final carTypePro = Provider.of<CarTypeProvider>(context,listen: false).carType;
-    print("carTypePro:::::: "+ carTypePro!);
-    final paymentMethod=Provider.of<DropBottomValue>(context,listen: false).valueDropBottom;
+    ///from api srv place
+    final dropOffLoc =
+        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+            .dropOfLocation;
+    print("pickUpLoc:::::: " + dropOffLoc.placeName);
+
+    ///from user model
+    final currentUserInfoOnline =
+        Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+    print("currentUserInfoOnline:::::: " + currentUserInfoOnline!.firstName);
+
+    final carTypePro =
+        Provider.of<CarTypeProvider>(context, listen: false).carType;
+    print("carTypePro:::::: " + carTypePro!);
+    final paymentMethod =
+        Provider.of<DropBottomValue>(context, listen: false).valueDropBottom;
     try {
       Map pickUpLocMAP = {
-        "latitude":pickUpLoc.latitude.toString(),
-        "longitude":pickUpLoc.longitude.toString(),
+        "latitude": pickUpLoc.latitude.toString(),
+        "longitude": pickUpLoc.longitude.toString(),
       };
-      print("pickUpLocMAP:::::: "+ pickUpLocMAP.toString());
+      print("pickUpLocMAP:::::: " + pickUpLocMAP.toString());
       Map dropOffLocMap = {
-        "latitude":dropOffLoc.latitude.toString(),
-        "longitude":dropOffLoc.longitude.toString(),
+        "latitude": dropOffLoc.latitude.toString(),
+        "longitude": dropOffLoc.longitude.toString(),
       };
-      print("dropOffLocMap:::::: "+ dropOffLocMap.toString());
+      print("dropOffLocMap:::::: " + dropOffLocMap.toString());
 
       Map rideInfoMap = {
-        "driver_id":"waiting",
-        "payment_method":paymentMethod,
-        "pickup":pickUpLocMAP,
-        "dropoff":dropOffLocMap,
-        "create_at":DateTime.now().toString(),
-        "rider_name":"${currentUserInfoOnline.first_name} ${currentUserInfoOnline.last_name}",
-        "rider_phone":currentUserInfoOnline.phone_number,
-        "pickup_address":pickUpLoc.placeName,
-        "dropoff_address":dropOffLoc.placeName,
-        "vehicle_type_id":carTypePro,
-        "user_Id":currentUserInfoOnline.user_id,
+        "driverId": "waiting",
+        "paymentMethod": paymentMethod,
+        "pickup": pickUpLocMAP,
+        "dropoff": dropOffLocMap,
+        "createAt": DateTime.now().toString(),
+        "riderName":
+            "${currentUserInfoOnline.firstName} ${currentUserInfoOnline.lastName}",
+        "riderPhone": currentUserInfoOnline.phoneNumber,
+        "pickupAddress": pickUpLoc.placeName,
+        "dropoffAddress": dropOffLoc.placeName,
+        "vehicleType_id": carTypePro,
+        "userId": currentUserInfoOnline.userId,
       };
       print("rideInfoMap::::::$rideInfoMap");
-      DatabaseReference RefRideRequest = FirebaseDatabase.instance.ref().child("Ride Request").child(currentUserInfoOnline.user_id);
-    await  RefRideRequest.set(rideInfoMap);
+      DatabaseReference RefRideRequest = FirebaseDatabase.instance
+          .ref()
+          .child("Ride Request")
+          .child(currentUserInfoOnline.userId);
+      await RefRideRequest.set(rideInfoMap);
     } catch (ex) {
       _tools.toastMsg(ex.toString());
     }
   }
 
   // this method for cancel rider Request
- void cancelRiderRequest(UserIdProvider userIdProvider){
+  void cancelRiderRequest(UserIdProvider userIdProvider) {
     print("id is::::" + userIdProvider.getUser.uid);
-   DatabaseReference RefRideRequest = FirebaseDatabase.instance.ref().child("Ride Request").child(userIdProvider.getUser.uid);
-   RefRideRequest.remove();
- }
+    DatabaseReference RefRideRequest = FirebaseDatabase.instance
+        .ref()
+        .child("Ride Request")
+        .child(userIdProvider.getUser.uid);
+    RefRideRequest.remove();
+  }
 }

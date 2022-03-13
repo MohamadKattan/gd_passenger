@@ -1,8 +1,8 @@
-// this class for indector in profile screen
+// this class for inductor in profile screen
 
 import 'package:flutter/cupertino.dart';
 
-class IndectorProfileScreen extends ChangeNotifier{
+class InductorProfileScreen extends ChangeNotifier{
   bool isTrue = false;
   updateState(bool state){
     isTrue=state;

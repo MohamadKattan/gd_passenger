@@ -10,8 +10,8 @@ import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:provider/provider.dart';
 
 class DropPlaceDetails {
-  GetUrl _getUrl = GetUrl();
-  CircularInductorCostem _costem = CircularInductorCostem();
+  final GetUrl _getUrl = GetUrl();
+  final CircularInductorCostem _costem = CircularInductorCostem();
 
   void getPlaceAddressDetails(String placeId,BuildContext context) async {
     showDialog(
@@ -19,7 +19,7 @@ class DropPlaceDetails {
         builder:(context)=> _costem.circularInductorCostem(context)
     );
     final placeDetailsUrl = Uri.parse(
-        "https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${mapKey}");
+        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey");
 
     final res = await _getUrl.getUrlMethod(placeDetailsUrl);
     Navigator.pop(context);
@@ -27,7 +27,7 @@ class DropPlaceDetails {
       return;
     }
     if (res["status"] == "OK") {
-      Address address = new Address(
+      Address address =  Address(
           placeFormattedAddress: "",
           placeName: "",
           placeId: "",

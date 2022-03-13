@@ -1,14 +1,13 @@
 //this class for google map methods
 import 'dart:async';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/repo/api_srv_geo.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LogicGoogleMap {
-
-  ApiSrvGeo _apiMethods =ApiSrvGeo();
+   final ApiSrvGeo _apiMethods = ApiSrvGeo();
   late Position currentPosition;
   var geolocator = Geolocator();
 
@@ -17,9 +16,8 @@ class LogicGoogleMap {
 
 // when driver arrived we need to change location to trip location on map
 
-
 // set location
-  final CameraPosition kGooglePlex = CameraPosition(
+  final CameraPosition kGooglePlex = const CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
@@ -57,12 +55,14 @@ class LogicGoogleMap {
 
     // update on google map
     CameraPosition cameraPosition =
-        new CameraPosition(target: latLngPosition, zoom: 14);
+        CameraPosition(target: latLngPosition, zoom: 14);
     newGoogleMapController
         ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
     ///Not for chacking
-    final address= await _apiMethods.searchCoordinatesAddress(position, context);
-    print("My Address:::" +address);
+    final address =
+        await _apiMethods.searchCoordinatesAddress(position, context);
+    print("My Address:::" + address);
 
     return currentPosition;
   }

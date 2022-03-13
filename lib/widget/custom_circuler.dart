@@ -9,7 +9,7 @@ class CircularInductorCostem{
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.black45,
       ),
       child: Column(

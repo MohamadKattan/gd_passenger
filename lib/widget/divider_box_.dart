@@ -7,7 +7,7 @@ class CustomWidget {
   Widget customDivider() {
     return Container(
       height: 0.6,
-      decoration: BoxDecoration(color: Colors.black12, boxShadow: [
+      decoration: const BoxDecoration(color: Colors.black12, boxShadow: [
         BoxShadow(
             blurRadius: 5.0,
             spreadRadius: 0.4,
@@ -27,7 +27,7 @@ class CustomWidget {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4.0),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                   blurRadius: 4.0,
                   spreadRadius: 0.3,
@@ -41,7 +41,7 @@ class CustomWidget {
               child: Center(
                 child: Icon(
                   icon.icon,
-                  color: Color(0xFFFFD54F),
+                  color: const Color(0xFFFFD54F),
                   size: 20,
                 ),
               ),
@@ -51,7 +51,7 @@ class CustomWidget {
               child: Center(
                 child: Text(
                   text,
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                  style: const TextStyle(fontSize: 16, color: Colors.black54),
                 ),
               ),
             )
@@ -67,7 +67,7 @@ class CustomWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 12.5 / 100,
       width: MediaQuery.of(context).size.height * 20 / 100,
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         children: [
           Expanded(
@@ -78,7 +78,7 @@ class CustomWidget {
           text,
           maxLines: 1,
               overflow: TextOverflow.ellipsis,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.bold,

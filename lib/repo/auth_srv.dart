@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 // this class for Auth by firebase-phone method
 class AuthSev {
-  Tools _tools = Tools();
+  final Tools _tools = Tools();
   FirebaseAuth auth = FirebaseAuth.instance;
   late UserCredential userCredential;
   late User currentUser;
@@ -67,12 +67,12 @@ class AuthSev {
                                 controller: code,
                                 maxLength: 15,
                                 showCursor: true,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
-                                cursorColor: Color(0xFFFFD54F),
-                                decoration: InputDecoration(
+                                cursorColor: const Color(0xFFFFD54F),
+                                decoration: const InputDecoration(
                                   icon: Padding(
-                                    padding: const EdgeInsets.only(top: 15.0),
+                                    padding: EdgeInsets.only(top: 15.0),
                                     child: Icon(
                                       Icons.vpn_key,
                                       color: Color(0xFFFFD54F),
@@ -113,7 +113,7 @@ class AuthSev {
                             } else {
                               Provider.of<TrueFalse>(context, listen: false)
                                   .changeStateBooling(false);
-                              _tools.toastMsg("Code field can\'t be empty");
+                              _tools.toastMsg("Code field can't be empty");
                             }
                           },
                           child: Row(
@@ -124,12 +124,12 @@ class AuthSev {
                                   height: 60,
                                   width: 140,
                                   decoration: BoxDecoration(
-                                      color: Color(0xFFFFD54F),
+                                      color: const Color(0xFFFFD54F),
                                       borderRadius: BorderRadius.circular(8)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
                                     child: Center(
-                                        child: const Text(
+                                        child: Text(
                                       "verify",
                                       style: TextStyle(
                                           fontSize: 25.0,
@@ -156,8 +156,8 @@ class AuthSev {
   }
 
   //this method for got user id
-  Future<User> getCurrentUserId() async {
-      currentUser = await auth.currentUser!;
+  Future<User> getCurrentUserId()async{
+      currentUser = auth.currentUser!;
       print("::::${currentUser.uid}");
       return currentUser;
   }

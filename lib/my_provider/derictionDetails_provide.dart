@@ -1,9 +1,8 @@
-// this class for listing to dirction api
-
+//this class for listing to direction api
 import 'package:flutter/cupertino.dart';
 import 'package:gd_passenger/model/directions_details.dart';
 
-class DerictionDetails extends ChangeNotifier{
+class DirectionDetailsPro extends ChangeNotifier {
   DirectionDetails directionDetails = DirectionDetails(
       distanceText: "",
       durationText: "",
@@ -11,7 +10,7 @@ class DerictionDetails extends ChangeNotifier{
       durationVale: 0,
       enCodingPoints: "");
 
-  void updateDerictionDetails(DirectionDetails details){
+  void updateDirectionDetails(DirectionDetails details) {
     directionDetails = details;
     notifyListeners();
   }

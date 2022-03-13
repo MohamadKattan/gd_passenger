@@ -15,7 +15,7 @@ class CancelTaxi {
       required VoidCallback voidCallback}) {
     return Container(
       height: MediaQuery.of(context).size.height * 40 / 100,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
           boxShadow: [
@@ -35,7 +35,7 @@ class CancelTaxi {
                   child: Lottie.asset('assets/71796-searching-taxi.json',
                       height: 150, width: 250, fit: BoxFit.contain)),
             ),
-            Text(
+            const Text(
               "Searching a driver...",
               style: TextStyle(color: Colors.black45),
             ),
@@ -43,7 +43,7 @@ class CancelTaxi {
                 onTap: () {
                   voidCallback();
                   DataBaseSrv().cancelRiderRequest(userIdProvider);
-                  Provider.of<PosotionCancelReq>(context, listen: false)
+                  Provider.of<PositionCancelReq>(context, listen: false)
                       .updateValue(-400.0);
                   Provider.of<PositionChang>(context, listen: false)
                       .changValue(0.0);
@@ -55,7 +55,7 @@ class CancelTaxi {
                     width: 120.0,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                               blurRadius: 6.0,
                               spreadRadius: 0.5,
@@ -63,7 +63,7 @@ class CancelTaxi {
                               offset: Offset(0.7, 0.7))
                         ],
                         color: Colors.redAccent[700]),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         "Cancel",
                         style: TextStyle(
