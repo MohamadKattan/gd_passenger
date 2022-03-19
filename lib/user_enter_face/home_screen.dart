@@ -4,6 +4,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/google_map_methods.dart';
 import 'package:gd_passenger/model/directions_details.dart';
+import 'package:gd_passenger/model/nearest%20_driver_%20available.dart';
 import 'package:gd_passenger/model/user.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
@@ -26,10 +27,14 @@ import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:gd_passenger/widget/custom_drop_bottom.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_geofire/flutter_geofire.dart';
 import '../my_provider/buttom_color_pro.dart';
+import '../repo/api_srv_geo.dart';
+import '../tools/geoFire_methods_tools.dart';
+import '../tools/math_methods.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen( {Key? key}) : super(key: key);
@@ -46,6 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Set<Marker> markersSet = {};
   Set<Circle> circlesSet = {};
   DirectionDetails? tripDirectionDetails;
+  bool nearDriverAvailableLoaded = false;
+  final ApiSrvGeo _apiMethods = ApiSrvGeo();
+  late Position currentPosition;
    @override
   void initState() {
      DataBaseSrv().currentOnlineUserInfo(context);
@@ -116,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 _logicGoogleMap.controllerGoogleMap
                                     .complete(controller);
                                 newGoogleMapController = controller;
-                                _logicGoogleMap
-                                    .locationPosition(context);
+                                locationPosition(context);
+
                               },
                             ),
                             Positioned(
@@ -237,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         tripDirectionDetails != null
-                                            ? Text("")
+                                            ? const Text("")
                                             : Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
@@ -291,6 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "Taxi"
                                                                 ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
                                                                 : "Taxi",
+                                                            "4",
                                                             context)),
                                                     Positioned(
                                                         right: -10.0,
@@ -380,6 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "MediumCommercial"
                                                                 ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
                                                                 : "MediumCommercial",
+                                                            "6-10",
                                                             context)),
                                                     Positioned(
                                                         right: -10.0,
@@ -467,6 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "Big Commercial"
                                                                 ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
                                                                 : "Big Commercial",
+                                                            "11-19",
                                                             context)),
                                                     Positioned(
                                                         right: -10.0,
@@ -535,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         const SizedBox(
                                           height: 10,
                                         ),
-                                        CustomDropBottom().DropBottomCustom(
+                                        CustomDropBottom().dropBottomCustom(
                                             context, dropBottomProvider),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -765,6 +776,118 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     print("this is details enCodingPoints:::::: ${details.enCodingPoints}");
   }
+///this method for got current loction after that run geofire method for got the drivers nearest
+  Future<dynamic> locationPosition(BuildContext context) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    currentPosition = position;
+    // to fitch LatLng in google map
+    LatLng latLngPosition = LatLng(position.latitude, position.longitude);
+
+    // update on google map
+    CameraPosition cameraPosition =
+    CameraPosition(target: latLngPosition, zoom: 14);
+    newGoogleMapController
+        ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+    ///Not for chacking
+    final address = await _apiMethods.searchCoordinatesAddress(position, context);
+    geoFireInitialize();
+
+  }
+
+  /// this method for display nearest driver available from rider in list by using geoFire
+ void geoFireInitialize(){
+    final currentPosition = Provider.of<AppData>(context, listen: false).pickUpLocation;
+
+    String pathToReference = "availableDrivers";
+    Geofire.initialize(pathToReference);
+
+    Geofire.queryAtLocation(currentPosition.latitude, currentPosition.longitude, 2)?.listen((map) {
+      if (map != null){
+        var callBack = map['callBack'];
+
+        switch (callBack) {
+          case Geofire.onKeyEntered:
+            NearestDriverAvailable nearestDriverAvailable =NearestDriverAvailable("",0.0,0.0);
+            nearestDriverAvailable.key = map['key'];
+            nearestDriverAvailable.latitude = map['latitude'];
+            nearestDriverAvailable.longitude = map['longitude'];
+            GeoFireMethods.listOfNearestDriverAvailable.add(nearestDriverAvailable);
+            if(nearDriverAvailableLoaded == true){
+              updateAvailableDriverOnMap();
+            }
+            break;
+
+          case Geofire.onKeyExited:
+            GeoFireMethods.removeDriverFromList(map["key"]);
+            break;
+
+          case Geofire.onKeyMoved:
+          // Update your key's location
+            NearestDriverAvailable nearestDriverAvailable =NearestDriverAvailable("",0.0,0.0);
+            nearestDriverAvailable.key = map['key'];
+            nearestDriverAvailable.latitude = map['latitude'];
+            nearestDriverAvailable.longitude = map['longitude'];
+            GeoFireMethods.updateDriverNearLocation(nearestDriverAvailable);
+            updateAvailableDriverOnMap();
+            break;
+
+          case Geofire.onGeoQueryReady:
+            updateAvailableDriverOnMap();
+            break;
+        }
+      }
+      setState(() {});
+    });
+  }
+
+  /// this method for add icon new driver on map
+  void updateAvailableDriverOnMap(){
+
+     setState(() {
+       markersSet.clear();
+     });
+
+     Set <Marker> tMarker= {};
+
+     for(NearestDriverAvailable driver in GeoFireMethods.listOfNearestDriverAvailable ){
+       LatLng driverAvailablePosititon = LatLng(driver.latitude, driver.longitude);
+       Marker marker =  Marker(
+           markerId:MarkerId("driver${driver.key}"),
+           position:driverAvailablePosititon,
+         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+         rotation:MathMethods.createRandomNumber(360),
+       );
+
+       tMarker.add(marker);
+     }
+     setState(() {
+       markersSet = tMarker;
+     });
+  }
 
   // this method for clean
   void restApp() {
@@ -852,6 +975,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Big Commercial");
   }
+// this method for got user info from database if it was null befoer user start his request a driver
   void checkAllUserInfoReal(Users? infoUserDataReal, BuildContext context){
    if(infoUserDataReal==null){
      DataBaseSrv().currentOnlineUserInfo(context);

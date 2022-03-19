@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/buttom_color_pro.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
@@ -24,13 +25,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+  FlutterNativeSplash.removeAfter(initialization);
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
 // this method for native splash screen
 void initialization(BuildContext context) async {
-  await Future.delayed(const Duration(seconds: 3));
+  await Future.delayed(const Duration(seconds: 4));
 }
 
 class MyApp extends StatelessWidget {

@@ -18,6 +18,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
+import 'auth_srv.dart';
+
 class DataBaseSrv {
   final Tools _tools = Tools();
 
@@ -87,24 +89,43 @@ class DataBaseSrv {
   }
 
   // this method for got user id/phone/image/name from user collection in database real time and send to saveRiderRequest method
-  Future<void> currentOnlineUserInfo(BuildContext context) async {
+ void currentOnlineUserInfo(BuildContext context) async {
+    // try {
+    //   User? firebaseUser = FirebaseAuth.instance.currentUser;
+    //   String userId = firebaseUser!.uid;
+    //   DatabaseReference ref =
+    //       FirebaseDatabase.instance.ref().child("users").child(userId);
+    //   TransactionResult result = await ref.runTransaction((Object? user) {
+    //     Map<String, dynamic> _user = Map<String, dynamic>.from(user as Map);
+    //     if (_user.values.isNotEmpty) {
+    //       Users infoUser = Users.fromMap(_user);
+    //       print("lllllllllll" + infoUser.firstName);
+    //       Provider.of<UserAllInfoDatabase>(context, listen: false)
+    //           .updateUser(infoUser);
+    //     }
+    //     return Transaction.success(_user);
+    //   });
+    // } catch (ex) {
+    //   Tools().toastMsg("Welcome");
+    // }
+    final currentUser = AuthSev().auth.currentUser;
+    late final DataSnapshot snapshot;
     try {
-      User? firebaseUser = FirebaseAuth.instance.currentUser;
-      String userId = firebaseUser!.uid;
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref().child("users").child(userId);
-      TransactionResult result = await ref.runTransaction((Object? user) {
-        Map<String, dynamic> _user = Map<String, dynamic>.from(user as Map);
-        if (_user.values.isNotEmpty) {
-          Users infoUser = Users.fromMap(_user);
-          print("lllllllllll" + infoUser.firstName);
-          Provider.of<UserAllInfoDatabase>(context, listen: false)
-              .updateUser(infoUser);
-        }
-        return Transaction.success(_user);
-      });
+      final ref = FirebaseDatabase.instance.ref();
+      snapshot = await ref.child("users").child(currentUser!.uid).get();
+      if (snapshot.exists) {
+        Map<String, dynamic> map =
+            Map<String, dynamic>.from(snapshot.value as Map);
+        Users infoUser = Users.fromMap(map);
+        print("lllllllllll" + infoUser.firstName);
+        Provider.of<UserAllInfoDatabase>(context, listen: false)
+            .updateUser(infoUser);
+        return;
+      } else {
+        print('No data available.');
+      }
     } catch (ex) {
-      Tools().toastMsg("Welcome");
+      Tools().toastMsg(ex.toString());
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
+import 'package:gd_passenger/tools/turn_Gps.dart';
 import 'package:gd_passenger/user_enter_face/auth_screen.dart';
 import 'package:gd_passenger/user_enter_face/home_screen.dart';
 
@@ -19,14 +20,15 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(seconds: 4),
-        lowerBound: 0.8,
+        lowerBound: 0.5,
         upperBound: 0.9);
     _animationController.forward();
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        TurnGps().turnGpsIfNot();
         Navigator.push(
           context,
-       MaterialPageRoute(builder: (context) {
+          MaterialPageRoute(builder: (context) {
             if (AuthSev().auth.currentUser?.uid != null) {
               DataBaseSrv().currentOnlineUserInfo(context);
               return const HomeScreen();
@@ -46,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: const Color(0xFFFFD54F),
+      backgroundColor: const Color(0xFFFDD44F),
       body: SafeArea(
         child: ScaleTransition(
           scale: _animationController,

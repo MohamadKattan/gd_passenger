@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class CustomDropBottom {
   String? value = "Cash";
 
-  Widget DropBottomCustom(BuildContext context, String dropBottomProvider) {
+  Widget dropBottomCustom(BuildContext context, String dropBottomProvider) {
     return Padding(
       padding: const EdgeInsets.only(right: 4.0, left: 4.0),
       child: Container(
@@ -25,13 +25,13 @@ class CustomDropBottom {
               iconSize: 40.0,
               items: <String>[
                 'Cash',
-                'Credit Card',
+                'Pay in taxi by Credit Card',
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Row(
                     children: [
-                     value=="Cash"? const Icon(Icons.money,color: Colors.green,):const Icon(Icons.credit_card,color: Colors.black38,),
+                     value=="Cash"? const Icon(Icons.money,color: Colors.green,): Image.asset("assets/iconDrop.png",fit: BoxFit.contain,width: 50.0,height: 50.0,),
                       const SizedBox(width: 10.0),
                       Text(value),
                     ],

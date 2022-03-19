@@ -1,6 +1,8 @@
 //custom widget class use in home scrren
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CustomWidget {
   // divider
@@ -63,7 +65,7 @@ class CustomWidget {
 
   // car type box taxi/van/veto
   Widget carTypeBox(
-      Image image, String text,BuildContext context) {
+      Image image, String text,String text1,BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 12.5 / 100,
       width: MediaQuery.of(context).size.height * 20 / 100,
@@ -85,6 +87,15 @@ class CustomWidget {
           ),
             ),
           ),
+          Expanded(child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(Icons.person,size: 16.0,color: Colors.black38),
+              const SizedBox(width: 4.0),
+              Text(text1,style: const TextStyle(fontSize: 12.0,color: Colors.black38),),
+            ],
+          ))
         ],
       ),
     );

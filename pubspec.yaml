@@ -51,6 +51,9 @@ dependencies:
   uuid: ^3.0.6
   flutter_polyline_points: ^1.0.0
   cached_network_image: ^3.2.0
+  flutter_native_splash: ^2.1.1
+  location: ^4.3.0
+  flutter_geofire: ^2.0.1
 
 
 dev_dependencies:
@@ -67,6 +70,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
+flutter_native_splash:
+  color: "#fdd44f"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -77,12 +83,14 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
   assets:
     - assets/
     - assets/taxi.png
     - assets/smallTexi.png
     - assets/van.png
     - assets/veto.png
+    - assets/iconDrop.png
 
 
   # To add assets to your application, add an assets section, like this:
