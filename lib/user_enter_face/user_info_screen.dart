@@ -24,139 +24,142 @@ class UserInfoScreen extends StatelessWidget {
     userProvider.getUserIdProvider();
     final picked = Provider.of<PickImageProvide>(context).ImageProvider;
     bool providerTrue = Provider.of<TrueFalse>(context).isTrue;
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      child: Scaffold(
-        body: SafeArea(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 60),
-                    const Text("Profile",
-                        style: TextStyle(fontSize: 30, color: Colors.black54)),
-                    SizedBox(height: 40),
-                    GestureDetector(
-                      onTap: () => showSheetCamerOrGallary(context: context),
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: const Color(0xFFFFD54F)),
-                        child:
-                          picked==null?const Icon(
-                            Icons.add_a_photo_outlined,
-                            size: 25,
-                            color: Colors.white,
-                          ):Image(image: FileImage(File(picked.path)),fit: BoxFit.fill,)
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: firstname,
-                        maxLength: 20,
-                        showCursor: true,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                        cursorColor: const Color(0xFFFFD54F),
-                        decoration: const InputDecoration(
-                          fillColor: Color(0xFFFFD54F),
-                          label: Text("First name"),
-                        ),
-                        keyboardType: TextInputType.name,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: lastname,
-                        maxLength: 20,
-                        showCursor: true,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                        cursorColor: const Color(0xFFFFD54F),
-                        decoration: const InputDecoration(
-                          fillColor: Color(0xFFFFD54F),
-                          label: Text("Last name"),
-                        ),
-                        keyboardType: TextInputType.name,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: email,
-                        maxLength: 40,
-                        showCursor: true,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                        cursorColor: const Color(0xFFFFD54F),
-                        decoration: const InputDecoration(
-                          fillColor: Color(0xFFFFD54F),
-                          label: Text("Email"),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                    ),
-                    const SizedBox(height: 60),
-                    GestureDetector(
-                      onTap: () {
-                        if (picked == null) {
-                          tools.toastMsg("image profile is required");
-                        } else {
-                          checkBeforeSet(
-                              context,
-                              userProvider.getUser.uid,
-                              userProvider.getUser.phoneNumber.toString(),
-                              imageFile!);
-                        }
-                      },
-                      child: Container(
-                        child: const Center(
-                            child: Text(
-                          "Save",
-                          style: TextStyle(
+    return WillPopScope(
+      onWillPop: ()async=>false,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        child: Scaffold(
+          body: SafeArea(
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 60),
+                      const Text("Profile",
+                          style: TextStyle(fontSize: 30, color: Colors.black54)),
+                      SizedBox(height: 40),
+                      GestureDetector(
+                        onTap: () => showSheetCamerOrGallary(context: context),
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: const Color(0xFFFFD54F)),
+                          child:
+                            picked==null?const Icon(
+                              Icons.add_a_photo_outlined,
+                              size: 25,
                               color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        )),
-                        width: 180,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            color: const Color(0xFFFFD54F),
-                            borderRadius: BorderRadius.circular(4.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Colors.black45,
-                                  offset: Offset(0.10, 0.7),
-                                  spreadRadius: 0.9)
-                            ]),
+                            ):Image(image: FileImage(File(picked.path)),fit: BoxFit.fill,)
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: firstname,
+                          maxLength: 20,
+                          showCursor: true,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                          cursorColor: const Color(0xFFFFD54F),
+                          decoration: const InputDecoration(
+                            fillColor: Color(0xFFFFD54F),
+                            label: Text("First name"),
+                          ),
+                          keyboardType: TextInputType.name,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: lastname,
+                          maxLength: 20,
+                          showCursor: true,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                          cursorColor: const Color(0xFFFFD54F),
+                          decoration: const InputDecoration(
+                            fillColor: Color(0xFFFFD54F),
+                            label: Text("Last name"),
+                          ),
+                          keyboardType: TextInputType.name,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: email,
+                          maxLength: 40,
+                          showCursor: true,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                          cursorColor: const Color(0xFFFFD54F),
+                          decoration: const InputDecoration(
+                            fillColor: Color(0xFFFFD54F),
+                            label: Text("Email"),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      ),
+                      const SizedBox(height: 60),
+                      GestureDetector(
+                        onTap: () {
+                          if (picked == null) {
+                            tools.toastMsg("image profile is required");
+                          } else {
+                            checkBeforeSet(
+                                context,
+                                userProvider.getUser.uid,
+                                userProvider.getUser.phoneNumber.toString(),
+                                imageFile!);
+                          }
+                        },
+                        child: Container(
+                          child: const Center(
+                              child: Text(
+                            "Save",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          )),
+                          width: 180,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFFFD54F),
+                              borderRadius: BorderRadius.circular(4.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black45,
+                                    offset: Offset(0.10, 0.7),
+                                    spreadRadius: 0.9)
+                              ]),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              providerTrue
-                  ? Opacity(
-                      opacity: 0.9,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: (const BoxDecoration(
-                          color: Colors.black,
-                        )),
-                        child: _inductorCostem.circularInductorCostem(context),
-                      ),
-                    )
-                  : const Text("")
-            ],
+                providerTrue
+                    ? Opacity(
+                        opacity: 0.9,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: (const BoxDecoration(
+                            color: Colors.black,
+                          )),
+                          child: _inductorCostem.circularInductorCostem(context),
+                        ),
+                      )
+                    : const Text("")
+              ],
+            ),
           ),
         ),
       ),

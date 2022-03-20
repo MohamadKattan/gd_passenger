@@ -125,7 +125,7 @@ class DataBaseSrv {
         print('No data available.');
       }
     } catch (ex) {
-      Tools().toastMsg(ex.toString());
+      Tools().toastMsg("Welcome DATA!!");
     }
   }
 

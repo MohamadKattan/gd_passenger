@@ -91,6 +91,7 @@ flutter:
     - assets/van.png
     - assets/veto.png
     - assets/iconDrop.png
+    - assets/car_test.png
 
 
   # To add assets to your application, add an assets section, like this:

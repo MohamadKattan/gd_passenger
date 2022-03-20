@@ -19,8 +19,8 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(seconds: 4),
-        lowerBound: 0.5,
+        duration: const Duration(seconds: 6),
+        lowerBound: 0.4,
         upperBound: 0.9);
     _animationController.forward();
     _animationController.addStatusListener((status) {

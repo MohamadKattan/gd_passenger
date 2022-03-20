@@ -27,84 +27,87 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final addressModle = Provider.of<AppData>(context).pickUpLocation;
-    return GestureDetector(
-      onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
-      child: SafeArea(
-        child: Scaffold(
-            body: SingleChildScrollView(
-                child: Column(
-          children: [
-            Container(
-              height: 120,
-              decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10.0),
-                  bottomRight: Radius.circular(10.0))),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 40.0, left: 10.0),
-                child: TextField(
-                  maxLength: 25,
-                  onChanged: (val) {
-                finedPlace(val, addressModle, context);
-                  },
-                  controller: whereEdit,
-                  showCursor: true,
-                  mouseCursor: MouseCursor.uncontrolled,
-                  autofocus: true,
-                  cursorWidth: 4.0,
-                  enabled: true,
-                  style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white),
-                  cursorColor: const Color(0xFFFFD54F),
-                  decoration: const InputDecoration(
-                fillColor: Color(0xFFFFD54F),
-                border: InputBorder.none,
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                  size: 35,
-                ),
-                iconColor: Colors.white,
-                hintText: "Where to?",
-                contentPadding: EdgeInsets.all(10.0),
-                hintStyle: TextStyle(
-                    fontSize: 25,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.0),
-                hoverColor: Color(0xFFFFD54F),
+    return WillPopScope(
+    onWillPop: ()async=>true,
+      child: GestureDetector(
+        onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
+        child: SafeArea(
+          child: Scaffold(
+              body: SingleChildScrollView(
+                  child: Column(
+            children: [
+              Container(
+                height: 120,
+                decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0))),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40.0, left: 10.0),
+                  child: TextField(
+                    maxLength: 25,
+                    onChanged: (val) {
+                  finedPlace(val, addressModle, context);
+                    },
+                    controller: whereEdit,
+                    showCursor: true,
+                    mouseCursor: MouseCursor.uncontrolled,
+                    autofocus: true,
+                    cursorWidth: 4.0,
+                    enabled: true,
+                    style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white),
+                    cursorColor: const Color(0xFFFFD54F),
+                    decoration: const InputDecoration(
+                  fillColor: Color(0xFFFFD54F),
+                  border: InputBorder.none,
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                    size: 35,
                   ),
-                  keyboardType: TextInputType.text,
+                  iconColor: Colors.white,
+                  hintText: "Where to?",
+                  contentPadding: EdgeInsets.all(10.0),
+                  hintStyle: TextStyle(
+                      fontSize: 25,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.0),
+                  hoverColor: Color(0xFFFFD54F),
+                    ),
+                    keyboardType: TextInputType.text,
+                  ),
                 ),
               ),
-            ),
-            placePredictionsList.isNotEmpty
-                ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.separated(
-                  itemBuilder: (context, index) {
-                    return PredictionsTitle(
-                        predictions: placePredictionsList[index]);
-                  },
-                  separatorBuilder: (context, index) =>
-                      customWidget.customDivider(),
-                  itemCount: placePredictionsList.length,
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                ),
-                  )
-                : Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: Center(
-                    child: Lottie.asset('assets/lf30_editor_jobovyne.json',
-                        height: 350, width: 350)),
-                  )
-          ],
-        ))),
+              placePredictionsList.isNotEmpty
+                  ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      return PredictionsTitle(
+                          predictions: placePredictionsList[index]);
+                    },
+                    separatorBuilder: (context, index) =>
+                        customWidget.customDivider(),
+                    itemCount: placePredictionsList.length,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                  ),
+                    )
+                  : Padding(
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: Center(
+                      child: Lottie.asset('assets/lf30_editor_jobovyne.json',
+                          height: 350, width: 350)),
+                    )
+            ],
+          ))),
+        ),
       ),
     );
   }

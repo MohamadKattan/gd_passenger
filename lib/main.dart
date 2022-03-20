@@ -32,7 +32,7 @@ void main() async {
 
 // this method for native splash screen
 void initialization(BuildContext context) async {
-  await Future.delayed(const Duration(seconds: 4));
+  await Future.delayed(const Duration(seconds: 1));
 }
 
 class MyApp extends StatelessWidget {
