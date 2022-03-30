@@ -17,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animationController;
   @override
   void initState() {
+    TurnGps().turnGpsIfNot();
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(seconds: 6),
@@ -25,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        TurnGps().turnGpsIfNot();
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) {

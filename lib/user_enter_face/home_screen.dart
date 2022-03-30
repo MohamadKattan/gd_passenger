@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -33,9 +34,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import '../my_provider/buttom_color_pro.dart';
+import '../notification.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/geoFire_methods_tools.dart';
 import '../tools/math_methods.dart';
+import '../widget/sorry_no_driver.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen( {Key? key}) : super(key: key);
@@ -56,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DirectionDetails? tripDirectionDetails;
   bool nearDriverAvailableLoaded = false;
   late BitmapDescriptor driversNearIcon;
+  List <NearestDriverAvailable>driverAvailable=[];
    @override
   void initState() {
      DataBaseSrv().currentOnlineUserInfo(context);
@@ -78,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
     userProvider.getUserIdProvider();
     final infoUserDataReal= Provider.of<UserAllInfoDatabase>(context).users;
     final changeColor= Provider.of<ChangeColor>(context).isTrue;
-    createDriverNearIcon();
+     createDriverNearIcon();
     return WillPopScope(
       onWillPop: () async=>false,
       child: Scaffold(
@@ -569,6 +573,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         listen: false)
                                                         .changValue(-500.0);
+                                                    driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
+                                                    searchNearestDriver(userProvider,context);
                                                   }
                                                 },
                                                 child: AnimatedContainer(
@@ -1001,5 +1007,35 @@ class _HomeScreenState extends State<HomeScreen> {
    }else{
      return;
    }
+  }
+/* this method when rider will do order it will send notification
+* to nearest driver [0] id driver it will cancel will switch to another
+* driver if no found drivers will cancel this trip and if driver accepted
+* will remove driver from map till finish his trip*/
+  void searchNearestDriver(UserIdProvider userProvider,BuildContext context) {
+    if(driverAvailable.isEmpty){
+      DataBaseSrv().cancelRiderRequest(userProvider);
+      restApp();
+      showDialog(context: context,barrierDismissible: false, builder:(_)=>sorryNoDriverDialog(context));
+    }else{
+     final driver = driverAvailable[0];
+     driverAvailable.removeAt(0);
+     print("sssssssssssss");
+     print("sssssssssssssssssssssss");
+     print("ssssssssssssssssssssssssssssss");
+     notifyDriver(driver,context);
+    }
+  }
+
+  Future<void> notifyDriver(NearestDriverAvailable driver,BuildContext context) async {
+    DataBaseSrv().sendRideRequestId(driver, context);
+    DatabaseReference tokeRef = FirebaseDatabase.instance
+        .ref()
+        .child("driver")
+        .child(driver.key)
+        .child("token");
+     final snapshot = await tokeRef.get();
+      String token = snapshot.value.toString();
+    SendNotification().sendNotificationToDriver(context,token);
   }
 }

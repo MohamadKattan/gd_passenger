@@ -1,7 +1,6 @@
 //this class for database methods
 
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gd_passenger/model/user.dart';
@@ -17,15 +16,14 @@ import 'package:gd_passenger/user_enter_face/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
+import '../model/nearest _driver_ available.dart';
 import 'auth_srv.dart';
 
 class DataBaseSrv {
   final Tools _tools = Tools();
 
-  firebase_storage.Reference refStorage =
-      firebase_storage.FirebaseStorage.instance.ref();
-
+  firebase_storage.Reference refStorage = firebase_storage.FirebaseStorage.instance.ref();
+ late DataSnapshot snapshot;
 // set image to storage before set user info to database
   Future<void> setImageToStorage(
       TextEditingController firstname,
@@ -90,24 +88,6 @@ class DataBaseSrv {
 
   // this method for got user id/phone/image/name from user collection in database real time and send to saveRiderRequest method
  void currentOnlineUserInfo(BuildContext context) async {
-    // try {
-    //   User? firebaseUser = FirebaseAuth.instance.currentUser;
-    //   String userId = firebaseUser!.uid;
-    //   DatabaseReference ref =
-    //       FirebaseDatabase.instance.ref().child("users").child(userId);
-    //   TransactionResult result = await ref.runTransaction((Object? user) {
-    //     Map<String, dynamic> _user = Map<String, dynamic>.from(user as Map);
-    //     if (_user.values.isNotEmpty) {
-    //       Users infoUser = Users.fromMap(_user);
-    //       print("lllllllllll" + infoUser.firstName);
-    //       Provider.of<UserAllInfoDatabase>(context, listen: false)
-    //           .updateUser(infoUser);
-    //     }
-    //     return Transaction.success(_user);
-    //   });
-    // } catch (ex) {
-    //   Tools().toastMsg("Welcome");
-    // }
     final currentUser = AuthSev().auth.currentUser;
     late final DataSnapshot snapshot;
     try {
@@ -143,8 +123,7 @@ class DataBaseSrv {
     print("pickUpLoc:::::: " + dropOffLoc.placeName);
 
     ///from user model
-    final currentUserInfoOnline =
-        Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+    final currentUserInfoOnline = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
     print("currentUserInfoOnline:::::: " + currentUserInfoOnline!.firstName);
 
     final carTypePro =
@@ -190,12 +169,26 @@ class DataBaseSrv {
   }
 
   // this method for cancel rider Request
-  void cancelRiderRequest(UserIdProvider userIdProvider) {
+  Future<void> cancelRiderRequest(UserIdProvider userIdProvider) async {
     print("id is::::" + userIdProvider.getUser.uid);
     DatabaseReference RefRideRequest = FirebaseDatabase.instance
         .ref()
         .child("Ride Request")
         .child(userIdProvider.getUser.uid);
-    RefRideRequest.remove();
+   await RefRideRequest.remove();
   }
+
+  // this method for send ride Request Id to driver collection in newride child for notification
+Future<void> sendRideRequestId(NearestDriverAvailable driver,BuildContext context) async {
+  final userId = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+  DatabaseReference driverRef = FirebaseDatabase.instance
+      .ref()
+      .child("driver")
+      .child(driver.key)
+      .child("newRide");
+    try{
+      await driverRef.set(userId?.userId);
+    }catch(e){e.toString();}
+
+}
 }
