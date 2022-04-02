@@ -2,6 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gd_passenger/my_provider/user_id_provider.dart';
+import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +11,7 @@ import '../my_provider/position_v_chnge.dart';
 import '../my_provider/posotoion_cancel_request.dart';
 import 'divider_box_.dart';
 
-Widget sorryNoDriverDialog(BuildContext context){
+Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider){
   return Dialog(
     elevation: 1.0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
@@ -49,6 +51,7 @@ Widget sorryNoDriverDialog(BuildContext context){
                     context,
                     listen: false)
                     .changValue(0.0);
+                DataBaseSrv().cancelRiderRequest(userProvider,context);
                 Navigator.pop(context);
               },
               child: Center(

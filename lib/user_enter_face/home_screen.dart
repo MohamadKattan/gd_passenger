@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -34,10 +35,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import '../my_provider/buttom_color_pro.dart';
+import '../my_provider/close_botton_driverInfo.dart';
+import '../my_provider/nearsert_driver_provider.dart';
+import '../my_provider/positon_driver_info_provide.dart';
 import '../notification.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/geoFire_methods_tools.dart';
 import '../tools/math_methods.dart';
+import '../widget/driver_info.dart';
 import '../widget/sorry_no_driver.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -60,6 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool nearDriverAvailableLoaded = false;
   late BitmapDescriptor driversNearIcon;
   List <NearestDriverAvailable>driverAvailable=[];
+  String state = "normal";
+  late StreamSubscription<DatabaseEvent> rideStreamSubscription;
+  bool isTimeRequstTrip = false;
    @override
   void initState() {
      DataBaseSrv().currentOnlineUserInfo(context);
@@ -82,7 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
     userProvider.getUserIdProvider();
     final infoUserDataReal= Provider.of<UserAllInfoDatabase>(context).users;
     final changeColor= Provider.of<ChangeColor>(context).isTrue;
-     createDriverNearIcon();
+    final postionDriverInfo=Provider.of<PositionDriverInfoProvider>(context).positionDriverInfo;
+    createDriverNearIcon();
     return WillPopScope(
       onWillPop: () async=>false,
       child: Scaffold(
@@ -101,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: TweenAnimationBuilder(
                     tween: Tween<double>(begin: 0.0, end: value),
-                    duration: const Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 100),
                     builder: (_, double val, __) {
                       return Transform(
                         transform: Matrix4.identity()
@@ -161,8 +170,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
+                              /// order taxi and else...
                               AnimatedPositioned(
-                                  duration: const Duration(seconds: 1),
+                                  duration: const Duration(milliseconds: 200),
                                   right: 0.0,
                                   left: 0.0,
                                   bottom: postionChang,
@@ -573,8 +583,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         listen: false)
                                                         .changValue(-500.0);
+                                                    setState(() {
+                                                      state = "requesting";
+                                                    });
                                                     driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
                                                     searchNearestDriver(userProvider,context);
+                                                    gotDriverInfo(context);
                                                   }
                                                 },
                                                 child: AnimatedContainer(
@@ -607,14 +621,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   )),
+                              ///cancel container
                               AnimatedPositioned(
-                                  duration: const Duration(seconds: 1),
+                                  duration: const Duration(milliseconds: 200),
                                   right: 0.0,
                                   left: 0.0,
                                   bottom: postionCancel,
                                   child: CancelTaxi().cancelTaxiRequest(
                                       context: context,
-                                      userIdProvider: userProvider,voidCallback:()=>restApp())),
+                                      userIdProvider: userProvider,voidCallback:(){
+                                    restApp();
+                                    setState(() {
+                                      state = "normal";
+                                    });
+                                  })),
+                              ///driver info
+                              AnimatedPositioned(
+                                  duration: const Duration(milliseconds: 200),
+                                  right: 0.0,
+                                  left: 0.0,
+                                  bottom: postionDriverInfo,
+                                  child: DriverInfo().driverInfoContainer(
+                                      context:context,
+                                    userIdProvider: userProvider,
+                                    voidCallback: (){
+                                      restApp();
+                                      setState(() {
+                                        state = "normal";
+                                      });
+                                    }
+                                  )),
                             ],
                           ),
                         ),
@@ -654,7 +690,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   .updateState(false);
                             },
                             icon: const Icon(
-                              Icons.format_list_numbered_rtl_rounded,
+                              Icons.arrow_back_ios,
                               color: Colors.black54,
                               size: 25,
                             )),
@@ -1008,34 +1044,162 @@ class _HomeScreenState extends State<HomeScreen> {
      return;
    }
   }
+///================================Start========================================
 /* this method when rider will do order it will send notification
 * to nearest driver [0] id driver it will cancel will switch to another
 * driver if no found drivers will cancel this trip and if driver accepted
 * will remove driver from map till finish his trip*/
   void searchNearestDriver(UserIdProvider userProvider,BuildContext context) {
     if(driverAvailable.isEmpty){
-      DataBaseSrv().cancelRiderRequest(userProvider);
+      DataBaseSrv().cancelRiderRequest(userProvider,context);
       restApp();
-      showDialog(context: context,barrierDismissible: false, builder:(_)=>sorryNoDriverDialog(context));
+      showDialog(context: context,barrierDismissible: false, builder:(_)=>sorryNoDriverDialog(context,userProvider));
     }else{
      final driver = driverAvailable[0];
      driverAvailable.removeAt(0);
-     print("sssssssssssss");
-     print("sssssssssssssssssssssss");
-     print("ssssssssssssssssssssssssssssss");
-     notifyDriver(driver,context);
+     Provider.of<NearestDriverProvider>(context,listen: false).updateState(driver);
+     notifyDriver(driver,context,userProvider);
     }
   }
 
-  Future<void> notifyDriver(NearestDriverAvailable driver,BuildContext context) async {
+  Future<void> notifyDriver(NearestDriverAvailable driver,BuildContext context, UserIdProvider userProvider) async {
     DataBaseSrv().sendRideRequestId(driver, context);
-    DatabaseReference tokeRef = FirebaseDatabase.instance
+    DatabaseReference driverRef = FirebaseDatabase.instance
         .ref()
         .child("driver")
-        .child(driver.key)
-        .child("token");
-     final snapshot = await tokeRef.get();
-      String token = snapshot.value.toString();
-    SendNotification().sendNotificationToDriver(context,token);
+        .child(driver.key);
+
+     final snapshot = await driverRef.child("token") .get();
+     if(snapshot.value != null){
+       String token = snapshot.value.toString();
+       SendNotification().sendNotificationToDriver(context,token);
+     }else{
+       return;
+     }
+      const secondPassed = Duration(seconds: 1);
+     final timer = Timer.periodic(secondPassed, (timer) {
+       rideRequestTimeOut = rideRequestTimeOut - 1;
+       //1
+       if(state != "requesting"){
+         driverRef.child("newRide").set("canceled")
+             .whenComplete(() =>driverRef.update({"newRide":"searching"}));
+         driverRef.child("newRide").onDisconnect();
+         rideRequestTimeOut = 40;
+         timer.cancel();
+       }
+       //2
+       driverRef.child("newRide").onValue.listen((event) {
+         if(event.snapshot.value.toString() == "accepted"){
+           driverRef.child("newRide").onDisconnect();
+           rideRequestTimeOut = 40;
+           timer.cancel();
+         }
+       });
+       //3
+       if(rideRequestTimeOut == 0){
+         driverRef.child("newRide").set("timeOut")
+             .whenComplete(() =>driverRef.child("newRide").set("searching"));
+         driverRef.child("newRide").onDisconnect();
+         rideRequestTimeOut = 40;
+         timer.cancel();
+         searchNearestDriver(userProvider,context);
+       }
+     });
   }
+  // this method for got driver info from Ride request collection
+  Future<void> gotDriverInfo(BuildContext context) async {
+    final id = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+
+    DatabaseReference reference =
+    FirebaseDatabase.instance.ref().child("Ride Request").child(id!.userId);
+    rideStreamSubscription = reference.onValue.listen((event) {
+      if (event.snapshot.value == null) {
+        return;
+      }
+      Map<String, dynamic> map = Map<String, dynamic>.from(event.snapshot.value as Map);
+      if(map["carInfo"] != null){
+        carDriverInfo = map["carInfo"].toString();
+      }
+      if(map["driverName"] != null){
+        driverName = map["driverName"].toString();
+      }
+      if(map["driverPhone"] != null){
+        driverPhone = map["driverPhone"].toString();
+      }
+      if (map["status"] != null) {
+        statusRide = map["status"].toString();
+      }
+      if(map["driverLocation"]!=null){
+       final driverLatitude = double.parse(map["driverLocation"]["latitude"].toString());
+       final driverLongitude = double.parse(map["driverLocation"]["longitude"].toString());
+       LatLng driverCurrentLocation=LatLng(driverLatitude, driverLongitude);
+       if (statusRide == "accepted"){
+         updateTireRideToPickUp(driverCurrentLocation,context);
+       }
+       else if(statusRide == "arrived"){
+         setState(() {
+           statusRide = "Driver arrived";
+           timeTrip = "";
+         });
+       }
+       else if(statusRide == "onride"){
+         updateTireRideToDropOff(context);
+         setState(() {
+           statusRide = "Trip Started";
+         });
+       }
+       else if(statusRide == "ended"){
+         setState(() {
+           statusRide = "Trip finished";
+           timeTrip = "";
+           Provider.of<CloseButtonProvider>(context,listen: false).updateState(true);
+         });
+       }
+      }
+      if (statusRide == "accepted") {
+        setState(() {
+          Provider.of<PositionDriverInfoProvider>(context,listen: false).updateState(0.0);
+          Provider.of<PositionCancelReq>(context,listen: false).updateValue(-400.0);
+          Provider.of<CloseButtonProvider>(context,listen: false).updateState(false);
+          Geofire.stopListener();
+          deleteGeoFireMarker();
+        });
+      }
+    });
+  }
+// this method for update time driver arrive to rider in driver info container
+  Future<void> updateTireRideToPickUp(LatLng driverCurrentLocation,BuildContext context) async {
+    final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
+    LatLng  riderLoc =LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
+    if(isTimeRequstTrip == false){
+      isTimeRequstTrip = true;
+      final details = await ApiSrvDir.obtainPlaceDirectionDetails(driverCurrentLocation, riderLoc, context);
+      setState(() {
+        timeTrip = details!.durationText.toString();
+      });
+      isTimeRequstTrip = false;
+    }
+  }
+// this method for update time from pickUp to dropOff
+  Future<void> updateTireRideToDropOff(BuildContext context) async {
+    final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final dropOffLoc = Provider.of<PlaceDetailsDropProvider>(context, listen: false).dropOfLocation;
+    LatLng  riderLocPickUp =LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
+    LatLng  riderLocDropOff =LatLng(dropOffLoc.latitude, dropOffLoc.longitude);
+    if(isTimeRequstTrip == false){
+      isTimeRequstTrip = true;
+      final details = await ApiSrvDir.obtainPlaceDirectionDetails(riderLocPickUp,riderLocDropOff, context);
+      setState(() {
+        timeTrip = details!.durationText.toString();
+      });
+      isTimeRequstTrip = false;
+    }
+  }
+// this method for delete all taxi when on taxi accepted
+void deleteGeoFireMarker(){
+    setState(() {
+      markersSet.removeWhere((ele) => ele.markerId.value.contains("driver"));
+    });
+}
+///================================End==========================================
 }

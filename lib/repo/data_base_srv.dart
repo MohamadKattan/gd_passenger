@@ -1,8 +1,10 @@
 //this class for database methods
 
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:gd_passenger/model/user.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
@@ -13,17 +15,24 @@ import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/home_screen.dart';
+import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import '../config.dart';
 import '../model/nearest _driver_ available.dart';
+import '../my_provider/nearsert_driver_provider.dart';
+import '../my_provider/positon_driver_info_provide.dart';
+import '../my_provider/posotoion_cancel_request.dart';
+import '../tools/geoFire_methods_tools.dart';
 import 'auth_srv.dart';
 
 class DataBaseSrv {
   final Tools _tools = Tools();
 
-  firebase_storage.Reference refStorage = firebase_storage.FirebaseStorage.instance.ref();
- late DataSnapshot snapshot;
+  firebase_storage.Reference refStorage =
+      firebase_storage.FirebaseStorage.instance.ref();
+  late DataSnapshot snapshot;
 // set image to storage before set user info to database
   Future<void> setImageToStorage(
       TextEditingController firstname,
@@ -87,7 +96,7 @@ class DataBaseSrv {
   }
 
   // this method for got user id/phone/image/name from user collection in database real time and send to saveRiderRequest method
- void currentOnlineUserInfo(BuildContext context) async {
+  void currentOnlineUserInfo(BuildContext context) async {
     final currentUser = AuthSev().auth.currentUser;
     late final DataSnapshot snapshot;
     try {
@@ -112,8 +121,7 @@ class DataBaseSrv {
 // this method will set all info when rider order a taxi in Ride Request collection
   void saveRiderRequest(BuildContext context) async {
     /// from api geo
-    final pickUpLoc =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
     print("pickUpLoc:::::: " + pickUpLoc.placeName);
 
     ///from api srv place
@@ -123,7 +131,8 @@ class DataBaseSrv {
     print("pickUpLoc:::::: " + dropOffLoc.placeName);
 
     ///from user model
-    final currentUserInfoOnline = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+    final currentUserInfoOnline =
+        Provider.of<UserAllInfoDatabase>(context, listen: false).users;
     print("currentUserInfoOnline:::::: " + currentUserInfoOnline!.firstName);
 
     final carTypePro =
@@ -169,26 +178,46 @@ class DataBaseSrv {
   }
 
   // this method for cancel rider Request
-  Future<void> cancelRiderRequest(UserIdProvider userIdProvider) async {
+  Future<void> cancelRiderRequest(UserIdProvider userIdProvider,BuildContext context) async {
+    final driverNer = Provider.of<NearestDriverProvider>(context,listen: false).driverNerProvider;
     print("id is::::" + userIdProvider.getUser.uid);
-    DatabaseReference RefRideRequest = FirebaseDatabase.instance
+    DatabaseReference refRideRequest = FirebaseDatabase.instance
         .ref()
         .child("Ride Request")
         .child(userIdProvider.getUser.uid);
-   await RefRideRequest.remove();
+    await refRideRequest.remove();
+    if(driverNer.key.isEmpty || driverNer.key == ""){
+      return;
+    }
+    else{
+        DatabaseReference driverRef = FirebaseDatabase.instance
+            .ref()
+            .child("driver")
+            .child(driverNer.key)
+            .child("newRide");
+        await driverRef.set("searching");
+          NearestDriverAvailable _nearestDriverAvailable = NearestDriverAvailable("",0.0,0.0);
+          Provider.of<NearestDriverProvider>(context,listen: false).updateState(_nearestDriverAvailable);
+        driverRef.child("newRide").onDisconnect();
+    }
   }
 
   // this method for send ride Request Id to driver collection in newride child for notification
-Future<void> sendRideRequestId(NearestDriverAvailable driver,BuildContext context) async {
-  final userId = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  DatabaseReference driverRef = FirebaseDatabase.instance
-      .ref()
-      .child("driver")
-      .child(driver.key)
-      .child("newRide");
-    try{
+  Future<void> sendRideRequestId(
+      NearestDriverAvailable driver, BuildContext context) async {
+    final userId =
+        Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+    DatabaseReference driverRef = FirebaseDatabase.instance
+        .ref()
+        .child("driver")
+        .child(driver.key)
+        .child("newRide");
+    try {
       await driverRef.set(userId?.userId);
-    }catch(e){e.toString();}
+    } catch (e) {
+      e.toString();
+    }
+  }
 
-}
+
 }

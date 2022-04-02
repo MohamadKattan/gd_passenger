@@ -42,7 +42,7 @@ class CancelTaxi {
             GestureDetector(
                 onTap: () {
                   voidCallback();
-                  DataBaseSrv().cancelRiderRequest(userIdProvider);
+                  DataBaseSrv().cancelRiderRequest(userIdProvider,context);
                   Provider.of<PositionCancelReq>(context, listen: false)
                       .updateValue(-400.0);
                   Provider.of<PositionChang>(context, listen: false)
