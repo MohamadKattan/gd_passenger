@@ -8,8 +8,6 @@ TextEditingController lastname = TextEditingController();
 TextEditingController email = TextEditingController();
 Tools tools = Tools();
 DataBaseSrv srv = DataBaseSrv();
-String mapKey = "AIzaSyBt7etvZRY_OrzFcCsawNb22jqSzE2mRDg";
-String serverToken ="key=AAAAZnprfL0:APA91bH3MKr_k15dqmiFxe6Z8p_YFJnTurnTLtxrZrv4dnMq1wJnn1ta8Htg6FSyWcPqNxMgCCTSc0cYjmu-U6gClk0YBzyHWrzKVsxJ-80Fum2hXlVyfY4tG-qclsL8-EJk1XmEZp0M";
 GoogleMapController? newGoogleMapController;
 int rideRequestTimeOut = 40;
 String statusRide = "";
