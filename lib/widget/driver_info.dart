@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../config.dart';
 import '../model/nearest _driver_ available.dart';
 import '../my_provider/close_botton_driverInfo.dart';
@@ -12,6 +13,7 @@ import '../my_provider/position_v_chnge.dart';
 import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/user_id_provider.dart';
 import '../repo/auth_srv.dart';
+import '../tools/tools.dart';
 import 'divider_box_.dart';
 
 class DriverInfo {
@@ -42,17 +44,35 @@ class DriverInfo {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Center(
-                  child: Text(
-                "Driver Status : $statusRide : $timeTrip",
-                style: const TextStyle(color: Colors.black87, fontSize: 18),
-              )),
+                  child: Row(
+                    children: [
+                      const Text(
+                "Driver Status : ",
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+                      Text(statusRide,style: const TextStyle(color:Colors.black45,fontSize: 14.0 )),
+                      const Text(
+                        " Time : ",
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      Text(timeTrip==""?"...":timeTrip,style: const TextStyle(color:Colors.black45,fontSize: 14.0 )),
+                    ],
+                  )),
             ),
             CustomWidget().customDivider(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Car Details : $carDriverInfo ",
-                style: const TextStyle(color: Colors.black87, fontSize: 20),
+              child: Row(
+                children: [
+                  const Text(
+                    "Car Details : ",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  Text(
+                    carDriverInfo,
+                    style: const TextStyle(color: Colors.black87, fontSize: 16),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -60,9 +80,17 @@ class DriverInfo {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Driver name : $driverName",
-                style: const TextStyle(color: Colors.black87, fontSize: 20),
+              child: Row(
+                children: [
+                  const Text(
+                    "Driver name : ",
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  Text(
+                    driverName,
+                    style: const TextStyle(color: Colors.black87, fontSize: 16),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -78,7 +106,12 @@ class DriverInfo {
                   IconButton(
                     iconSize: 40.0,
                     icon: Icon(Icons.call, color: Colors.greenAccent.shade700),
-                    onPressed: () => null,
+                    onPressed: () async {
+                      // if (!await launch(url)) throw 'Could not launch $url';
+                      await canLaunch("tel:$driverPhone")
+                          ? launch("tel:$driverPhone")
+                          : Tools().toastMsg('Could not launch $driverPhone');
+                    },
                   ),
                   IconButton(
                     iconSize: 40.0,
@@ -135,7 +168,30 @@ class DriverInfo {
                       ),
                     ),
                   )
-                : const Text(""),
+                : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: GestureDetector(
+                  onTap: () {
+                  Tools().toastMsg("Wait till finish your trip");
+                  },
+                  child: Container(
+                    height:
+                    MediaQuery.of(context).size.height * 6.5 / 100,
+                    width: MediaQuery.of(context).size.width * 70 / 100,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade700,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child:  Center(
+                        child: Text(
+                          "Close",
+                          style: TextStyle(fontSize: 18,color: Colors.redAccent.shade700),
+                        )),
+                  ),
+                ),
+              ),
+            ),
             // :const Text("")
           ],
         ));

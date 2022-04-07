@@ -10,9 +10,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ApiSrvDir {
+
 // got time/km/point
   static Future<DirectionDetails?> obtainPlaceDirectionDetails(
       LatLng initialPostion, LatLng finalPostion, BuildContext context) async {
+    DirectionDetails directionDetails = DirectionDetails(
+        distanceText: "",
+        durationText: "",
+        distanceVale: 0,
+        durationVale: 0,
+        enCodingPoints: "",
+    );
     final directionUrl = Uri.parse(
         "https://maps.googleapis.com/maps/api/directions/json?origin=${initialPostion.latitude},${initialPostion.longitude}&destination=${finalPostion.latitude},${finalPostion.longitude}&key=${mapKey}");
 
@@ -21,12 +29,6 @@ class ApiSrvDir {
       return null;
     }
     if (res["status"] == "OK") {
-      DirectionDetails directionDetails = DirectionDetails(
-          distanceText: "",
-          durationText: "",
-          distanceVale: 0,
-          durationVale: 0,
-          enCodingPoints: "");
       directionDetails.enCodingPoints =
           res["routes"][0]["overview_polyline"]["points"];
       directionDetails.durationText =
@@ -43,14 +45,14 @@ class ApiSrvDir {
       return directionDetails;
     }
     /// new add
-    return null;
+    return directionDetails;
   }
   //this method for caulc total price
 
   static int calculateFares(
       DirectionDetails directionDetails, String carTypePro) {
-    double timeTravleFare = (directionDetails.durationVale / 60) * 0.20;
-    double distanceTravleFare = (directionDetails.distanceVale / 1000) * 0.60;
+    double timeTravleFare = (directionDetails.durationVale / 60) * 0.05;
+    double distanceTravleFare = (directionDetails.distanceVale / 1000) * 0.40;
     double fareAmont = timeTravleFare + distanceTravleFare;
     final culculFinal = carTypePro == "Taxi"
         ? fareAmont * 13 + 0.70 * 13.00
@@ -59,7 +61,6 @@ class ApiSrvDir {
             : carTypePro == "Big Commercial"
                 ? fareAmont * 13 + 2 * 13.00
                 : 0;
-
     return culculFinal.truncate();
   }
 

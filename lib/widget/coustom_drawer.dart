@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gd_passenger/my_provider/buttom_color_pro.dart';
-import 'package:gd_passenger/my_provider/double_value.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
 import 'package:gd_passenger/user_enter_face/language_screen.dart';
 import 'package:gd_passenger/user_enter_face/profile_screen.dart';
@@ -13,7 +12,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 Widget customDrawer(BuildContext context) {
   return GestureDetector(
     onTap: () {
-      Provider.of<DoubleValue>(context, listen: false).value0Or1(0);
+      // Provider.of<DoubleValue>(context, listen: false).value0Or1(0);
       Provider.of<ChangeColor>(context, listen: false).updateState(false);
     },
     child: Container(
@@ -155,10 +154,10 @@ Widget customDrawer(BuildContext context) {
                 height: 8.0,
               ),
               CustomWidget().customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () => SystemNavigator.pop(),
+              GestureDetector(
+                onTap: () => SystemNavigator.pop(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: const [
                       Padding(

@@ -54,6 +54,7 @@ dependencies:
   flutter_native_splash: ^2.1.1
   location: ^4.3.0
   flutter_geofire: ^2.0.1
+  url_launcher: ^6.0.20
 
 
 dev_dependencies:

@@ -46,7 +46,7 @@ import '../widget/driver_info.dart';
 import '../widget/sorry_no_driver.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen( {Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -64,15 +64,16 @@ class _HomeScreenState extends State<HomeScreen> {
   DirectionDetails? tripDirectionDetails;
   bool nearDriverAvailableLoaded = false;
   late BitmapDescriptor driversNearIcon;
-  List <NearestDriverAvailable>driverAvailable=[];
+  List<NearestDriverAvailable> driverAvailable = [];
   String state = "normal";
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
-   @override
+  @override
   void initState() {
-     DataBaseSrv().currentOnlineUserInfo(context);
+    DataBaseSrv().currentOnlineUserInfo(context);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final value = Provider.of<DoubleValue>(context).value;
@@ -85,25 +86,26 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     final postionCancel = Provider.of<PositionCancelReq>(context).value;
-    final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
+    final dropBottomProvider =
+        Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
-    final infoUserDataReal= Provider.of<UserAllInfoDatabase>(context).users;
-    final changeColor= Provider.of<ChangeColor>(context).isTrue;
-    final postionDriverInfo=Provider.of<PositionDriverInfoProvider>(context).positionDriverInfo;
+    final infoUserDataReal = Provider.of<UserAllInfoDatabase>(context).users;
+    final changeColor = Provider.of<ChangeColor>(context).isTrue;
+    final postionDriverInfo =
+        Provider.of<PositionDriverInfoProvider>(context).positionDriverInfo;
     createDriverNearIcon();
     return WillPopScope(
-      onWillPop: () async=>false,
+      onWillPop: () async => false,
       child: Scaffold(
           body: Builder(
-        builder: (context) =>
-            SafeArea(
+        builder: (context) => SafeArea(
           child: Stack(
             children: [
               customDrawer(context),
               GestureDetector(
                 onTap: () {
-                //  infoUserDataReal == null? DataBaseSrv.currentOnlineUserInfo(context) :Text("");
+                  //  infoUserDataReal == null? DataBaseSrv.currentOnlineUserInfo(context) :Text("");
                   Provider.of<DoubleValue>(context, listen: false).value0Or1(0);
                   Provider.of<ChangeColor>(context, listen: false)
                       .updateState(false);
@@ -125,7 +127,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               GoogleMap(
                                 mapType: MapType.normal,
-                                initialCameraPosition: _logicGoogleMap.kGooglePlex,
+                                initialCameraPosition:
+                                    _logicGoogleMap.kGooglePlex,
                                 myLocationButtonEnabled: true,
                                 myLocationEnabled: true,
                                 zoomGesturesEnabled: true,
@@ -142,7 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .complete(controller);
                                   newGoogleMapController = controller;
                                   locationPosition(context);
-
                                 },
                               ),
                               Positioned(
@@ -150,7 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 right: 0.0,
                                 left: 0.0,
                                 child: GestureDetector(
-                                  onTap: () => Provider.of<PositionChang>(context,
+                                  onTap: () => Provider.of<PositionChang>(
+                                          context,
                                           listen: false)
                                       .changValue(0.0),
                                   child: Container(
@@ -170,6 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
+
                               /// order taxi and else...
                               AnimatedPositioned(
                                   duration: const Duration(milliseconds: 200),
@@ -204,7 +208,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           const SearchScreen()));
                                               if (res == "dataDir") {
                                                 await getPlaceDerction(context);
-                                                checkAllUserInfoReal(infoUserDataReal,context);
+                                                checkAllUserInfoReal(
+                                                    infoUserDataReal, context);
                                               }
                                             },
                                             child: Container(
@@ -222,7 +227,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 children: [
                                                   Padding(
                                                     padding:
-                                                        const EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     child:
                                                         searchIconOrCancelBottom(
                                                             tripDirectionDetails),
@@ -285,25 +291,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                           //                   context),
                                           //         ],
                                           //       ),
-                                          _customWidget
-                                              .customDivider(),
+                                          _customWidget.customDivider(),
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 8.0),
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                  children: [
+                                              child: Row(children: [
                                                 GestureDetector(
                                                   onTap: () =>
                                                       changeAllProClickTaxiBox(),
                                                   child: Stack(
                                                     children: [
                                                       Opacity(
-                                                          opacity: opacityTaxi ==
-                                                                  true
-                                                              ? 1
-                                                              : 0.3,
+                                                          opacity:
+                                                              opacityTaxi ==
+                                                                      true
+                                                                  ? 1
+                                                                  : 0.3,
                                                           child: _customWidget.carTypeBox(
                                                               const Image(
                                                                   image: AssetImage(
@@ -324,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           right: -10.0,
                                                           top: -10.0,
                                                           child: IconButton(
-                                                              onPressed: () =>customBottomSheet
+                                                              onPressed: () => customBottomSheet
                                                                   .showSheetCarInfo(
                                                                       context:
                                                                           context,
@@ -356,23 +361,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           .purple,
                                                                       size: 20,
                                                                     )
-                                                                  : const Text(""))),
+                                                                  : const Text(
+                                                                      ""))),
                                                       Positioned(
                                                         right: 0.0,
                                                         left: 0.0,
-                                                        bottom:
-                                                            MediaQuery.of(context)
-                                                                    .size
-                                                                    .height *
-                                                                0.15 /
-                                                                100,
+                                                        bottom: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.15 /
+                                                            100,
                                                         child: Container(
                                                           height: 4,
                                                           decoration:
                                                               BoxDecoration(
                                                             borderRadius:
                                                                 BorderRadius
-                                                                    .circular(2),
+                                                                    .circular(
+                                                                        2),
                                                             color: taxiLine ==
                                                                     true
                                                                 ? Colors.black
@@ -414,27 +421,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           right: -10.0,
                                                           top: -10.0,
                                                           child: IconButton(
-                                                              onPressed: () =>
-                                                                  customBottomSheet
-                                                                  .showSheetCarInfo(
-                                                                      context:
-                                                                          context,
-                                                                      image:
-                                                                          const Image(
-                                                                              image: AssetImage(
-                                                                                  "assets/van.png")),
-                                                                      title:
-                                                                          "Medium",
-                                                                      des:
-                                                                          "Medium commercial car",
-                                                                      iconM: Icons
-                                                                          .money,
-                                                                      price:
-                                                                          "20.0",
-                                                                      iconP: Icons
-                                                                          .person,
-                                                                      person:
-                                                                          "6-10"),
+                                                              onPressed: () => customBottomSheet.showSheetCarInfo(
+                                                                  context:
+                                                                      context,
+                                                                  image: const Image(
+                                                                      image: AssetImage(
+                                                                          "assets/van.png")),
+                                                                  title:
+                                                                      "Medium",
+                                                                  des:
+                                                                      "Medium commercial car",
+                                                                  iconM: Icons
+                                                                      .money,
+                                                                  price: "20.0",
+                                                                  iconP: Icons
+                                                                      .person,
+                                                                  person:
+                                                                      "6-10"),
                                                               icon: opacityVan ==
                                                                       true
                                                                   ? const Icon(
@@ -444,24 +447,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           .purple,
                                                                       size: 20,
                                                                     )
-                                                                  : const Text(""))),
+                                                                  : const Text(
+                                                                      ""))),
                                                       Positioned(
                                                         right: 0.0,
                                                         left: 0.0,
-                                                        bottom:
-                                                            MediaQuery.of(context)
-                                                                    .size
-                                                                    .height *
-                                                                0.15 /
-                                                                100,
+                                                        bottom: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.15 /
+                                                            100,
                                                         child: Container(
                                                           height: 4,
                                                           decoration:
                                                               BoxDecoration(
                                                             borderRadius:
                                                                 BorderRadius
-                                                                    .circular(2),
-                                                            color: vanLine == true
+                                                                    .circular(
+                                                                        2),
+                                                            color: vanLine ==
+                                                                    true
                                                                 ? Colors.black
                                                                 : Colors
                                                                     .transparent,
@@ -478,10 +484,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: Stack(
                                                     children: [
                                                       Opacity(
-                                                          opacity: opacityVeto ==
-                                                                  true
-                                                              ? 1.0
-                                                              : 0.3,
+                                                          opacity:
+                                                              opacityVeto ==
+                                                                      true
+                                                                  ? 1.0
+                                                                  : 0.3,
                                                           child: _customWidget.carTypeBox(
                                                               const Image(
                                                                   image: AssetImage(
@@ -502,26 +509,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           right: -10.0,
                                                           top: -10.0,
                                                           child: IconButton(
-                                                              onPressed: () => customBottomSheet
-                                                                  .showSheetCarInfo(
-                                                                      context:
-                                                                          context,
-                                                                      image:
-                                                                          const Image(
-                                                                              image: AssetImage(
-                                                                                  "assets/veto.png")),
-                                                                      title:
-                                                                          "Big commercial",
-                                                                      des:
-                                                                          "Big commercial car: veto etc...",
-                                                                      iconM: Icons
-                                                                          .money,
-                                                                      price:
-                                                                          "25.0",
-                                                                      iconP: Icons
-                                                                          .person,
-                                                                      person:
-                                                                          "11-19"),
+                                                              onPressed: () => customBottomSheet.showSheetCarInfo(
+                                                                  context:
+                                                                      context,
+                                                                  image: const Image(
+                                                                      image: AssetImage(
+                                                                          "assets/veto.png")),
+                                                                  title:
+                                                                      "Big commercial",
+                                                                  des:
+                                                                      "Big commercial car: veto etc...",
+                                                                  iconM: Icons
+                                                                      .money,
+                                                                  price: "25.0",
+                                                                  iconP: Icons
+                                                                      .person,
+                                                                  person:
+                                                                      "11-19"),
                                                               icon: opacityVeto ==
                                                                       true
                                                                   ? const Icon(
@@ -531,23 +535,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           .purple,
                                                                       size: 20,
                                                                     )
-                                                                  : const Text(""))),
+                                                                  : const Text(
+                                                                      ""))),
                                                       Positioned(
                                                         right: 0.0,
                                                         left: 0.0,
-                                                        bottom:
-                                                            MediaQuery.of(context)
-                                                                    .size
-                                                                    .height *
-                                                                0.15 /
-                                                                100,
+                                                        bottom: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.15 /
+                                                            100,
                                                         child: Container(
                                                           height: 4,
                                                           decoration:
                                                               BoxDecoration(
                                                             borderRadius:
                                                                 BorderRadius
-                                                                    .circular(2),
+                                                                    .circular(
+                                                                        2),
                                                             color: vetoLine ==
                                                                     true
                                                                 ? Colors.black
@@ -570,29 +576,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: GestureDetector(
-                                                onTap: () async{
-                                                  if(tripDirectionDetails==null){
-                                                    Tools().toastMsg("Choose to where before your request");
-                                                  }else{
-                                                    DataBaseSrv().saveRiderRequest(context);
+                                                onTap: () async {
+                                                  if (tripDirectionDetails ==
+                                                      null) {
+                                                    Tools().toastMsg(
+                                                        "Choose to where before your request");
+                                                  } else {
+                                                    ///todo
+                                                    final int amount =
+                                                        checkAnyAmount(
+                                                            carTypePro!,
+                                                            tripDirectionDetails!);
+                                                    DataBaseSrv()
+                                                        .saveRiderRequest(
+                                                            context, amount);
                                                     Provider.of<PositionCancelReq>(
-                                                        context,
-                                                        listen: false)
+                                                            context,
+                                                            listen: false)
                                                         .updateValue(0.0);
                                                     Provider.of<PositionChang>(
-                                                        context,
-                                                        listen: false)
+                                                            context,
+                                                            listen: false)
                                                         .changValue(-500.0);
                                                     setState(() {
                                                       state = "requesting";
                                                     });
-                                                    driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
-                                                    searchNearestDriver(userProvider,context);
+                                                    driverAvailable = GeoFireMethods
+                                                        .listOfNearestDriverAvailable;
+                                                    searchNearestDriver(
+                                                        userProvider, context);
                                                     gotDriverInfo(context);
                                                   }
                                                 },
                                                 child: AnimatedContainer(
-                                                  duration: const Duration(seconds: 1),
+                                                  duration: const Duration(
+                                                      seconds: 1),
                                                   height: MediaQuery.of(context)
                                                           .size
                                                           .height *
@@ -604,7 +622,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       70 /
                                                       100,
                                                   decoration: BoxDecoration(
-                                                    color: tripDirectionDetails!=null?const Color(0xFFFFD54F):Colors.purple,
+                                                    color:
+                                                        tripDirectionDetails !=
+                                                                null
+                                                            ? const Color(
+                                                                0xFFFFD54F)
+                                                            : Colors.purple,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             15.0),
@@ -621,6 +644,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   )),
+
                               ///cancel container
                               AnimatedPositioned(
                                   duration: const Duration(milliseconds: 200),
@@ -629,12 +653,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   bottom: postionCancel,
                                   child: CancelTaxi().cancelTaxiRequest(
                                       context: context,
-                                      userIdProvider: userProvider,voidCallback:(){
-                                    restApp();
-                                    setState(() {
-                                      state = "normal";
-                                    });
-                                  })),
+                                      userIdProvider: userProvider,
+                                      voidCallback: () {
+                                        restApp();
+                                        setState(() {
+                                          state = "normal";
+                                        });
+                                      })),
+
                               ///driver info
                               AnimatedPositioned(
                                   duration: const Duration(milliseconds: 200),
@@ -642,15 +668,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   left: 0.0,
                                   bottom: postionDriverInfo,
                                   child: DriverInfo().driverInfoContainer(
-                                      context:context,
-                                    userIdProvider: userProvider,
-                                    voidCallback: (){
-                                      restApp();
-                                      setState(() {
-                                        state = "normal";
-                                      });
-                                    }
-                                  )),
+                                      context: context,
+                                      userIdProvider: userProvider,
+                                      voidCallback: () {
+                                        restApp();
+                                        setState(() {
+                                          state = "normal";
+                                        });
+                                      })),
                             ],
                           ),
                         ),
@@ -664,12 +689,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         radius: 30,
                         backgroundColor: const Color(0xFFFFD54F),
                         child: IconButton(
-                            onPressed: (){
+                            onPressed: () {
                               checkAllUserInfoReal(infoUserDataReal, context);
-                            Provider.of<DoubleValue>(context, listen: false)
-                                .value0Or1(1);
-                            Provider.of<ChangeColor>(context, listen: false)
-                                .updateState(true);},
+                              Provider.of<DoubleValue>(context, listen: false)
+                                  .value0Or1(1);
+                              Provider.of<ChangeColor>(context, listen: false)
+                                  .updateState(true);
+                            },
                             icon: const Icon(
                               Icons.format_list_numbered_rtl_rounded,
                               color: Colors.black54,
@@ -827,7 +853,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-///this method for got current loction after that run geofire method for got the drivers nearest
+  ///this method for got current loction after that run geofire method for got the drivers nearest
   Future<dynamic> locationPosition(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -859,35 +885,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // update on google map
     CameraPosition cameraPosition =
-    CameraPosition(target: latLngPosition, zoom: 14);
+        CameraPosition(target: latLngPosition, zoom: 14);
     newGoogleMapController
         ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     ///Not for chacking
-    final address = await _apiMethods.searchCoordinatesAddress(position, context);
+    final address =
+        await _apiMethods.searchCoordinatesAddress(position, context);
     geoFireInitialize();
-
   }
 
   /// this method for display nearest driver available from rider in list by using geoFire
- void geoFireInitialize(){
-    final currentPosition = Provider.of<AppData>(context, listen: false).pickUpLocation;
+  void geoFireInitialize() {
+    final currentPosition =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
 
     String pathToReference = "availableDrivers";
     Geofire.initialize(pathToReference);
 
-    Geofire.queryAtLocation(currentPosition.latitude, currentPosition.longitude, 2)?.listen((map) {
-      if (map != null){
+    Geofire.queryAtLocation(
+            currentPosition.latitude, currentPosition.longitude, 2)
+        ?.listen((map) {
+      if (map != null) {
         var callBack = map['callBack'];
 
         switch (callBack) {
           case Geofire.onKeyEntered:
-            NearestDriverAvailable nearestDriverAvailable =NearestDriverAvailable("",0.0,0.0);
+            NearestDriverAvailable nearestDriverAvailable =
+                NearestDriverAvailable("", 0.0, 0.0);
             nearestDriverAvailable.key = map['key'];
             nearestDriverAvailable.latitude = map['latitude'];
             nearestDriverAvailable.longitude = map['longitude'];
-            GeoFireMethods.listOfNearestDriverAvailable.add(nearestDriverAvailable);
-            if(nearDriverAvailableLoaded == true){
+            GeoFireMethods.listOfNearestDriverAvailable
+                .add(nearestDriverAvailable);
+            if (nearDriverAvailableLoaded == true) {
               updateAvailableDriverOnMap();
             }
             break;
@@ -897,8 +928,9 @@ class _HomeScreenState extends State<HomeScreen> {
             break;
 
           case Geofire.onKeyMoved:
-          // Update your key's location
-            NearestDriverAvailable nearestDriverAvailable =NearestDriverAvailable("",0.0,0.0);
+            // Update your key's location
+            NearestDriverAvailable nearestDriverAvailable =
+                NearestDriverAvailable("", 0.0, 0.0);
             nearestDriverAvailable.key = map['key'];
             nearestDriverAvailable.latitude = map['latitude'];
             nearestDriverAvailable.longitude = map['longitude'];
@@ -916,38 +948,41 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// this method for add icon new near driver on map
-  void updateAvailableDriverOnMap(){
+  void updateAvailableDriverOnMap() {
+    setState(() {
+      markersSet.clear();
+    });
 
-     setState(() {
-       markersSet.clear();
-     });
+    Set<Marker> tMarker = {};
 
-     Set <Marker> tMarker= {};
+    for (NearestDriverAvailable driver
+        in GeoFireMethods.listOfNearestDriverAvailable) {
+      LatLng driverAvailablePosititon =
+          LatLng(driver.latitude, driver.longitude);
+      Marker marker = Marker(
+        markerId: MarkerId("driver${driver.key}"),
+        position: driverAvailablePosititon,
+        icon: driversNearIcon,
+        rotation: MathMethods.createRandomNumber(360),
+      );
 
-     for(NearestDriverAvailable driver in GeoFireMethods.listOfNearestDriverAvailable ){
-       LatLng driverAvailablePosititon = LatLng(driver.latitude, driver.longitude);
-       Marker marker =  Marker(
-           markerId:MarkerId("driver${driver.key}"),
-           position:driverAvailablePosititon,
-         icon: driversNearIcon,
-         rotation:MathMethods.createRandomNumber(360),
-       );
-
-       tMarker.add(marker);
-     }
-     setState(() {
-       markersSet = tMarker;
-     });
+      tMarker.add(marker);
+    }
+    setState(() {
+      markersSet = tMarker;
+    });
   }
 
   ///this Method for custom icon driver near
-  void createDriverNearIcon(){
-       ImageConfiguration imageConfiguration = createLocalImageConfiguration(context,size:const Size(1.0,1.0));
-       BitmapDescriptor.fromAssetImage(imageConfiguration,"assets/car_test.png").then((value){
-         setState(() {
-           driversNearIcon=value;
-         });
-       });
+  void createDriverNearIcon() {
+    ImageConfiguration imageConfiguration =
+        createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
+    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/car_test.png")
+        .then((value) {
+      setState(() {
+        driversNearIcon = value;
+      });
+    });
   }
 
   // this method for clean
@@ -959,8 +994,7 @@ class _HomeScreenState extends State<HomeScreen> {
       polylineCoordinates.clear();
       tripDirectionDetails = null;
     });
-     locationPosition(context);
-
+    locationPosition(context);
   }
 
   // this method for switch text where to OR toll passes
@@ -1036,170 +1070,211 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Big Commercial");
   }
-// this method for got user info from database if it was null befoer user start his request a driver
-  void checkAllUserInfoReal(Users? infoUserDataReal, BuildContext context){
-   if(infoUserDataReal==null){
-     DataBaseSrv().currentOnlineUserInfo(context);
-   }else{
-     return;
-   }
+
+// this method for check any amount will set to   Ride Request collection
+  int checkAnyAmount(String carTypePro, DirectionDetails details) {
+    var amount = 0;
+    if (tripDirectionDetails == null) {
+      return 0;
+    }
+    amount = carTypePro == "Taxi"
+        ? ApiSrvDir.calculateFares(details, carTypePro)
+        : carTypePro == "MediumCommercial"
+            ? ApiSrvDir.calculateFares(details, carTypePro)
+            : carTypePro == "Big Commercial"
+                ? ApiSrvDir.calculateFares(details, carTypePro)
+                : 0;
+    return amount;
   }
-///================================Start========================================
+
+// this method for got user info from database if it was null befoer user start his request a driver
+  void checkAllUserInfoReal(Users? infoUserDataReal, BuildContext context) {
+    if (infoUserDataReal == null) {
+      DataBaseSrv().currentOnlineUserInfo(context);
+    } else {
+      return;
+    }
+  }
+
+  ///================================Start========================================
 /* this method when rider will do order it will send notification
 * to nearest driver [0] id driver it will cancel will switch to another
 * driver if no found drivers will cancel this trip and if driver accepted
 * will remove driver from map till finish his trip*/
-  void searchNearestDriver(UserIdProvider userProvider,BuildContext context) {
-    if(driverAvailable.isEmpty){
-      DataBaseSrv().cancelRiderRequest(userProvider,context);
+  void searchNearestDriver(UserIdProvider userProvider, BuildContext context) {
+    if (driverAvailable.isEmpty) {
+      DataBaseSrv().cancelRiderRequest(userProvider, context);
       restApp();
-      showDialog(context: context,barrierDismissible: false, builder:(_)=>sorryNoDriverDialog(context,userProvider));
-    }else{
-     final driver = driverAvailable[0];
-     driverAvailable.removeAt(0);
-     Provider.of<NearestDriverProvider>(context,listen: false).updateState(driver);
-     notifyDriver(driver,context,userProvider);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => sorryNoDriverDialog(context, userProvider));
+    } else {
+      final driver = driverAvailable[0];
+      driverAvailable.removeAt(0);
+      Provider.of<NearestDriverProvider>(context, listen: false)
+          .updateState(driver);
+      notifyDriver(driver, context, userProvider);
     }
   }
 
-  Future<void> notifyDriver(NearestDriverAvailable driver,BuildContext context, UserIdProvider userProvider) async {
+  Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
+      UserIdProvider userProvider) async {
     DataBaseSrv().sendRideRequestId(driver, context);
-    DatabaseReference driverRef = FirebaseDatabase.instance
-        .ref()
-        .child("driver")
-        .child(driver.key);
+    DatabaseReference driverRef =
+        FirebaseDatabase.instance.ref().child("driver").child(driver.key);
 
-     final snapshot = await driverRef.child("token") .get();
-     if(snapshot.value != null){
-       String token = snapshot.value.toString();
-       SendNotification().sendNotificationToDriver(context,token);
-     }else{
-       return;
-     }
-      const secondPassed = Duration(seconds: 1);
-     final timer = Timer.periodic(secondPassed, (timer) {
-       rideRequestTimeOut = rideRequestTimeOut - 1;
-       //1
-       if(state != "requesting"){
-         driverRef.child("newRide").set("canceled")
-             .whenComplete(() =>driverRef.update({"newRide":"searching"}));
-         driverRef.child("newRide").onDisconnect();
-         rideRequestTimeOut = 40;
-         timer.cancel();
-       }
-       //2
-       driverRef.child("newRide").onValue.listen((event) {
-         if(event.snapshot.value.toString() == "accepted"){
-           driverRef.child("newRide").onDisconnect();
-           rideRequestTimeOut = 40;
-           timer.cancel();
-         }
-       });
-       //3
-       if(rideRequestTimeOut == 0){
-         driverRef.child("newRide").set("timeOut")
-             .whenComplete(() =>driverRef.child("newRide").set("searching"));
-         driverRef.child("newRide").onDisconnect();
-         rideRequestTimeOut = 40;
-         timer.cancel();
-         searchNearestDriver(userProvider,context);
-       }
-     });
+    final snapshot = await driverRef.child("token").get();
+    if (snapshot.value != null) {
+      String token = snapshot.value.toString();
+      SendNotification().sendNotificationToDriver(context, token);
+    } else {
+      return;
+    }
+    const secondPassed = Duration(seconds: 1);
+    final timer = Timer.periodic(secondPassed, (timer) {
+      rideRequestTimeOut = rideRequestTimeOut - 1;
+      //1
+      if (state != "requesting") {
+        driverRef
+            .child("newRide")
+            .set("canceled")
+            .whenComplete(() => driverRef.update({"newRide": "searching"}));
+        driverRef.child("newRide").onDisconnect();
+        rideRequestTimeOut = 40;
+        timer.cancel();
+      }
+      //2
+      driverRef.child("newRide").onValue.listen((event) {
+        if (event.snapshot.value.toString() == "accepted") {
+          driverRef.child("newRide").onDisconnect();
+          rideRequestTimeOut = 40;
+          timer.cancel();
+        }
+      });
+      //3
+      if (rideRequestTimeOut == 0) {
+        driverRef
+            .child("newRide")
+            .set("timeOut")
+            .whenComplete(() => driverRef.child("newRide").set("searching"));
+        driverRef.child("newRide").onDisconnect();
+        rideRequestTimeOut = 40;
+        timer.cancel();
+        searchNearestDriver(userProvider, context);
+      }
+    });
   }
+
   // this method for got driver info from Ride request collection
   Future<void> gotDriverInfo(BuildContext context) async {
     final id = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
 
     DatabaseReference reference =
-    FirebaseDatabase.instance.ref().child("Ride Request").child(id!.userId);
+        FirebaseDatabase.instance.ref().child("Ride Request").child(id!.userId);
     rideStreamSubscription = reference.onValue.listen((event) {
       if (event.snapshot.value == null) {
         return;
       }
-      Map<String, dynamic> map = Map<String, dynamic>.from(event.snapshot.value as Map);
-      if(map["carInfo"] != null){
+      Map<String, dynamic> map =
+          Map<String, dynamic>.from(event.snapshot.value as Map);
+      if (map["carInfo"] != null) {
         carDriverInfo = map["carInfo"].toString();
       }
-      if(map["driverName"] != null){
+      if (map["driverName"] != null) {
         driverName = map["driverName"].toString();
       }
-      if(map["driverPhone"] != null){
+      if (map["driverPhone"] != null) {
         driverPhone = map["driverPhone"].toString();
       }
       if (map["status"] != null) {
         statusRide = map["status"].toString();
       }
-      if(map["driverLocation"]!=null){
-       final driverLatitude = double.parse(map["driverLocation"]["latitude"].toString());
-       final driverLongitude = double.parse(map["driverLocation"]["longitude"].toString());
-       LatLng driverCurrentLocation=LatLng(driverLatitude, driverLongitude);
-       if (statusRide == "accepted"){
-         updateTireRideToPickUp(driverCurrentLocation,context);
-       }
-       else if(statusRide == "arrived"){
-         setState(() {
-           statusRide = "Driver arrived";
-           timeTrip = "";
-         });
-       }
-       else if(statusRide == "onride"){
-         updateTireRideToDropOff(context);
-         setState(() {
-           statusRide = "Trip Started";
-         });
-       }
-       else if(statusRide == "ended"){
-         setState(() {
-           statusRide = "Trip finished";
-           timeTrip = "";
-           Provider.of<CloseButtonProvider>(context,listen: false).updateState(true);
-         });
-       }
+      if (map["driverLocation"] != null) {
+        final driverLatitude =
+            double.parse(map["driverLocation"]["latitude"].toString());
+        final driverLongitude =
+            double.parse(map["driverLocation"]["longitude"].toString());
+        LatLng driverCurrentLocation = LatLng(driverLatitude, driverLongitude);
+        if (statusRide == "accepted") {
+          updateTireRideToPickUp(driverCurrentLocation, context);
+        } else if (statusRide == "arrived") {
+          setState(() {
+            statusRide = "Driver arrived";
+            timeTrip = "";
+          });
+        } else if (statusRide == "onride") {
+          updateTireRideToDropOff(context);
+          setState(() {
+            statusRide = "Trip Started";
+          });
+        } else if (statusRide == "ended") {
+          setState(() {
+            statusRide = "Trip finished";
+            timeTrip = "";
+            Provider.of<CloseButtonProvider>(context, listen: false)
+                .updateState(true);
+          });
+        }
       }
       if (statusRide == "accepted") {
         setState(() {
-          Provider.of<PositionDriverInfoProvider>(context,listen: false).updateState(0.0);
-          Provider.of<PositionCancelReq>(context,listen: false).updateValue(-400.0);
-          Provider.of<CloseButtonProvider>(context,listen: false).updateState(false);
+          Provider.of<PositionDriverInfoProvider>(context, listen: false)
+              .updateState(0.0);
+          Provider.of<PositionCancelReq>(context, listen: false)
+              .updateValue(-400.0);
+          Provider.of<CloseButtonProvider>(context, listen: false)
+              .updateState(false);
           Geofire.stopListener();
           deleteGeoFireMarker();
         });
       }
     });
   }
+
 // this method for update time driver arrive to rider in driver info container
-  Future<void> updateTireRideToPickUp(LatLng driverCurrentLocation,BuildContext context) async {
-    final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
-    LatLng  riderLoc =LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
-    if(isTimeRequstTrip == false){
+  Future<void> updateTireRideToPickUp(
+      LatLng driverCurrentLocation, BuildContext context) async {
+    final pickUpLoc =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    LatLng riderLoc = LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
+    if (isTimeRequstTrip == false) {
       isTimeRequstTrip = true;
-      final details = await ApiSrvDir.obtainPlaceDirectionDetails(driverCurrentLocation, riderLoc, context);
+      final details = await ApiSrvDir.obtainPlaceDirectionDetails(
+          driverCurrentLocation, riderLoc, context);
       setState(() {
         timeTrip = details!.durationText.toString();
       });
       isTimeRequstTrip = false;
     }
   }
+
 // this method for update time from pickUp to dropOff
   Future<void> updateTireRideToDropOff(BuildContext context) async {
-    final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
-    final dropOffLoc = Provider.of<PlaceDetailsDropProvider>(context, listen: false).dropOfLocation;
-    LatLng  riderLocPickUp =LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
-    LatLng  riderLocDropOff =LatLng(dropOffLoc.latitude, dropOffLoc.longitude);
-    if(isTimeRequstTrip == false){
+    final pickUpLoc =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final dropOffLoc =
+        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+            .dropOfLocation;
+    LatLng riderLocPickUp = LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
+    LatLng riderLocDropOff = LatLng(dropOffLoc.latitude, dropOffLoc.longitude);
+    if (isTimeRequstTrip == false) {
       isTimeRequstTrip = true;
-      final details = await ApiSrvDir.obtainPlaceDirectionDetails(riderLocPickUp,riderLocDropOff, context);
+      final details = await ApiSrvDir.obtainPlaceDirectionDetails(
+          riderLocPickUp, riderLocDropOff, context);
       setState(() {
         timeTrip = details!.durationText.toString();
       });
       isTimeRequstTrip = false;
     }
   }
+
 // this method for delete all taxi when on taxi accepted
-void deleteGeoFireMarker(){
+  void deleteGeoFireMarker() {
     setState(() {
       markersSet.removeWhere((ele) => ele.markerId.value.contains("driver"));
     });
-}
-///================================End==========================================
+  }
+
+  ///================================End==========================================
 }

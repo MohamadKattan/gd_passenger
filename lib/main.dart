@@ -64,8 +64,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PositionDriverInfoProvider()),
         ChangeNotifierProvider(create: (context) => NearestDriverProvider()),
         ChangeNotifierProvider(create: (context) => CloseButtonProvider()),
-
-
       ],
       builder: (context, _) {
         return const MaterialApp(

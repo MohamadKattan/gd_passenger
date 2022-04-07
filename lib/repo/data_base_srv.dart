@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:gd_passenger/model/user.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
@@ -15,16 +14,13 @@ import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/home_screen.dart';
-import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import '../config.dart';
+import '../model/directions_details.dart';
 import '../model/nearest _driver_ available.dart';
+import '../my_provider/derictionDetails_provide.dart';
 import '../my_provider/nearsert_driver_provider.dart';
-import '../my_provider/positon_driver_info_provide.dart';
-import '../my_provider/posotoion_cancel_request.dart';
-import '../tools/geoFire_methods_tools.dart';
 import 'auth_srv.dart';
 
 class DataBaseSrv {
@@ -119,9 +115,10 @@ class DataBaseSrv {
   }
 
 // this method will set all info when rider order a taxi in Ride Request collection
-  void saveRiderRequest(BuildContext context) async {
+  void saveRiderRequest(BuildContext context, int amount) async {
     /// from api geo
-    final pickUpLoc = Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final pickUpLoc =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
     print("pickUpLoc:::::: " + pickUpLoc.placeName);
 
     ///from api srv place
@@ -140,6 +137,8 @@ class DataBaseSrv {
     print("carTypePro:::::: " + carTypePro!);
     final paymentMethod =
         Provider.of<DropBottomValue>(context, listen: false).valueDropBottom;
+    final km =
+        Provider.of<DirectionDetailsPro>(context, listen: false).directionDetails.distanceVale;
     try {
       Map pickUpLocMAP = {
         "latitude": pickUpLoc.latitude.toString(),
@@ -165,40 +164,45 @@ class DataBaseSrv {
         "dropoffAddress": dropOffLoc.placeName,
         "vehicleType_id": carTypePro,
         "userId": currentUserInfoOnline.userId,
+        "amount": amount.toString(),
+        "km": (km/1000).toStringAsFixed(2),
       };
       print("rideInfoMap::::::$rideInfoMap");
-      DatabaseReference RefRideRequest = FirebaseDatabase.instance
+      DatabaseReference refRideRequest = FirebaseDatabase.instance
           .ref()
           .child("Ride Request")
           .child(currentUserInfoOnline.userId);
-      await RefRideRequest.set(rideInfoMap);
+      await refRideRequest.set(rideInfoMap);
     } catch (ex) {
       _tools.toastMsg(ex.toString());
     }
   }
 
   // this method for cancel rider Request
-  Future<void> cancelRiderRequest(UserIdProvider userIdProvider,BuildContext context) async {
-    final driverNer = Provider.of<NearestDriverProvider>(context,listen: false).driverNerProvider;
+  Future<void> cancelRiderRequest(
+      UserIdProvider userIdProvider, BuildContext context) async {
+    final driverNer = Provider.of<NearestDriverProvider>(context, listen: false)
+        .driverNerProvider;
     print("id is::::" + userIdProvider.getUser.uid);
     DatabaseReference refRideRequest = FirebaseDatabase.instance
         .ref()
         .child("Ride Request")
         .child(userIdProvider.getUser.uid);
     await refRideRequest.remove();
-    if(driverNer.key.isEmpty || driverNer.key == ""){
+    if (driverNer.key.isEmpty || driverNer.key == "") {
       return;
-    }
-    else{
-        DatabaseReference driverRef = FirebaseDatabase.instance
-            .ref()
-            .child("driver")
-            .child(driverNer.key)
-            .child("newRide");
-        await driverRef.set("searching");
-          NearestDriverAvailable _nearestDriverAvailable = NearestDriverAvailable("",0.0,0.0);
-          Provider.of<NearestDriverProvider>(context,listen: false).updateState(_nearestDriverAvailable);
-        driverRef.child("newRide").onDisconnect();
+    } else {
+      DatabaseReference driverRef = FirebaseDatabase.instance
+          .ref()
+          .child("driver")
+          .child(driverNer.key)
+          .child("newRide");
+      await driverRef.set("searching");
+      NearestDriverAvailable _nearestDriverAvailable =
+          NearestDriverAvailable("", 0.0, 0.0);
+      Provider.of<NearestDriverProvider>(context, listen: false)
+          .updateState(_nearestDriverAvailable);
+      driverRef.child("newRide").onDisconnect();
     }
   }
 
@@ -218,6 +222,4 @@ class DataBaseSrv {
       e.toString();
     }
   }
-
-
 }
