@@ -55,6 +55,7 @@ dependencies:
   location: ^4.3.0
   flutter_geofire: ^2.0.1
   url_launcher: ^6.0.20
+  smooth_star_rating_null_safety: ^1.0.4+2
 
 
 dev_dependencies:

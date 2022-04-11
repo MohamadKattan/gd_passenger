@@ -41,9 +41,7 @@ class DropPlaceDetails {
       Provider.of<PlaceDetailsDropProvider>(context, listen: false)
           .updateDropOfLocation(address);
       print("Drop location  nNNn is :::: ${address.placeName}");
-      print("Drop location  nNNn is :::: ${address.placeName}");
-      print("Drop location  nNNn is :::: ${address.placeName}");
-      Provider.of<CarTypeProvider>(context,listen: false).updateCarType("Taxi");
+      Provider.of<CarTypeProvider>(context,listen: false).updateCarType("Taxi-4 seats");
       Navigator.pop(context,"dataDir");
     }
   }

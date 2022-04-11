@@ -181,29 +181,29 @@ class DataBaseSrv {
   // this method for cancel rider Request
   Future<void> cancelRiderRequest(
       UserIdProvider userIdProvider, BuildContext context) async {
-    final driverNer = Provider.of<NearestDriverProvider>(context, listen: false)
-        .driverNerProvider;
+    // final driverNer = Provider.of<NearestDriverProvider>(context, listen: false)
+    //     .driverNerProvider;
     print("id is::::" + userIdProvider.getUser.uid);
     DatabaseReference refRideRequest = FirebaseDatabase.instance
         .ref()
         .child("Ride Request")
         .child(userIdProvider.getUser.uid);
     await refRideRequest.remove();
-    if (driverNer.key.isEmpty || driverNer.key == "") {
-      return;
-    } else {
-      DatabaseReference driverRef = FirebaseDatabase.instance
-          .ref()
-          .child("driver")
-          .child(driverNer.key)
-          .child("newRide");
-      await driverRef.set("searching");
-      NearestDriverAvailable _nearestDriverAvailable =
-          NearestDriverAvailable("", 0.0, 0.0);
-      Provider.of<NearestDriverProvider>(context, listen: false)
-          .updateState(_nearestDriverAvailable);
-      driverRef.child("newRide").onDisconnect();
-    }
+    // if (driverNer.key.isEmpty || driverNer.key == "") {
+    //   return;
+    // } else {
+    //   DatabaseReference driverRef = FirebaseDatabase.instance
+    //       .ref()
+    //       .child("driver")
+    //       .child(driverNer.key)
+    //       .child("newRide");
+    //   await driverRef.set("searching");
+    //   NearestDriverAvailable _nearestDriverAvailable =
+    //       NearestDriverAvailable("", 0.0, 0.0);
+    //   Provider.of<NearestDriverProvider>(context, listen: false)
+    //       .updateState(_nearestDriverAvailable);
+    //   driverRef.child("newRide").onDisconnect();
+    // }
   }
 
   // this method for send ride Request Id to driver collection in newride child for notification
@@ -216,10 +216,13 @@ class DataBaseSrv {
         .child("driver")
         .child(driver.key)
         .child("newRide");
-    try {
-      await driverRef.set(userId?.userId);
-    } catch (e) {
-      e.toString();
+    final snap = await driverRef.get();
+    if(snap.value!=null&&snap.value=="searching"){
+      try {
+        await driverRef.set(userId?.userId);
+      } catch (e) {
+        e.toString();
+      }
     }
   }
 }

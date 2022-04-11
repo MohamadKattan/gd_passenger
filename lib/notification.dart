@@ -38,16 +38,11 @@ class SendNotification{
           "data":dataMap,
           "to":token,
         };
-    print("hhhhhhhhhhhhhhhhhhh$token");
     final url = Uri.parse("https://fcm.googleapis.com/fcm/send");
   final res =   await http.post(
         url,
        headers: header,
        body: convert.jsonEncode(sendNotificationMap)
     );
-    print("hellooooooo");
- print("hellooooooo");
- print("hellooooooo");  print("hellooooooo");
-
   }
 }
