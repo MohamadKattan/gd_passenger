@@ -66,10 +66,8 @@ class _RatingWidgetState extends State<RatingWidget> {
               SizedBox(height: MediaQuery.of(context).size.height * 1/ 100),
               GestureDetector(
                 onTap: () {
-                  if(rating==0.0){
-                    Navigator.pop(context);
-                  }
                   rateTODateBase();
+                  Navigator.pop(context);
                 },
                 child: Center(
                   child: Container(
@@ -93,7 +91,7 @@ class _RatingWidgetState extends State<RatingWidget> {
     );
   }
 // this method for set rate to data base
-  void rateTODateBase() async{
+ Future <void> rateTODateBase() async{
     DatabaseReference reference =   FirebaseDatabase.instance
         .ref()
         .child("driver")
@@ -106,11 +104,9 @@ class _RatingWidgetState extends State<RatingWidget> {
        double newRating = oldRating + rating;
        double result = newRating / 2;
        reference.set(result.toStringAsFixed(2));
-       Navigator.pop(context);
 
        }else{
          reference.set(rating.toStringAsFixed(2));
-         Navigator.pop(context);
        }
      });
   }

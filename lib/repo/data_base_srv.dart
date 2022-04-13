@@ -117,12 +117,11 @@ class DataBaseSrv {
 // this method will set all info when rider order a taxi in Ride Request collection
   void saveRiderRequest(BuildContext context, int amount) async {
     /// from api geo
-    final pickUpLoc =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final pickUpLoc=Provider.of<AppData>(context, listen: false).pickUpLocation;
     print("pickUpLoc:::::: " + pickUpLoc.placeName);
 
     ///from api srv place
-    final dropOffLoc =
+    final dropOffLoc=
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
     print("pickUpLoc:::::: " + dropOffLoc.placeName);

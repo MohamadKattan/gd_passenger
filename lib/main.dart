@@ -74,4 +74,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-//<bitmap android:gravity="center" android:src="@drawable/splash"/>

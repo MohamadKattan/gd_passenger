@@ -3,11 +3,12 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
-import 'package:gd_passenger/widget/rating_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../config.dart';
 import '../model/nearest _driver_ available.dart';
+import '../my_provider/app_data.dart';
 import '../my_provider/close_botton_driverInfo.dart';
 import '../my_provider/nearsert_driver_provider.dart';
 import '../my_provider/placeDetails_drop_provider.dart';
@@ -17,6 +18,8 @@ import '../my_provider/user_id_provider.dart';
 import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
 import 'divider_box_.dart';
+import 'package:uuid/uuid.dart';
+var uuid = const Uuid();
 
 class DriverInfo {
   Widget driverInfoContainer(
@@ -60,7 +63,7 @@ class DriverInfo {
                       " Time : ",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
-                    Text(timeTrip == "" ? "..." : timeTrip,
+                    Text(timeTrip == "" ? "...." : timeTrip,
                         style:  TextStyle(
                             color: Colors.green.shade700, fontSize: 15.0)),
                   ],
@@ -97,6 +100,16 @@ class DriverInfo {
                       driverName,
                       style: const TextStyle(color: Colors.black87, fontSize: 16),
                     ),
+                    const SizedBox(width: 10.0),
+                    SmoothStarRating(
+                      allowHalfRating: true,
+                      starCount: 5,
+                      rating: ratDriverRead,
+                      size: 15.0,
+                      color: Colors.yellow.shade700,
+                      borderColor: Colors.yellow.shade700,
+                      spacing:0.0,
+                    ),
                   ],
                 ),
               ),
@@ -120,19 +133,19 @@ class DriverInfo {
                             : Tools().toastMsg('Could not launch $driverPhone');
                       },
                     ),
-                    statusRide == "Trip Started"
-                        ? IconButton(
+                    // statusRide == "Trip Started"
+                        IconButton(
                             iconSize: 40.0,
                             color: Colors.black12,
                             icon: Icon(Icons.map,
                                 color: Colors.blueAccent.shade700),
-                            onPressed: () => openGoogleMap(context))
-                        : IconButton(
-                            iconSize: 40.0,
-                            color: Colors.black54,
-                            icon: const Icon(Icons.map),
-                            onPressed: () => Tools().toastMsg("Wait your Driver")),
-                    isCloseTrue == true?
+                            onPressed: () => openGoogleMap(context)),
+                        // : IconButton(
+                        //     iconSize: 40.0,
+                        //     color: Colors.black54,
+                        //     icon: const Icon(Icons.map),
+                        //     onPressed: () => Tools().toastMsg("Wait your Driver")),
+                    // isCloseTrue == true?
                     IconButton(
                         iconSize: 40.0,
                         icon:
@@ -149,93 +162,45 @@ class DriverInfo {
                               .updateState(-400.0);
                           Provider.of<PositionChang>(context, listen: false)
                               .changValue(0.0);
-                          deleteRideRequesr();
+                          deleteRideRequesr(context);
                           GeoFireMethods.listOfNearestDriverAvailable.clear();
                         })
-                        :IconButton(
-                        iconSize: 40.0,
-                        icon:
-                        Icon(Icons.close, color: Colors.redAccent.shade700),
-                        onPressed: () {
-                          Tools().toastMsg("Wait till finish your trip");
-                        })
+                        // :IconButton(
+                        // iconSize: 40.0,
+                        // icon:
+                        // Icon(Icons.close, color: Colors.redAccent.shade700),
+                        // onPressed: () {
+                        //   Tools().toastMsg("Wait till finish your trip");
+                        // })
                   ],
                 ),
               ),
-              // const SizedBox(height: 10.0),
-              // isCloseTrue == true
-              //     ? Center(
-              //         child: Padding(
-              //           padding: const EdgeInsets.all(4.0),
-              //           child: GestureDetector(
-              //             onTap: () {
-              //               voidCallback();
-              //               NearestDriverAvailable _nearestDriverAvailable =
-              //                   NearestDriverAvailable("", 0.0, 0.0);
-              //               Provider.of<NearestDriverProvider>(context,
-              //                       listen: false)
-              //                   .updateState(_nearestDriverAvailable);
-              //               Provider.of<PositionDriverInfoProvider>(context,
-              //                       listen: false)
-              //                   .updateState(-400.0);
-              //               Provider.of<PositionChang>(context, listen: false)
-              //                   .changValue(0.0);
-              //               deleteRideRequesr();
-              //               GeoFireMethods.listOfNearestDriverAvailable.clear();
-              //             },
-              //             child: Container(
-              //               height:
-              //                   MediaQuery.of(context).size.height * 6.5 / 100,
-              //               width: MediaQuery.of(context).size.width * 70 / 100,
-              //               decoration: BoxDecoration(
-              //                 color: Colors.redAccent.shade700,
-              //                 borderRadius: BorderRadius.circular(15.0),
-              //               ),
-              //               child: const Center(
-              //                   child: Text(
-              //                 "Close",
-              //                 style: TextStyle(fontSize: 18),
-              //               )),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : Center(
-              //         child: Padding(
-              //           padding: const EdgeInsets.all(4.0),
-              //           child: GestureDetector(
-              //             onTap: () {
-              //               Tools().toastMsg("Wait till finish your trip");
-              //             },
-              //             child: Container(
-              //               height:
-              //                   MediaQuery.of(context).size.height * 6.5 / 100,
-              //               width: MediaQuery.of(context).size.width * 70 / 100,
-              //               decoration: BoxDecoration(
-              //                 color: Colors.grey.shade700,
-              //                 borderRadius: BorderRadius.circular(15.0),
-              //               ),
-              //               child: Center(
-              //                   child: Text(
-              //                 "Close",
-              //                 style: TextStyle(
-              //                     fontSize: 18, color: Colors.redAccent.shade700),
-              //               )),
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              // :const Text("")
             ],
           ),
         ));
   }
 
-  Future<void> deleteRideRequesr() async {
+  Future<void> deleteRideRequesr(BuildContext context) async {
+    final pickUpLoc=Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final dropOffLoc=
+        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+            .dropOfLocation;
     final userID = AuthSev().auth.currentUser?.uid;
-    DatabaseReference refRideRequest =
-        FirebaseDatabase.instance.ref().child("Ride Request").child(userID!);
-    await refRideRequest.remove();
+    DatabaseReference ref =
+    FirebaseDatabase.instance.ref()
+        .child("users")
+        .child(userID!)
+        .child("history")
+        .child(uuid.v4());
+    ref.set({
+      "pickAddress":pickUpLoc.placeName,
+      "dropAddress":dropOffLoc.placeName,
+      "trip":"don",
+    }).whenComplete(() async {
+      DatabaseReference refRideRequest =
+      FirebaseDatabase.instance.ref().child("Ride Request").child(userID);
+      await refRideRequest.remove();
+    });
   }
 
   Future<void> openGoogleMap(BuildContext context) async {

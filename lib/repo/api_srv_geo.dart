@@ -25,7 +25,7 @@ class ApiSrvGeo {
       st3 = response["results"][0]["address_components"][5]["long_name"];
       st4 = response["results"][0]["address_components"][6]["long_name"];
 
-      placeAddress = st1 + "" + st2 + "" + st3 + "" + st4 ;
+      placeAddress = st1 + "," + st2 + "," + st3 + "," + st4 ;
       //from module
       Address userPickUpAddress =  Address(
           placeFormattedAddress: "",

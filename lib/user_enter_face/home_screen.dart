@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/config.dart';
@@ -41,7 +40,6 @@ import '../my_provider/positon_driver_info_provide.dart';
 import '../notification.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/geoFire_methods_tools.dart';
-import '../tools/math_methods.dart';
 import '../widget/collect_money_dialog.dart';
 import '../widget/driver_info.dart';
 import '../widget/rating_widget.dart';
@@ -88,8 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     final postionCancel = Provider.of<PositionCancelReq>(context).value;
-    final dropBottomProvider =
-        Provider.of<DropBottomValue>(context).valueDropBottom;
+    final dropBottomProvider=Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
     final infoUserDataReal = Provider.of<UserAllInfoDatabase>(context).users;
@@ -105,587 +102,573 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Stack(
             children: [
               customDrawer(context),
-              GestureDetector(
-                onTap: () {
-                  //  infoUserDataReal == null? DataBaseSrv.currentOnlineUserInfo(context) :Text("");
-                  Provider.of<DoubleValue>(context, listen: false).value0Or1(0);
-                  Provider.of<ChangeColor>(context, listen: false)
-                      .updateState(false);
-                },
-                child: TweenAnimationBuilder(
-                    tween: Tween<double>(begin: 0.0, end: value),
-                    duration: const Duration(milliseconds: 100),
-                    builder: (_, double val, __) {
-                      return Transform(
-                        transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
-                          ..setEntry(0, 3, 300 * val)
-                          ..rotateY((pi / 3) * val),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          color: Colors.white,
-                          child: Stack(
-                            children: [
-                              GoogleMap(
-                                mapType: MapType.normal,
-                                initialCameraPosition:
-                                    _logicGoogleMap.kGooglePlex,
-                                myLocationButtonEnabled: true,
-                                myLocationEnabled: true,
-                                zoomGesturesEnabled: true,
-                                zoomControlsEnabled: true,
-                                liteModeEnabled: false,
-                                trafficEnabled: false,
-                                compassEnabled: true,
-                                buildingsEnabled: true,
-                                polylines: polylineSet,
-                                markers: markersSet,
-                                circles: circlesSet,
-                                onMapCreated: (GoogleMapController controller) {
-                                  _logicGoogleMap.controllerGoogleMap
-                                      .complete(controller);
-                                  newGoogleMapController = controller;
-                                  locationPosition(context);
-                                },
-                              ),
-                              Positioned(
-                                bottom: 0.0,
-                                right: 0.0,
-                                left: 0.0,
-                                child: GestureDetector(
-                                  onTap: () => Provider.of<PositionChang>(
-                                          context,
-                                          listen: false)
-                                      .changValue(0.0),
-                                  child: Container(
-                                    height: 45,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0)),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.arrow_circle_up,
-                                        size: 40,
-                                        color: Colors.purple,
-                                      ),
+              TweenAnimationBuilder(
+                  tween: Tween<double>(begin: 0.0, end: value),
+                  duration: const Duration(milliseconds: 100),
+                  builder: (_, double val, __) {
+                    return Transform(
+                      transform: Matrix4.identity()
+                        ..setEntry(3, 2, 0.001)
+                        ..setEntry(0, 3, 300 * val)
+                        ..rotateY((pi / 3) * val),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        color: Colors.white,
+                        child: Stack(
+                          children: [
+                            GoogleMap(
+                              mapType: MapType.normal,
+                              initialCameraPosition:
+                                  _logicGoogleMap.kGooglePlex,
+                              myLocationButtonEnabled: true,
+                              myLocationEnabled: true,
+                              polylines: polylineSet,
+                              markers: markersSet,
+                              circles: circlesSet,
+                              onMapCreated: (GoogleMapController controller) {
+                                _logicGoogleMap.controllerGoogleMap
+                                    .complete(controller);
+                                newGoogleMapController = controller;
+                                locationPosition(context);
+                              },
+                            ),
+                            Positioned(
+                              bottom: 0.0,
+                              right: 0.0,
+                              left: 0.0,
+                              child: GestureDetector(
+                                onTap: () => Provider.of<PositionChang>(
+                                        context,
+                                        listen: false)
+                                    .changValue(0.0),
+                                child: Container(
+                                  height: 45,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.circular(16.0)),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.arrow_circle_up,
+                                      size: 40,
+                                      color: Colors.purple,
                                     ),
                                   ),
                                 ),
                               ),
+                            ),
 
-                              /// order taxi and else...
-                              AnimatedPositioned(
-                                  duration: const Duration(milliseconds: 200),
-                                  right: 0.0,
-                                  left: 0.0,
-                                  bottom: postionChang,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        40 /
-                                        100,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20.0),
-                                            topRight: Radius.circular(20.0)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              blurRadius: 6.0,
-                                              spreadRadius: 0.5,
-                                              color: Colors.black54,
-                                              offset: Offset(0.7, 0.7))
-                                        ],
-                                        color: Colors.white),
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              final res = await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const SearchScreen()));
-                                              if (res == "dataDir") {
-                                                await getPlaceDerction(context);
-                                                checkAllUserInfoReal(
-                                                    infoUserDataReal, context);
-                                              }
-                                            },
-                                            child: Container(
-                                              color: Colors.transparent,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  100,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  15.0 /
-                                                  100,
-                                              child: Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child:
-                                                        searchIconOrCancelBottom(
-                                                            tripDirectionDetails),
-                                                  ),
-                                                  changeTextWhereToOrTollpasses(
-                                                      tripDirectionDetails),
-                                                  tripDirectionDetails != null
-                                                      ? SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              5 /
-                                                              100)
-                                                      : SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              45 /
-                                                              100),
-                                                  IconButton(
-                                                    icon: const Icon(
-                                                      Icons
-                                                          .arrow_circle_down_outlined,
-                                                      color: Colors.purple,
-                                                      size: 35,
-                                                    ),
-                                                    onPressed: () {
-                                                      Provider.of<PositionChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changValue(-500.0);
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          // tripDirectionDetails != null
-                                          //     ? const Text("")
-                                          //     : Row(
-                                          //         crossAxisAlignment:
-                                          //             CrossAxisAlignment.center,
-                                          //         mainAxisAlignment:
-                                          //             MainAxisAlignment
-                                          //                 .spaceEvenly,
-                                          //         children: [
-                                          //           _customWidget
-                                          //               .containerBox(
-                                          //                   const Icon(Icons
-                                          //                       .home_outlined),
-                                          //                   "Home",
-                                          //                   context),
-                                          //           _customWidget
-                                          //               .containerBox(
-                                          //                   const Icon(Icons
-                                          //                       .work_outline),
-                                          //                   "Work",
-                                          //                   context),
-                                          //         ],
-                                          //       ),
-                                          _customWidget.customDivider(),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(children: [
-                                                GestureDetector(
-                                                  onTap: () =>
-                                                      changeAllProClickTaxiBox(),
-                                                  child: Stack(
-                                                    children: [
-                                                      Opacity(
-                                                          opacity:
-                                                              opacityTaxi ==
-                                                                      true
-                                                                  ? 1
-                                                                  : 0.3,
-                                                          child: _customWidget.carTypeBox(
-                                                              const Image(
-                                                                  image: AssetImage(
-                                                                      "assets/smallTexi.png"),
-                                                                  fit: BoxFit
-                                                                      .contain),
-                                                              tripDirectionDetails !=
-                                                                          null &&
-                                                                      carTypePro !=
-                                                                          "" &&
-                                                                      carTypePro ==
-                                                                          "Taxi"
-                                                                  ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
-                                                                  : "Taxi",
-                                                              "4",
-                                                              context)),
-                                                      Positioned(
-                                                          right: -10.0,
-                                                          top: -10.0,
-                                                          child: IconButton(
-                                                              onPressed: () => customBottomSheet
-                                                                  .showSheetCarInfo(
-                                                                      context:
-                                                                          context,
-                                                                      image:
-                                                                          const Image(
-                                                                        image: AssetImage(
-                                                                            "assets/smallTexi.png"),
-                                                                        fit: BoxFit
-                                                                            .contain,
-                                                                      ),
-                                                                      title:
-                                                                          "Regular Taxi",
-                                                                      des:
-                                                                          "sedan car: Hyundai,Renault,Fiat,Toyota etc...",
-                                                                      iconM: Icons
-                                                                          .money,
-                                                                      price:
-                                                                          "Start:15.00",
-                                                                      iconP: Icons
-                                                                          .person,
-                                                                      person:
-                                                                          "4"),
-                                                              icon: opacityTaxi ==
-                                                                      true
-                                                                  ? const Icon(
-                                                                      Icons
-                                                                          .info_outline,
-                                                                      color: Colors
-                                                                          .purple,
-                                                                      size: 20,
-                                                                    )
-                                                                  : const Text(
-                                                                      ""))),
-                                                      Positioned(
-                                                        right: 0.0,
-                                                        left: 0.0,
-                                                        bottom: MediaQuery.of(
+                            /// order taxi and else...
+                            AnimatedPositioned(
+                                duration: const Duration(milliseconds: 200),
+                                right: 0.0,
+                                left: 0.0,
+                                bottom: postionChang,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      40 /
+                                      100,
+                                  decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20.0),
+                                          topRight: Radius.circular(20.0)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 6.0,
+                                            spreadRadius: 0.5,
+                                            color: Colors.black54,
+                                            offset: Offset(0.7, 0.7))
+                                      ],
+                                      color: Colors.white),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final res = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const SearchScreen()));
+                                            if (res == "dataDir") {
+                                              await getPlaceDerction(context);
+                                              checkAllUserInfoReal(
+                                                  infoUserDataReal, context);
+                                            }
+                                          },
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                100,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                15.0 /
+                                                100,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(
+                                                          8.0),
+                                                  child:
+                                                      searchIconOrCancelBottom(
+                                                          tripDirectionDetails),
+                                                ),
+                                                changeTextWhereToOrTollpasses(
+                                                    tripDirectionDetails),
+                                                tripDirectionDetails != null
+                                                    ? SizedBox(
+                                                        width: MediaQuery.of(
                                                                     context)
                                                                 .size
-                                                                .height *
-                                                            0.15 /
-                                                            100,
-                                                        child: Container(
-                                                          height: 4,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        2),
-                                                            color: taxiLine ==
-                                                                    true
-                                                                ? Colors.black
-                                                                : Colors
-                                                                    .transparent,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () =>
-                                                      changeAllProClickVanBox(),
-                                                  child: Stack(
-                                                    children: [
-                                                      Opacity(
-                                                          opacity:
-                                                              opacityVan == true
-                                                                  ? 1
-                                                                  : 0.3,
-                                                          child: _customWidget.carTypeBox(
-                                                              const Image(
-                                                                  image: AssetImage(
-                                                                      "assets/van.png"),
-                                                                  fit: BoxFit
-                                                                      .contain),
-                                                              tripDirectionDetails !=
-                                                                          null &&
-                                                                      carTypePro !=
-                                                                          "" &&
-                                                                      carTypePro ==
-                                                                          "MediumCommercial"
-                                                                  ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
-                                                                  : "MediumCommercial",
-                                                              "6-10",
-                                                              context)),
-                                                      Positioned(
-                                                          right: -10.0,
-                                                          top: -10.0,
-                                                          child: IconButton(
-                                                              onPressed: () => customBottomSheet.showSheetCarInfo(
-                                                                  context:
-                                                                      context,
-                                                                  image: const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/van.png")),
-                                                                  title:
-                                                                      "Medium",
-                                                                  des:
-                                                                      "Medium commercial car",
-                                                                  iconM: Icons
-                                                                      .money,
-                                                                  price: "20.0",
-                                                                  iconP: Icons
-                                                                      .person,
-                                                                  person:
-                                                                      "6-10"),
-                                                              icon: opacityVan ==
-                                                                      true
-                                                                  ? const Icon(
-                                                                      Icons
-                                                                          .info_outline,
-                                                                      color: Colors
-                                                                          .purple,
-                                                                      size: 20,
-                                                                    )
-                                                                  : const Text(
-                                                                      ""))),
-                                                      Positioned(
-                                                        right: 0.0,
-                                                        left: 0.0,
-                                                        bottom: MediaQuery.of(
+                                                                .width *
+                                                            5 /
+                                                            100)
+                                                    : SizedBox(
+                                                        width: MediaQuery.of(
                                                                     context)
                                                                 .size
-                                                                .height *
-                                                            0.15 /
-                                                            100,
-                                                        child: Container(
-                                                          height: 4,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        2),
-                                                            color: vanLine ==
-                                                                    true
-                                                                ? Colors.black
-                                                                : Colors
-                                                                    .transparent,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                                .width *
+                                                            45 /
+                                                            100),
+                                                IconButton(
+                                                  icon: const Icon(
+                                                    Icons
+                                                        .arrow_circle_down_outlined,
+                                                    color: Colors.purple,
+                                                    size: 35,
                                                   ),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    changeAllProClickVetoBox();
-                                                  },
-                                                  child: Stack(
-                                                    children: [
-                                                      Opacity(
-                                                          opacity:
-                                                              opacityVeto ==
-                                                                      true
-                                                                  ? 1.0
-                                                                  : 0.3,
-                                                          child: _customWidget.carTypeBox(
-                                                              const Image(
-                                                                  image: AssetImage(
-                                                                      "assets/veto.png"),
-                                                                  fit: BoxFit
-                                                                      .contain),
-                                                              tripDirectionDetails !=
-                                                                          null &&
-                                                                      carTypePro !=
-                                                                          "" &&
-                                                                      carTypePro ==
-                                                                          "Big Commercial"
-                                                                  ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
-                                                                  : "Big Commercial",
-                                                              "11-19",
-                                                              context)),
-                                                      Positioned(
-                                                          right: -10.0,
-                                                          top: -10.0,
-                                                          child: IconButton(
-                                                              onPressed: () => customBottomSheet.showSheetCarInfo(
-                                                                  context:
-                                                                      context,
-                                                                  image: const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/veto.png")),
-                                                                  title:
-                                                                      "Big commercial",
-                                                                  des:
-                                                                      "Big commercial car: veto etc...",
-                                                                  iconM: Icons
-                                                                      .money,
-                                                                  price: "25.0",
-                                                                  iconP: Icons
-                                                                      .person,
-                                                                  person:
-                                                                      "11-19"),
-                                                              icon: opacityVeto ==
-                                                                      true
-                                                                  ? const Icon(
-                                                                      Icons
-                                                                          .info_outline,
-                                                                      color: Colors
-                                                                          .purple,
-                                                                      size: 20,
-                                                                    )
-                                                                  : const Text(
-                                                                      ""))),
-                                                      Positioned(
-                                                        right: 0.0,
-                                                        left: 0.0,
-                                                        bottom: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.15 /
-                                                            100,
-                                                        child: Container(
-                                                          height: 4,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        2),
-                                                            color: vetoLine ==
-                                                                    true
-                                                                ? Colors.black
-                                                                : Colors
-                                                                    .transparent,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ]),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          CustomDropBottom().dropBottomCustom(
-                                              context, dropBottomProvider),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                                onTap: () async {
-                                                  if (tripDirectionDetails ==
-                                                      null) {
-                                                    Tools().toastMsg(
-                                                        "Choose to where before your request");
-                                                  } else {
-                                                    ///todo
-                                                    final int amount =
-                                                        checkAnyAmount(
-                                                            carTypePro!,
-                                                            tripDirectionDetails!);
-                                                    DataBaseSrv()
-                                                        .saveRiderRequest(
-                                                            context, amount);
-                                                    Provider.of<PositionCancelReq>(
-                                                            context,
-                                                            listen: false)
-                                                        .updateValue(0.0);
+                                                  onPressed: () {
                                                     Provider.of<PositionChang>(
                                                             context,
                                                             listen: false)
                                                         .changValue(-500.0);
-                                                    setState(() {
-                                                      state = "requesting";
-                                                    });
-                                                    driverAvailable = GeoFireMethods
-                                                        .listOfNearestDriverAvailable;
-                                                    searchNearestDriver(
-                                                        userProvider,
-                                                        context,
-                                                        carTypePro);
-                                                    gotDriverInfo(context);
-                                                  }
-                                                },
-                                                child: AnimatedContainer(
-                                                  duration: const Duration(
-                                                      seconds: 1),
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      6.5 /
-                                                      100,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      70 /
-                                                      100,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        tripDirectionDetails !=
-                                                                null
-                                                            ? const Color(
-                                                                0xFFFFD54F)
-                                                            : Colors.purple,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0),
-                                                  ),
-                                                  child: const Center(
-                                                      child: Text(
-                                                    "Request a Taxi",
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )),
-                                                )),
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        // tripDirectionDetails != null
+                                        //     ? const Text("")
+                                        //     : Row(
+                                        //         crossAxisAlignment:
+                                        //             CrossAxisAlignment.center,
+                                        //         mainAxisAlignment:
+                                        //             MainAxisAlignment
+                                        //                 .spaceEvenly,
+                                        //         children: [
+                                        //           _customWidget
+                                        //               .containerBox(
+                                        //                   const Icon(Icons
+                                        //                       .home_outlined),
+                                        //                   "Home",
+                                        //                   context),
+                                        //           _customWidget
+                                        //               .containerBox(
+                                        //                   const Icon(Icons
+                                        //                       .work_outline),
+                                        //                   "Work",
+                                        //                   context),
+                                        //         ],
+                                        //       ),
+                                        _customWidget.customDivider(),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(children: [
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    changeAllProClickTaxiBox(),
+                                                child: Stack(
+                                                  children: [
+                                                    Opacity(
+                                                        opacity:
+                                                            opacityTaxi ==
+                                                                    true
+                                                                ? 1
+                                                                : 0.3,
+                                                        child: _customWidget.carTypeBox(
+                                                            const Image(
+                                                                image: AssetImage(
+                                                                    "assets/smallTexi.png"),
+                                                                fit: BoxFit
+                                                                    .contain),
+                                                            tripDirectionDetails !=
+                                                                        null &&
+                                                                    carTypePro !=
+                                                                        "" &&
+                                                                    carTypePro ==
+                                                                        "Taxi-4 seats"
+                                                                ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
+                                                                : "Taxi",
+                                                            "4",
+                                                            context)),
+                                                    Positioned(
+                                                        right: -10.0,
+                                                        top: -10.0,
+                                                        child: IconButton(
+                                                            onPressed: () => customBottomSheet
+                                                                .showSheetCarInfo(
+                                                                    context:
+                                                                        context,
+                                                                    image:
+                                                                        const Image(
+                                                                      image: AssetImage(
+                                                                          "assets/smallTexi.png"),
+                                                                      fit: BoxFit
+                                                                          .contain,
+                                                                    ),
+                                                                    title:
+                                                                        "Regular Taxi",
+                                                                    des:
+                                                                        "sedan car: Hyundai,Renault,Fiat,Toyota etc...",
+                                                                    iconM: Icons
+                                                                        .money,
+                                                                    price:
+                                                                        "Start:15.00",
+                                                                    iconP: Icons
+                                                                        .person,
+                                                                    person:
+                                                                        "4"),
+                                                            icon: opacityTaxi ==
+                                                                    true
+                                                                ? const Icon(
+                                                                    Icons
+                                                                        .info_outline,
+                                                                    color: Colors
+                                                                        .purple,
+                                                                    size: 20,
+                                                                  )
+                                                                : const Text(
+                                                                    ""))),
+                                                    Positioned(
+                                                      right: 0.0,
+                                                      left: 0.0,
+                                                      bottom: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .height *
+                                                          0.15 /
+                                                          100,
+                                                      child: Container(
+                                                        height: 4,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      2),
+                                                          color: taxiLine ==
+                                                                  true
+                                                              ? Colors.black
+                                                              : Colors
+                                                                  .transparent,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    changeAllProClickVanBox(),
+                                                child: Stack(
+                                                  children: [
+                                                    Opacity(
+                                                        opacity:
+                                                            opacityVan == true
+                                                                ? 1
+                                                                : 0.3,
+                                                        child: _customWidget.carTypeBox(
+                                                            const Image(
+                                                                image: AssetImage(
+                                                                    "assets/van.png"),
+                                                                fit: BoxFit
+                                                                    .contain),
+                                                            tripDirectionDetails !=
+                                                                        null &&
+                                                                    carTypePro !=
+                                                                        "" &&
+                                                                    carTypePro ==
+                                                                        "Medium commercial-6-10 seats"
+                                                                ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
+                                                                : "MediumCommercial",
+                                                            "6-10",
+                                                            context)),
+                                                    Positioned(
+                                                        right: -10.0,
+                                                        top: -10.0,
+                                                        child: IconButton(
+                                                            onPressed: () => customBottomSheet.showSheetCarInfo(
+                                                                context:
+                                                                    context,
+                                                                image: const Image(
+                                                                    image: AssetImage(
+                                                                        "assets/van.png")),
+                                                                title:
+                                                                    "Medium",
+                                                                des:
+                                                                    "Medium commercial car",
+                                                                iconM: Icons
+                                                                    .money,
+                                                                price: "20.0",
+                                                                iconP: Icons
+                                                                    .person,
+                                                                person:
+                                                                    "6-10"),
+                                                            icon: opacityVan ==
+                                                                    true
+                                                                ? const Icon(
+                                                                    Icons
+                                                                        .info_outline,
+                                                                    color: Colors
+                                                                        .purple,
+                                                                    size: 20,
+                                                                  )
+                                                                : const Text(
+                                                                    ""))),
+                                                    Positioned(
+                                                      right: 0.0,
+                                                      left: 0.0,
+                                                      bottom: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .height *
+                                                          0.15 /
+                                                          100,
+                                                      child: Container(
+                                                        height: 4,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      2),
+                                                          color: vanLine ==
+                                                                  true
+                                                              ? Colors.black
+                                                              : Colors
+                                                                  .transparent,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  changeAllProClickVetoBox();
+                                                },
+                                                child: Stack(
+                                                  children: [
+                                                    Opacity(
+                                                        opacity:
+                                                            opacityVeto ==
+                                                                    true
+                                                                ? 1.0
+                                                                : 0.3,
+                                                        child: _customWidget.carTypeBox(
+                                                            const Image(
+                                                                image: AssetImage(
+                                                                    "assets/veto.png"),
+                                                                fit: BoxFit
+                                                                    .contain),
+                                                            tripDirectionDetails !=
+                                                                        null &&
+                                                                    carTypePro !=
+                                                                        "" &&
+                                                                    carTypePro ==
+                                                                        "Big commercial-11-19 seats"
+                                                                ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
+                                                                : "Big Commercial",
+                                                            "11-19",
+                                                            context)),
+                                                    Positioned(
+                                                        right: -10.0,
+                                                        top: -10.0,
+                                                        child: IconButton(
+                                                            onPressed: () => customBottomSheet.showSheetCarInfo(
+                                                                context:
+                                                                    context,
+                                                                image: const Image(
+                                                                    image: AssetImage(
+                                                                        "assets/veto.png")),
+                                                                title:
+                                                                    "Big commercial",
+                                                                des:
+                                                                    "Big commercial car: veto etc...",
+                                                                iconM: Icons
+                                                                    .money,
+                                                                price: "25.0",
+                                                                iconP: Icons
+                                                                    .person,
+                                                                person:
+                                                                    "11-19"),
+                                                            icon: opacityVeto ==
+                                                                    true
+                                                                ? const Icon(
+                                                                    Icons
+                                                                        .info_outline,
+                                                                    color: Colors
+                                                                        .purple,
+                                                                    size: 20,
+                                                                  )
+                                                                : const Text(
+                                                                    ""))),
+                                                    Positioned(
+                                                      right: 0.0,
+                                                      left: 0.0,
+                                                      bottom: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .height *
+                                                          0.15 /
+                                                          100,
+                                                      child: Container(
+                                                        height: 4,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      2),
+                                                          color: vetoLine ==
+                                                                  true
+                                                              ? Colors.black
+                                                              : Colors
+                                                                  .transparent,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ]),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        CustomDropBottom().dropBottomCustom(
+                                            context, dropBottomProvider),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: GestureDetector(
+                                              onTap: () async {
+                                                if (tripDirectionDetails ==
+                                                    null) {
+                                                  Tools().toastMsg(
+                                                      "Choose to where before your request");
+                                                } else {
+                                                  ///todo
+                                                  final int amount =
+                                                      checkAnyAmount(
+                                                          carTypePro!,
+                                                          tripDirectionDetails!);
+                                                  DataBaseSrv()
+                                                      .saveRiderRequest(
+                                                          context, amount);
+                                                  Provider.of<PositionCancelReq>(
+                                                          context,
+                                                          listen: false)
+                                                      .updateValue(0.0);
+                                                  Provider.of<PositionChang>(
+                                                          context,
+                                                          listen: false)
+                                                      .changValue(-500.0);
+                                                  setState(() {
+                                                    state = "requesting";
+                                                  });
+                                                  driverAvailable = GeoFireMethods
+                                                      .listOfNearestDriverAvailable;
+                                                  searchNearestDriver(
+                                                      userProvider,
+                                                      context,
+                                                      carTypePro);
+                                                  gotDriverInfo(context);
+                                                }
+                                              },
+                                              child: AnimatedContainer(
+                                                duration: const Duration(
+                                                    seconds: 1),
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    6.5 /
+                                                    100,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    70 /
+                                                    100,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      tripDirectionDetails !=
+                                                              null
+                                                          ? const Color(
+                                                              0xFFFFD54F)
+                                                          : Colors.purple,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
+                                                ),
+                                                child: const Center(
+                                                    child: Text(
+                                                  "Request a Taxi",
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                )),
+                                              )),
+                                        ),
+                                      ],
                                     ),
-                                  )),
+                                  ),
+                                )),
 
-                              ///cancel container
-                              AnimatedPositioned(
-                                  duration: const Duration(milliseconds: 200),
-                                  right: 0.0,
-                                  left: 0.0,
-                                  bottom: postionCancel,
-                                  child: CancelTaxi().cancelTaxiRequest(
-                                      context: context,
-                                      userIdProvider: userProvider,
-                                      voidCallback: () {
-                                        restApp();
-                                        setState(() {
-                                          state = "normal";
-                                        });
-                                      })),
+                            ///cancel container
+                            AnimatedPositioned(
+                                duration: const Duration(milliseconds: 200),
+                                right: 0.0,
+                                left: 0.0,
+                                bottom: postionCancel,
+                                child: CancelTaxi().cancelTaxiRequest(
+                                    context: context,
+                                    userIdProvider: userProvider,
+                                    voidCallback: () {
+                                      restApp();
+                                      setState(() {
+                                        state = "normal";
+                                      });
+                                    })),
 
-                              ///driver info
-                              AnimatedPositioned(
-                                  duration: const Duration(milliseconds: 200),
-                                  right: 0.0,
-                                  left: 0.0,
-                                  bottom: postionDriverInfo,
-                                  child: DriverInfo().driverInfoContainer(
-                                      context: context,
-                                      userIdProvider: userProvider,
-                                      voidCallback: () {
-                                        restApp();
-                                        setState(() {
-                                          state = "normal";
-                                        });
-                                      })),
-                            ],
-                          ),
+                            ///driver info
+                            AnimatedPositioned(
+                                duration: const Duration(milliseconds: 200),
+                                right: 0.0,
+                                left: 0.0,
+                                bottom: postionDriverInfo,
+                                child: DriverInfo().driverInfoContainer(
+                                    context: context,
+                                    userIdProvider: userProvider,
+                                    voidCallback: () {
+                                      restApp();
+                                      setState(() {
+                                        state = "normal";
+                                      });
+                                    })),
+                          ],
                         ),
-                      );
-                    }),
-              ),
+                      ),
+                    );
+                  }),
               changeColor == false
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -814,7 +797,8 @@ class _HomeScreenState extends State<HomeScreen> {
     Marker markerPickUpLocation = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
         infoWindow:
-            InfoWindow(title: initialPos.placeName, snippet: "My Location"),
+            InfoWindow(
+                title: initialPos.placeName, snippet: "My Location"),
         position: LatLng(pickUpLatling.latitude, pickUpLatling.longitude),
         markerId: const MarkerId("pickUpId"));
 
@@ -852,12 +836,9 @@ class _HomeScreenState extends State<HomeScreen> {
       circlesSet.add(pickUpLocCircle);
       circlesSet.add(dropOffLocCircle);
     });
-    if (kDebugMode) {
-      print("this is details enCodingPoints:::::: ${details.enCodingPoints}");
-    }
   }
 
-  ///this method for got current loction after that run geofire method for got the drivers nearest
+  ///this method for got current location after that run geofire method for got the drivers nearest
   Future<dynamic> locationPosition(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -894,7 +875,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     ///Not for chacking
-
     await _apiMethods.searchCoordinatesAddress(position, context);
     geoFireInitialize();
   }
@@ -952,29 +932,56 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// this method for add icon new near driver on map
-  void updateAvailableDriverOnMap() {
+  void updateAvailableDriverOnMap() async{
     setState(() {
-      markersSet.clear();
+      ///canceled
+      // markersSet.clear();
     });
 
     Set<Marker> tMarker = {};
 
     for (NearestDriverAvailable driver
         in GeoFireMethods.listOfNearestDriverAvailable) {
+      DatabaseReference ref = FirebaseDatabase.instance
+          .ref()
+          .child("driver")
+          .child(driver.key);
+      await ref.once().then((value){
+        final snap = value.snapshot.value;
+        if(snap == null){
+          return;
+        }
+        Map<String,dynamic>map = Map<String,dynamic>.from(snap as Map);
+        if(map["firstName"]!=null){
+           fNameIcon = map["firstName"].toString();
+        }
+        if(map["lastName"]!=null){
+          lNameIcon = map["lastName"].toString();
+        }
+        if(map["rating"]!=null){
+          ratDriverRead = double.parse(map["rating"].toString());
+        }
+      });
+
       LatLng driverAvailablePosititon =
           LatLng(driver.latitude, driver.longitude);
       Marker marker = Marker(
         markerId: MarkerId("driver${driver.key}"),
         position: driverAvailablePosititon,
+        infoWindow: InfoWindow(title:"$fNameIcon $lNameIcon",snippet: "2-3 min" ),
         icon: driversNearIcon,
-        rotation: MathMethods.createRandomNumber(360),
+        // rotation: MathMethods.createRandomNumber(120),
       );
 
       tMarker.add(marker);
+      setState(() {
+        markersSet.add(marker);
+      });
     }
-    setState(() {
-      markersSet = tMarker;
-    });
+    ///cancel
+    // setState(() {
+    //   markersSet=tMarker;
+    // });
   }
 
   ///this Method for custom icon driver near
@@ -997,14 +1004,15 @@ class _HomeScreenState extends State<HomeScreen> {
       circlesSet.clear();
       polylineCoordinates.clear();
       tripDirectionDetails = null;
-       statusRide = "";
-       carDriverInfo = "";
-       driverName = "";
-       driverPhone = "";
-       timeTrip = "";
-       driverId = "";
-       titleRate = "";
-       rating = 0.0;
+      statusRide = "";
+      carDriverInfo = "";
+      driverName = "";
+      driverPhone = "";
+      timeTrip = "";
+      driverId = "";
+      titleRate = "";
+      rating = 0.0;
+      carRideType="";
     });
     locationPosition(context);
   }
@@ -1012,11 +1020,11 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method for switch text where to OR toll passes
   changeTextWhereToOrTollpasses(DirectionDetails? tripDirectionDetails) {
     if (tripDirectionDetails != null) {
-      return const Expanded(
+      return  Expanded(
           child: Text(
-        "Not:if found toll passes aren't include!",
+        "Km : ${tripDirectionDetails.distanceText} , Time : ${tripDirectionDetails.durationText} ",
         style:
-            TextStyle(color: Colors.white, backgroundColor: Colors.redAccent),
+            TextStyle(color: Colors.white, backgroundColor: Colors.blueAccent.shade700),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ));
@@ -1056,7 +1064,8 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
     Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
-    Provider.of<CarTypeProvider>(context, listen: false).updateCarType("Taxi-4 seats");
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Taxi-4 seats");
   }
 
   // this method will change all provider state when click on van box
@@ -1138,9 +1147,9 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snap != null) {
           carRideType = snap.toString();
           if (carRideType == carTypePro) {
-            notifyDriver(driver, context, userProvider,carTypePro);
+            notifyDriver(driver, context, userProvider, carTypePro);
             driverAvailable.removeAt(0);
-          }else{
+          } else {
             Tools().toastMsg(" No car available try again");
           }
         }
@@ -1186,7 +1195,7 @@ class _HomeScreenState extends State<HomeScreen> {
         driverRef.child("newRide").onDisconnect();
         rideRequestTimeOut = 60;
         timer.cancel();
-        searchNearestDriver(userProvider, context,carTypePro);
+        searchNearestDriver(userProvider, context, carTypePro);
       }
       //4
       if (after2MinTimeOut == 0) {
