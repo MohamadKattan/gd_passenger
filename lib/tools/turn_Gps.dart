@@ -15,7 +15,7 @@ class TurnGps {
         return;
       }
     }
-    location.enableBackgroundMode(enable: true);
+    location.enableBackgroundMode(enable: false);
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {

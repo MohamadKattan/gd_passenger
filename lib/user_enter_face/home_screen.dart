@@ -37,13 +37,17 @@ import '../my_provider/buttom_color_pro.dart';
 import '../my_provider/close_botton_driverInfo.dart';
 import '../my_provider/nearsert_driver_provider.dart';
 import '../my_provider/positon_driver_info_provide.dart';
+import '../my_provider/rider_id.dart';
 import '../notification.dart';
 import '../repo/api_srv_geo.dart';
+import '../tools/curanny_type.dart';
 import '../tools/geoFire_methods_tools.dart';
 import '../widget/collect_money_dialog.dart';
+import '../widget/complain_onDriver.dart';
+import '../widget/driver_iconCar_info.dart';
 import '../widget/driver_info.dart';
-import '../widget/rating_widget.dart';
 import '../widget/sorry_no_driver.dart';
+import '../widget/veto_van_price_info.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -64,10 +68,13 @@ class _HomeScreenState extends State<HomeScreen> {
   DirectionDetails? tripDirectionDetails;
   bool nearDriverAvailableLoaded = false;
   late BitmapDescriptor driversNearIcon;
+  late BitmapDescriptor driversNearIcon1;
   List<NearestDriverAvailable> driverAvailable = [];
   String state = "normal";
+  String pathToReference = "availableDrivers";
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
+
   @override
   void initState() {
     DataBaseSrv().currentOnlineUserInfo(context);
@@ -86,7 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     final postionCancel = Provider.of<PositionCancelReq>(context).value;
-    final dropBottomProvider=Provider.of<DropBottomValue>(context).valueDropBottom;
+    final dropBottomProvider =
+        Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
     final infoUserDataReal = Provider.of<UserAllInfoDatabase>(context).users;
@@ -94,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionDriverInfo =
         Provider.of<PositionDriverInfoProvider>(context).positionDriverInfo;
     createDriverNearIcon();
+    createDriverNearIcon1();
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -138,8 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: 0.0,
                               left: 0.0,
                               child: GestureDetector(
-                                onTap: () => Provider.of<PositionChang>(
-                                        context,
+                                onTap: () => Provider.of<PositionChang>(context,
                                         listen: false)
                                     .changValue(0.0),
                                 child: Container(
@@ -213,8 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               children: [
                                                 Padding(
                                                   padding:
-                                                      const EdgeInsets.all(
-                                                          8.0),
+                                                      const EdgeInsets.all(8.0),
                                                   child:
                                                       searchIconOrCancelBottom(
                                                           tripDirectionDetails),
@@ -254,305 +261,305 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                         ),
-                                        // tripDirectionDetails != null
-                                        //     ? const Text("")
-                                        //     : Row(
-                                        //         crossAxisAlignment:
-                                        //             CrossAxisAlignment.center,
-                                        //         mainAxisAlignment:
-                                        //             MainAxisAlignment
-                                        //                 .spaceEvenly,
-                                        //         children: [
-                                        //           _customWidget
-                                        //               .containerBox(
-                                        //                   const Icon(Icons
-                                        //                       .home_outlined),
-                                        //                   "Home",
-                                        //                   context),
-                                        //           _customWidget
-                                        //               .containerBox(
-                                        //                   const Icon(Icons
-                                        //                       .work_outline),
-                                        //                   "Work",
-                                        //                   context),
-                                        //         ],
-                                        //       ),
                                         _customWidget.customDivider(),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(children: [
-                                              GestureDetector(
-                                                onTap: () =>
-                                                    changeAllProClickTaxiBox(),
-                                                child: Stack(
-                                                  children: [
-                                                    Opacity(
-                                                        opacity:
-                                                            opacityTaxi ==
+                                          child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () =>
+                                                      changeAllProClickTaxiBox(),
+                                                  child: Stack(
+                                                    children: [
+                                                      Opacity(
+                                                          opacity:
+                                                              opacityTaxi ==
+                                                                      true
+                                                                  ? 1
+                                                                  : 0.3,
+                                                          child: _customWidget.carTypeBox(
+                                                              const Image(
+                                                                  image: AssetImage(
+                                                                      "assets/smallTexi.png"),
+                                                                  fit: BoxFit
+                                                                      .contain),
+                                                              tripDirectionDetails !=
+                                                                          null &&
+                                                                      carTypePro !=
+                                                                          "" &&
+                                                                      carTypePro ==
+                                                                          "Taxi-4 seats"
+                                                                  ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}"
+                                                                  : "Taxi",
+                                                              "4",
+                                                              context)),
+                                                      Positioned(
+                                                          right: -10.0,
+                                                          top: -10.0,
+                                                          child: IconButton(
+                                                              onPressed: () => customBottomSheet
+                                                                  .showSheetCarInfo(
+                                                                      context:
+                                                                          context,
+                                                                      image:
+                                                                          const Image(
+                                                                        image: AssetImage(
+                                                                            "assets/smallTexi.png"),
+                                                                        fit: BoxFit
+                                                                            .contain,
+                                                                      ),
+                                                                      title:
+                                                                          "Regular Taxi",
+                                                                      des:
+                                                                          "sedan car: Hyundai,Renault,Fiat,Toyota etc...",
+                                                                      iconM: Icons
+                                                                          .money,
+                                                                      price:
+                                                                          "Start:15.00",
+                                                                      iconP: Icons
+                                                                          .person,
+                                                                      person:
+                                                                          "4"),
+                                                              icon: opacityTaxi ==
+                                                                      true
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .info_outline,
+                                                                      color: Colors
+                                                                          .purple,
+                                                                      size: 20,
+                                                                    )
+                                                                  : const Text(
+                                                                      ""))),
+                                                      Positioned(
+                                                        right: 0.0,
+                                                        left: 0.0,
+                                                        bottom: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.15 /
+                                                            100,
+                                                        child: Container(
+                                                          height: 4,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        2),
+                                                            color: taxiLine ==
                                                                     true
-                                                                ? 1
-                                                                : 0.3,
-                                                        child: _customWidget.carTypeBox(
-                                                            const Image(
-                                                                image: AssetImage(
-                                                                    "assets/smallTexi.png"),
-                                                                fit: BoxFit
-                                                                    .contain),
-                                                            tripDirectionDetails !=
-                                                                        null &&
-                                                                    carTypePro !=
-                                                                        "" &&
-                                                                    carTypePro ==
-                                                                        "Taxi-4 seats"
-                                                                ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
-                                                                : "Taxi",
-                                                            "4",
-                                                            context)),
-                                                    Positioned(
-                                                        right: -10.0,
-                                                        top: -10.0,
-                                                        child: IconButton(
-                                                            onPressed: () => customBottomSheet
-                                                                .showSheetCarInfo(
-                                                                    context:
-                                                                        context,
-                                                                    image:
-                                                                        const Image(
+                                                                ? Colors.black
+                                                                : Colors
+                                                                    .transparent,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    tripDirectionDetails != null
+                                                        ? showDialog(
+                                                            context: context,
+                                                            barrierDismissible:
+                                                                false,
+                                                            builder: (_) =>
+                                                                vetoVanPriceTurkeyJust(
+                                                                    context))
+                                                        : null;
+                                                    changeAllProClickVanBox();
+                                                  },
+                                                  child: Stack(
+                                                    children: [
+                                                      Opacity(
+                                                          opacity:
+                                                              opacityVan == true
+                                                                  ? 1
+                                                                  : 0.3,
+                                                          child: _customWidget.carTypeBox(
+                                                              const Image(
+                                                                  image: AssetImage(
+                                                                      "assets/van.png"),
+                                                                  fit: BoxFit
+                                                                      .contain),
+                                                              tripDirectionDetails !=
+                                                                          null &&
+                                                                      carTypePro !=
+                                                                          "" &&
+                                                                      carTypePro ==
+                                                                          "Medium commercial-6-10 seats"
+                                                                  ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}"
+                                                                  : "MediumCommercial",
+                                                              "6-10",
+                                                              context)),
+                                                      Positioned(
+                                                          right: -10.0,
+                                                          top: -10.0,
+                                                          child: IconButton(
+                                                              onPressed: () => customBottomSheet.showSheetCarInfo(
+                                                                  context:
+                                                                      context,
+                                                                  image: const Image(
                                                                       image: AssetImage(
-                                                                          "assets/smallTexi.png"),
-                                                                      fit: BoxFit
-                                                                          .contain,
-                                                                    ),
-                                                                    title:
-                                                                        "Regular Taxi",
-                                                                    des:
-                                                                        "sedan car: Hyundai,Renault,Fiat,Toyota etc...",
-                                                                    iconM: Icons
-                                                                        .money,
-                                                                    price:
-                                                                        "Start:15.00",
-                                                                    iconP: Icons
-                                                                        .person,
-                                                                    person:
-                                                                        "4"),
-                                                            icon: opacityTaxi ==
+                                                                          "assets/van.png")),
+                                                                  title:
+                                                                      "Medium",
+                                                                  des:
+                                                                      "Medium commercial car",
+                                                                  iconM: Icons
+                                                                      .money,
+                                                                  price: "20.0",
+                                                                  iconP: Icons
+                                                                      .person,
+                                                                  person:
+                                                                      "6-10"),
+                                                              icon: opacityVan ==
+                                                                      true
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .info_outline,
+                                                                      color: Colors
+                                                                          .purple,
+                                                                      size: 20,
+                                                                    )
+                                                                  : const Text(
+                                                                      ""))),
+                                                      Positioned(
+                                                        right: 0.0,
+                                                        left: 0.0,
+                                                        bottom: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.15 /
+                                                            100,
+                                                        child: Container(
+                                                          height: 4,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        2),
+                                                            color: vanLine ==
                                                                     true
-                                                                ? const Icon(
-                                                                    Icons
-                                                                        .info_outline,
-                                                                    color: Colors
-                                                                        .purple,
-                                                                    size: 20,
-                                                                  )
-                                                                : const Text(
-                                                                    ""))),
-                                                    Positioned(
-                                                      right: 0.0,
-                                                      left: 0.0,
-                                                      bottom: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .height *
-                                                          0.15 /
-                                                          100,
-                                                      child: Container(
-                                                        height: 4,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      2),
-                                                          color: taxiLine ==
-                                                                  true
-                                                              ? Colors.black
-                                                              : Colors
-                                                                  .transparent,
+                                                                ? Colors.black
+                                                                : Colors
+                                                                    .transparent,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () =>
-                                                    changeAllProClickVanBox(),
-                                                child: Stack(
-                                                  children: [
-                                                    Opacity(
-                                                        opacity:
-                                                            opacityVan == true
-                                                                ? 1
-                                                                : 0.3,
-                                                        child: _customWidget.carTypeBox(
-                                                            const Image(
-                                                                image: AssetImage(
-                                                                    "assets/van.png"),
-                                                                fit: BoxFit
-                                                                    .contain),
-                                                            tripDirectionDetails !=
-                                                                        null &&
-                                                                    carTypePro !=
-                                                                        "" &&
-                                                                    carTypePro ==
-                                                                        "Medium commercial-6-10 seats"
-                                                                ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
-                                                                : "MediumCommercial",
-                                                            "6-10",
-                                                            context)),
-                                                    Positioned(
-                                                        right: -10.0,
-                                                        top: -10.0,
-                                                        child: IconButton(
-                                                            onPressed: () => customBottomSheet.showSheetCarInfo(
-                                                                context:
-                                                                    context,
-                                                                image: const Image(
-                                                                    image: AssetImage(
-                                                                        "assets/van.png")),
-                                                                title:
-                                                                    "Medium",
-                                                                des:
-                                                                    "Medium commercial car",
-                                                                iconM: Icons
-                                                                    .money,
-                                                                price: "20.0",
-                                                                iconP: Icons
-                                                                    .person,
-                                                                person:
-                                                                    "6-10"),
-                                                            icon: opacityVan ==
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    tripDirectionDetails != null
+                                                        ? showDialog(
+                                                            context: context,
+                                                            barrierDismissible:
+                                                                false,
+                                                            builder: (_) =>
+                                                                vetoVanPriceTurkeyJust(
+                                                                    context))
+                                                        : null;
+                                                    changeAllProClickVetoBox();
+                                                  },
+                                                  child: Stack(
+                                                    children: [
+                                                      Opacity(
+                                                          opacity:
+                                                              opacityVeto ==
+                                                                      true
+                                                                  ? 1.0
+                                                                  : 0.3,
+                                                          child: _customWidget.carTypeBox(
+                                                              const Image(
+                                                                  image: AssetImage(
+                                                                      "assets/veto.png"),
+                                                                  fit: BoxFit
+                                                                      .contain),
+                                                              tripDirectionDetails !=
+                                                                          null &&
+                                                                      carTypePro !=
+                                                                          "" &&
+                                                                      carTypePro ==
+                                                                          "Big commercial-11-19 seats"
+                                                                  ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}"
+                                                                  : "Big Commercial",
+                                                              "11-19",
+                                                              context)),
+                                                      Positioned(
+                                                          right: -10.0,
+                                                          top: -10.0,
+                                                          child: IconButton(
+                                                              onPressed: () => customBottomSheet.showSheetCarInfo(
+                                                                  context:
+                                                                      context,
+                                                                  image: const Image(
+                                                                      image: AssetImage(
+                                                                          "assets/veto.png")),
+                                                                  title:
+                                                                      "Big commercial",
+                                                                  des:
+                                                                      "Big commercial car: veto etc...",
+                                                                  iconM: Icons
+                                                                      .money,
+                                                                  price: "25.0",
+                                                                  iconP: Icons
+                                                                      .person,
+                                                                  person:
+                                                                      "11-19"),
+                                                              icon: opacityVeto ==
+                                                                      true
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .info_outline,
+                                                                      color: Colors
+                                                                          .purple,
+                                                                      size: 20,
+                                                                    )
+                                                                  : const Text(
+                                                                      ""))),
+                                                      Positioned(
+                                                        right: 0.0,
+                                                        left: 0.0,
+                                                        bottom: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.15 /
+                                                            100,
+                                                        child: Container(
+                                                          height: 4,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        2),
+                                                            color: vetoLine ==
                                                                     true
-                                                                ? const Icon(
-                                                                    Icons
-                                                                        .info_outline,
-                                                                    color: Colors
-                                                                        .purple,
-                                                                    size: 20,
-                                                                  )
-                                                                : const Text(
-                                                                    ""))),
-                                                    Positioned(
-                                                      right: 0.0,
-                                                      left: 0.0,
-                                                      bottom: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .height *
-                                                          0.15 /
-                                                          100,
-                                                      child: Container(
-                                                        height: 4,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      2),
-                                                          color: vanLine ==
-                                                                  true
-                                                              ? Colors.black
-                                                              : Colors
-                                                                  .transparent,
+                                                                ? Colors.black
+                                                                : Colors
+                                                                    .transparent,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  changeAllProClickVetoBox();
-                                                },
-                                                child: Stack(
-                                                  children: [
-                                                    Opacity(
-                                                        opacity:
-                                                            opacityVeto ==
-                                                                    true
-                                                                ? 1.0
-                                                                : 0.3,
-                                                        child: _customWidget.carTypeBox(
-                                                            const Image(
-                                                                image: AssetImage(
-                                                                    "assets/veto.png"),
-                                                                fit: BoxFit
-                                                                    .contain),
-                                                            tripDirectionDetails !=
-                                                                        null &&
-                                                                    carTypePro !=
-                                                                        "" &&
-                                                                    carTypePro ==
-                                                                        "Big commercial-11-19 seats"
-                                                                ? "${ApiSrvDir.calculateFares(tripDirectionDetails!, carTypePro!)} TL"
-                                                                : "Big Commercial",
-                                                            "11-19",
-                                                            context)),
-                                                    Positioned(
-                                                        right: -10.0,
-                                                        top: -10.0,
-                                                        child: IconButton(
-                                                            onPressed: () => customBottomSheet.showSheetCarInfo(
-                                                                context:
-                                                                    context,
-                                                                image: const Image(
-                                                                    image: AssetImage(
-                                                                        "assets/veto.png")),
-                                                                title:
-                                                                    "Big commercial",
-                                                                des:
-                                                                    "Big commercial car: veto etc...",
-                                                                iconM: Icons
-                                                                    .money,
-                                                                price: "25.0",
-                                                                iconP: Icons
-                                                                    .person,
-                                                                person:
-                                                                    "11-19"),
-                                                            icon: opacityVeto ==
-                                                                    true
-                                                                ? const Icon(
-                                                                    Icons
-                                                                        .info_outline,
-                                                                    color: Colors
-                                                                        .purple,
-                                                                    size: 20,
-                                                                  )
-                                                                : const Text(
-                                                                    ""))),
-                                                    Positioned(
-                                                      right: 0.0,
-                                                      left: 0.0,
-                                                      bottom: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .height *
-                                                          0.15 /
-                                                          100,
-                                                      child: Container(
-                                                        height: 4,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      2),
-                                                          color: vetoLine ==
-                                                                  true
-                                                              ? Colors.black
-                                                              : Colors
-                                                                  .transparent,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ]),
-                                          ),
+                                              ]),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -568,7 +575,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Tools().toastMsg(
                                                       "Choose to where before your request");
                                                 } else {
-                                                  ///todo
                                                   final int amount =
                                                       checkAnyAmount(
                                                           carTypePro!,
@@ -598,7 +604,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               },
                                               child: AnimatedContainer(
                                                 duration: const Duration(
-                                                    seconds: 1),
+                                                    milliseconds: 1000),
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *
@@ -610,12 +616,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     70 /
                                                     100,
                                                 decoration: BoxDecoration(
-                                                  color:
-                                                      tripDirectionDetails !=
-                                                              null
-                                                          ? const Color(
-                                                              0xFFFFD54F)
-                                                          : Colors.purple,
+                                                  color: tripDirectionDetails !=
+                                                          null
+                                                      ? const Color(0xFFFFD54F)
+                                                      : Colors.purple,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           15.0),
@@ -709,6 +713,27 @@ class _HomeScreenState extends State<HomeScreen> {
                             )),
                       ),
                     ),
+              statusRide == "accepted" || statusRide == "Driver arrived"
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 80.0, left: 10.0),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => complainOnDriver(context));
+                            },
+                            icon: Icon(
+                              Icons.call,
+                              color: Colors.greenAccent.shade700,
+                              size: 25,
+                            )),
+                      ),
+                    )
+                  : const Text("")
             ],
           ),
         ),
@@ -760,7 +785,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ///property PolylinePoints
       Polyline polyline = Polyline(
           polylineId: const PolylineId("polylineId"),
-          color: Colors.red,
+          color: Colors.greenAccent.shade700,
           width: 6,
           geodesic: true,
           startCap: Cap.roundCap,
@@ -797,8 +822,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Marker markerPickUpLocation = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
         infoWindow:
-            InfoWindow(
-                title: initialPos.placeName, snippet: "My Location"),
+            InfoWindow(title: initialPos.placeName, snippet: "My Location"),
         position: LatLng(pickUpLatling.latitude, pickUpLatling.longitude),
         markerId: const MarkerId("pickUpId"));
 
@@ -883,13 +907,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void geoFireInitialize() {
     final currentPosition =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
-
-    String pathToReference = "availableDrivers";
     Geofire.initialize(pathToReference);
-
     Geofire.queryAtLocation(
             currentPosition.latitude, currentPosition.longitude, 2)
-        ?.listen((map) {
+        ?.listen((map) async {
       if (map != null) {
         var callBack = map['callBack'];
 
@@ -905,6 +926,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (nearDriverAvailableLoaded == true) {
               updateAvailableDriverOnMap();
             }
+
             break;
 
           case Geofire.onKeyExited:
@@ -932,7 +954,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// this method for add icon new near driver on map
-  void updateAvailableDriverOnMap() async{
+  void updateAvailableDriverOnMap() async {
+     late String driverPhoneOnMap;
     setState(() {
       ///canceled
       // markersSet.clear();
@@ -942,24 +965,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (NearestDriverAvailable driver
         in GeoFireMethods.listOfNearestDriverAvailable) {
-      DatabaseReference ref = FirebaseDatabase.instance
-          .ref()
-          .child("driver")
-          .child(driver.key);
-      await ref.once().then((value){
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref().child("driver").child(driver.key);
+      await ref.once().then((value) {
         final snap = value.snapshot.value;
-        if(snap == null){
+        if (snap == null) {
           return;
         }
-        Map<String,dynamic>map = Map<String,dynamic>.from(snap as Map);
-        if(map["firstName"]!=null){
-           fNameIcon = map["firstName"].toString();
+        Map<String, dynamic> map = Map<String, dynamic>.from(snap as Map);
+        if (map["firstName"] != null) {
+          fNameIcon = map["firstName"].toString();
         }
-        if(map["lastName"]!=null){
+        if (map["lastName"] != null) {
           lNameIcon = map["lastName"].toString();
         }
-        if(map["rating"]!=null){
+        if (map["rating"] != null) {
           ratDriverRead = double.parse(map["rating"].toString());
+        }
+        if (map["personImage"] != null) {
+          driverImage = map["personImage"].toString();
+        }
+        if (map["carInfo"]["carType"] != null) {
+          carDriverType = map["carInfo"]["carType"].toString();
+        }
+        if (map["phoneNumber"] != null) {
+          driverPhoneOnMap = map["phoneNumber"].toString();
         }
       });
 
@@ -968,8 +998,16 @@ class _HomeScreenState extends State<HomeScreen> {
       Marker marker = Marker(
         markerId: MarkerId("driver${driver.key}"),
         position: driverAvailablePosititon,
-        infoWindow: InfoWindow(title:"$fNameIcon $lNameIcon",snippet: "2-3 min" ),
-        icon: driversNearIcon,
+        icon: carDriverType == "Taxi-4 seats"
+            ? driversNearIcon
+            : driversNearIcon1,
+        infoWindow: InfoWindow(
+            onTap: () => showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => callDriverIconMap(context,driverPhoneOnMap)),
+            title: " $fNameIcon $lNameIcon /Arrive:2-3 min",
+            snippet: "call : $driverPhoneOnMap"),
         // rotation: MathMethods.createRandomNumber(120),
       );
 
@@ -978,6 +1016,7 @@ class _HomeScreenState extends State<HomeScreen> {
         markersSet.add(marker);
       });
     }
+
     ///cancel
     // setState(() {
     //   markersSet=tMarker;
@@ -996,7 +1035,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // this method for clean
+  void createDriverNearIcon1() {
+    ImageConfiguration imageConfiguration =
+        createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
+    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/car_ios.png")
+        .then((value) {
+      setState(() {
+        driversNearIcon1 = value;
+      });
+    });
+  }
+
   void restApp() {
     setState(() {
       polylineSet.clear();
@@ -1012,7 +1061,7 @@ class _HomeScreenState extends State<HomeScreen> {
       driverId = "";
       titleRate = "";
       rating = 0.0;
-      carRideType="";
+      carRideType = "";
     });
     locationPosition(context);
   }
@@ -1020,11 +1069,11 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method for switch text where to OR toll passes
   changeTextWhereToOrTollpasses(DirectionDetails? tripDirectionDetails) {
     if (tripDirectionDetails != null) {
-      return  Expanded(
+      return Expanded(
           child: Text(
         "Km : ${tripDirectionDetails.distanceText} , Time : ${tripDirectionDetails.durationText} ",
-        style:
-            TextStyle(color: Colors.white, backgroundColor: Colors.blueAccent.shade700),
+        style: TextStyle(
+            color: Colors.white, backgroundColor: Colors.blueAccent.shade700),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ));
@@ -1099,11 +1148,11 @@ class _HomeScreenState extends State<HomeScreen> {
       return 0;
     }
     amount = carTypePro == "Taxi-4 seats"
-        ? ApiSrvDir.calculateFares(details, carTypePro)
+        ? ApiSrvDir.calculateFares1(details, carTypePro, context)
         : carTypePro == "Medium commercial-6-10 seats"
-            ? ApiSrvDir.calculateFares(details, carTypePro)
+            ? ApiSrvDir.calculateFares1(details, carTypePro, context)
             : carTypePro == "Big commercial-11-19 seats"
-                ? ApiSrvDir.calculateFares(details, carTypePro)
+                ? ApiSrvDir.calculateFares1(details, carTypePro, context)
                 : 0;
     return amount;
   }
@@ -1178,14 +1227,14 @@ class _HomeScreenState extends State<HomeScreen> {
       if (state != "requesting") {
         driverRef.child("newRide").set("canceled");
         driverRef.child("newRide").onDisconnect();
-        rideRequestTimeOut = 60;
+        rideRequestTimeOut = 30;
         timer.cancel();
       }
       //2
       driverRef.child("newRide").onValue.listen((event) {
         if (event.snapshot.value.toString() == "accepted") {
           driverRef.child("newRide").onDisconnect();
-          rideRequestTimeOut = 60;
+          rideRequestTimeOut = 30;
           timer.cancel();
         }
       });
@@ -1193,14 +1242,14 @@ class _HomeScreenState extends State<HomeScreen> {
       if (rideRequestTimeOut == 0) {
         driverRef.child("newRide").set("timeOut");
         driverRef.child("newRide").onDisconnect();
-        rideRequestTimeOut = 60;
-        timer.cancel();
+        rideRequestTimeOut = 30;
+        timer.cancel(); //
         searchNearestDriver(userProvider, context, carTypePro);
       }
       //4
       if (after2MinTimeOut == 0) {
         timer.cancel();
-        after2MinTimeOut = 120;
+        after2MinTimeOut = 70;
 
         Provider.of<PositionCancelReq>(context, listen: false)
             .updateValue(-400.0);
@@ -1265,16 +1314,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (BuildContext context) {
                   return collectMoney(context, fare);
                 });
+
             if (res == "close") {
               if (map["driverId"] != null) {
                 driverId = map["driverId"].toString();
+                Provider.of<RiderId>(context, listen: false)
+                    .updateStatus(driverId);
               }
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return RatingWidget(id: driverId);
-                  });
+              //   // showDialog(
+              //   //     context: context,
+              //   //     barrierDismissible: false,
+              //   //     builder: (BuildContext context) {
+              //   //       return RatingWidget(id: driverId);
+              //   //     });
               rideStreamSubscription.cancel();
             }
           }

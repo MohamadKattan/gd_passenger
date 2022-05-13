@@ -20,8 +20,8 @@ class _SplashScreenState extends State<SplashScreen>
     TurnGps().turnGpsIfNot();
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(seconds: 4),
-        lowerBound: 0.4,
+        duration: const Duration(seconds: 1),
+        lowerBound: 0.5,
         upperBound: 0.6);
     _animationController.forward();
     _animationController.addStatusListener((status) {

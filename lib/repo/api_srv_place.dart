@@ -9,6 +9,9 @@ import 'package:gd_passenger/tools/get_url.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:provider/provider.dart';
 
+import '../my_provider/lineTaxiProvider.dart';
+import '../my_provider/opictyProvider.dart';
+
 class DropPlaceDetails {
   final GetUrl _getUrl = GetUrl();
   final CircularInductorCostem _costem = CircularInductorCostem();
@@ -41,6 +44,12 @@ class DropPlaceDetails {
       Provider.of<PlaceDetailsDropProvider>(context, listen: false)
           .updateDropOfLocation(address);
       print("Drop location  nNNn is :::: ${address.placeName}");
+      Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
+      Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+      Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+      Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
+      Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+      Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
       Provider.of<CarTypeProvider>(context,listen: false).updateCarType("Taxi-4 seats");
       Navigator.pop(context,"dataDir");
     }

@@ -13,12 +13,14 @@ String serverToken ="key=AAAAZnprfL0:APA91bH3MKr_k15dqmiFxe6Z8p_YFJnTurnTLtxrZrv
 GoogleMapController? newGoogleMapController;
 String fNameIcon = "";
 String lNameIcon = "";
-int rideRequestTimeOut = 60;
-int after2MinTimeOut = 120;
+String driverImage = "";
+int rideRequestTimeOut = 30;
+int after2MinTimeOut = 70;
 String statusRide = "";
 String carDriverInfo = "";
 String driverName = "";
 String driverPhone = "";
+String carDriverType = "";
 String timeTrip = "";
 String driverId = "";
 String titleRate = "";

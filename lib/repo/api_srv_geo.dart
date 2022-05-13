@@ -1,6 +1,6 @@
 // this class api GeoCoding  for make address  read able
 
-
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/model/address.dart';
@@ -8,10 +8,12 @@ import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/tools/get_url.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'auth_srv.dart';
 
 class ApiSrvGeo {
+  final userId = AuthSev().auth.currentUser?.uid;
+  DatabaseReference ref = FirebaseDatabase.instance.ref().child("users");
   final GetUrl _getUrl = GetUrl();
-
   // this method for got geocoding api for current position address readable
   Future<dynamic> searchCoordinatesAddress(
       Position position, BuildContext context) async {
@@ -33,13 +35,13 @@ class ApiSrvGeo {
           placeId: "",
           latitude: position.latitude,
           longitude: position.longitude);
+
+      ref.child(userId!).child("country").set(st3);
+
       //for update
       Provider.of<AppData>(context, listen: false)
           .updatePickUpLocationAddress(userPickUpAddress);
-      print(":::::::"+placeAddress.toString());
     }
     return placeAddress;
   }
-
-  //this method for disply places when user start search where to go
 }

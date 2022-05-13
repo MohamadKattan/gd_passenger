@@ -17,10 +17,8 @@ import 'package:gd_passenger/user_enter_face/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import '../model/directions_details.dart';
 import '../model/nearest _driver_ available.dart';
 import '../my_provider/derictionDetails_provide.dart';
-import '../my_provider/nearsert_driver_provider.dart';
 import 'auth_srv.dart';
 
 class DataBaseSrv {
@@ -78,7 +76,8 @@ class DataBaseSrv {
         "firstName": firstname.text,
         "lastName": lastname.text,
         "email": email.text.trim(),
-        "phoneNumber": phoneNumber.toString()
+        "phoneNumber": phoneNumber.toString(),
+        "country":"",
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
@@ -102,7 +101,7 @@ class DataBaseSrv {
         Map<String, dynamic> map =
             Map<String, dynamic>.from(snapshot.value as Map);
         Users infoUser = Users.fromMap(map);
-        print("lllllllllll" + infoUser.firstName);
+
         Provider.of<UserAllInfoDatabase>(context, listen: false)
             .updateUser(infoUser);
         return;
@@ -110,7 +109,7 @@ class DataBaseSrv {
         print('No data available.');
       }
     } catch (ex) {
-      Tools().toastMsg("Welcome DATA!!");
+      // Tools().toastMsg("Welcome DATA!!");
     }
   }
 

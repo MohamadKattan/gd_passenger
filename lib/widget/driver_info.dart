@@ -1,8 +1,11 @@
 // this class will show all driver info
 
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
+import 'package:gd_passenger/widget/rating_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,6 +20,7 @@ import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/user_id_provider.dart';
 import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
+import 'call_driver.dart';
 import 'divider_box_.dart';
 import 'package:uuid/uuid.dart';
 var uuid = const Uuid();
@@ -127,10 +131,9 @@ class DriverInfo {
                       iconSize: 40.0,
                       icon: Icon(Icons.call, color: Colors.greenAccent.shade700),
                       onPressed: () async {
-                        // if (!await launch(url)) throw 'Could not launch $url';
-                        await canLaunch("tel:$driverPhone")
-                            ? launch("tel:$driverPhone")
-                            : Tools().toastMsg('Could not launch $driverPhone');
+                     showDialog(context: context,
+                         barrierDismissible: false,
+                         builder:(_)=>callDriver(context));
                       },
                     ),
                     // statusRide == "Trip Started"
@@ -145,12 +148,12 @@ class DriverInfo {
                         //     color: Colors.black54,
                         //     icon: const Icon(Icons.map),
                         //     onPressed: () => Tools().toastMsg("Wait your Driver")),
-                    // isCloseTrue == true?
+                    isCloseTrue == true?
                     IconButton(
                         iconSize: 40.0,
                         icon:
                             Icon(Icons.close, color: Colors.redAccent.shade700),
-                        onPressed: () {
+                        onPressed: () async {
                           voidCallback();
                           NearestDriverAvailable _nearestDriverAvailable =
                           NearestDriverAvailable("", 0.0, 0.0);
@@ -162,16 +165,23 @@ class DriverInfo {
                               .updateState(-400.0);
                           Provider.of<PositionChang>(context, listen: false)
                               .changValue(0.0);
-                          deleteRideRequesr(context);
-                          GeoFireMethods.listOfNearestDriverAvailable.clear();
-                        })
-                        // :IconButton(
-                        // iconSize: 40.0,
-                        // icon:
-                        // Icon(Icons.close, color: Colors.redAccent.shade700),
-                        // onPressed: () {
-                        //   Tools().toastMsg("Wait till finish your trip");
-                        // })
+                        await   deleteRideRequesr(context);
+                            GeoFireMethods.listOfNearestDriverAvailable.clear();
+                          // Timer.periodic(const Duration(seconds: 6), (timer) {
+                          //   Navigator.push(context,MaterialPageRoute(builder:(_)=>const SplashScreen()));
+                          // });
+
+                        }):const Text(""),
+                    IconButton(
+                        iconSize: 40.0,
+                        icon:
+                        Icon(Icons.star, color: Colors.yellow.shade700),
+                        onPressed: () {
+                          showDialog(context: context,barrierDismissible: false, builder:(_)=>
+                          const RatingWidget()
+                          );
+                        }),
+
                   ],
                 ),
               ),

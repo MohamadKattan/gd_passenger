@@ -1,12 +1,15 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../config.dart';
+import '../my_provider/rider_id.dart';
 import 'divider_box_.dart';
 
 class RatingWidget extends StatefulWidget {
- final String id;
-  const RatingWidget({required this.id,Key? key}) : super(key: key);
+ // final String id;
+ //  required this.id
+  const RatingWidget({Key? key}) : super(key: key);
 
   @override
   State<RatingWidget> createState() => _RatingWidgetState();
@@ -15,6 +18,7 @@ class RatingWidget extends StatefulWidget {
 class _RatingWidgetState extends State<RatingWidget> {
   @override
   Widget build(BuildContext context) {
+    final id = Provider.of<RiderId>(context).id;
     return Dialog(
       elevation: 1.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -66,7 +70,7 @@ class _RatingWidgetState extends State<RatingWidget> {
               SizedBox(height: MediaQuery.of(context).size.height * 1/ 100),
               GestureDetector(
                 onTap: () {
-                  rateTODateBase();
+                  rateTODateBase(id);
                   Navigator.pop(context);
                 },
                 child: Center(
@@ -91,11 +95,11 @@ class _RatingWidgetState extends State<RatingWidget> {
     );
   }
 // this method for set rate to data base
- Future <void> rateTODateBase() async{
+ Future <void> rateTODateBase(String id) async{
     DatabaseReference reference =   FirebaseDatabase.instance
         .ref()
         .child("driver")
-        .child(widget.id)
+        .child(id)
         .child("rating");
 
      await reference.once().then((value){
