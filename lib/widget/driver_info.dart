@@ -1,7 +1,6 @@
 // this class will show all driver info
 
 import 'dart:async';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
@@ -20,6 +19,7 @@ import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/user_id_provider.dart';
 import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
+import '../user_enter_face/trip_screen.dart';
 import 'call_driver.dart';
 import 'divider_box_.dart';
 import 'package:uuid/uuid.dart';
@@ -143,11 +143,6 @@ class DriverInfo {
                             icon: Icon(Icons.map,
                                 color: Colors.blueAccent.shade700),
                             onPressed: () => openGoogleMap(context)),
-                        // : IconButton(
-                        //     iconSize: 40.0,
-                        //     color: Colors.black54,
-                        //     icon: const Icon(Icons.map),
-                        //     onPressed: () => Tools().toastMsg("Wait your Driver")),
                     isCloseTrue == true?
                     IconButton(
                         iconSize: 40.0,

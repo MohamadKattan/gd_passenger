@@ -56,6 +56,7 @@ dependencies:
   flutter_geofire: ^2.0.1
   url_launcher: ^6.0.20
   smooth_star_rating_null_safety: ^1.0.4+2
+  maps_toolkit: ^2.0.0
 
 
 dev_dependencies:
@@ -96,6 +97,9 @@ flutter:
     - assets/car_test.png
     - assets/100navigation.png
     - assets/car_ios.png
+    - assets/100currentlocationicon.png
+    - assets/100flagblackwhite.png
+    - assets/100passengerlocationicon.png
 
 
   # To add assets to your application, add an assets section, like this:

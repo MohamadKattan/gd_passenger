@@ -34,7 +34,6 @@ Widget callDriver(BuildContext context){
                     : Tools().toastMsg(
                     'Could not launch $driverPhone');
                 Navigator.pop(context);
-                Navigator.pop(context);
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -53,7 +52,6 @@ Widget callDriver(BuildContext context){
                 await canLaunch("https://wa.me/$driverPhone")
                     ? launch("https://wa.me/$driverPhone")
                     : Tools().toastMsg('Support not available now try again');
-                Navigator.pop(context);
                 Navigator.pop(context);
               },
               child: Padding(
