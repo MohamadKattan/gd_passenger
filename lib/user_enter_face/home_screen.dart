@@ -23,7 +23,6 @@ import 'package:gd_passenger/repo/api_srv_dir.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/search_screen.dart';
-import 'package:gd_passenger/user_enter_face/trip_screen.dart';
 import 'package:gd_passenger/widget/bottom_sheet.dart';
 import 'package:gd_passenger/widget/coustom_drawer.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
@@ -72,9 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
   late BitmapDescriptor driversNearIcon1;
   List<NearestDriverAvailable> driverAvailable = [];
   String state = "normal";
-  String pathToReference = "availableDrivers";
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
+  String carOrderType = "Taxi-4 seats";
 
   @override
   void initState() {
@@ -270,26 +269,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceEvenly,
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Expanded(
-                                                  flex:0,
+                                                  flex: 0,
                                                   child: GestureDetector(
                                                     onTap: () =>
                                                         changeAllProClickTaxiBox(),
                                                     child: Stack(
                                                       children: [
                                                         Opacity(
-                                                            opacity:
-                                                                opacityTaxi ==
-                                                                        true
-                                                                    ? 1
-                                                                    : 0.3,
+                                                            opacity: opacityTaxi ==
+                                                                    true
+                                                                ? 1
+                                                                : 0.3,
                                                             child: _customWidget.carTypeBox(
                                                                 const Image(
                                                                     image: AssetImage(
-                                                                        "assets/smallTexi.png"),
+                                                                        "assets/yellow.png"),
                                                                     fit: BoxFit
                                                                         .contain),
                                                                 tripDirectionDetails !=
@@ -312,8 +309,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             context,
                                                                         image:
                                                                             const Image(
-                                                                          image: AssetImage(
-                                                                              "assets/smallTexi.png"),
+                                                                          image:
+                                                                              AssetImage("assets/yellow.png"),
                                                                           fit: BoxFit
                                                                               .contain,
                                                                         ),
@@ -336,7 +333,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             .info_outline,
                                                                         color: Colors
                                                                             .purple,
-                                                                        size: 20,
+                                                                        size:
+                                                                            20,
                                                                       )
                                                                     : const Text(
                                                                         ""))),
@@ -372,7 +370,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                      tripDirectionDetails != null
+                                                      tripDirectionDetails !=
+                                                              null
                                                           ? showDialog(
                                                               context: context,
                                                               barrierDismissible:
@@ -387,13 +386,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       children: [
                                                         Opacity(
                                                             opacity:
-                                                                opacityVan == true
+                                                                opacityVan ==
+                                                                        true
                                                                     ? 1
                                                                     : 0.3,
                                                             child: _customWidget.carTypeBox(
                                                                 const Image(
-                                                                    image: AssetImage(
-                                                                        "assets/van.png"),
+                                                                    image:
+                                                                        AssetImage(
+                                                                            "assets/mers.png"),
                                                                     fit: BoxFit
                                                                         .contain),
                                                                 tripDirectionDetails !=
@@ -415,14 +416,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         context,
                                                                     image: const Image(
                                                                         image: AssetImage(
-                                                                            "assets/van.png")),
+                                                                            "assets/mers.png")),
                                                                     title:
                                                                         "Medium",
                                                                     des:
                                                                         "Medium commercial car",
                                                                     iconM: Icons
                                                                         .money,
-                                                                    price: "20.0",
+                                                                    price:
+                                                                        "20.0",
                                                                     iconP: Icons
                                                                         .person,
                                                                     person:
@@ -434,7 +436,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             .info_outline,
                                                                         color: Colors
                                                                             .purple,
-                                                                        size: 20,
+                                                                        size:
+                                                                            20,
                                                                       )
                                                                     : const Text(
                                                                         ""))),
@@ -470,7 +473,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                        tripDirectionDetails != null
+                                                      tripDirectionDetails !=
+                                                              null
                                                           ? showDialog(
                                                               context: context,
                                                               barrierDismissible:
@@ -484,15 +488,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     child: Stack(
                                                       children: [
                                                         Opacity(
-                                                            opacity:
-                                                                opacityVeto ==
-                                                                        true
-                                                                    ? 1.0
-                                                                    : 0.3,
+                                                            opacity: opacityVeto ==
+                                                                    true
+                                                                ? 1.0
+                                                                : 0.3,
                                                             child: _customWidget.carTypeBox(
                                                                 const Image(
                                                                     image: AssetImage(
-                                                                        "assets/veto.png"),
+                                                                        "assets/van.png"),
                                                                     fit: BoxFit
                                                                         .contain),
                                                                 tripDirectionDetails !=
@@ -514,14 +517,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         context,
                                                                     image: const Image(
                                                                         image: AssetImage(
-                                                                            "assets/veto.png")),
+                                                                            "assets/van.png")),
                                                                     title:
                                                                         "Big commercial",
                                                                     des:
                                                                         "Big commercial car: veto etc...",
                                                                     iconM: Icons
                                                                         .money,
-                                                                    price: "25.0",
+                                                                    price:
+                                                                        "25.0",
                                                                     iconP: Icons
                                                                         .person,
                                                                     person:
@@ -533,7 +537,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             .info_outline,
                                                                         color: Colors
                                                                             .purple,
-                                                                        size: 20,
+                                                                        size:
+                                                                            20,
                                                                       )
                                                                     : const Text(
                                                                         ""))),
@@ -900,8 +905,8 @@ class _HomeScreenState extends State<HomeScreen> {
     LatLng latLngPosition = LatLng(position.latitude, position.longitude);
 
     // update on google map
-    CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition = CameraPosition(
+        target: latLngPosition, zoom: 16.50, tilt: 80.0, bearing: 35.0);
     newGoogleMapController
         ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
@@ -914,7 +919,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void geoFireInitialize() {
     final currentPosition =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
-    Geofire.initialize(pathToReference);
+    Geofire.initialize("availableDrivers");
 
     Geofire.queryAtLocation(
             currentPosition.latitude, currentPosition.longitude, 2)
@@ -963,7 +968,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// this method for add icon new near driver on map
   void updateAvailableDriverOnMap() async {
-     late String driverPhoneOnMap;
+    late String driverPhoneOnMap;
     setState(() {
       ///canceled
       // markersSet.clear();
@@ -1013,7 +1018,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => showDialog(
                 context: context,
                 barrierDismissible: false,
-                builder: (_) => callDriverIconMap(context,driverPhoneOnMap)),
+                builder: (_) => callDriverIconMap(context, driverPhoneOnMap)),
             title: " $fNameIcon $lNameIcon /Arrive:2-3 min",
             snippet: "call : $driverPhoneOnMap"),
         // rotation: MathMethods.createRandomNumber(120),
@@ -1034,8 +1039,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ///this Method for custom icon driver near
   void createDriverNearIcon() {
     ImageConfiguration imageConfiguration =
-        createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
-    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/car_test.png")
+        createLocalImageConfiguration(context, size: const Size(0.6, 0.6));
+    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/yellowcar.png")
         .then((value) {
       setState(() {
         driversNearIcon = value;
@@ -1045,8 +1050,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void createDriverNearIcon1() {
     ImageConfiguration imageConfiguration =
-        createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
-    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/car_ios.png")
+        createLocalImageConfiguration(context, size: const Size(0.6, 0.6));
+    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/blackcar.png")
         .then((value) {
       setState(() {
         driversNearIcon1 = value;
@@ -1070,7 +1075,9 @@ class _HomeScreenState extends State<HomeScreen> {
       titleRate = "";
       rating = 0.0;
       carRideType = "";
-      driverNewLocation=const LatLng(0.0,0.0);
+      carOrderType = "Taxi-4 seats";
+      driverNewLocation = const LatLng(0.0, 0.0);
+      markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
     });
     locationPosition(context);
   }
@@ -1124,6 +1131,9 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Taxi-4 seats");
+    setState(() {
+      carOrderType = "Taxi-4 seats";
+    });
   }
 
   // this method will change all provider state when click on van box
@@ -1136,6 +1146,9 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Medium commercial-6-10 seats");
+    setState(() {
+      carOrderType = "Medium commercial-6-10 seats";
+    });
   }
 
   // this method will change all provider state when click on Veto box
@@ -1148,6 +1161,9 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Big commercial-11-19 seats");
+    setState(() {
+      carOrderType = "Big commercial-11-19 seats";
+    });
   }
 
 // this method for check any amount will set to   Ride Request collection
@@ -1204,7 +1220,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final snap = value.snapshot.value;
         if (snap != null) {
           carRideType = snap.toString();
-          if (carRideType == carTypePro) {
+          if (carRideType == carOrderType) {
             notifyDriver(driver, context, userProvider, carTypePro);
             driverAvailable.removeAt(0);
           } else {
@@ -1237,13 +1253,16 @@ class _HomeScreenState extends State<HomeScreen> {
         driverRef.child("newRide").set("canceled");
         driverRef.child("newRide").onDisconnect();
         rideRequestTimeOut = 30;
+        after2MinTimeOut = 90;
         timer.cancel();
+        restApp();
       }
       //2
       driverRef.child("newRide").onValue.listen((event) {
         if (event.snapshot.value.toString() == "accepted") {
           driverRef.child("newRide").onDisconnect();
           rideRequestTimeOut = 30;
+          after2MinTimeOut = 90;
           timer.cancel();
         }
       });
@@ -1256,10 +1275,10 @@ class _HomeScreenState extends State<HomeScreen> {
         searchNearestDriver(userProvider, context, carTypePro);
       }
       //4
-      if (after2MinTimeOut == 0) {
+      if (after2MinTimeOut <= 0) {
+        after2MinTimeOut = 90;
         timer.cancel();
-        after2MinTimeOut = 70;
-
+        Tools().toastMsg("No driver found try again Time out");
         Provider.of<PositionCancelReq>(context, listen: false)
             .updateValue(-400.0);
         Provider.of<PositionChang>(context, listen: false).changValue(0.0);
@@ -1300,9 +1319,9 @@ class _HomeScreenState extends State<HomeScreen> {
             double.parse(map["driverLocation"]["longitude"].toString());
         print("22222222222$driverLongitude");
         LatLng driverCurrentLocation = LatLng(driverLatitude, driverLongitude);
-       setState(() {
-         driverNewLocation=driverCurrentLocation;
-       });
+        setState(() {
+          driverNewLocation = driverCurrentLocation;
+        });
         print("33333333333$driverNewLocation");
         if (statusRide == "accepted") {
           updateTireRideToPickUp(driverCurrentLocation, context);
@@ -1350,33 +1369,33 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
       if (statusRide == "accepted") {
-          Provider.of<PositionDriverInfoProvider>(context, listen: false)
-              .updateState(0.0);
-          Provider.of<PositionCancelReq>(context, listen: false)
-              .updateValue(-400.0);
-          Provider.of<CloseButtonProvider>(context, listen: false)
-              .updateState(false);
-          Geofire.stopListener();
-          deleteGeoFireMarker();
-          if(driverNewLocation!=null){
-            Set<Marker> tMarker1 = {};
-            Marker marker = Marker(
-              markerId: MarkerId("myDriver$driverId"),
-              position: driverNewLocation,
-              icon: carDriverType == "Taxi-4 seats"
-                  ? driversNearIcon
-                  : driversNearIcon1,
-              infoWindow: InfoWindow(
-                  title: " $fNameIcon $lNameIcon",
-                  snippet: " Your driver on way"),
-              // rotation: MathMethods.createRandomNumber(120),
-            );
+        Provider.of<PositionDriverInfoProvider>(context, listen: false)
+            .updateState(0.0);
+        Provider.of<PositionCancelReq>(context, listen: false)
+            .updateValue(-400.0);
+        Provider.of<CloseButtonProvider>(context, listen: false)
+            .updateState(false);
+        Geofire.stopListener();
+        deleteGeoFireMarker();
+        if (driverNewLocation != null) {
+          Set<Marker> tMarker1 = {};
+          Marker marker = Marker(
+            markerId: MarkerId("myDriver$driverId"),
+            position: driverNewLocation,
+            icon: carDriverType == "Taxi-4 seats"
+                ? driversNearIcon
+                : driversNearIcon1,
+            infoWindow: InfoWindow(
+                title: " $fNameIcon $lNameIcon",
+                snippet: " Your driver on way"),
+            // rotation: MathMethods.createRandomNumber(120),
+          );
 
-            tMarker1.add(marker);
-            setState(() {
-              markersSet.add(marker);
-            });
-          }
+          tMarker1.add(marker);
+          setState(() {
+            markersSet.add(marker);
+          });
+        }
       }
     });
   }
@@ -1419,7 +1438,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 // this method for delete all taxi when on taxi accepted
-void  deleteGeoFireMarker() {
+  void deleteGeoFireMarker() {
     setState(() {
       markersSet.removeWhere((ele) => ele.markerId.value.contains("driver"));
     });

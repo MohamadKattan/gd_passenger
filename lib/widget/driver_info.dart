@@ -19,7 +19,6 @@ import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/user_id_provider.dart';
 import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
-import '../user_enter_face/trip_screen.dart';
 import 'call_driver.dart';
 import 'divider_box_.dart';
 import 'package:uuid/uuid.dart';
@@ -162,9 +161,6 @@ class DriverInfo {
                               .changValue(0.0);
                         await   deleteRideRequesr(context);
                             GeoFireMethods.listOfNearestDriverAvailable.clear();
-                          // Timer.periodic(const Duration(seconds: 6), (timer) {
-                          //   Navigator.push(context,MaterialPageRoute(builder:(_)=>const SplashScreen()));
-                          // });
 
                         }):const Text(""),
                     IconButton(

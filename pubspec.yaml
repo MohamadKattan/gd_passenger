@@ -89,17 +89,16 @@ flutter:
 
   assets:
     - assets/
-    - assets/taxi.png
-    - assets/smallTexi.png
     - assets/van.png
-    - assets/veto.png
     - assets/iconDrop.png
-    - assets/car_test.png
     - assets/100navigation.png
-    - assets/car_ios.png
     - assets/100currentlocationicon.png
     - assets/100flagblackwhite.png
     - assets/100passengerlocationicon.png
+    - assets/blackcar.png
+    - assets/mers.png
+    - assets/yellow.png
+    - assets/yellowcar.png
 
 
   # To add assets to your application, add an assets section, like this:
