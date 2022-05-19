@@ -74,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
   String carOrderType = "Taxi-4 seats";
-  int index = 0;
+  String waitState="wait";
+ // late String pathGeoFire;
 
   @override
   void initState() {
@@ -914,6 +915,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ///Not for chacking
     await _apiMethods.searchCoordinatesAddress(position, context);
     geoFireInitialize();
+
   }
 
   /// this method for display nearest driver available from rider in list by using geoFire
@@ -921,7 +923,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final currentPosition =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     Geofire.initialize("availableDrivers");
-
     Geofire.queryAtLocation(
             currentPosition.latitude, currentPosition.longitude, 2)
         ?.listen((map) async {
@@ -1077,7 +1078,6 @@ class _HomeScreenState extends State<HomeScreen> {
       rating = 0.0;
       carRideType = "";
       carOrderType = "Taxi-4 seats";
-      index=0;
       driverNewLocation = const LatLng(0.0, 0.0);
       markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
     });
@@ -1124,7 +1124,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // this method for change all provider state when click taxiBox
-  void changeAllProClickTaxiBox() {
+  Future<void> changeAllProClickTaxiBox() async {
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
     Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
@@ -1136,11 +1136,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       carOrderType = "Taxi-4 seats";
     });
-    print("car1$carOrderType");
   }
 
   // this method will change all provider state when click on van box
-  void changeAllProClickVanBox() {
+  Future<void> changeAllProClickVanBox() async {
     Provider.of<LineTaxi>(context, listen: false).changelineVan(true);
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
@@ -1152,11 +1151,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       carOrderType = "Medium commercial-6-10 seats";
     });
-    print("car2$carOrderType");
   }
 
   // this method will change all provider state when click on Veto box
-  void changeAllProClickVetoBox() {
+  Future<void> changeAllProClickVetoBox() async {
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(true);
     Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
@@ -1168,7 +1166,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       carOrderType = "Big commercial-11-19 seats";
     });
-    print("car3$carOrderType");
   }
 
 // this method for check any amount will set to   Ride Request collection
@@ -1212,69 +1209,40 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (_) => sorryNoDriverDialog(context, userProvider));
     }
     else if (driverAvailable.isNotEmpty) {
-
-      for (var i = 0; i == index;) {
-        print("i++iiiiiiii$i");
-        final driver = driverAvailable[i];
+      for (var ele in driverAvailable){
         Provider.of<NearestDriverProvider>(context, listen: false)
-            .updateState(driver);
+            .updateState(ele);
         DatabaseReference ref = FirebaseDatabase.instance
             .ref()
             .child("driver")
-            .child(driver.key)
+            .child(ele.key)
             .child("carInfo")
             .child("carType");
         await ref.once().then((value) {
           final snap = value.snapshot.value;
           if (snap != null) {
             carRideType = snap.toString();
-            print("carRideType$carRideType");
-            if (carRideType != carOrderType) {
-              i++;
-              int _count = 120;
-              Timer.periodic(const Duration(seconds: 1), (timer) {
-                _count = _count - 1;
-                if (_count == 0) {
-                  timer.cancel();
-                }
-                if (carRideType != carOrderType && _count == 0) {
-                  setState(() {
-                    _count = 120;
-                  });
-                  Tools().toastMsg(
-                      " this type of $carOrderType not available chose another type");
-                  Provider.of<PositionCancelReq>(context, listen: false)
-                      .updateValue(-400.0);
-                  Provider.of<PositionChang>(context, listen: false)
-                      .changValue(0.0);
-                  DataBaseSrv().cancelRiderRequest(userProvider, context);
-                }
-              });
-            } else if (carRideType == carOrderType) {
-              int newIndex = i;
-              print("newIndex$newIndex");
-              notifyDriver(driver, context, userProvider, carTypePro);
-              driverAvailable.removeAt(newIndex);
-            } else {
-              int _count = 120;
-              Timer.periodic(const Duration(seconds: 1), (timer) {
-                if (_count == 0) {
-                  timer.cancel();
-                  _count == 120;
-                  Tools().toastMsg(" No car available try again");
-                }
-              });
+            if (carRideType == carOrderType) {
+              notifyDriver(ele, context, userProvider, carTypePro);
+              driverAvailable.removeAt(0);
+            }else{
+             Future.delayed(const Duration(seconds: 107)).whenComplete((){
+               if(waitState=="wait"){
+                 Tools().toastMsg("This Type if car $carOrderType not available now try again");
+                 Provider.of<PositionCancelReq>(context, listen: false)
+                     .updateValue(-400.0);
+                 Provider.of<PositionChang>(context, listen: false).changValue(0.0);
+                 DataBaseSrv().cancelRiderRequest(userProvider, context);
+               }
+             });
             }
           }
         });
-        break;
       }
-
-      ///old code with out loop
+       ///old code with out loop
       // final driver = driverAvailable[0];
       // Provider.of<NearestDriverProvider>(context, listen: false)
       //     .updateState(driver);
-      //
       // DatabaseReference ref = FirebaseDatabase.instance
       //     .ref()
       //     .child("driver")
@@ -1285,7 +1253,6 @@ class _HomeScreenState extends State<HomeScreen> {
       //   final snap = value.snapshot.value;
       //   if (snap != null) {
       //     carRideType = snap.toString();
-      //     print("carRideType$carRideType");
       //     if (carRideType == carOrderType) {
       //       notifyDriver(driver, context, userProvider, carTypePro);
       //       driverAvailable.removeAt(0);
@@ -1296,7 +1263,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // });
       // print("search$carOrderType");
     } else {
-      Tools().toastMsg(" No car available try again");
+      Tools().toastMsg(" No car available try again!!!");
     }
   }
 
@@ -1336,6 +1303,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             rideRequestTimeOut = 35;
             after2MinTimeOut = 105;
+            waitState=="";
           });
         }
       });
@@ -1346,12 +1314,12 @@ class _HomeScreenState extends State<HomeScreen> {
         timer.cancel();
         setState(() {
           rideRequestTimeOut = 35;
+          waitState=="";
         });
         Geofire.initialize("availableDrivers");
         Geofire.removeLocation(driver.key);
-        Future.delayed(const Duration(seconds: 2)).whenComplete(()
-        => searchNearestDriver(userProvider, context, carTypePro));
-
+        Future.delayed(const Duration(seconds: 2)).whenComplete(
+            () => searchNearestDriver(userProvider, context, carTypePro));
       }
       //4
       if (after2MinTimeOut <= 0) {
@@ -1359,6 +1327,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           after2MinTimeOut = 105;
           rideRequestTimeOut = 35;
+          waitState=="";
         });
         Tools().toastMsg("No driver found try again Time out");
         Provider.of<PositionCancelReq>(context, listen: false)
