@@ -74,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
   String carOrderType = "Taxi-4 seats";
-  String waitState="wait";
- // late String pathGeoFire;
+  String waitState = "wait";
+  // late String pathGeoFire;
 
   @override
   void initState() {
@@ -915,7 +915,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ///Not for chacking
     await _apiMethods.searchCoordinatesAddress(position, context);
     geoFireInitialize();
-
   }
 
   /// this method for display nearest driver available from rider in list by using geoFire
@@ -1207,9 +1206,8 @@ class _HomeScreenState extends State<HomeScreen> {
           context: context,
           barrierDismissible: false,
           builder: (_) => sorryNoDriverDialog(context, userProvider));
-    }
-    else if (driverAvailable.isNotEmpty) {
-      for (var ele in driverAvailable){
+    } else if (driverAvailable.isNotEmpty) {
+      for (var ele in driverAvailable) {
         Provider.of<NearestDriverProvider>(context, listen: false)
             .updateState(ele);
         DatabaseReference ref = FirebaseDatabase.instance
@@ -1225,21 +1223,30 @@ class _HomeScreenState extends State<HomeScreen> {
             if (carRideType == carOrderType) {
               notifyDriver(ele, context, userProvider, carTypePro);
               driverAvailable.removeAt(0);
-            }else{
-             Future.delayed(const Duration(seconds: 107)).whenComplete((){
-               if(waitState=="wait"){
-                 Tools().toastMsg("This Type if car $carOrderType not available now try again");
-                 Provider.of<PositionCancelReq>(context, listen: false)
-                     .updateValue(-400.0);
-                 Provider.of<PositionChang>(context, listen: false).changValue(0.0);
-                 DataBaseSrv().cancelRiderRequest(userProvider, context);
-               }
-             });
+            } else {
+              if (waitState == "wait") {
+                int _count = 120;
+                Timer.periodic(const Duration(seconds: 1), (timer) {
+                  _count = _count - 1;
+                  if (_count == 0) {
+                    timer.cancel();
+                    _count = 120;
+                    Tools().toastMsg(
+                        "This Type if car $carOrderType not available now try again");
+                    Provider.of<PositionCancelReq>(context, listen: false)
+                        .updateValue(-400.0);
+                    Provider.of<PositionChang>(context, listen: false)
+                        .changValue(0.0);
+                    DataBaseSrv().cancelRiderRequest(userProvider, context);
+                  }
+                });
+              }
             }
           }
         });
       }
-       ///old code with out loop
+
+      ///old code with out loop
       // final driver = driverAvailable[0];
       // Provider.of<NearestDriverProvider>(context, listen: false)
       //     .updateState(driver);
@@ -1269,6 +1276,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
       UserIdProvider userProvider, String carTypePro) async {
+    setState(() {
+      waitState="";
+    });
     DataBaseSrv().sendRideRequestId(driver, context);
     DatabaseReference driverRef =
         FirebaseDatabase.instance.ref().child("driver").child(driver.key);
@@ -1293,6 +1303,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           rideRequestTimeOut = 35;
           after2MinTimeOut = 105;
+          waitState="";
         });
       }
       //2
@@ -1303,7 +1314,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             rideRequestTimeOut = 35;
             after2MinTimeOut = 105;
-            waitState=="";
+            waitState == "";
           });
         }
       });
@@ -1314,7 +1325,7 @@ class _HomeScreenState extends State<HomeScreen> {
         timer.cancel();
         setState(() {
           rideRequestTimeOut = 35;
-          waitState=="";
+          waitState == "";
         });
         Geofire.initialize("availableDrivers");
         Geofire.removeLocation(driver.key);
@@ -1327,7 +1338,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           after2MinTimeOut = 105;
           rideRequestTimeOut = 35;
-          waitState=="";
+          waitState == "";
         });
         Tools().toastMsg("No driver found try again Time out");
         Provider.of<PositionCancelReq>(context, listen: false)
