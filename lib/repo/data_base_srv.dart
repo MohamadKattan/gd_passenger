@@ -17,6 +17,7 @@ import 'package:gd_passenger/user_enter_face/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import '../config.dart';
 import '../model/nearest _driver_ available.dart';
 import '../my_provider/derictionDetails_provide.dart';
 import 'auth_srv.dart';
@@ -164,6 +165,7 @@ class DataBaseSrv {
         "userId": currentUserInfoOnline.userId,
         "amount": amount.toString(),
         "km": (km/1000).toStringAsFixed(2),
+        "tourismCityName":tourismCityName,
       };
       print("rideInfoMap::::::$rideInfoMap");
       DatabaseReference refRideRequest = FirebaseDatabase.instance
@@ -179,29 +181,11 @@ class DataBaseSrv {
   // this method for cancel rider Request
   Future<void> cancelRiderRequest(
       UserIdProvider userIdProvider, BuildContext context) async {
-    // final driverNer = Provider.of<NearestDriverProvider>(context, listen: false)
-    //     .driverNerProvider;
-    print("id is::::" + userIdProvider.getUser.uid);
     DatabaseReference refRideRequest = FirebaseDatabase.instance
         .ref()
         .child("Ride Request")
         .child(userIdProvider.getUser.uid);
     await refRideRequest.remove();
-    // if (driverNer.key.isEmpty || driverNer.key == "") {
-    //   return;
-    // } else {
-    //   DatabaseReference driverRef = FirebaseDatabase.instance
-    //       .ref()
-    //       .child("driver")
-    //       .child(driverNer.key)
-    //       .child("newRide");
-    //   await driverRef.set("searching");
-    //   NearestDriverAvailable _nearestDriverAvailable =
-    //       NearestDriverAvailable("", 0.0, 0.0);
-    //   Provider.of<NearestDriverProvider>(context, listen: false)
-    //       .updateState(_nearestDriverAvailable);
-    //   driverRef.child("newRide").onDisconnect();
-    // }
   }
 
   // this method for send ride Request Id to driver collection in newride child for notification

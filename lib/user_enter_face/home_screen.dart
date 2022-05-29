@@ -379,8 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               barrierDismissible:
                                                                   false,
                                                               builder: (_) =>
-                                                                  vetoVanPriceTurkeyJust(
-                                                                      context))
+                                                                  const VetoVanPriceTurkeyJust())
                                                           : null;
                                                       changeAllProClickVanBox();
                                                     },
@@ -482,8 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               barrierDismissible:
                                                                   false,
                                                               builder: (_) =>
-                                                                  vetoVanPriceTurkeyJust(
-                                                                      context))
+                                                                  const VetoVanPriceTurkeyJust())
                                                           : null;
                                                       changeAllProClickVetoBox();
                                                     },
@@ -1077,6 +1075,8 @@ class _HomeScreenState extends State<HomeScreen> {
       rating = 0.0;
       carRideType = "";
       carOrderType = "Taxi-4 seats";
+      tourismCityName="";
+      tourismCityPrice="";
       driverNewLocation = const LatLng(0.0, 0.0);
       markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
     });
@@ -1199,6 +1199,9 @@ class _HomeScreenState extends State<HomeScreen> {
 * will remove driver from map till finish his trip*/
   Future<void> searchNearestDriver(UserIdProvider userProvider,
       BuildContext context, String carTypePro) async {
+    setState(() {
+      waitState == "wait";
+    });
     if (driverAvailable.isEmpty) {
       DataBaseSrv().cancelRiderRequest(userProvider, context);
       restApp();
@@ -1225,12 +1228,12 @@ class _HomeScreenState extends State<HomeScreen> {
               driverAvailable.removeAt(0);
             } else {
               if (waitState == "wait") {
-                int _count = 120;
+                int _count = 5;
                 Timer.periodic(const Duration(seconds: 1), (timer) {
                   _count = _count - 1;
                   if (_count == 0) {
                     timer.cancel();
-                    _count = 120;
+                    _count = 5;
                     Tools().toastMsg(
                         "This Type if car $carOrderType not available now try again");
                     Provider.of<PositionCancelReq>(context, listen: false)
@@ -1245,30 +1248,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         });
       }
-
-      ///old code with out loop
-      // final driver = driverAvailable[0];
-      // Provider.of<NearestDriverProvider>(context, listen: false)
-      //     .updateState(driver);
-      // DatabaseReference ref = FirebaseDatabase.instance
-      //     .ref()
-      //     .child("driver")
-      //     .child(driver.key)
-      //     .child("carInfo")
-      //     .child("carType");
-      // await ref.once().then((value) {
-      //   final snap = value.snapshot.value;
-      //   if (snap != null) {
-      //     carRideType = snap.toString();
-      //     if (carRideType == carOrderType) {
-      //       notifyDriver(driver, context, userProvider, carTypePro);
-      //       driverAvailable.removeAt(0);
-      //     } else {
-      //       Tools().toastMsg(" No car available try again");
-      //     }
-      //   }
-      // });
-      // print("search$carOrderType");
     } else {
       Tools().toastMsg(" No car available try again!!!");
     }
@@ -1277,7 +1256,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
       UserIdProvider userProvider, String carTypePro) async {
     setState(() {
-      waitState="";
+      waitState = "";
     });
     DataBaseSrv().sendRideRequestId(driver, context);
     DatabaseReference driverRef =
@@ -1301,9 +1280,9 @@ class _HomeScreenState extends State<HomeScreen> {
         timer.cancel();
         restApp();
         setState(() {
-          rideRequestTimeOut = 35;
-          after2MinTimeOut = 105;
-          waitState="";
+          rideRequestTimeOut = 20;
+          after2MinTimeOut = 100;
+          waitState = "";
         });
       }
       //2
@@ -1312,8 +1291,8 @@ class _HomeScreenState extends State<HomeScreen> {
           driverRef.child("newRide").onDisconnect();
           timer.cancel();
           setState(() {
-            rideRequestTimeOut = 35;
-            after2MinTimeOut = 105;
+            rideRequestTimeOut = 20;
+            after2MinTimeOut = 100;
             waitState == "";
           });
         }
@@ -1324,7 +1303,7 @@ class _HomeScreenState extends State<HomeScreen> {
         driverRef.child("newRide").onDisconnect();
         timer.cancel();
         setState(() {
-          rideRequestTimeOut = 35;
+          rideRequestTimeOut = 20;
           waitState == "";
         });
         Geofire.initialize("availableDrivers");
@@ -1336,8 +1315,8 @@ class _HomeScreenState extends State<HomeScreen> {
       if (after2MinTimeOut <= 0) {
         timer.cancel();
         setState(() {
-          after2MinTimeOut = 105;
-          rideRequestTimeOut = 35;
+          after2MinTimeOut = 100;
+          rideRequestTimeOut = 20;
           waitState == "";
         });
         Tools().toastMsg("No driver found try again Time out");
@@ -1376,15 +1355,12 @@ class _HomeScreenState extends State<HomeScreen> {
       if (map["driverLocation"] != null) {
         final driverLatitude =
             double.parse(map["driverLocation"]["latitude"].toString());
-        print("111111111$driverLatitude");
         final driverLongitude =
             double.parse(map["driverLocation"]["longitude"].toString());
-        print("22222222222$driverLongitude");
         LatLng driverCurrentLocation = LatLng(driverLatitude, driverLongitude);
         setState(() {
           driverNewLocation = driverCurrentLocation;
         });
-        print("33333333333$driverNewLocation");
         if (statusRide == "accepted") {
           updateTireRideToPickUp(driverCurrentLocation, context);
         } else if (statusRide == "arrived") {
