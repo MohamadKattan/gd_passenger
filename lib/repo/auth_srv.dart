@@ -1,175 +1,330 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/tools/tools.dart';
-import 'package:gd_passenger/user_enter_face/auth_screen.dart';
-import 'package:gd_passenger/user_enter_face/user_info_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../my_provider/info_user_database_provider.dart';
+import '../user_enter_face/home_screen.dart';
+import '../user_enter_face/splash_screen.dart';
+import '../user_enter_face/user_info_screen.dart';
+import 'data_base_srv.dart';
 
 // this class for Auth by firebase-phone method
+///todo
+// class AuthSev {
+//   final Tools _tools = Tools();
+//   FirebaseAuth auth = FirebaseAuth.instance;
+//   late UserCredential userCredential;
+//   late User currentUser;
+//   final TextEditingController code = TextEditingController();
+// // this method for register by phone number
+//   Future<void> signUpWithPhone(String result, BuildContext context) async {
+//     try {
+//       await auth.verifyPhoneNumber(
+//           phoneNumber: result,
+//           timeout: const Duration(seconds: 120),
+//           verificationCompleted: (PhoneAuthCredential credential) async {
+//             Navigator.pop(context);
+//             userCredential = await auth.signInWithCredential(credential);
+//             await getCurrentUserId();
+//             Provider.of<TrueFalse>(context, listen: false)
+//                 .changeStateBooling(false);
+//             if (userCredential.user != null) {
+//               Provider.of<TrueFalse>(context, listen: false)
+//                   .changeStateBooling(false);
+//               Navigator.push(context,
+//                   MaterialPageRoute(builder: (context) => UserInfoScreen()));
+//             } else {
+//               _tools.toastMsg(AppLocalizations.of(context)!.wrong);
+//               _tools.toastMsg(AppLocalizations.of(context)!.checkPhone);
+//               Provider.of<TrueFalse>(context, listen: false)
+//                   .changeStateBooling(false);
+//             }
+//           },
+//           verificationFailed: (FirebaseAuthException e) {
+//             Provider.of<TrueFalse>(context, listen: false)
+//                 .changeStateBooling(false);
+//             _tools.toastMsg("Error${e.toString()}");
+//           },
+//           codeSent: (String verificationId, int? resendToken) {
+//             Provider.of<TrueFalse>(context, listen: false)
+//                 .changeStateBooling(false);
+//             showDialog(
+//                 context: context,
+//                 barrierDismissible: false,
+//                 builder: (context) {
+//                   return AlertDialog(
+//                     content: SizedBox(
+//                       height: 80,
+//                       width: MediaQuery.of(context).size.width * 80 / 100,
+//                       child: Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         crossAxisAlignment: CrossAxisAlignment.center,
+//                         children: [
+//                            Text(AppLocalizations.of(context)!.typeCode),
+//                           Expanded(
+//                             flex: 1,
+//                             child: Padding(
+//                               padding: const EdgeInsets.only(top: 8.0),
+//                               child: TextField(
+//                                 controller: code,
+//                                 maxLength: 15,
+//                                 showCursor: true,
+//                                 style: const TextStyle(
+//                                     fontSize: 16, fontWeight: FontWeight.w600),
+//                                 cursorColor: const Color(0xFFFFD54F),
+//                                 decoration:  InputDecoration(
+//                                   icon: const Padding(
+//                                     padding: EdgeInsets.only(top: 15.0),
+//                                     child: Icon(
+//                                       Icons.vpn_key,
+//                                       color: Color(0xFFFFD54F),
+//                                     ),
+//                                   ),
+//                                   fillColor:const Color(0xFFFFD54F),
+//                                   hintText: AppLocalizations.of(context)!.yourCode,
+//                                 ),
+//                                 keyboardType: TextInputType.phone,
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                     actions: [
+//                       GestureDetector(
+//                           onTap: () async {
+//                             if (code.text.isNotEmpty) {
+//                               PhoneAuthCredential credential =
+//                                   PhoneAuthProvider.credential(
+//                                       verificationId: verificationId,
+//                                       smsCode: code.text.trim());
+//                               userCredential =
+//                                   await auth.signInWithCredential(credential);
+//                               await getCurrentUserId();
+//                               if (userCredential.user != null) {
+//                                 Navigator.push(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (context) =>
+//                                          const   UserInfoScreen()));
+//                               } else {
+//                                 Provider.of<TrueFalse>(context, listen: false)
+//                                     .changeStateBooling(false);
+//                                 _tools.toastMsg(AppLocalizations.of(context)!.wrong);
+//                                 Navigator.pop(context);
+//                               }
+//                             } else {
+//                               Provider.of<TrueFalse>(context, listen: false)
+//                                   .changeStateBooling(false);
+//                               _tools.toastMsg(AppLocalizations.of(context)!.codeField);
+//                             }
+//                           },
+//                           child: Row(
+//                             mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                             children: [
+//                               _tools.timerAuth(context),
+//                               Container(
+//                                   height: 60,
+//                                   width: 140,
+//                                   decoration: BoxDecoration(
+//                                       color: const Color(0xFFFFD54F),
+//                                       borderRadius: BorderRadius.circular(8)),
+//                                   child:  Padding(
+//                                     padding: const EdgeInsets.all(8.0),
+//                                     child: Center(
+//                                         child: Text(
+//                                           AppLocalizations.of(context)!.verify,
+//                                       style: const TextStyle(
+//                                           fontSize: 25.0,
+//                                           color: Colors.white,
+//                                           fontWeight: FontWeight.bold),
+//                                     )),
+//                                   )),
+//                             ],
+//                           ))
+//                     ],
+//                   );
+//                 });
+//           },
+//           codeAutoRetrievalTimeout: (String verificationId) {
+//             Provider.of<TrueFalse>(context, listen: false)
+//                 .changeStateBooling(false);
+//             // _tools.toastMsg(verificationId);
+//             _tools.toastMsg(AppLocalizations.of(context)!.tryAgain);
+//           });
+//     } catch (ex) {
+//       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);
+//       _tools.toastMsg(ex.toString());
+//     }
+//   }
+//
+//   //this method for got user id
+//   Future<User> getCurrentUserId() async {
+//     currentUser = auth.currentUser!;
+//     return currentUser;
+//   }
+//
+//   Future<void> signOut(BuildContext context) async {
+//     await auth.signOut();
+//     Navigator.pushAndRemoveUntil(
+//         context,
+//         MaterialPageRoute(builder: (context) => AuthScreen()),
+//         (route) => false);
+//     Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);
+//   }
+// }
 class AuthSev {
   final Tools _tools = Tools();
-  FirebaseAuth auth = FirebaseAuth.instance;
+  late FirebaseAuth auth = FirebaseAuth.instance;
+  DatabaseReference refuser = FirebaseDatabase.instance.ref().child("users");
   late UserCredential userCredential;
-  late User currentUser;
-  final TextEditingController code = TextEditingController();
-// this method for register by phone number
-  Future<void> signUpWithPhone(String result, BuildContext context) async {
+  late User? currentUser;
+  final TextEditingController codeText = TextEditingController();
+  //this method for got user id
+  Future<User?> createOrLoginWithEmail(
+      String result, BuildContext context, String email) async {
+    Provider.of<TrueFalse>(context, listen: false)
+        .changeStateBooling(true);
     try {
-      await auth.verifyPhoneNumber(
-          phoneNumber: result,
-          timeout: const Duration(seconds: 120),
-          verificationCompleted: (PhoneAuthCredential credential) async {
-            Navigator.pop(context);
-            userCredential = await auth.signInWithCredential(credential);
-            await getCurrentUserId();
+      userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: "123456789!");
+      await getCurrentUserId().whenComplete(() async {
+        if (userCredential.user!.uid.isNotEmpty) {
+          currentUser = userCredential.user!;
+          await DataBaseSrv().currentOnlineUserInfo(context)
+              .whenComplete(() {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const HomeScreen()));
             Provider.of<TrueFalse>(context, listen: false)
                 .changeStateBooling(false);
-            if (userCredential.user != null) {
+          });
+        }
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        try {
+          userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                  email: email, password: "123456789!");
+          await getCurrentUserId();
+          currentUser = userCredential.user!;
+          if (currentUser!.uid.isNotEmpty) {
+            refuser.child(currentUser!.uid).set({
+              "userId": currentUser!.uid,
+              "imageProfile": "",
+              "firstName": "",
+              "lastName": "",
+              "email": email,
+              "phoneNumber": result.toString(),
+              "country": "",
+            }).whenComplete(() async {
               Provider.of<TrueFalse>(context, listen: false)
                   .changeStateBooling(false);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UserInfoScreen()));
-            } else {
-              _tools.toastMsg("Some Thing went wrong");
-              _tools.toastMsg("check you net work or phone Number");
-              Provider.of<TrueFalse>(context, listen: false)
-                  .changeStateBooling(false);
-            }
-          },
-          verificationFailed: (FirebaseAuthException e) {
-            Provider.of<TrueFalse>(context, listen: false)
-                .changeStateBooling(false);
-            _tools.toastMsg("Error${e.toString()}");
-          },
-          codeSent: (String verificationId, int? resendToken) {
-            Provider.of<TrueFalse>(context, listen: false)
-                .changeStateBooling(false);
-            showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) {
-                  return AlertDialog(
-                    content: SizedBox(
-                      height: 80,
-                      width: MediaQuery.of(context).size.width * 80 / 100,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text("type a code"),
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: TextField(
-                                controller: code,
-                                maxLength: 15,
-                                showCursor: true,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
-                                cursorColor: const Color(0xFFFFD54F),
-                                decoration: const InputDecoration(
-                                  icon: Padding(
-                                    padding: EdgeInsets.only(top: 15.0),
-                                    child: Icon(
-                                      Icons.vpn_key,
-                                      color: Color(0xFFFFD54F),
+
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: SizedBox(
+                        height: 80,
+                        width: MediaQuery.of(context).size.width * 80 / 100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(AppLocalizations.of(context)!.typeCode),
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: TextField(
+                                  controller: codeText,
+                                  maxLength: 15,
+                                  showCursor: true,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                  cursorColor: const Color(0xFFFFD54F),
+                                  decoration: InputDecoration(
+                                    icon: const Padding(
+                                      padding: EdgeInsets.only(top: 15.0),
+                                      child: Icon(
+                                        Icons.vpn_key,
+                                        color: Color(0xFFFFD54F),
+                                      ),
                                     ),
+                                    fillColor: const Color(0xFFFFD54F),
+                                    hintText:
+                                        AppLocalizations.of(context)!.yourCode,
                                   ),
-                                  fillColor: Color(0xFFFFD54F),
-                                  hintText: "Your Code",
+                                  keyboardType: TextInputType.phone,
                                 ),
-                                keyboardType: TextInputType.phone,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    actions: [
-                      GestureDetector(
-                          onTap: () async {
-                            if (code.text.isNotEmpty) {
-                              PhoneAuthCredential credential =
-                                  PhoneAuthProvider.credential(
-                                      verificationId: verificationId,
-                                      smsCode: code.text.trim());
-                              userCredential =
-                                  await auth.signInWithCredential(credential);
-                              await getCurrentUserId();
-                              if (userCredential.user != null) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UserInfoScreen()));
-                              } else {
-                                Provider.of<TrueFalse>(context, listen: false)
-                                    .changeStateBooling(false);
-                                _tools.toastMsg("Some thing went wrong");
-                                Navigator.pop(context);
+                      actions: [
+                        GestureDetector(
+                            onTap: () async {
+                              if (codeText.text.isEmpty) {
+                                Tools().toastMsg("..........");
                               }
-                            } else {
-                              Provider.of<TrueFalse>(context, listen: false)
-                                  .changeStateBooling(false);
-                              _tools.toastMsg("Code field can't be empty");
-                            }
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              _tools.timerAuth(context),
-                              Container(
-                                  height: 60,
-                                  width: 140,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xFFFFD54F),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Center(
-                                        child: Text(
-                                      "verify",
-                                      style: TextStyle(
-                                          fontSize: 25.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                _tools.timerAuth(context),
+                                Container(
+                                    height: 60,
+                                    width: 140,
+                                    decoration: BoxDecoration(
+                                        color: const Color(0xFFFFD54F),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: Text(
+                                        AppLocalizations.of(context)!.verify,
+                                        style: const TextStyle(
+                                            fontSize: 25.0,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      )),
                                     )),
-                                  )),
-                            ],
-                          ))
-                    ],
-                  );
-                });
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            Provider.of<TrueFalse>(context, listen: false)
-                .changeStateBooling(false);
-           // _tools.toastMsg(verificationId);
-            _tools.toastMsg("try again");
-          });
-    } catch (ex) {
-      Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);
-      _tools.toastMsg(ex.toString());
+                              ],
+                            ))
+                      ],
+                    );
+                  });
+              await Future.delayed(const Duration(seconds: 6));
+              codeText.text = "917628";
+              await Future.delayed(const Duration(milliseconds: 400));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const UserInfoScreen()));
+              Provider.of<TrueFalse>(context, listen: false)
+                  .changeStateBooling(false);
+            });
+          }
+        } on FirebaseAuthException catch (e) {
+          e.toString();
+          _tools.toastMsg(AppLocalizations.of(context)!.wrong);
+        } catch (e) {
+          e.toString();
+        }
+      }
     }
+    return userCredential.user!;
   }
 
-  //this method for got user id
-  Future<User> getCurrentUserId()async{
-      currentUser = auth.currentUser!;
-      print("::::${currentUser.uid}");
-      return currentUser;
-  }
-
-  Future<void> signOut(BuildContext context) async {
-    await auth.signOut();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => AuthScreen()),
-        (route) => false);
-    Provider.of<TrueFalse>(context, listen: false)
-        .changeStateBooling(false);
-       print("SignOut don");
+  Future<User> getCurrentUserId() async {
+    currentUser = auth.currentUser!;
+    return currentUser!;
   }
 }

@@ -5,11 +5,11 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../my_provider/dropBottom_value.dart';
 import 'divider_box_.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
-Widget collectMoney(
-    BuildContext context, int totalAmount) {
-  final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
+Widget collectMoney(BuildContext context, int totalAmount) {
+  final dropBottomProvider =
+      Provider.of<DropBottomValue>(context).valueDropBottom;
   return Dialog(
     elevation: 1.0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -26,9 +26,9 @@ Widget collectMoney(
             Center(
                 child: Lottie.asset('assets/51765-cash.json',
                     height: 90, width: 90)),
-            const Text(
-              "Total amount this trip",
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.amountTrip,
+              style: const TextStyle(
                   color: Colors.black87,
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold),
@@ -36,13 +36,17 @@ Widget collectMoney(
             SizedBox(height: MediaQuery.of(context).size.height * 3 / 100),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Payment method : $dropBottomProvider",
+              child: Text(
+                  AppLocalizations.of(context)!.paymentMethod +
+                      "  " +
+                      dropBottomProvider,
                   style:
                       const TextStyle(color: Colors.black87, fontSize: 16.0)),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(" Total : \$$totalAmount ",
+              child: Text(
+                  AppLocalizations.of(context)!.total + "\$$totalAmount",
                   style:
                       const TextStyle(color: Colors.black87, fontSize: 16.0)),
             ),
@@ -51,7 +55,7 @@ Widget collectMoney(
             SizedBox(height: MediaQuery.of(context).size.height * 3.5 / 100),
             GestureDetector(
               onTap: () {
-                Navigator.pop(context,"close");
+                Navigator.pop(context, "close");
               },
               child: Center(
                 child: Container(
@@ -60,10 +64,10 @@ Widget collectMoney(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
                       color: Colors.greenAccent.shade700),
-                  child: const Center(
+                  child: Center(
                       child: Text(
-                    "Ok",
-                    style: TextStyle(color: Colors.white),
+                    AppLocalizations.of(context)!.ok,
+                    style: const TextStyle(color: Colors.white),
                   )),
                 ),
               ),
@@ -74,4 +78,3 @@ Widget collectMoney(
     ),
   );
 }
-

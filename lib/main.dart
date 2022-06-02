@@ -24,6 +24,8 @@ import 'my_provider/indector_profile_screen.dart';
 import 'my_provider/nearsert_driver_provider.dart';
 import 'my_provider/positon_driver_info_provide.dart';
 import 'my_provider/rider_id.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,16 +64,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserAllInfoDatabase()),
         ChangeNotifierProvider(create: (context) => InductorProfileScreen()),
         ChangeNotifierProvider(create: (context) => ChangeColor()),
-        ChangeNotifierProvider(create: (context) => PositionDriverInfoProvider()),
+        ChangeNotifierProvider(
+            create: (context) => PositionDriverInfoProvider()),
         ChangeNotifierProvider(create: (context) => NearestDriverProvider()),
         ChangeNotifierProvider(create: (context) => CloseButtonProvider()),
         ChangeNotifierProvider(create: (context) => RiderId()),
-
       ],
       builder: (context, _) {
         return const MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'GD Passenger',
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('en', ''), // English, no country code
+              Locale('ar', ''), // Arabic, no country code
+              Locale('tr', ''), // Turkish, no country code
+            ],
             home: SplashScreen());
       },
     );

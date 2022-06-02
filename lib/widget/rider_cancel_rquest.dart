@@ -7,6 +7,7 @@ import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CancelTaxi {
   Widget cancelTaxiRequest(
@@ -35,14 +36,14 @@ class CancelTaxi {
                   child: Lottie.asset('assets/71796-searching-taxi.json',
                       height: 150, width: 250, fit: BoxFit.contain)),
             ),
-            const Text(
-              "Searching a driver...",
-              style: TextStyle(color: Colors.black45),
+             Text(
+              AppLocalizations.of(context)!.searching ,
+              style:const TextStyle(color: Colors.black45),
             ),
             GestureDetector(
                 onTap: () {
                   voidCallback();
-                  DataBaseSrv().cancelRiderRequest(userIdProvider,context);
+                  DataBaseSrv().cancelRiderRequest(userIdProvider, context);
                   Provider.of<PositionCancelReq>(context, listen: false)
                       .updateValue(-400.0);
                   Provider.of<PositionChang>(context, listen: false)
@@ -63,10 +64,10 @@ class CancelTaxi {
                               offset: Offset(0.7, 0.7))
                         ],
                         color: Colors.redAccent[700]),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        "Cancel",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.cancel,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontStyle: FontStyle.italic,

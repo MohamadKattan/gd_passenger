@@ -9,6 +9,7 @@ import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 var uuid = const Uuid();
 
@@ -62,18 +63,18 @@ class _SearchScreenState extends State<SearchScreen> {
                     fontStyle: FontStyle.italic,
                     color: Colors.white),
                     cursorColor: const Color(0xFFFFD54F),
-                    decoration: const InputDecoration(
-                  fillColor: Color(0xFFFFD54F),
+                    decoration:  InputDecoration(
+                  fillColor: const Color(0xFFFFD54F),
                   border: InputBorder.none,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.search,
                     color: Colors.white,
                     size: 35,
                   ),
                   iconColor: Colors.white,
-                  hintText: "Where to?",
-                  contentPadding: EdgeInsets.all(10.0),
-                  hintStyle: TextStyle(
+                  hintText: AppLocalizations.of(context)!.whereTo,
+                  contentPadding: const EdgeInsets.all(10.0),
+                  hintStyle: const TextStyle(
                       fontSize: 25,
                       color: Colors.grey,
                       fontWeight: FontWeight.bold,

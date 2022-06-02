@@ -22,7 +22,9 @@ import '../tools/tools.dart';
 import 'call_driver.dart';
 import 'divider_box_.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 var uuid = const Uuid();
+
 
 class DriverInfo {
   Widget driverInfoContainer(
@@ -55,16 +57,16 @@ class DriverInfo {
                 child: Center(
                     child: Row(
                   children: [
-                    const Text(
-                      "Driver Status : ",
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                     Text(
+                      AppLocalizations.of(context)!.driverStatus,
+                      style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
-                    Text(statusRide,
+                    Text(newstatusRide,
                         style:  TextStyle(
                             color: Colors.green.shade700, fontSize: 15.0)),
-                    const Text(
-                      " Time : ",
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                     Text(
+                      AppLocalizations.of(context)!.time,
+                      style:const TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     Text(timeTrip == "" ? "...." : timeTrip,
                         style:  TextStyle(
@@ -77,9 +79,9 @@ class DriverInfo {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    const Text(
-                      "Car Details : ",
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                     Text(
+                      AppLocalizations.of(context)!.carDetails,
+                      style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     Text(
                       carDriverInfo,
@@ -95,9 +97,9 @@ class DriverInfo {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    const Text(
-                      "Driver name : ",
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                     Text(
+                      AppLocalizations.of(context)!.driverName,
+                      style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     Text(
                       driverName,
@@ -211,6 +213,6 @@ class DriverInfo {
         "https://www.google.com/maps/search/?api=1&query=${dropOff.latitude},${dropOff.longitude}";
     await canLaunch(url)
         ? launch(url)
-        : Tools().toastMsg('Could not launch google map');
+        : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
   }
 }

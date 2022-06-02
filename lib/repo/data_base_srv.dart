@@ -54,7 +54,6 @@ class DataBaseSrv {
       String phoneNumber,
       TextEditingController email) async {
     String url = await refStorage.child("users").child(uid).getDownloadURL();
-    print("urllll${url}");
     setUserinfoToDataBase(
         url, uid, firstname, lastname, context, phoneNumber, email);
   }
@@ -78,7 +77,7 @@ class DataBaseSrv {
         "lastName": lastname.text,
         "email": email.text.trim(),
         "phoneNumber": phoneNumber.toString(),
-        "country":"",
+        "country": "",
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
@@ -92,7 +91,7 @@ class DataBaseSrv {
   }
 
   // this method for got user id/phone/image/name from user collection in database real time and send to saveRiderRequest method
-  void currentOnlineUserInfo(BuildContext context) async {
+  Future<void> currentOnlineUserInfo(BuildContext context) async {
     final currentUser = AuthSev().auth.currentUser;
     late final DataSnapshot snapshot;
     try {
@@ -106,9 +105,7 @@ class DataBaseSrv {
         Provider.of<UserAllInfoDatabase>(context, listen: false)
             .updateUser(infoUser);
         return;
-      } else {
-        print('No data available.');
-      }
+      } else {}
     } catch (ex) {
       // Tools().toastMsg("Welcome DATA!!");
     }
@@ -117,38 +114,36 @@ class DataBaseSrv {
 // this method will set all info when rider order a taxi in Ride Request collection
   void saveRiderRequest(BuildContext context, int amount) async {
     /// from api geo
-    final pickUpLoc=Provider.of<AppData>(context, listen: false).pickUpLocation;
-    print("pickUpLoc:::::: " + pickUpLoc.placeName);
+    final pickUpLoc =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
 
     ///from api srv place
-    final dropOffLoc=
+    final dropOffLoc =
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
-    print("pickUpLoc:::::: " + dropOffLoc.placeName);
 
     ///from user model
     final currentUserInfoOnline =
         Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-    print("currentUserInfoOnline:::::: " + currentUserInfoOnline!.firstName);
 
     final carTypePro =
         Provider.of<CarTypeProvider>(context, listen: false).carType;
-    print("carTypePro:::::: " + carTypePro!);
+
     final paymentMethod =
         Provider.of<DropBottomValue>(context, listen: false).valueDropBottom;
-    final km =
-        Provider.of<DirectionDetailsPro>(context, listen: false).directionDetails.distanceVale;
+    final km = Provider.of<DirectionDetailsPro>(context, listen: false)
+        .directionDetails
+        .distanceVale;
     try {
       Map pickUpLocMAP = {
         "latitude": pickUpLoc.latitude.toString(),
         "longitude": pickUpLoc.longitude.toString(),
       };
-      print("pickUpLocMAP:::::: " + pickUpLocMAP.toString());
+
       Map dropOffLocMap = {
         "latitude": dropOffLoc.latitude.toString(),
         "longitude": dropOffLoc.longitude.toString(),
       };
-      print("dropOffLocMap:::::: " + dropOffLocMap.toString());
 
       Map rideInfoMap = {
         "driverId": "waiting",
@@ -157,17 +152,16 @@ class DataBaseSrv {
         "dropoff": dropOffLocMap,
         "createAt": DateTime.now().toString(),
         "riderName":
-            "${currentUserInfoOnline.firstName} ${currentUserInfoOnline.lastName}",
+            "${currentUserInfoOnline!.firstName} ${currentUserInfoOnline.lastName}",
         "riderPhone": currentUserInfoOnline.phoneNumber,
         "pickupAddress": pickUpLoc.placeName,
         "dropoffAddress": dropOffLoc.placeName,
         "vehicleType_id": carTypePro,
         "userId": currentUserInfoOnline.userId,
         "amount": amount.toString(),
-        "km": (km/1000).toStringAsFixed(2),
-        "tourismCityName":tourismCityName,
+        "km": (km / 1000).toStringAsFixed(2),
+        "tourismCityName": tourismCityName,
       };
-      print("rideInfoMap::::::$rideInfoMap");
       DatabaseReference refRideRequest = FirebaseDatabase.instance
           .ref()
           .child("Ride Request")
@@ -199,7 +193,7 @@ class DataBaseSrv {
         .child(driver.key)
         .child("newRide");
     final snap = await driverRef.get();
-    if(snap.value!=null&&snap.value=="searching"){
+    if (snap.value != null && snap.value == "searching") {
       try {
         await driverRef.set(userId?.userId);
       } catch (e) {

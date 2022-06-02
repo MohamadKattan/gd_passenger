@@ -43,7 +43,7 @@ class DropPlaceDetails {
 
       Provider.of<PlaceDetailsDropProvider>(context, listen: false)
           .updateDropOfLocation(address);
-      print("Drop location  nNNn is :::: ${address.placeName}");
+
       Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
       Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
       Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);

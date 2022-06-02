@@ -6,6 +6,9 @@ import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../config.dart';
 
 GlobalKey globalKey = GlobalKey();
 
@@ -13,7 +16,6 @@ class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
   static String result = "";
   static String? resultCodeCon = "+90";
-  static final TextEditingController phoneNumber = TextEditingController();
   static AuthSev authSev = AuthSev();
   static final CircularInductorCostem _inductorCostem = CircularInductorCostem();
 
@@ -38,9 +40,9 @@ class AuthScreen extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(
-                        "Log in to Garanti driver taxi",
-                        style: TextStyle(
+                       Text(
+                        AppLocalizations.of(context)!.logInToTaxi,
+                        style:const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
@@ -49,9 +51,10 @@ class AuthScreen extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        "Enter your number to be able to log in or create a new account",
-                        style: TextStyle(
+                       Text(
+                        AppLocalizations.of(context)!.newAccount,
+                        textAlign: TextAlign.center,
+                        style:const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.black26,
@@ -60,9 +63,10 @@ class AuthScreen extends StatelessWidget {
                       const SizedBox(
                         height: 25,
                       ),
-                      const Text(
-                        "Enter your phone number",
-                        style: TextStyle(
+                       Text(
+                         AppLocalizations.of(context)!.enterNumber ,
+                         textAlign: TextAlign.center,
+                        style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -82,7 +86,7 @@ class AuthScreen extends StatelessWidget {
                               child: CountryListPick(
                                   appBar: AppBar(
                                     backgroundColor: Colors.amber[200],
-                                    title: const Text('Pick your country'),
+                                    title:  Text(AppLocalizations.of(context)!.pickCountry),
                                   ),
                                   theme: CountryTheme(
                                     isShowFlag: true,
@@ -115,26 +119,43 @@ class AuthScreen extends StatelessWidget {
                                 style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
                                 cursorColor: const Color(0xFFFFD54F),
-                                decoration: const InputDecoration(
-                                  icon: Padding(
+                                decoration:  InputDecoration(
+                                  icon: const Padding(
                                     padding: EdgeInsets.only(top: 15.0),
                                     child: Icon(
                                       Icons.phone,
                                       color: Color(0xFFFFD54F),
                                     ),
                                   ),
-                                  fillColor: Color(0xFFFFD54F),
-                                  label: Text("Phone number"),
+                                  fillColor:const Color(0xFFFFD54F),
+                                  label: Text(AppLocalizations.of(context)!.number),
                                 ),
                                 keyboardType: TextInputType.phone,
                               ),
                             ),
+
                           ],
                         ),
                       ),
-                      const SizedBox(
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: email,
+                          maxLength: 40,
+                          showCursor: true,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                          cursorColor: const Color(0xFFFFD54F),
+                          decoration: InputDecoration(
+                            fillColor: const Color(0xFFFFD54F),
+                            label: Text(AppLocalizations.of(context)!.email),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      ),
+                      SizedBox(
                         height: 20,
-                        child: Text("Verification code will send by a massage"),
+                        child: Text(AppLocalizations.of(context)!.verificationCode),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 40),
@@ -142,26 +163,36 @@ class AuthScreen extends StatelessWidget {
                           onTap: () async {
                             if (phoneNumber.text.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                 SnackBar(
                                   behavior: SnackBarBehavior.fixed,
                                   backgroundColor: Colors.red,
-                                  duration: Duration(seconds: 3),
-                                  content: Text('phone number can\'t be empty'),
+                                  duration:const Duration(seconds: 3),
+                                  content: Text(AppLocalizations.of(context)!.numberEmpty),
                                 ),
                               );
-                            } else {
-                              result = "${resultCodeCon}${phoneNumber.text}";
-                              await authSev.signUpWithPhone(result, context);
+                            }
+                           else if (email.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.fixed,
+                                  backgroundColor: Colors.red,
+                                  duration:const Duration(seconds: 3),
+                                  content: Text(AppLocalizations.of(context)!.emailRequired),
+                                ),
+                              );
+                            }
+                            else {
+                              result = "$resultCodeCon${phoneNumber.text}";
+                              await authSev.createOrLoginWithEmail(result, context,email.text.trim());
                               FocusScope.of(context).requestFocus(FocusNode());
-                              Provider.of<TrueFalse>(context, listen: false)
-                                  .changeStateBooling(true);
+
                             }
                           },
                           child: Container(
-                            child: const Center(
+                            child:  Center(
                                 child: Text(
-                              "SignUp",
-                              style: TextStyle(
+                                  AppLocalizations.of(context)!.signUp,
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),
@@ -185,8 +216,8 @@ class AuthScreen extends StatelessWidget {
                         child: Center(
                             child: Lottie.asset(
                                 'assets/91310-mobile-device-tech.json',
-                                height: 250,
-                                width: 250)),
+                                height: 150,
+                                width: 150)),
                       ),
                     ],
                   ),

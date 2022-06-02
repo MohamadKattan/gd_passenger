@@ -2,15 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
-import 'package:gd_passenger/user_enter_face/language_screen.dart';
 import 'package:gd_passenger/user_enter_face/profile_screen.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import '../tools/carousel_slider.dart';
 import '../user_enter_face/book_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget customDrawer(BuildContext context) {
+  double rightVal = MediaQuery.of(context).size.width*20/100;
   return Container(
     width: MediaQuery.of(context).size.width,
     height: MediaQuery.of(context).size.height,
@@ -26,23 +27,21 @@ Widget customDrawer(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 20 / 100,
-          child: DrawerHeader(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 80),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  showImage(context),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  showUserName(context),
-                  showUserPhone(context),
-                ],
-              ),
+        DrawerHeader(
+          child: Padding(
+            padding:  EdgeInsets.only(left: AppLocalizations.of(context)!.hi=="مرحبا"?0.0:80.0,
+                right: AppLocalizations.of(context)!.hi=="مرحبا"?120.0:0.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                showImage(context),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                showUserName(context),
+                showUserPhone(context),
+              ],
             ),
           ),
         ),
@@ -52,22 +51,29 @@ Widget customDrawer(BuildContext context) {
               height: 4.0,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:  EdgeInsets.only(right: AppLocalizations.of(context)!.hi=="مرحبا"?rightVal:8.0,left: 8.0),
               child: GestureDetector(
-                onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const BookingScreen())),
-                child: Row(children: const [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.history, color: Colors.black45,size: 30,),
-              ),
-              SizedBox(width: 8.0),
-              Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: Text(
-                    "My Bookings",
-                    style: TextStyle(color: Colors.black45,fontSize: 16.0),
-                  ))
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BookingScreen())),
+                child: Row(children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.history,
+                      color: Colors.black45,
+                      size: 35,
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                      child: Text(
+                        AppLocalizations.of(context)!.book,
+                        style: const TextStyle(
+                            color: Colors.black45, fontSize: 20.0,fontWeight: FontWeight.bold),
+                      ))
                 ]),
               ),
             ),
@@ -76,22 +82,26 @@ Widget customDrawer(BuildContext context) {
             ),
             CustomWidget().customDivider(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:  EdgeInsets.only(left: 8.0,right: AppLocalizations.of(context)!.hi=="مرحبا"?rightVal:8.0),
               child: GestureDetector(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ProfileScreen())),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfileScreen())),
                 child: Row(
-                  children: const [
-                    Padding(
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.person, color: Colors.black45,size: 30),
+                      child:
+                          Icon(Icons.person, color: Colors.black45, size: 35),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 8.0,
                     ),
                     Text(
-                      "My profile",
-                      style: TextStyle(color: Colors.black45,fontSize: 16),
+                      AppLocalizations.of(context)!.profile,
+                      style:
+                          const TextStyle(color: Colors.black45, fontSize: 20,fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -102,73 +112,38 @@ Widget customDrawer(BuildContext context) {
             ),
             CustomWidget().customDivider(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:  EdgeInsets.only(left: 8.0,right: AppLocalizations.of(context)!.hi=="مرحبا"?rightVal:8.0),
               child: GestureDetector(
-                onTap: () => null,
+                onTap: () => SystemNavigator.pop(),
                 child: Row(
-                  children: const [
-                    Padding(
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.mail, color: Colors.black45,size: 30,),
+                      child: Icon(
+                        Icons.exit_to_app,
+                        color: Colors.black45,
+                        size: 35.0,
+                      ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 8.0,
                     ),
                     Text(
-                      "Call us",
-                      style: TextStyle(color: Colors.black45,fontSize: 16.0),
+                      AppLocalizations.of(context)!.exit,
+                      style: const TextStyle(
+                          color: Colors.black45, fontSize: 20.0,fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(
-              height: 8.0,
-            ),
             CustomWidget().customDivider(),
+            ImageSliderDemo(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const LanguageScreen())),
-                child: Row(
-              children: const [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.language, color: Colors.black45,size: 30,),
-                ),
-                SizedBox(width: 8.0),
-                Text(
-                  "Language",
-                  style: TextStyle(color: Colors.black45,fontSize: 16.0),
-                ),
-              ],
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            CustomWidget().customDivider(),
-            GestureDetector(
-              onTap: () => SystemNavigator.pop(),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.exit_to_app, color: Colors.black45,size: 30.0,),
-                    ),
-                    SizedBox(
-                      width: 8.0,
-                    ),
-                    Text("Exit",style: TextStyle(color: Colors.black45,fontSize: 16.0),),
-                  ],
-                ),
-              ),
-            ),
-            CustomWidget().customDivider(),
+              padding:  EdgeInsets.only(top: 8.0,left: 8.0,bottom: 8.0,
+                  right: AppLocalizations.of(context)!.hi=="مرحبا"?120.0:8.0),
+              child: const Text("Garanti taxi v1.0.0",style: TextStyle(color: Colors.black45,fontSize: 20,fontWeight: FontWeight.bold),),
+            )
           ],
         ),
       ],
@@ -213,8 +188,9 @@ Widget showUserName(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
   return userInfoRealTime?.firstName != null
-      ? Text("Hi ${userInfoRealTime?.firstName}")
-      : const Expanded(child: Text("Welcome back"));
+      ? Text(
+          AppLocalizations.of(context)!.hi + " ${userInfoRealTime?.firstName}")
+      : Expanded(child: Text(AppLocalizations.of(context)!.welcomeBack));
 }
 
 Widget showUserPhone(BuildContext context) {

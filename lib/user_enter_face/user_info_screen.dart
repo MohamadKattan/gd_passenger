@@ -10,14 +10,15 @@ import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserInfoScreen extends StatelessWidget {
   static late XFile? imageFile;
   static final ImagePicker _picker = ImagePicker();
-  static final CircularInductorCostem _inductorCostem = CircularInductorCostem();
+  static final CircularInductorCostem _inductorCostem =
+      CircularInductorCostem();
 
   const UserInfoScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserIdProvider>(context, listen: false);
@@ -25,7 +26,7 @@ class UserInfoScreen extends StatelessWidget {
     final picked = Provider.of<PickImageProvide>(context).ImageProvider;
     bool providerTrue = Provider.of<TrueFalse>(context).isTrue;
     return WillPopScope(
-      onWillPop: ()async=>false,
+      onWillPop: () async => false,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Scaffold(
@@ -38,24 +39,28 @@ class UserInfoScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 60),
-                      const Text("Profile",
-                          style: TextStyle(fontSize: 30, color: Colors.black54)),
-                      SizedBox(height: 40),
+                      Text(AppLocalizations.of(context)!.profile,
+                          style: const TextStyle(
+                              fontSize: 30, color: Colors.black54)),
+                      const SizedBox(height: 40),
                       GestureDetector(
                         onTap: () => showSheetCamerOrGallary(context: context),
                         child: Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: const Color(0xFFFFD54F)),
-                          child:
-                            picked==null?const Icon(
-                              Icons.add_a_photo_outlined,
-                              size: 25,
-                              color: Colors.white,
-                            ):Image(image: FileImage(File(picked.path)),fit: BoxFit.fill,)
-                        ),
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: const Color(0xFFFFD54F)),
+                            child: picked == null
+                                ? const Icon(
+                                    Icons.add_a_photo_outlined,
+                                    size: 25,
+                                    color: Colors.white,
+                                  )
+                                : Image(
+                                    image: FileImage(File(picked.path)),
+                                    fit: BoxFit.fill,
+                                  )),
                       ),
                       const SizedBox(
                         height: 20,
@@ -69,9 +74,10 @@ class UserInfoScreen extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                           cursorColor: const Color(0xFFFFD54F),
-                          decoration: const InputDecoration(
-                            fillColor: Color(0xFFFFD54F),
-                            label: Text("First name"),
+                          decoration: InputDecoration(
+                            fillColor: const Color(0xFFFFD54F),
+                            label:
+                                Text(AppLocalizations.of(context)!.firstName),
                           ),
                           keyboardType: TextInputType.name,
                         ),
@@ -85,47 +91,48 @@ class UserInfoScreen extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                           cursorColor: const Color(0xFFFFD54F),
-                          decoration: const InputDecoration(
-                            fillColor: Color(0xFFFFD54F),
-                            label: Text("Last name"),
+                          decoration: InputDecoration(
+                            fillColor: const Color(0xFFFFD54F),
+                            label: Text(AppLocalizations.of(context)!.lastName),
                           ),
                           keyboardType: TextInputType.name,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          controller: email,
-                          maxLength: 40,
-                          showCursor: true,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                          cursorColor: const Color(0xFFFFD54F),
-                          decoration: const InputDecoration(
-                            fillColor: Color(0xFFFFD54F),
-                            label: Text("Email"),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: TextField(
+                      //     controller: email,
+                      //     maxLength: 40,
+                      //     showCursor: true,
+                      //     style: const TextStyle(
+                      //         fontSize: 16, fontWeight: FontWeight.w600),
+                      //     cursorColor: const Color(0xFFFFD54F),
+                      //     decoration: InputDecoration(
+                      //       fillColor: const Color(0xFFFFD54F),
+                      //       label: Text(AppLocalizations.of(context)!.email),
+                      //     ),
+                      //     keyboardType: TextInputType.emailAddress,
+                      //   ),
+                      // ),
                       const SizedBox(height: 60),
                       GestureDetector(
                         onTap: () {
                           if (picked == null) {
-                            tools.toastMsg("image profile is required");
+                            tools.toastMsg(
+                                AppLocalizations.of(context)!.imageRequired);
                           } else {
                             checkBeforeSet(
                                 context,
                                 userProvider.getUser.uid,
-                                userProvider.getUser.phoneNumber.toString(),
+                                phoneNumber.text.trim(),
                                 imageFile!);
                           }
                         },
                         child: Container(
-                          child: const Center(
+                          child: Center(
                               child: Text(
-                            "Save",
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.save,
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
@@ -154,7 +161,8 @@ class UserInfoScreen extends StatelessWidget {
                           decoration: (const BoxDecoration(
                             color: Colors.black,
                           )),
-                          child: _inductorCostem.circularInductorCostem(context),
+                          child:
+                              _inductorCostem.circularInductorCostem(context),
                         ),
                       )
                     : const Text("")
@@ -169,32 +177,23 @@ class UserInfoScreen extends StatelessWidget {
   Future<void> getImage(BuildContext context, ImageSource source) async {
     try {
       final XFile? _file = await _picker.pickImage(
-          source: source, maxWidth: 40.0, maxHeight: 40.0, imageQuality: 30);
+          source: source, maxWidth: 60.0, maxHeight: 60.0, imageQuality: 80);
       imageFile = _file!;
       Provider.of<PickImageProvide>(context, listen: false)
           .listingToPickImage(imageFile!);
     } catch (e) {
-      tools.toastMsg("image profile is required");
+      tools.toastMsg(AppLocalizations.of(context)!.imageRequired);
       tools.toastMsg(e.toString());
     }
   }
 
   checkBeforeSet(
       BuildContext context, String uid, String phoneNumber, XFile? imageFile) {
-
     if (firstname.text.isEmpty) {
-      tools.toastMsg("First name is required");
-    }
-   else if (lastname.text.isEmpty) {
-      tools.toastMsg("Last name is required");
-    }
-  else  if (email.text.isEmpty) {
-      tools.toastMsg("Email is required");
-    }
-    else if (!email.text.contains("@") && !email.text.endsWith(".com")) {
-       tools.toastMsg("check your email address some thing wrong");
-     }
-    else {
+      tools.toastMsg(AppLocalizations.of(context)!.nameRequired);
+    } else if (lastname.text.isEmpty) {
+      tools.toastMsg(AppLocalizations.of(context)!.lastRequired);
+    } else {
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       srv.setImageToStorage(
           firstname, lastname, uid, context, phoneNumber, imageFile!, email);
@@ -219,12 +218,12 @@ class UserInfoScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
-                        "Pick a photo",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.pickPhoto,
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.black54),
@@ -243,23 +242,24 @@ class UserInfoScreen extends StatelessWidget {
                       child: Container(
                         height: 60,
                         width: MediaQuery.of(context).size.width * 0.60,
-                        decoration:
-                            const BoxDecoration(color: Colors.white, boxShadow: [
-                          BoxShadow(
-                              blurRadius: 6.0,
-                              spreadRadius: 0.5,
-                              color: Colors.black54,
-                              offset: Offset(0.7, 0.7))
-                        ]),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 6.0,
+                                  spreadRadius: 0.5,
+                                  color: Colors.black54,
+                                  offset: Offset(0.7, 0.7))
+                            ]),
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.camera, color: Color(0xFFFFD54F)),
-                            SizedBox(
+                          children: [
+                            const Icon(Icons.camera, color: Color(0xFFFFD54F)),
+                            const SizedBox(
                               width: 5.0,
                             ),
-                            Text("Camera"),
+                            Text(AppLocalizations.of(context)!.camera),
                           ],
                         )),
                       ),
@@ -275,23 +275,24 @@ class UserInfoScreen extends StatelessWidget {
                       child: Container(
                         height: 60,
                         width: MediaQuery.of(context).size.width * 0.60,
-                        decoration:
-                            const BoxDecoration(color: Colors.white, boxShadow: [
-                          BoxShadow(
-                              blurRadius: 6.0,
-                              spreadRadius: 0.5,
-                              color: Colors.black54,
-                              offset: Offset(0.7, 0.7))
-                        ]),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 6.0,
+                                  spreadRadius: 0.5,
+                                  color: Colors.black54,
+                                  offset: Offset(0.7, 0.7))
+                            ]),
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.image, color: Color(0xFFFFD54F)),
-                            SizedBox(
+                          children: [
+                            const Icon(Icons.image, color: Color(0xFFFFD54F)),
+                            const SizedBox(
                               width: 5.0,
                             ),
-                            Text("gallery"),
+                            Text(AppLocalizations.of(context)!.gallery),
                           ],
                         )),
                       ),

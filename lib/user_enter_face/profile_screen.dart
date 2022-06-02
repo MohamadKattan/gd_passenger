@@ -12,6 +12,7 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 import '../my_provider/pick_image_provider.dart';
 import '../tools/tools.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -93,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                     child: GestureDetector(
                       onTap: (){
                         if(imageProvider==null){
-                          Tools().toastMsg("Up date your image first");
+                          Tools().toastMsg(AppLocalizations.of(context)!.upImage);
                         }else{
                           Provider.of<InductorProfileScreen>(context,listen: false).updateState(true);
                           startUpdateInfoUser(
@@ -107,10 +108,10 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         height: MediaQuery.of(context).size.height * 10 / 100,
                         width: MediaQuery.of(context).size.width * 80 / 100,
-                        child: const Center(
+                        child:  Center(
                           child: Text(
-                            "Update",
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.update,
+                            style:const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -134,12 +135,11 @@ class ProfileScreen extends StatelessWidget {
   Future<void> getImage(BuildContext context, ImageSource source) async {
     try {
       final XFile? _file = await _picker.pickImage(
-          source: source, maxWidth: 40.0, maxHeight: 40.0, imageQuality: 30);
+          source: source, maxWidth: 60.0, maxHeight: 60.0, imageQuality: 80);
       imageFile = _file!;
       Provider.of<PickImageProvide>(context,listen: false).listingToPickImage(imageFile);
     } catch (e) {
-      Tools().toastMsg("image profile is required");
-      Tools().toastMsg(e.toString());
+      Tools().toastMsg( AppLocalizations.of(context)!.imageRequired);
     }
   }
 
@@ -161,12 +161,12 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
+                   Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
-                        "Pick a photo",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.pickPhoto,
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.black54),
@@ -196,12 +196,12 @@ class ProfileScreen extends StatelessWidget {
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.camera, color: Color(0xFFFFD54F)),
-                            SizedBox(
+                          children:  [
+                            const Icon(Icons.camera, color: Color(0xFFFFD54F)),
+                            const SizedBox(
                               width: 5.0,
                             ),
-                            Text("Camera"),
+                            Text( AppLocalizations.of(context)!.camera),
                           ],
                         )),
                       ),
@@ -228,12 +228,12 @@ class ProfileScreen extends StatelessWidget {
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.image, color: Color(0xFFFFD54F)),
-                            SizedBox(
+                          children:  [
+                           const Icon(Icons.image, color: Color(0xFFFFD54F)),
+                          const  SizedBox(
                               width: 5.0,
                             ),
-                            Text("gallery"),
+                            Text( AppLocalizations.of(context)!.gallery),
                           ],
                         )),
                       ),

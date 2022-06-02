@@ -6,9 +6,10 @@ import 'package:gd_passenger/tools/tools.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-TextEditingController firstname = TextEditingController();
-TextEditingController lastname = TextEditingController();
-TextEditingController email = TextEditingController();
+ final TextEditingController phoneNumber = TextEditingController();
+ final TextEditingController email = TextEditingController();
+ final  TextEditingController firstname = TextEditingController();
+ final TextEditingController lastname = TextEditingController();
 Tools tools = Tools();
 DataBaseSrv srv = DataBaseSrv();
 String mapKey = "AIzaSyBt7etvZRY_OrzFcCsawNb22jqSzE2mRDg";
@@ -22,6 +23,7 @@ String driverImage = "";
 int rideRequestTimeOut = 25;
 int after2MinTimeOut = 100;
 String statusRide = "";
+String newstatusRide = "";
 String carDriverInfo = "";
 LatLng driverNewLocation = const LatLng(0.0, 0.0);
 String driverName = "";
@@ -35,6 +37,7 @@ double ratDriverRead = 0.0;
 String carRideType = "";
 String tourismCityName = "";
 String tourismCityPrice = "";
+String newValueDrop = "";
 
 
 

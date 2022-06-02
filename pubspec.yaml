@@ -29,6 +29,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,6 +59,8 @@ dependencies:
   url_launcher: ^6.0.20
   smooth_star_rating_null_safety: ^1.0.4+2
   maps_toolkit: ^2.0.0
+  intl: ^0.17.0
+  carousel_slider: ^4.1.1
 
 
 dev_dependencies:
@@ -81,7 +85,7 @@ flutter_native_splash:
 
 # The following section is specific to Flutter.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -99,6 +103,12 @@ flutter:
     - assets/mers.png
     - assets/yellow.png
     - assets/yellowcar.png
+    - assets/01.jpg
+    - assets/02.jpg
+    - assets/03.jpg
+    - assets/04.jpg
+    - assets/05.jpg
+    - assets/06.jpg
 
 
   # To add assets to your application, add an assets section, like this:

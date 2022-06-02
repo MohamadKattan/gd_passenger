@@ -5,10 +5,11 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 import '../config.dart';
 import '../my_provider/rider_id.dart';
 import 'divider_box_.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RatingWidget extends StatefulWidget {
- // final String id;
- //  required this.id
+  // final String id;
+  //  required this.id
   const RatingWidget({Key? key}) : super(key: key);
 
   @override
@@ -32,29 +33,29 @@ class _RatingWidgetState extends State<RatingWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text(
-                "Rate this driver",
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.rate,
+                style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 3 / 100),
               SmoothStarRating(
-                  allowHalfRating: false,
-                  starCount: 5,
-                  rating: rating,
-                  size: 40.0,
-                  color: Colors.yellow.shade700,
-                  borderColor: Colors.yellow,
-                  spacing:0.0,
+                allowHalfRating: false,
+                starCount: 5,
+                rating: rating,
+                size: 40.0,
+                color: Colors.yellow.shade700,
+                borderColor: Colors.yellow,
+                spacing: 0.0,
                 onRatingChanged: (v) {
                   rating = v;
                   setState(() {
-                    if(rating ==0.0){
+                    if (rating == 0.0) {
                       titleRate = "";
-                    }else{
-                      titleRate = "Thanks for your rating";
+                    } else {
+                      titleRate = AppLocalizations.of(context)!.thanks;
                     }
                   });
                 },
@@ -63,11 +64,11 @@ class _RatingWidgetState extends State<RatingWidget> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(titleRate,
                     style:
-                    const TextStyle(color: Colors.black87, fontSize: 20.0)),
+                        const TextStyle(color: Colors.black87, fontSize: 20.0)),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 1 / 100),
               CustomWidget().customDivider(),
-              SizedBox(height: MediaQuery.of(context).size.height * 1/ 100),
+              SizedBox(height: MediaQuery.of(context).size.height * 1 / 100),
               GestureDetector(
                 onTap: () {
                   rateTODateBase(id);
@@ -80,11 +81,11 @@ class _RatingWidgetState extends State<RatingWidget> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
                         color: Colors.greenAccent.shade700),
-                    child: const Center(
+                    child: Center(
                         child: Text(
-                          "Submit",
-                          style: TextStyle(color: Colors.white),
-                        )),
+                      AppLocalizations.of(context)!.ok,
+                      style: const TextStyle(color: Colors.white),
+                    )),
                   ),
                 ),
               ),
@@ -94,24 +95,24 @@ class _RatingWidgetState extends State<RatingWidget> {
       ),
     );
   }
+
 // this method for set rate to data base
- Future <void> rateTODateBase(String id) async{
-    DatabaseReference reference =   FirebaseDatabase.instance
+  Future<void> rateTODateBase(String id) async {
+    DatabaseReference reference = FirebaseDatabase.instance
         .ref()
         .child("driver")
         .child(id)
         .child("rating");
 
-     await reference.once().then((value){
-       if(value.snapshot.value != null){
-       double oldRating = double.parse(value.snapshot.value.toString());
-       double newRating = oldRating + rating;
-       double result = newRating / 2;
-       reference.set(result.toStringAsFixed(2));
-
-       }else{
-         reference.set(rating.toStringAsFixed(2));
-       }
-     });
+    await reference.once().then((value) {
+      if (value.snapshot.value != null) {
+        double oldRating = double.parse(value.snapshot.value.toString());
+        double newRating = oldRating + rating;
+        double result = newRating / 2;
+        reference.set(result.toStringAsFixed(2));
+      } else {
+        reference.set(rating.toStringAsFixed(2));
+      }
+    });
   }
 }

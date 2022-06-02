@@ -1,0 +1,334 @@
+{
+  "wrong": "Some Thing went wrong",
+  "@wrong": {
+    "description": "Some Thing went wrong"
+  },
+  "checkPhone": "check you net work or phone Number",
+  "@checkPhone": {
+    "description": "check you net work or phone Number"
+  },
+  "typeCode": "type a code",
+  "@typeCode": {
+    "description": "type a code"
+  },
+  "yourCode": "Your Code",
+  "@yourCode": {
+    "description": "Your Code"
+  },
+  "codeField": "Code field can't be empty",
+  "@codeField": {
+    "description": " Code field can't be empty"
+  },
+  "verify": "Verify",
+  "@verify": {
+    "description": " Verify"
+  },
+  "tryAgain": "try again",
+  "@tryAgain": {
+    "description": " try again"
+  },
+  "logInToTaxi": "Login to Garanti driver taxi",
+  "@logInToTaxi": {
+    "description": "LogIn to Garanti driver taxi"
+  },
+  "newAccount": "Enter your number & mail to be able to log in or create a new account",
+  "@newAccount": {
+    "description": "Enter your number & mail to be able to log in or create a new account"
+  },
+  "enterNumber": "Write your phone number & mail",
+  "@enterNumber": {
+    "description": "Enter your phone number"
+  },
+  "pickCountry": "Pick your country",
+  "@pickCountry": {
+    "description": "Pick your country"
+  },
+  "number": "Phone number",
+  "@number": {
+    "description": "Phone number"
+  },
+  "verificationCode": "Verification code will send",
+  "@verificationCode": {
+    "description": "Verification code will send"
+  },
+  "numberEmpty": "phone number can't be empty",
+  "@numberEmpty": {
+    "description": "phone number can't be empty"
+  },
+  "signUp": "SignUp",
+  "@signUp": {
+    "description": "SignUp"
+  },
+  "book": "My booking",
+ "@book": {
+    "description": "My booking"
+  },
+  "to": "To",
+  "@to": {
+    "description": "To"
+  },
+  "historyEmpty": "History is empty",
+  "@historyEmpty": {
+    "description": "History is empty"
+  },
+  "taxi": "Taxi",
+  "@taxi": {
+    "description": "Taxi"
+  },
+  "regularTaxi": "Regular Taxi",
+  "@regularTaxi": {
+    "description": "Regular Taxi"
+  },
+  "sedanCar": "sedan car: Hyundai,Renault,Fiat,Toyota etc...",
+  "@sedanCar": {
+    "description": "sedan car: Hyundai,Renault,Fiat,Toyota etc..."
+  },
+  "start15": "Start:15.00",
+  "@start15": {
+    "description": "Start:15.00"
+  },
+  "mediumCommercial": "MediumCommercial",
+  "@mediumCommercial": {
+    "description": "MediumCommercial"
+  },
+  "medium": "Medium",
+  "@medium": {
+    "description": "Medium"
+  },
+  "mediumCar": "Medium commercial car",
+  "@mediumCar": {
+    "description": "Medium commercial car"
+  },
+  "bigCommercial": "Big Commercial",
+  "@bigCommercial": {
+    "description": "Big Commercial"
+  },
+  "bigCar": "Big commercial car: veto etc...",
+  "@bigCar": {
+    "description": "Big commercial car: veto etc..."
+  },
+  "chooseBefore": "Choose to where before your request",
+  "@chooseBefore": {
+    "description": "Choose to where before your request"
+  },
+  "requestTaxi": "Request a Car",
+  "@requestTaxi": {
+    "description": "Request a Taxi"
+  },
+  "km": "Km : ",
+  "@km": {
+    "description": "Km : "
+  },
+  "time": "Time :",
+  "@time": {
+    "description": "Time :"
+  },
+  "whereTo": "Where to ?",
+  "@whereTo": {
+    "description": "Where to ?"
+  },
+  "noCarAvailable": "No car available try again!!!",
+  "@noCarAvailable": {
+    "description": "No car available try again!!!"
+  },
+  "upImage": "Up date your image first",
+  "@upImage": {
+    "description": "Up date your image first"
+  },
+  "update": "Update",
+  "@update": {
+    "description": "Update"
+  },
+  "imageRequired": "image profile is required",
+  "@imageRequired": {
+    "description": "image profile is required"
+  },
+  "pickPhoto": "Pick a photo",
+  "@pickPhoto": {
+    "description": "Pick a photo"
+  },
+  "camera": "Camera",
+  "@camera": {
+    "description": "Camera"
+  },
+  "gallery": "Gallery",
+  "@gallery": {
+    "description": "gallery"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile"
+  },
+  "firstName": "First name",
+  "@firstName": {
+    "description": "First name"
+  },
+  "lastName": "Last name",
+  "@lastName": {
+    "description": "Last name"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save"
+  },
+  "nameRequired": "First name is required",
+  "@nameRequired": {
+    "description": "First name is required"
+  },
+  "lastRequired": "Last name is required",
+  "@lastRequired": {
+    "description": "Last name is required"
+  },
+  "emailRequired": "Email  is required",
+  "@emailRequired": {
+    "description": "Email  is required"
+  },
+  "com": "check your email @ or .com address some thing wrong",
+  "@com": {
+    "description": "check your email address some thing wrong"
+  },
+  "callDriver": "Call a driver",
+  "@callDriver": {
+    "description": "Call a driver"
+  },
+  "normalCall": "Normal call",
+  "@normalCall": {
+    "description": "Normal call"
+  },
+  "whatsApp": "Whats app call",
+  "@whatsApp": {
+    "description": "Whats app call"
+  },
+  "amountTrip": "Total amount this trip",
+  "@amountTrip": {
+    "description": "Total amount this trip"
+  },
+  "paymentMethod": "Payment method :",
+  "@paymentMethod": {
+    "description": "Payment method :"
+  },
+  "total": "Total : ",
+  "@total": {
+    "description": "Total : "
+  },
+  "ok": "Ok ",
+  "@ok": {
+    "description": "Ok"
+  },
+  "issue": "If you have any Issue ",
+  "@issue": {
+    "description": "If you have any Issue"
+  },
+  "callAs": "Call as",
+  "@callAs": {
+    "description": "Call us"
+  },
+  "hi": "Hi",
+  "@hi": {
+    "description": "Hi"
+  },
+  "welcomeBack": "Welcome back",
+  "@welcomeBack": {
+    "description": "Welcome back"
+  },
+  "cash": "Cash",
+  "@cash": {
+    "description": "Cash"
+  },
+  "creditCard": "Pay in taxi by Credit Card",
+  "@creditCard": {
+    "description": "Pay in taxi by Credit Card"
+  },
+  "driverStatus": "Driver Status :",
+  "@driverStatus": {
+    "description": "Driver Status :"
+  },
+  "carDetails": "Car Details : ",
+  "@carDetails": {
+    "description": "Car Details : "
+  },
+  "driverName": "Driver name : ",
+  "@driverName": {
+    "description": "Driver name : "
+  },
+  "rate": "Rate this driver",
+  "@rate": {
+    "description": "Rate this driver"
+  },
+  "thanks": "Thanks for your rating",
+  "@thanks": {
+    "description": "Thanks for your rating"
+  },
+  "searching": "Searching a driver...",
+  "@searching": {
+    "description": "Searching a driver..."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel"
+  },
+  "sorry": "No driver available try again",
+  "@sorry": {
+    "description": "No driver available try again"
+  },
+  "torzimTrip": "This type of car for tourism trip",
+  "@torzimTrip": {
+    "description": "This type of car for tourism trip"
+  },
+  "pricesList": "Prices list",
+  "@pricesList": {
+    "description": "Prices list"
+  },
+  "istanbul": "Trip in  Istanbul City : ",
+  "@istanbul": {
+    "description": "Trip in  Istanbul City : "
+  },
+  "bursa": "Trip from Istanbul to Bursa : ",
+  "@bursa": {
+    "description": "Trip from Istanbul to Bursa : "
+  },
+  "izmit": "Trip from Istanbul to Izmit : ",
+  "@izmit": {
+    "description": "Trip from Istanbul to Izmit : "
+  },
+  "sabanjah": "from Istanbul to Sabanjah:",
+  "@sabanjah": {
+    "description": "from Istanbul to Sabanjah:"
+  },
+  "polo": "Trip from Istanbul to Polo abant : ",
+  "@polo": {
+    "description": "Trip from Istanbul to Polo abant : "
+  },
+  "sala": "Trip from Istanbul to Sala:",
+  "@sala": {
+    "description": "Trip from Istanbul to Sala:"
+  },
+  "yalua": "Trip from Istanbul to Yalua :",
+  "@yalua": {
+    "description": "Trip from Istanbul to Yalua :"
+  },
+  "arrived": "Driver arrived",
+  "@arrived": {
+    "description": "Driver arrived"
+  },
+  "started": "Trip Started",
+  "@started": {
+    "description": "Trip Started"
+  },
+  "finished": "Trip finished",
+  "@finished": {
+    "description": "Trip finished"
+  },
+  "accepted": "Accepted",
+  "@accepted": {
+    "description": "Accepted"
+  },
+  "exit": "Exit",
+  "@exit": {
+    "description": "Exit"
+  }
+}
