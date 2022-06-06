@@ -6,15 +6,24 @@ import 'package:gd_passenger/tools/tools.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'model/directions_details.dart';
+
  final TextEditingController phoneNumber = TextEditingController();
  final TextEditingController email = TextEditingController();
  final  TextEditingController firstname = TextEditingController();
  final TextEditingController lastname = TextEditingController();
+
+String mapKey = "AIzaSyAKMapANMFqO7-hXUfsjfQHtQG6JlSnuAo";
+String serverToken =
+    "key=AAAADxQpVvI:APA91bH34mheWrclzBAQyPxkT7LEKrmnFbhEXROlAH8blsBi3iqya6fQ7Soq1GEzaAZ77vPIF2tKp2cTPQ1NUkWoj1cqI_PSOLxaaPABc0d5jFxfCFAvbnbbGo8wFCENKN6E9ywT_4-k";
+
 Tools tools = Tools();
 DataBaseSrv srv = DataBaseSrv();
-String mapKey = "AIzaSyBt7etvZRY_OrzFcCsawNb22jqSzE2mRDg";
-String serverToken =
-    "key=AAAAZnprfL0:APA91bH3MKr_k15dqmiFxe6Z8p_YFJnTurnTLtxrZrv4dnMq1wJnn1ta8Htg6FSyWcPqNxMgCCTSc0cYjmu-U6gClk0YBzyHWrzKVsxJ-80Fum2hXlVyfY4tG-qclsL8-EJk1XmEZp0M";
+DirectionDetails? tripDirectionDetails;
+List<LatLng> polylineCoordinates = [];
+Set<Polyline> polylineSet = {};
+Set<Marker> markersSet = {};
+Set<Circle> circlesSet = {};
 GoogleMapController? newGoogleMapController;
 StreamSubscription<Position>? tripScreenStreamSubscription;
 String fNameIcon = "";

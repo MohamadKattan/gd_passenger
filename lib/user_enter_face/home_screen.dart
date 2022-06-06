@@ -26,7 +26,6 @@ import 'package:gd_passenger/user_enter_face/search_screen.dart';
 import 'package:gd_passenger/widget/bottom_sheet.dart';
 import 'package:gd_passenger/widget/coustom_drawer.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
-import 'package:gd_passenger/widget/custom_drop_bottom.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
 import 'package:geolocator/geolocator.dart';
@@ -62,11 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
   final ApiSrvGeo _apiMethods = ApiSrvGeo();
   late Position currentPosition;
-  Set<Polyline> polylineSet = {};
-  List<LatLng> polylineCoordinates = [];
-  Set<Marker> markersSet = {};
-  Set<Circle> circlesSet = {};
-  DirectionDetails? tripDirectionDetails;
   bool nearDriverAvailableLoaded = false;
   late BitmapDescriptor driversNearIcon;
   late BitmapDescriptor driversNearIcon1;
@@ -74,10 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String state = "normal";
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
-  String carOrderType = "Taxi-4 seats";
   String waitState = "wait";
   double grofireRadr = 2;
-  // late String pathGeoFire;
+  String carOrderType = "Taxi-4 seats";
+
 
   @override
   void initState() {
@@ -373,14 +367,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 Expanded(
                                                   child: GestureDetector(
-                                                    onTap: () {
-                                                      showDialog(
+                                                    onTap: ()async {
+                                                    await  changeAllProClickVanBox();
+                                                      infoUserDataReal!.country=="Turkey"?
+                                                      await   showDialog(
                                                           context: context,
                                                           barrierDismissible:
                                                           false,
                                                           builder: (_) =>
-                                                          const VetoVanPriceTurkeyJust());
-                                                      changeAllProClickVanBox();
+                                                          const VetoVanPriceTurkeyJust())
+                                                          :null;
                                                     },
                                                     child: Stack(
                                                       children: [
@@ -472,13 +468,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 Expanded(
                                                   child: GestureDetector(
-                                                    onTap: () {
-                                                      showDialog(
+                                                    onTap: ()async {
+                                                      infoUserDataReal!.country=="Turkey"?
+                                                    await  showDialog(
                                                           context: context,
                                                           barrierDismissible:
                                                           false,
                                                           builder: (_) =>
-                                                          const VetoVanPriceTurkeyJust());
+                                                          const VetoVanPriceTurkeyJust())
+                                                          :null;
                                                       changeAllProClickVetoBox();
                                                     },
                                                     child: Stack(
@@ -605,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   searchNearestDriver(
                                                       userProvider,
                                                       context,
-                                                      carTypePro);
+                                                      );
                                                   gotDriverInfo(context);
                                                 }
                                               },
@@ -719,13 +717,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .updateState(false);
                               },
                               icon: const Icon(
-                                Icons.arrow_back_ios,
+                                Icons.close,
                                 color: Colors.black54,
                                 size: 25,
                               )),
                         ),
                       ),
                   ),
+              /// complain button
               statusRide == "accepted" || statusRide == "Driver arrived"
                   ? Padding(
                       padding: const EdgeInsets.only(top: 80.0, left: 10.0),
@@ -835,7 +834,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Marker markerPickUpLocation = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
         infoWindow:
-            InfoWindow(title: initialPos.placeName, snippet: "My Location"),
+            InfoWindow(title: initialPos.placeName, snippet: AppLocalizations.of(context)!.myLocation),
         position: LatLng(pickUpLatling.latitude, pickUpLatling.longitude),
         markerId: const MarkerId("pickUpId"));
 
@@ -844,7 +843,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BitmapDescriptor.hueRed,
         ),
         infoWindow:
-            InfoWindow(title: finalPos.placeName, snippet: "Drop off Location"),
+            InfoWindow(title: finalPos.placeName, snippet: AppLocalizations.of(context)!.dropOff),
         position: LatLng(dropOfLatling.latitude, dropOfLatling.longitude),
         markerId: const MarkerId("dropOfId"));
 
@@ -1019,8 +1018,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 context: context,
                 barrierDismissible: false,
                 builder: (_) => callDriverIconMap(context, driverPhoneOnMap)),
-            title: " $fNameIcon $lNameIcon /Arrive:2-3 min",
-            snippet: "call : $driverPhoneOnMap"),
+            title: " $fNameIcon $lNameIcon / " + AppLocalizations.of(context)!.dropOff,
+            snippet: AppLocalizations.of(context)!.callDriver +  driverPhoneOnMap),
         // rotation: MathMethods.createRandomNumber(120),
       );
 
@@ -1260,7 +1259,7 @@ class _HomeScreenState extends State<HomeScreen> {
 * driver if no found drivers will cancel this trip and if driver accepted
 * will remove driver from map till finish his trip*/
   Future<void> searchNearestDriver(UserIdProvider userProvider,
-      BuildContext context, String carTypePro) async {
+      BuildContext context) async {
     setState(() {
       waitState = "wait";
     });
@@ -1286,20 +1285,33 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snap != null) {
             carRideType = snap.toString();
             if (carRideType == carOrderType) {
-              notifyDriver(ele, context, userProvider, carTypePro);
+              print("type:::$carOrderType");
+              notifyDriver(ele, context, userProvider);
               driverAvailable.removeAt(0);
             }
-            else {
-              if (waitState == "wait") {
+            Future.delayed(const Duration(seconds: 60)).whenComplete((){
+              if(waitState=="wait"){
                 Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
-                Provider.of<PositionCancelReq>(context, listen: false)
-                    .updateValue(-400.0);
-                Provider.of<PositionChang>(context, listen: false)
-                    .changValue(0.0);
-                DataBaseSrv().cancelRiderRequest(userProvider, context);
-                restApp();
+                    Provider.of<PositionCancelReq>(context, listen: false)
+                        .updateValue(-400.0);
+                    Provider.of<PositionChang>(context, listen: false)
+                        .changValue(0.0);
+                    DataBaseSrv().cancelRiderRequest(userProvider, context);
+                    restApp();
               }
-            }
+            });
+            // else {
+            //   if (waitState == "wait") {
+            //     print("typenot:::$carOrderType");
+            //     Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
+            //     Provider.of<PositionCancelReq>(context, listen: false)
+            //         .updateValue(-400.0);
+            //     Provider.of<PositionChang>(context, listen: false)
+            //         .changValue(0.0);
+            //     DataBaseSrv().cancelRiderRequest(userProvider, context);
+            //     restApp();
+            //   }
+            // }
           }
         });
       }
@@ -1309,7 +1321,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
-      UserIdProvider userProvider, String carTypePro) async {
+      UserIdProvider userProvider) async {
     setState(() {
       waitState = "";
     });
@@ -1361,7 +1373,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Geofire.initialize("availableDrivers");
         Geofire.removeLocation(driver.key);
         Future.delayed(const Duration(seconds: 2)).whenComplete(
-            () => searchNearestDriver(userProvider, context, carTypePro));
+            () => searchNearestDriver(userProvider, context));
       }
       //4
       if (after2MinTimeOut <= 0) {
@@ -1483,7 +1495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : driversNearIcon1,
             infoWindow: InfoWindow(
                 title: " $fNameIcon $lNameIcon",
-                snippet: " Your driver on way"),
+                snippet: AppLocalizations.of(context)!.onWay),
             // rotation: MathMethods.createRandomNumber(120),
           );
 

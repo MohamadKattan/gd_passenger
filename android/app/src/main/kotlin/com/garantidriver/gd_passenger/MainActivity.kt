@@ -1,4 +1,4 @@
-package com.garantidriver.gd_passenger
+package com.garantidriver.garantitaxi
 
 import io.flutter.embedding.android.FlutterActivity
 

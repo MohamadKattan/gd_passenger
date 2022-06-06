@@ -275,7 +275,7 @@
   "@sorry": {
     "description": "No driver available try again"
   },
-  "torzimTrip": "This type of car for tourism trip",
+  "torzimTrip": "The vehicle you have chosen is a tourism vehicle it is for a daily of 12 hour and it is forbidden to make short distances",
   "@torzimTrip": {
     "description": "This type of car for tourism trip"
   },
@@ -330,5 +330,21 @@
   "exit": "Exit",
   "@exit": {
     "description": "Exit"
+  },
+  "myLocation": "My location",
+  "@myLocation": {
+    "description": "My location"
+  },
+  "dropOff": "Destination",
+  "@dropOff": {
+    "description": "Destination"
+  },
+  "arrivedInfo": "Arrive:2-3 min",
+  "@arrivedInfo": {
+    "description": "Arrive:2-3 min"
+  },
+  "onWay": "Your driver on way",
+  "@onWay": {
+    "description": "Your driver on way"
   }
 }

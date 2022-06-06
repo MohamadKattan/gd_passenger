@@ -23,10 +23,10 @@
   "start15": "Başlangıç:15.00",
   "mediumCommercial": "OrtaTicari",
   "medium": "Orta",
-  "mediumCar": "orta boy ticari araba",
+  "mediumCar": "Güzübirlik tür için özel tucvvörim araci ",
   "bigCommercial": "Büyük Ticari",
-  "bigCar": "Büyük ticari gezi arabası: Vito ...",
-  "requestTaxi": "araba siparişi",
+  "bigCar": "Uzun yolculuk için özel araç en az 12 saat",
+  "requestTaxi": "Araç çağir",
   "km": "Km : ",
   "time": "Zaman :",
   "whereTo": "Nereye  ?",
@@ -67,7 +67,7 @@
   "searching": "Sürücü aranıyor...",
   "cancel": "İptal",
   "sorry": "Kullanılabilir sürücü yok tekrar deneyin",
-  "torzimTrip": "Turizm gezisi için bu tür araba",
+  "torzimTrip": "Seçtiğiniz araç turizm aracıdır, günlük 12 saattir ve kısa mesafe yapılması yasaktır.",
   "pricesList": "Fiyat listesi",
   "istanbul": "İstanbul Şehir Gezisi :",
   "bursa": "İstanbul'dan Bursa'ya Yolculuk :",
@@ -80,5 +80,9 @@
   "started": "Yolculuk Başladı",
   "finished": "Yolculuk bitti",
   "accepted": "kabul",
-  "exit": "çıkış"
+  "exit": "çıkış",
+  "myLocation": "Benim konumum",
+  "dropOff": "Hedef",
+  "arrivedInfo": "varış:2-3 dk",
+  "onWay": "yolda sürücü"
 }

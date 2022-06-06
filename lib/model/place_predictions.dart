@@ -5,6 +5,7 @@ class PlacePredictions {
   late String mainText;
   late String secondaryText;
   PlacePredictions(this.mainText, this.secondaryText, this.placeId);
+
   PlacePredictions.fromJson(Map<String, dynamic> json) {
     placeId = json["place_id"];
     mainText = json["structured_formatting"]["main_text"];

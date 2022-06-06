@@ -8,7 +8,6 @@ import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:gd_passenger/tools/get_url.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:provider/provider.dart';
-
 import '../my_provider/lineTaxiProvider.dart';
 import '../my_provider/opictyProvider.dart';
 

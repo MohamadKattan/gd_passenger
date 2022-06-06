@@ -34,7 +34,7 @@ class DriverInfo {
     final isCloseTrue =
         Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
-        height: MediaQuery.of(context).size.height * 35 / 100,
+        height: 210,
         decoration:  BoxDecoration(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -53,7 +53,7 @@ class DriverInfo {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Row(
                   children: [
@@ -61,16 +61,19 @@ class DriverInfo {
                       AppLocalizations.of(context)!.driverStatus,
                       style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
+                  const  SizedBox(width: 4.0,),
                     Text(newstatusRide,
                         style:  TextStyle(
-                            color: Colors.green.shade700, fontSize: 15.0)),
+                            color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
+                    const  SizedBox(width: 4.0,),
                      Text(
                       AppLocalizations.of(context)!.time,
                       style:const TextStyle(color: Colors.black, fontSize: 20),
                     ),
+                    const  SizedBox(width: 4.0,),
                     Text(timeTrip == "" ? "...." : timeTrip,
                         style:  TextStyle(
-                            color: Colors.green.shade700, fontSize: 15.0)),
+                            color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
                   ],
                 )),
               ),
@@ -83,15 +86,13 @@ class DriverInfo {
                       AppLocalizations.of(context)!.carDetails,
                       style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
+                    const  SizedBox(width: 4.0,),
                     Text(
                       carDriverInfo,
                       style: const TextStyle(color: Colors.black87, fontSize: 16),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 8.0,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -101,6 +102,7 @@ class DriverInfo {
                       AppLocalizations.of(context)!.driverName,
                       style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
+                    const  SizedBox(width: 4.0,),
                     Text(
                       driverName,
                       style: const TextStyle(color: Colors.black87, fontSize: 16),
@@ -118,12 +120,9 @@ class DriverInfo {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 10.0,
-              ),
               CustomWidget().customDivider(),
               Padding(
-                padding: const EdgeInsets.only(top: 15.0),
+                padding: const EdgeInsets.only(top: 8.0,bottom: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,

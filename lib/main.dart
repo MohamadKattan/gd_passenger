@@ -64,8 +64,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserAllInfoDatabase()),
         ChangeNotifierProvider(create: (context) => InductorProfileScreen()),
         ChangeNotifierProvider(create: (context) => ChangeColor()),
-        ChangeNotifierProvider(
-            create: (context) => PositionDriverInfoProvider()),
+        ChangeNotifierProvider(create: (context) => PositionDriverInfoProvider()),
         ChangeNotifierProvider(create: (context) => NearestDriverProvider()),
         ChangeNotifierProvider(create: (context) => CloseButtonProvider()),
         ChangeNotifierProvider(create: (context) => RiderId()),
