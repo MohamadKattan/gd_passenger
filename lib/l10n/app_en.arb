@@ -295,21 +295,21 @@
   "@izmit": {
     "description": "Trip from Istanbul to Izmit : "
   },
-  "sabanjah": "from Istanbul to Sabanjah:",
+  "sabanjah": "from Istanbul to spanca:",
   "@sabanjah": {
-    "description": "from Istanbul to Sabanjah:"
+    "description": "from Istanbul to spanca:"
   },
-  "polo": "Trip from Istanbul to Polo abant : ",
+  "polo": "Trip from Istanbul to bolu abant : ",
   "@polo": {
-    "description": "Trip from Istanbul to Polo abant : "
+    "description": "Trip from Istanbul to bolu abant : "
   },
-  "sala": "Trip from Istanbul to Sala:",
+  "sala": "Trip from Istanbul to şile:",
   "@sala": {
-    "description": "Trip from Istanbul to Sala:"
+    "description": "Trip from Istanbul to şile:"
   },
-  "yalua": "Trip from Istanbul to Yalua :",
+  "yalua": "Trip from Istanbul to yalova :",
   "@yalua": {
-    "description": "Trip from Istanbul to Yalua :"
+    "description": "Trip from Istanbul to yalova :"
   },
   "arrived": "Driver arrived",
   "@arrived": {

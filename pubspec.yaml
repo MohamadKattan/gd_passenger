@@ -61,6 +61,8 @@ dependencies:
   maps_toolkit: ^2.0.0
   intl: ^0.17.0
   carousel_slider: ^4.1.1
+  assets_audio_player: "3.0.4+1"
+  audioplayers: ^0.20.1
 
 
 dev_dependencies:
@@ -109,6 +111,15 @@ flutter:
     - assets/04.jpg
     - assets/05.jpg
     - assets/06.jpg
+    - assets/onway.wav
+    - assets/waiten.wav
+    - assets/youintripar.wav
+    - assets/intripen.wav
+    - assets/dcomingtoyouar.wav
+    - assets/darrivedtoyouar.wav
+    - assets/arrivedtr.mp3
+    - assets/commingtr.mp3
+    - assets/starttr.mp3
 
 
   # To add assets to your application, add an assets section, like this:

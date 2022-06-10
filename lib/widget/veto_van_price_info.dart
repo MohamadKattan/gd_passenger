@@ -246,7 +246,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      tourismCityName = "sabanjah";
+                      tourismCityName = "sapanca";
                       tourismCityPrice = "180";
                     });
                     tourismCities(tourismCityName, context);
@@ -303,7 +303,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      tourismCityName = "polo";
+                      tourismCityName = "Bolu abant";
                       tourismCityPrice = "300";
                     });
                     tourismCities(tourismCityName, context);
@@ -357,7 +357,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      tourismCityName = "sala";
+                      tourismCityName = "şile";
                       tourismCityPrice = "150";
                     });
                     tourismCities(tourismCityName, context);
@@ -415,7 +415,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      tourismCityName = "yalaua";
+                      tourismCityName = "yalova";
                       tourismCityPrice = "170";
                     });
                     tourismCities(tourismCityName, context);

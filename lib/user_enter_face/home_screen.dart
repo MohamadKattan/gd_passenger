@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -71,14 +73,28 @@ class _HomeScreenState extends State<HomeScreen> {
   String waitState = "wait";
   double grofireRadr = 2;
   String carOrderType = "Taxi-4 seats";
+   // AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
+  AudioPlayer audioPlayer = AudioPlayer();
+  late AudioCache audioCache;
+  bool sound1=false;
+  bool sound2=false;
+  bool sound3=false;
+
 
 
   @override
   void initState() {
     DataBaseSrv().currentOnlineUserInfo(context);
+    audioCache = AudioCache(fixedPlayer: audioPlayer,prefix:"assets/");
     super.initState();
   }
-
+  @override
+  void dispose() {
+    audioPlayer.release();
+    audioPlayer.dispose();
+    audioCache.clearAll();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final value = Provider.of<DoubleValue>(context).value;
@@ -133,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               polylines: polylineSet,
                               markers: markersSet,
                               circles: circlesSet,
-                              onMapCreated: (GoogleMapController controller) {
+                              onMapCreated: (GoogleMapController controller) async {
                                 _logicGoogleMap.controllerGoogleMap
                                     .complete(controller);
                                 newGoogleMapController = controller;
@@ -369,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: GestureDetector(
                                                     onTap: ()async {
                                                     await  changeAllProClickVanBox();
-                                                      infoUserDataReal!.country=="Turkey"?
+                                                     infoUserDataReal!.country=="Turkey"?
                                                       await   showDialog(
                                                           context: context,
                                                           barrierDismissible:
@@ -1082,6 +1098,9 @@ class _HomeScreenState extends State<HomeScreen> {
       tourismCityPrice = "";
       driverNewLocation = const LatLng(0.0, 0.0);
       markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
+      sound1=false;
+      sound2=false;
+      sound3=false;
     });
     locationPosition(context);
   }
@@ -1285,7 +1304,6 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snap != null) {
             carRideType = snap.toString();
             if (carRideType == carOrderType) {
-              print("type:::$carOrderType");
               notifyDriver(ele, context, userProvider);
               driverAvailable.removeAt(0);
             }
@@ -1359,6 +1377,9 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             rideRequestTimeOut = 20;
             after2MinTimeOut = 100;
+            sound1=true;
+            sound2=true;
+            sound3=true;
           });
         }
       });
@@ -1395,7 +1416,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method for got driver info from Ride request collection
   Future<void> gotDriverInfo(BuildContext context) async {
     final id = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-
     DatabaseReference reference =
         FirebaseDatabase.instance.ref().child("Ride Request").child(id!.userId);
     rideStreamSubscription = reference.onValue.listen((event) async {
@@ -1426,17 +1446,22 @@ class _HomeScreenState extends State<HomeScreen> {
           driverNewLocation = driverCurrentLocation;
         });
         if (statusRide == "accepted") {
+          soundAccepted();
           updateTireRideToPickUp(driverCurrentLocation, context);
           setState(() {
             newstatusRide=AppLocalizations.of(context)!.accepted;
           });
         } else if (statusRide == "arrived") {
+          await audioPlayer.stop();
+          soundArrived();
           setState(() {
             statusRide = "Driver arrived";
             timeTrip = "";
             newstatusRide=AppLocalizations.of(context)!.arrived;
           });
         } else if (statusRide == "onride") {
+          await audioPlayer.stop();
+          soundTripStart();
           updateTireRideToDropOff(context);
           setState(() {
             statusRide = "Trip Started";
@@ -1448,6 +1473,7 @@ class _HomeScreenState extends State<HomeScreen> {
             timeTrip = "";
             newstatusRide=AppLocalizations.of(context)!.finished;
           });
+          await audioPlayer.stop();
           if (map["total"] != null) {
             int fare = int.parse(map["total"].toString());
             var res = await showDialog(
@@ -1550,6 +1576,56 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       markersSet.removeWhere((ele) => ele.markerId.value.contains("driver"));
     });
+  }
+
+  // this metod for change voice conect to languge
+
+ Future<void>soundAccepted() async{
+    if(sound1==true){
+      if(AppLocalizations.of(context)!.taxi=="Taksi"){
+        await audioCache.play("commingtr.mp3");
+      }
+      else if(AppLocalizations.of(context)!.taxi=="تاكسي"){
+        await audioCache.play("dcomingtoyouar.wav");
+      }else{
+        await audioCache.play("onway.wav");
+      }
+    }
+    setState(() {
+      sound1=false;
+    });
+}
+
+Future <void>  soundArrived()  async{
+    if(sound2==true){
+      if(AppLocalizations.of(context)!.taxi=="Taksi"){
+        await audioCache.play("arrivedtr.mp3");
+      }
+      else if(AppLocalizations.of(context)!.taxi=="تاكسي"){
+        await audioCache.play("darrivedtoyouar.wav");
+      }else{
+        await audioCache.play("waiten.wav");
+      }
+    }
+    setState(() {
+      sound2=false;
+    });
+  }
+
+ Future <void>  soundTripStart() async {
+    if(sound3==true){
+      if(AppLocalizations.of(context)!.taxi=="Taksi"){
+        await audioCache.play("starttr.mp3");
+      }
+      else if(AppLocalizations.of(context)!.taxi=="تاكسي"){
+        await audioCache.play("youintripar.wav");
+      }else{
+        await audioCache.play("intripen.wav");
+      }
+    }
+ setState(() {
+   sound3=false;
+ });
   }
 
   ///================================End==========================================

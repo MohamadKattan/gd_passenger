@@ -101,11 +101,11 @@ class DataBaseSrv {
         Map<String, dynamic> map =
             Map<String, dynamic>.from(snapshot.value as Map);
         Users infoUser = Users.fromMap(map);
-
         Provider.of<UserAllInfoDatabase>(context, listen: false)
             .updateUser(infoUser);
+      } else {
         return;
-      } else {}
+      }
     } catch (ex) {
       // Tools().toastMsg("Welcome DATA!!");
     }
