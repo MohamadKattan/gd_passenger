@@ -1590,6 +1590,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await audioCache.play("onway.wav");
       }
     }
+  await  Future.delayed(const Duration(seconds: 5));
     setState(() {
       sound1=false;
     });
@@ -1606,6 +1607,7 @@ Future <void>  soundArrived()  async{
         await audioCache.play("waiten.wav");
       }
     }
+    await  Future.delayed(const Duration(seconds: 5));
     setState(() {
       sound2=false;
     });
@@ -1622,6 +1624,7 @@ Future <void>  soundArrived()  async{
         await audioCache.play("intripen.wav");
       }
     }
+    await  Future.delayed(const Duration(seconds: 5));
  setState(() {
    sound3=false;
  });
