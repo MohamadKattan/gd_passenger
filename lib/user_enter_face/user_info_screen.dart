@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../repo/api_srv_geo.dart';
 
 class UserInfoScreen extends StatelessWidget {
   static late XFile? imageFile;
@@ -194,6 +195,7 @@ class UserInfoScreen extends StatelessWidget {
     } else if (lastname.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.lastRequired);
     } else {
+     ApiSrvGeo().getContry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       srv.setImageToStorage(
           firstname, lastname, uid, context, phoneNumber, imageFile!, email);

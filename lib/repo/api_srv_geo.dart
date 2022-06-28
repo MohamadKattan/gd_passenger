@@ -44,4 +44,18 @@ class ApiSrvGeo {
     }
     return placeAddress;
   }
+
+  Future<dynamic>getContry()async{
+    String stContry = "";
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var url = Uri.parse("https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey");
+    final response = await _getUrl.getUrlMethod(url);
+    if (response != "failed") {
+      stContry = response["results"][0]["address_components"][5]["long_name"];
+      contry=stContry;
+      ref.child(userId!).child("country").set(stContry);
+    }
+    return stContry;
+  }
 }

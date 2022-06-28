@@ -1,9 +1,16 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:gd_passenger/tools/turn_Gps.dart';
 import 'package:gd_passenger/user_enter_face/auth_screen.dart';
-import 'package:gd_passenger/user_enter_face/home_screen.dart';
+import 'package:gd_passenger/user_enter_face/user_info_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../my_provider/info_user_database_provider.dart';
+import '../tools/tools.dart';
+import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -16,28 +23,40 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   @override
-  void initState() {
+  initState() {
     TurnGps().turnGpsIfNot();
+    if (AuthSev().auth.currentUser?.uid != null) {
+      DataBaseSrv().currentOnlineUserInfo(context);
+    }
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(seconds: 1),
         lowerBound: 0.5,
         upperBound: 0.6);
     _animationController.forward();
-    _animationController.addStatusListener((status) {
+    _animationController.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) {
-            if (AuthSev().auth.currentUser?.uid != null) {
-              DataBaseSrv().currentOnlineUserInfo(context);
-              return const HomeScreen();
-            } else {
-              return const AuthScreen();
-            }
-          }),
-        );
+        if (AuthSev().auth.currentUser?.uid != null) {
+          DataBaseSrv().currentOnlineUserInfo(context);
+          final infoUser = Provider.of<UserAllInfoDatabase>(context,listen: false).users;
+          if (infoUser!.update == true) {
+          await  goToPlayStore().whenComplete(() async {
+            DatabaseReference refuser =
+            FirebaseDatabase.instance.ref().child("users").child(infoUser.userId);
+            await refuser.child("update").set(false);
+            SystemNavigator.pop();
+          });
+          } else if (infoUser.status == "info") {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const UserInfoScreen()));
+          } else {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+          }
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+        }
       }
     });
     super.initState();
@@ -69,5 +88,14 @@ class _SplashScreenState extends State<SplashScreen>
     // TODO: implement dispose
     super.dispose();
     _animationController.dispose();
+  }
+
+  // this method for go to play Store
+  Future<void> goToPlayStore() async {
+    await canLaunch(
+            "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
+        ? launch(
+            "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
+        : Tools().toastMsg('Could not launch');
   }
 }

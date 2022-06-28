@@ -14,6 +14,7 @@ import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/home_screen.dart';
+import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -70,19 +71,21 @@ class DataBaseSrv {
     DatabaseReference refuser =
         FirebaseDatabase.instance.ref().child("users").child(uid);
     try {
-      await refuser.set({
+      await refuser.update({
         "userId": uid.toString(),
         "imageProfile": url.toString(),
         "firstName": firstname.text,
         "lastName": lastname.text,
-        "email": email.text.trim(),
-        "phoneNumber": phoneNumber.toString(),
-        "country": "",
+        // "email": email.text.trim(),
+        // "phoneNumber": phoneNumber.toString(),
+        // "country": "",
+        "status":"ok",
+        "update":false
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => const SplashScreen()));
       });
     } catch (ex) {
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);

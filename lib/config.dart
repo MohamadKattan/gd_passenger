@@ -13,7 +13,7 @@ import 'model/directions_details.dart';
  final  TextEditingController firstname = TextEditingController();
  final TextEditingController lastname = TextEditingController();
 
-String mapKey = "AIzaSyAKMapANMFqO7-hXUfsjfQHtQG6JlSnuAo";
+String mapKey = "AIzaSyDh5NNwfDJFU27Y_yMpVcWeeepBQBbewmM";
 String serverToken =
     "key=AAAADxQpVvI:APA91bH34mheWrclzBAQyPxkT7LEKrmnFbhEXROlAH8blsBi3iqya6fQ7Soq1GEzaAZ77vPIF2tKp2cTPQ1NUkWoj1cqI_PSOLxaaPABc0d5jFxfCFAvbnbbGo8wFCENKN6E9ywT_4-k";
 
@@ -47,6 +47,7 @@ String carRideType = "";
 String tourismCityName = "";
 String tourismCityPrice = "";
 String newValueDrop = "";
+String contry="";
 
 
 

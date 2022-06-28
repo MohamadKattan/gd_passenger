@@ -93,20 +93,20 @@ class ApiSrvDir {
         contryName == "United Arab Emirates") {
       culculFinal = fareAmont - 0.30 * 3.67 + 3.30 * 3.67;
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
-        contryName == "Turkey") {
+        contryName == "Turkey"||contry=="Turkey") {
       if (tourismCityName == "istanbul") {
         culculFinal = 100;
       } else if (tourismCityName == "bursa") {
         culculFinal = 220;
       } else if (tourismCityName == "izmit") {
         culculFinal = 150;
-      } else if (tourismCityName == "sabanjah") {
+      } else if (tourismCityName == "sapanca") {
         culculFinal = 180;
-      } else if (tourismCityName == "polo") {
+      } else if (tourismCityName == "Bolu abant") {
         culculFinal = 300;
-      } else if (tourismCityName == "sala") {
-        culculFinal = 300;
-      } else if (tourismCityName == "yalaua") {
+      } else if (tourismCityName == "şile") {
+        culculFinal = 170;
+      } else if (tourismCityName == "yalova") {
         culculFinal = 170;
       } else {
         culculFinal = 100;
@@ -136,20 +136,20 @@ class ApiSrvDir {
         contryName == "United Arab Emirates") {
       culculFinal = fareAmont * 3.67 + 5.30 * 3.67;
     } else if (carTypePro == "Big commercial-11-19 seats" &&
-        contryName == "Turkey") {
+        contryName == "Turkey"||contry=="Turkey") {
       if (tourismCityName == "istanbul") {
         culculFinal = 100;
       } else if (tourismCityName == "bursa") {
         culculFinal = 220;
       } else if (tourismCityName == "izmit") {
         culculFinal = 150;
-      } else if (tourismCityName == "sabanjah") {
+      } else if (tourismCityName == "sapanca") {
         culculFinal = 180;
-      } else if (tourismCityName == "polo") {
+      } else if (tourismCityName == "Bolu abant") {
         culculFinal = 300;
-      } else if (tourismCityName == "sala") {
-        culculFinal = 300;
-      } else if (tourismCityName == "yalaua") {
+      } else if (tourismCityName == "şile") {
+        culculFinal = 170;
+      } else if (tourismCityName == "yalova") {
         culculFinal = 170;
       } else {
         culculFinal = 100;

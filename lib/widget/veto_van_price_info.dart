@@ -358,7 +358,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   onTap: () {
                     setState(() {
                       tourismCityName = "şile";
-                      tourismCityPrice = "150";
+                      tourismCityPrice = "170";
                     });
                     tourismCities(tourismCityName, context);
                   },
@@ -396,7 +396,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "\$300",
+                                "\$150",
                                 style: TextStyle(
                                   color: Colors.redAccent.shade700,
                                   fontSize: 20,

@@ -31,7 +31,7 @@
   "@logInToTaxi": {
     "description": "LogIn to Garanti driver taxi"
   },
-  "newAccount": "Enter your number & mail to be able to log in or create a new account",
+  "newAccount": "Enter your Phone number  to be able to log in or create a new account",
   "@newAccount": {
     "description": "Enter your number & mail to be able to log in or create a new account"
   },

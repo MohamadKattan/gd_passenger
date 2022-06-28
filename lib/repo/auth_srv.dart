@@ -214,7 +214,9 @@ class AuthSev {
               "lastName": "",
               "email": email,
               "phoneNumber": result.toString(),
-              "country": "Turkey",
+              "country": "",
+              "status":"info",
+              "update":false
             }).whenComplete(() async {
               Provider.of<TrueFalse>(context, listen: false)
                   .changeStateBooling(false);
@@ -324,7 +326,9 @@ class AuthSev {
               "lastName": "",
               "email": email,
               "phoneNumber": result.toString(),
-              "country": "Turkey",
+              "country": "",
+              "status":"info",
+              "update":false
             }).whenComplete(() async {
               Provider.of<TrueFalse>(context, listen: false)
                   .changeStateBooling(false);
