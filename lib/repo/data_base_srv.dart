@@ -76,9 +76,6 @@ class DataBaseSrv {
         "imageProfile": url.toString(),
         "firstName": firstname.text,
         "lastName": lastname.text,
-        // "email": email.text.trim(),
-        // "phoneNumber": phoneNumber.toString(),
-        // "country": "",
         "status":"ok",
         "update":false
       }).whenComplete(() {
@@ -155,7 +152,7 @@ class DataBaseSrv {
         "dropoff": dropOffLocMap,
         "createAt": DateTime.now().toString(),
         "riderName":
-            "${currentUserInfoOnline!.firstName} ${currentUserInfoOnline.lastName}",
+            "${currentUserInfoOnline.firstName} ${currentUserInfoOnline.lastName}",
         "riderPhone": currentUserInfoOnline.phoneNumber,
         "pickupAddress": pickUpLoc.placeName,
         "dropoffAddress": dropOffLoc.placeName,
@@ -198,7 +195,7 @@ class DataBaseSrv {
     final snap = await driverRef.get();
     if (snap.value != null && snap.value == "searching") {
       try {
-        await driverRef.set(userId?.userId);
+        await driverRef.set(userId.userId);
       } catch (e) {
         e.toString();
       }

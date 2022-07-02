@@ -387,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: GestureDetector(
                                                     onTap: () async {
                                                       await changeAllProClickVanBox();
-                                                      await checkAllUserInfoReal(infoUserDataReal!, context);
+                                                      await checkAllUserInfoReal(infoUserDataReal, context);
                                                       infoUserDataReal
                                                                   .country ==
                                                               "Turkey"
@@ -497,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     onTap: () async {
                                                       changeAllProClickVetoBox();
                                                       await checkAllUserInfoReal(
-                                                          infoUserDataReal!,
+                                                          infoUserDataReal,
                                                           context);
                                                       infoUserDataReal
                                                                   .country ==
@@ -1466,7 +1466,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> gotDriverInfo(BuildContext context) async {
     final id = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
     DatabaseReference reference =
-        FirebaseDatabase.instance.ref().child("Ride Request").child(id!.userId);
+        FirebaseDatabase.instance.ref().child("Ride Request").child(id.userId);
     rideStreamSubscription = reference.onValue.listen((event) async {
       if (event.snapshot.value == null) {
         return;

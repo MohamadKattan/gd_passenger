@@ -5,7 +5,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>Gd Passenger</string>
+		<string>Garanti Taxi</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -45,5 +45,26 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-	</dict>
+		<key>LSApplicationQueriesSchemes</key>
+	    <array>
+		  <string>https</string>
+		  <string>tel</string>
+		  <string>mailto</string>
+	    </array>
+	    <key>NSLocationWhenInUseUsageDescription</key>
+	    <string>This app needs access to location when open.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+	    <string>This app needs access to location when in the background.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	    <string>This app needs access to location when in the background and when open.</string>
+		<key>NSCameraUsageDescription</key>
+	    <string>Garanti Taxi needs needs access to the camera.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+	    <string>Garanti Taxi needs permission for the photo library.</string>
+	    <key>NSMicrophoneUsageDescription</key>
+        <string>Garanti Taxi needs access to the microphone.</string>
+
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>

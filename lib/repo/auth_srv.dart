@@ -205,7 +205,6 @@ class AuthSev {
                 context, MaterialPageRoute(builder: (_) => const HomeScreen()));
             Provider.of<TrueFalse>(context, listen: false)
                 .changeStateBooling(false);
-            return;
           } else if (!snapshot.exists || snapshot.key!.isEmpty) {
             refuser.child(currentUser!.uid).set({
               "userId": currentUser!.uid,

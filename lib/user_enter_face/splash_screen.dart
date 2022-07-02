@@ -25,37 +25,40 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   initState() {
     TurnGps().turnGpsIfNot();
-    if (AuthSev().auth.currentUser?.uid != null) {
-      DataBaseSrv().currentOnlineUserInfo(context);
-    }
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 2),
         lowerBound: 0.5,
         upperBound: 0.6);
     _animationController.forward();
     _animationController.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        if (AuthSev().auth.currentUser?.uid != null) {
-          DataBaseSrv().currentOnlineUserInfo(context);
-          final infoUser = Provider.of<UserAllInfoDatabase>(context,listen: false).users;
-          if (infoUser!.update == true) {
-          await  goToPlayStore().whenComplete(() async {
-            DatabaseReference refuser =
-            FirebaseDatabase.instance.ref().child("users").child(infoUser.userId);
-            await refuser.child("update").set(false);
-            SystemNavigator.pop();
-          });
+        if (AuthSev().auth.currentUser?.uid==null) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+        } else if (AuthSev().auth.currentUser?.uid != null) {
+          await DataBaseSrv().currentOnlineUserInfo(context);
+          final infoUser =
+              Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+          if (infoUser.update == true) {
+            await goToPlayStore().whenComplete(() async {
+              DatabaseReference refuser = FirebaseDatabase.instance
+                  .ref()
+                  .child("users")
+                  .child(infoUser.userId);
+              await refuser.child("update").set(false);
+              SystemNavigator.pop();
+            });
+          } else if (infoUser.status == "") {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const AuthScreen()));
           } else if (infoUser.status == "info") {
             Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const UserInfoScreen()));
-          } else {
+          } else if (infoUser.status == "ok") {
             Navigator.push(
                 context, MaterialPageRoute(builder: (_) => const HomeScreen()));
           }
-        } else {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const AuthScreen()));
         }
       }
     });

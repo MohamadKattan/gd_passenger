@@ -25,7 +25,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserAllInfoDatabase>(context).users;
     bool isTrue =  Provider.of<InductorProfileScreen>(context).isTrue;
-   final imageProvider= Provider.of<PickImageProvide>(context).ImageProvider;
+   final imageProvider= Provider.of<PickImageProvide>(context).imageProvider;
     return SafeArea(
       child: Scaffold(
         body:
@@ -51,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.edit, size: 30.0),
-                        hintText: "${userInfo?.firstName}",
+                        hintText: userInfo.firstName,
                         hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
                       ),
                     ),
@@ -67,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.edit, size: 30.0),
-                        hintText: "${userInfo?.lastName}",
+                        hintText: userInfo.lastName,
                         hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
                       ),
                     ),
@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.edit, size: 30.0),
-                        hintText: "${userInfo?.email}",
+                        hintText: userInfo.email,
                         hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
                       ),
                     ),
@@ -98,7 +98,7 @@ class ProfileScreen extends StatelessWidget {
                         }else{
                           Provider.of<InductorProfileScreen>(context,listen: false).updateState(true);
                           startUpdateInfoUser(
-                              userInfo!, name, lastName, email, imageFile,context);
+                              userInfo, name, lastName, email, imageFile,context);
                         }
                       },
                       child: Container(
@@ -251,7 +251,7 @@ class ProfileScreen extends StatelessWidget {
   Widget showImage(BuildContext context) {
     final userInfoRealTime =
         Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-    return userInfoRealTime?.imageProfile != null
+    return userInfoRealTime.imageProfile != null
         ? Stack(
             children: [
               CachedNetworkImage(
@@ -264,7 +264,7 @@ class ProfileScreen extends StatelessWidget {
                         image: imageProvider, fit: BoxFit.cover),
                   ),
                 ),
-                imageUrl: "${userInfoRealTime?.imageProfile}",
+                imageUrl: userInfoRealTime.imageProfile,
                 placeholder: (context, url) => const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.person),
               ),

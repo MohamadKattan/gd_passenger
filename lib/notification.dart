@@ -12,7 +12,7 @@ class SendNotification{
 
   Future<void> sendNotificationToDriver(BuildContext context, String token) async {
  final placeName = Provider.of<PlaceDetailsDropProvider>(context,listen: false).dropOfLocation.placeName;
- final userIdRider = Provider.of<UserAllInfoDatabase>(context, listen: false).users!.userId;
+ final userIdRider = Provider.of<UserAllInfoDatabase>(context, listen: false).users.userId;
 
     Map<String,String>header =
     {

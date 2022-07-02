@@ -396,7 +396,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "\$150",
+                                "\$170",
                                 style: TextStyle(
                                   color: Colors.redAccent.shade700,
                                   fontSize: 20,
@@ -518,13 +518,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
               address.placeName = res["result"]["name"];
               address.latitude = res["result"]["geometry"]["location"]["lat"];
               address.longitude = res["result"]["geometry"]["location"]["lng"];
-
               Provider.of<PlaceDetailsDropProvider>(context, listen: false)
                   .updateDropOfLocation(address);
-              _checkUserInfo(context);
-            await  _getPlaceDerction(context);
-              Future.delayed(const Duration(microseconds: 200))
-                  .whenComplete(() => Navigator.pop(context));
+              _getPlaceDerction(context);
+              // Future.delayed(const Duration(microseconds: 100))
+              //     .whenComplete(() => Navigator.pop(context));
             }
           });
         }
@@ -587,7 +585,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
       ///set from above
       polylineSet.add(polyline);
     });
-
+    Navigator.pop(context);
     ///for fit line on map PolylinePoints
     LatLngBounds latLngBounds;
     if (pickUpLatling.latitude > dropOfLatling.latitude &&

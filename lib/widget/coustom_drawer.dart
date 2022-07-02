@@ -154,7 +154,7 @@ Widget customDrawer(BuildContext context) {
 Widget showImage(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime?.imageProfile != null
+  return userInfoRealTime.imageProfile != null
       ? Expanded(
           child: CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Container(
@@ -165,7 +165,7 @@ Widget showImage(BuildContext context) {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
-            imageUrl: "${userInfoRealTime?.imageProfile}",
+            imageUrl: userInfoRealTime.imageProfile,
             placeholder: (context, url) => const CircularProgressIndicator(),
             errorWidget: (context, url, error) => const Icon(Icons.person),
           ),
@@ -187,16 +187,16 @@ Widget showImage(BuildContext context) {
 Widget showUserName(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime?.firstName != null
+  return userInfoRealTime.firstName != null
       ? Text(
-          AppLocalizations.of(context)!.hi + " ${userInfoRealTime?.firstName}")
+          AppLocalizations.of(context)!.hi + " ${userInfoRealTime.firstName}")
       : Expanded(child: Text(AppLocalizations.of(context)!.welcomeBack));
 }
 
 Widget showUserPhone(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime?.phoneNumber != null
-      ? Text("${userInfoRealTime?.phoneNumber}")
+  return userInfoRealTime.phoneNumber != null
+      ? Text(userInfoRealTime.phoneNumber)
       : const Text("");
 }

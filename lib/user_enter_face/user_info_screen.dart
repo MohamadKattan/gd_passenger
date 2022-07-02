@@ -13,18 +13,24 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../repo/api_srv_geo.dart';
 
-class UserInfoScreen extends StatelessWidget {
-  static late XFile? imageFile;
-  static final ImagePicker _picker = ImagePicker();
-  static final CircularInductorCostem _inductorCostem =
-      CircularInductorCostem();
+class UserInfoScreen extends StatefulWidget {
 
   const UserInfoScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UserInfoScreen> createState() => _UserInfoScreenState();
+}
+
+class _UserInfoScreenState extends State<UserInfoScreen> {
+  XFile imageFile =XFile("");
+   final ImagePicker _picker = ImagePicker();
+   final CircularInductorCostem _inductorCostem =
+  CircularInductorCostem();
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
-    final picked = Provider.of<PickImageProvide>(context).ImageProvider;
+    final picked = Provider.of<PickImageProvide>(context).imageProvider;
     bool providerTrue = Provider.of<TrueFalse>(context).isTrue;
     return WillPopScope(
       onWillPop: () async => false,
@@ -59,7 +65,7 @@ class UserInfoScreen extends StatelessWidget {
                                     color: Colors.white,
                                   )
                                 : Image(
-                                    image: FileImage(File(picked.path)),
+                                    image: FileImage(File(imageFile.path)),
                                     fit: BoxFit.fill,
                                   )),
                       ),
@@ -99,34 +105,24 @@ class UserInfoScreen extends StatelessWidget {
                           keyboardType: TextInputType.name,
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(8.0),
-                      //   child: TextField(
-                      //     controller: email,
-                      //     maxLength: 40,
-                      //     showCursor: true,
-                      //     style: const TextStyle(
-                      //         fontSize: 16, fontWeight: FontWeight.w600),
-                      //     cursorColor: const Color(0xFFFFD54F),
-                      //     decoration: InputDecoration(
-                      //       fillColor: const Color(0xFFFFD54F),
-                      //       label: Text(AppLocalizations.of(context)!.email),
-                      //     ),
-                      //     keyboardType: TextInputType.emailAddress,
-                      //   ),
-                      // ),
                       const SizedBox(height: 60),
                       GestureDetector(
                         onTap: () {
                           if (picked == null) {
-                            tools.toastMsg(
-                                AppLocalizations.of(context)!.imageRequired);
-                          } else {
+                            // tools.toastMsg(
+                            //     AppLocalizations.of(context)!.imageRequired);
                             checkBeforeSet(
                                 context,
                                 userProvider.getUser.uid,
                                 phoneNumber.text.trim(),
-                                imageFile!);
+                                imageFile);
+                          }
+                          else {
+                            checkBeforeSet(
+                                context,
+                                userProvider.getUser.uid,
+                                phoneNumber.text.trim(),
+                               imageFile);
                           }
                         },
                         child: Container(
@@ -163,7 +159,7 @@ class UserInfoScreen extends StatelessWidget {
                             color: Colors.black,
                           )),
                           child:
-                              _inductorCostem.circularInductorCostem(context),
+                            _inductorCostem.circularInductorCostem(context),
                         ),
                       )
                     : const Text("")
@@ -178,11 +174,14 @@ class UserInfoScreen extends StatelessWidget {
   Future<void> getImage(BuildContext context, ImageSource source) async {
     try {
       final XFile? _file = await _picker.pickImage(
-          source: source, maxWidth: 60.0, maxHeight: 60.0, imageQuality: 80);
-      imageFile = _file!;
+          source: source, maxWidth: 150.0, maxHeight: 150.0, imageQuality: 80);
+      setState(() {
+        imageFile = _file!;
+      });
       Provider.of<PickImageProvide>(context, listen: false)
-          .listingToPickImage(imageFile!);
+          .listingToPickImage(imageFile);
     } catch (e) {
+      print("image ${e.toString()}");
       tools.toastMsg(AppLocalizations.of(context)!.imageRequired);
       tools.toastMsg(e.toString());
     }
@@ -214,7 +213,7 @@ class UserInfoScreen extends StatelessWidget {
           positioning: SnapPositioning.relativeToAvailableSpace,
         ),
         builder: (context, state) {
-          return Container(
+          return SizedBox(
             height: 400,
             child: Material(
               child: Column(

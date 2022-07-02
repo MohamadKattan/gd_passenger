@@ -68,7 +68,7 @@ class ApiSrvDir {
   static int calculateFares1(DirectionDetails directionDetails,
       String carTypePro, BuildContext context) {
     final contryName =
-        Provider.of<UserAllInfoDatabase>(context, listen: false).users?.country;
+        Provider.of<UserAllInfoDatabase>(context, listen: false).users.country;
     late double culculFinal;
     double timeTravleFare = (directionDetails.durationVale / 60) * 0.20;
     double distanceTravleFare = (directionDetails.distanceVale / 1000) * 0.60;

@@ -5,8 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:gd_passenger/model/user.dart';
 
 class UserAllInfoDatabase extends ChangeNotifier {
-  Users? users;
-  void updateUser(Users? users1) {
+  Users users = Users(
+      firstName: "",
+      lastName: "",
+      imageProfile: "",
+      phoneNumber: "",
+      userId: "",
+      email: "",
+      status: "",
+      country: "",
+      update: false);
+  void updateUser(Users users1) {
     users = users1;
     notifyListeners();
   }
