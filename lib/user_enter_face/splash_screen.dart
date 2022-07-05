@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
     _animationController.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        if (AuthSev().auth.currentUser?.uid==null) {
+        if (AuthSev().auth.currentUser?.uid == null) {
           Navigator.push(
               context, MaterialPageRoute(builder: (_) => const AuthScreen()));
         } else if (AuthSev().auth.currentUser?.uid != null) {
@@ -95,10 +97,18 @@ class _SplashScreenState extends State<SplashScreen>
 
   // this method for go to play Store
   Future<void> goToPlayStore() async {
-    await canLaunch(
-            "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
-        ? launch(
-            "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
-        : Tools().toastMsg('Could not launch');
+    if (Platform.isAndroid) {
+      await canLaunch(
+              "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
+          ? launch(
+              "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
+          : Tools().toastMsg('Could not launch');
+    } else {
+      await canLaunch(
+              "https://www.apple.com/app-store/")
+          ? launch(
+              "https://www.apple.com/app-store/")
+          : Tools().toastMsg('Could not launch');
+    }
   }
 }

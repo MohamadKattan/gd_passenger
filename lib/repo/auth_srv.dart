@@ -9,7 +9,7 @@ import '../model/user.dart';
 import '../my_provider/info_user_database_provider.dart';
 import '../user_enter_face/home_screen.dart';
 import '../user_enter_face/user_info_screen.dart';
-import 'data_base_srv.dart';
+
 
 // this class for Auth by firebase-phone method
 /// we canceled for now
@@ -178,7 +178,7 @@ import 'data_base_srv.dart';
 // }
 class AuthSev {
   final Tools _tools = Tools();
-  late FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
   DatabaseReference refuser = FirebaseDatabase.instance.ref().child("users");
   late UserCredential userCredential;
   late User? currentUser;
@@ -190,125 +190,123 @@ class AuthSev {
     Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
     try {
       userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: "123456789!");
-      await getCurrentUserId().whenComplete(() async {
-        if (userCredential.user!.uid.isNotEmpty) {
-          currentUser = userCredential.user!;
-          snapshot = await refuser.child("users").child(currentUser!.uid).get();
-          if (snapshot.exists) {
-            Map<String, dynamic> map =
-                Map<String, dynamic>.from(snapshot.value as Map);
-            Users _infoUser = Users.fromMap(map);
-            Provider.of<UserAllInfoDatabase>(context, listen: false)
-                .updateUser(_infoUser);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+          .signInWithEmailAndPassword(email: email,password: "123456789!");
+      await getCurrentUserId();
+      if (userCredential.user!.uid.isNotEmpty) {
+        currentUser = userCredential.user!;
+        snapshot = await refuser.child("users").child(currentUser!.uid).get();
+        if (snapshot.exists && snapshot.key!= null) {
+          Map<String, dynamic> map = Map<String, dynamic>.from(snapshot.value as Map);
+          Users _infoUser = Users.fromMap(map);
+          Provider.of<UserAllInfoDatabase>(context, listen: false)
+              .updateUser(_infoUser);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+          Provider.of<TrueFalse>(context, listen: false)
+              .changeStateBooling(false);
+        } else if (!snapshot.exists || snapshot.key!.isEmpty) {
+          refuser.child(currentUser!.uid).set({
+            "userId": currentUser!.uid,
+            "imageProfile": "",
+            "firstName": "",
+            "lastName": "",
+            "email": email,
+            "phoneNumber": result.toString(),
+            "country": "",
+            "status":"info",
+            "update":false
+          }).whenComplete(() async {
             Provider.of<TrueFalse>(context, listen: false)
                 .changeStateBooling(false);
-          } else if (!snapshot.exists || snapshot.key!.isEmpty) {
-            refuser.child(currentUser!.uid).set({
-              "userId": currentUser!.uid,
-              "imageProfile": "",
-              "firstName": "",
-              "lastName": "",
-              "email": email,
-              "phoneNumber": result.toString(),
-              "country": "",
-              "status":"info",
-              "update":false
-            }).whenComplete(() async {
-              Provider.of<TrueFalse>(context, listen: false)
-                  .changeStateBooling(false);
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: SizedBox(
-                        height: 80,
-                        width: MediaQuery.of(context).size.width * 80 / 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(AppLocalizations.of(context)!.typeCode),
-                            Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: TextField(
-                                  controller: codeText,
-                                  maxLength: 15,
-                                  showCursor: true,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                  cursorColor: const Color(0xFFFFD54F),
-                                  decoration: InputDecoration(
-                                    icon: const Padding(
-                                      padding: EdgeInsets.only(top: 15.0),
-                                      child: Icon(
-                                        Icons.vpn_key,
-                                        color: Color(0xFFFFD54F),
-                                      ),
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return AlertDialog(
+                    content: SizedBox(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width * 80 / 100,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(AppLocalizations.of(context)!.typeCode),
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: TextField(
+                                controller: codeText,
+                                maxLength: 15,
+                                showCursor: true,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600),
+                                cursorColor: const Color(0xFFFFD54F),
+                                decoration: InputDecoration(
+                                  icon: const Padding(
+                                    padding: EdgeInsets.only(top: 15.0),
+                                    child: Icon(
+                                      Icons.vpn_key,
+                                      color: Color(0xFFFFD54F),
                                     ),
-                                    fillColor: const Color(0xFFFFD54F),
-                                    hintText:
-                                        AppLocalizations.of(context)!.yourCode,
                                   ),
-                                  keyboardType: TextInputType.phone,
+                                  fillColor: const Color(0xFFFFD54F),
+                                  hintText:
+                                  AppLocalizations.of(context)!.yourCode,
                                 ),
+                                keyboardType: TextInputType.phone,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      actions: [
-                        GestureDetector(
-                            onTap: () async {
-                              if (codeText.text.isEmpty) {
-                                Tools().toastMsg("..........");
-                              }
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _tools.timerAuth(context),
-                                Container(
-                                    height: 60,
-                                    width: 140,
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xFFFFD54F),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Center(
-                                          child: Text(
-                                        AppLocalizations.of(context)!.verify,
-                                        style: const TextStyle(
-                                            fontSize: 25.0,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                    )),
-                              ],
-                            ))
-                      ],
-                    );
-                  });
-              await Future.delayed(const Duration(seconds: 6));
-              codeText.text = "917628";
-              await Future.delayed(const Duration(milliseconds: 400));
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UserInfoScreen()));
-              Provider.of<TrueFalse>(context, listen: false)
-                  .changeStateBooling(false);
-            });
-          }
+                    ),
+                    actions: [
+                      GestureDetector(
+                          onTap: () async {
+                            if (codeText.text.isEmpty) {
+                              Tools().toastMsg("..........");
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _tools.timerAuth(context),
+                              Container(
+                                  height: 60,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xFFFFD54F),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!.verify,
+                                          style: const TextStyle(
+                                              fontSize: 25.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  )),
+                            ],
+                          ))
+                    ],
+                  );
+                });
+            await Future.delayed(const Duration(seconds: 6));
+            codeText.text = "917628";
+            await Future.delayed(const Duration(milliseconds: 400));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const UserInfoScreen()));
+            Provider.of<TrueFalse>(context, listen: false)
+                .changeStateBooling(false);
+          });
         }
-      });
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         try {

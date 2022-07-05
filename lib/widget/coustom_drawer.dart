@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,7 @@ import '../user_enter_face/book_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget customDrawer(BuildContext context) {
-  double rightVal = MediaQuery.of(context).size.width*20/100;
+  double rightVal = MediaQuery.of(context).size.width * 25 / 100;
   return Container(
     width: MediaQuery.of(context).size.width,
     height: MediaQuery.of(context).size.height,
@@ -29,8 +30,10 @@ Widget customDrawer(BuildContext context) {
       children: [
         DrawerHeader(
           child: Padding(
-            padding:  EdgeInsets.only(left: AppLocalizations.of(context)!.hi=="مرحبا"?0.0:80.0,
-                right: AppLocalizations.of(context)!.hi=="مرحبا"?120.0:0.0),
+            padding: EdgeInsets.only(
+                left: AppLocalizations.of(context)!.hi == "مرحبا" ? 0.0 : 80.0,
+                right:
+                    AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 0.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +54,11 @@ Widget customDrawer(BuildContext context) {
               height: 4.0,
             ),
             Padding(
-              padding:  EdgeInsets.only(right: AppLocalizations.of(context)!.hi=="مرحبا"?rightVal:8.0,left: 8.0),
+              padding: EdgeInsets.only(
+                  right: AppLocalizations.of(context)!.hi == "مرحبا"
+                      ? rightVal
+                      : 8.0,
+                  left: 8.0),
               child: GestureDetector(
                 onTap: () => Navigator.push(
                     context,
@@ -72,7 +79,9 @@ Widget customDrawer(BuildContext context) {
                       child: Text(
                         AppLocalizations.of(context)!.book,
                         style: const TextStyle(
-                            color: Colors.black45, fontSize: 20.0,fontWeight: FontWeight.bold),
+                            color: Colors.black45,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
                       ))
                 ]),
               ),
@@ -82,7 +91,11 @@ Widget customDrawer(BuildContext context) {
             ),
             CustomWidget().customDivider(),
             Padding(
-              padding:  EdgeInsets.only(left: 8.0,right: AppLocalizations.of(context)!.hi=="مرحبا"?rightVal:8.0),
+              padding: EdgeInsets.only(
+                  left: 8.0,
+                  right: AppLocalizations.of(context)!.hi == "مرحبا"
+                      ? rightVal
+                      : 8.0),
               child: GestureDetector(
                 onTap: () => Navigator.push(
                     context,
@@ -100,8 +113,10 @@ Widget customDrawer(BuildContext context) {
                     ),
                     Text(
                       AppLocalizations.of(context)!.profile,
-                      style:
-                          const TextStyle(color: Colors.black45, fontSize: 20,fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.black45,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -112,9 +127,18 @@ Widget customDrawer(BuildContext context) {
             ),
             CustomWidget().customDivider(),
             Padding(
-              padding:  EdgeInsets.only(left: 8.0,right: AppLocalizations.of(context)!.hi=="مرحبا"?rightVal:8.0),
+              padding: EdgeInsets.only(
+                  left: 8.0,
+                  right: AppLocalizations.of(context)!.hi == "مرحبا"
+                      ? rightVal
+                      : 8.0),
               child: GestureDetector(
-                onTap: () => SystemNavigator.pop(),
+                onTap: () {
+                  if (Platform.isAndroid) {
+                    SystemNavigator.pop();
+                  }
+                  exit(0);
+                },
                 child: Row(
                   children: [
                     const Padding(
@@ -131,7 +155,9 @@ Widget customDrawer(BuildContext context) {
                     Text(
                       AppLocalizations.of(context)!.exit,
                       style: const TextStyle(
-                          color: Colors.black45, fontSize: 20.0,fontWeight: FontWeight.bold),
+                          color: Colors.black45,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -140,9 +166,20 @@ Widget customDrawer(BuildContext context) {
             CustomWidget().customDivider(),
             ImageSliderDemo(),
             Padding(
-              padding:  EdgeInsets.only(top: 8.0,left: 8.0,bottom: 8.0,
-                  right: AppLocalizations.of(context)!.hi=="مرحبا"?120.0:8.0),
-              child: const Text("Garanti taxi v1.0.0",style: TextStyle(color: Colors.black45,fontSize: 20,fontWeight: FontWeight.bold),),
+              padding: EdgeInsets.only(
+                  top: 8.0,
+                  left: 8.0,
+                  bottom: 8.0,
+                  right: AppLocalizations.of(context)!.hi == "مرحبا"
+                      ? 120.0
+                      : 8.0),
+              child: const Text(
+                "Garanti taxi v1.0.0",
+                style: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
             )
           ],
         ),

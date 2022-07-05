@@ -55,27 +55,42 @@ class DriverInfo {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
-                    child: Row(
+                    child: SingleChildScrollView(
+                     scrollDirection: Axis.horizontal,
+                      child: Row(
                   children: [
-                     Text(
-                      AppLocalizations.of(context)!.driverStatus,
-                      style: const TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                  const  SizedBox(width: 4.0,),
-                    Text(newstatusRide,
-                        style:  TextStyle(
-                            color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
-                    const  SizedBox(width: 4.0,),
-                     Text(
-                      AppLocalizations.of(context)!.time,
-                      style:const TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    const  SizedBox(width: 4.0,),
-                    Text(timeTrip == "" ? "...." : timeTrip,
-                        style:  TextStyle(
-                            color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
+                       Expanded(
+                         flex:0,
+                         child: Text(
+                          AppLocalizations.of(context)!.driverStatus,
+                          style: const TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                       ),
+                  const  SizedBox(width: 3.0,),
+                      Expanded(
+                        flex: 0,
+                        child: Text(newstatusRide,
+                            style:  TextStyle(
+                                color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
+                      ),
+                      const  SizedBox(width: 3.0),
+                       Expanded(
+                         flex: 0,
+                         child: Text(
+                          AppLocalizations.of(context)!.time,
+                          style:const TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                       ),
+                      const  SizedBox(width: 3.0),
+                      Expanded(
+                        flex: 0,
+                        child: Text(timeTrip == "" ? "...." : timeTrip,
+                            style:  TextStyle(
+                                color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
+                      ),
                   ],
-                )),
+                ),
+                    )),
               ),
               CustomWidget().customDivider(),
               Padding(

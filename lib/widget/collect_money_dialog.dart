@@ -15,10 +15,13 @@ Widget collectMoney(BuildContext context, int totalAmount) {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
     backgroundColor: Colors.transparent,
     child: Container(
-      height: MediaQuery.of(context).size.height * 45 / 100,
+      height: 275,
       width: double.infinity,
-      decoration: const BoxDecoration(color: Colors.white),
+      decoration:  BoxDecoration(
+        borderRadius: BorderRadius.circular(4.0),
+          color: Colors.white),
       child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -58,15 +61,15 @@ Widget collectMoney(BuildContext context, int totalAmount) {
                 },
                 child: Center(
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 30 / 100,
-                    height: MediaQuery.of(context).size.height * 8 / 100,
+                    width: 120,
+                    height: 50,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
                         color: Colors.greenAccent.shade700),
                     child: Center(
                         child: Text(
                       AppLocalizations.of(context)!.ok,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
                     )),
                   ),
                 ),

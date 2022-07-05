@@ -8,8 +8,8 @@ import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 import '../my_provider/pick_image_provider.dart';
+import '../my_provider/profile_sheet.dart';
 import '../tools/tools.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,109 +24,224 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserAllInfoDatabase>(context).users;
-    bool isTrue =  Provider.of<InductorProfileScreen>(context).isTrue;
-   final imageProvider= Provider.of<PickImageProvide>(context).imageProvider;
-    return SafeArea(
-      child: Scaffold(
-        body:
-        Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40.0),
-                  GestureDetector(
-                      onTap: () => showSheetCamerOrGallary(context: context),
-                      child: showImage(context)),
-                  SizedBox(height: MediaQuery.of(context).size.height * 15 / 100),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
-                      controller: name,
-                      maxLength: 40,
-                      maxLines: 1,
-                      keyboardType: TextInputType.name,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.edit, size: 30.0),
-                        hintText: userInfo.firstName,
-                        hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
-                      controller: lastName,
-                      maxLength: 40,
-                      maxLines: 1,
-                      keyboardType: TextInputType.name,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.edit, size: 30.0),
-                        hintText: userInfo.lastName,
-                        hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
-                      controller: email,
-                      maxLength: 40,
-                      maxLines: 1,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.edit, size: 30.0),
-                        hintText: userInfo.email,
-                        hintStyle: const TextStyle(color: Colors.black54, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: GestureDetector(
-                      onTap: (){
-                        if(imageProvider==null){
-                          Tools().toastMsg(AppLocalizations.of(context)!.upImage);
-                        }else{
-                          Provider.of<InductorProfileScreen>(context,listen: false).updateState(true);
-                          startUpdateInfoUser(
-                              userInfo, name, lastName, email, imageFile,context);
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFFD54F),
-                          borderRadius: BorderRadius.circular(4.0),
+    bool isTrue = Provider.of<InductorProfileScreen>(context).isTrue;
+    final imageProvider = Provider.of<PickImageProvide>(context).imageProvider;
+    final sheetVal = Provider.of<ProfileSheet>(context).valSheet;
+    return Scaffold(
+      body: Builder(
+        builder:(_)=> SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(color: Colors.white),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 40.0),
+                      GestureDetector(
+                          onTap: () => Provider.of<ProfileSheet>(context,listen: false).updateState(0),
+                          child: showImage(context)),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 15 / 100),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16.0),
+                          controller: name,
+                          maxLength: 40,
+                          maxLines: 1,
+                          keyboardType: TextInputType.name,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.edit, size: 30.0),
+                            hintText: userInfo.firstName,
+                            hintStyle: const TextStyle(
+                                color: Colors.black54, fontSize: 16),
+                          ),
                         ),
-                        height: MediaQuery.of(context).size.height * 10 / 100,
-                        width: MediaQuery.of(context).size.width * 80 / 100,
-                        child:  Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.update,
-                            style:const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
+                      ),
+                      const SizedBox(height: 10.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16.0),
+                          controller: lastName,
+                          maxLength: 40,
+                          maxLines: 1,
+                          keyboardType: TextInputType.name,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.edit, size: 30.0),
+                            hintText: userInfo.lastName,
+                            hintStyle: const TextStyle(
+                                color: Colors.black54, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16.0),
+                          controller: email,
+                          maxLength: 40,
+                          maxLines: 1,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.edit, size: 30.0),
+                            hintText: userInfo.email,
+                            hintStyle: const TextStyle(
+                                color: Colors.black54, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (imageProvider == null) {
+                              Tools().toastMsg(
+                                  AppLocalizations.of(context)!.upImage);
+                            } else {
+                              Provider.of<InductorProfileScreen>(context,
+                                      listen: false)
+                                  .updateState(true);
+                              startUpdateInfoUser(userInfo, name, lastName, email,
+                                  imageFile, context);
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFD54F),
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            height: MediaQuery.of(context).size.height * 10 / 100,
+                            width: MediaQuery.of(context).size.width * 80 / 100,
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!.update,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-           isTrue==true?CircularInductorCostem().circularInductorCostem(context):const Text(""),
-          ],
+              AnimatedPositioned(
+                  duration: const Duration(milliseconds: 200),
+                  right: 0.0,
+                  left: 0.0,
+                  bottom: sheetVal,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0)
+                    ),
+                    height: 250,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.pickPhoto,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black54),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            getImage(context, ImageSource.camera);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 60,
+                              width: MediaQuery.of(context).size.width * 0.60,
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 6.0,
+                                        spreadRadius: 0.5,
+                                        color: Colors.black54,
+                                        offset: Offset(0.7, 0.7))
+                                  ]),
+                              child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.camera, color: Color(0xFFFFD54F)),
+                                      const SizedBox(
+                                        width: 5.0,
+                                      ),
+                                      Text(AppLocalizations.of(context)!.camera),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            getImage(context, ImageSource.gallery);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 60,
+                              width: MediaQuery.of(context).size.width * 0.60,
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 6.0,
+                                        spreadRadius: 0.5,
+                                        color: Colors.black54,
+                                        offset: Offset(0.7, 0.7))
+                                  ]),
+                              child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.image, color: Color(0xFFFFD54F)),
+                                      const SizedBox(
+                                        width: 5.0,
+                                      ),
+                                      Text(AppLocalizations.of(context)!.gallery),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              isTrue == true
+                  ? CircularInductorCostem().circularInductorCostem(context)
+                  : const Text(""),
+            ],
+          ),
         ),
       ),
     );
@@ -137,116 +252,119 @@ class ProfileScreen extends StatelessWidget {
       final XFile? _file = await _picker.pickImage(
           source: source, maxWidth: 60.0, maxHeight: 60.0, imageQuality: 80);
       imageFile = _file!;
-      Provider.of<PickImageProvide>(context,listen: false).listingToPickImage(imageFile);
+      Provider.of<PickImageProvide>(context, listen: false)
+          .listingToPickImage(imageFile);
+      Provider.of<ProfileSheet>(context,listen: false).updateState(-400);
     } catch (e) {
-      Tools().toastMsg( AppLocalizations.of(context)!.imageRequired);
+      Tools().toastMsg(AppLocalizations.of(context)!.imageRequired);
     }
   }
 
-  void showSheetCamerOrGallary({required BuildContext context}) async {
-    await showSlidingBottomSheet(context, builder: (context) {
-      return SlidingSheetDialog(
-        elevation: 8,
-        cornerRadius: 16,
-        snapSpec: const SnapSpec(
-          snap: true,
-          initialSnap: 0.400,
-          snappings: [0.4, 0.7, 0.400],
-          positioning: SnapPositioning.relativeToAvailableSpace,
-        ),
-        builder: (context, state) {
-          return Container(
-            height: 400,
-            child: Material(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.pickPhoto,
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      getImage(context, ImageSource.camera);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width * 0.60,
-                        decoration:
-                            const BoxDecoration(color: Colors.white, boxShadow: [
-                          BoxShadow(
-                              blurRadius: 6.0,
-                              spreadRadius: 0.5,
-                              color: Colors.black54,
-                              offset: Offset(0.7, 0.7))
-                        ]),
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:  [
-                            const Icon(Icons.camera, color: Color(0xFFFFD54F)),
-                            const SizedBox(
-                              width: 5.0,
-                            ),
-                            Text( AppLocalizations.of(context)!.camera),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      getImage(context, ImageSource.gallery);
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width * 0.60,
-                        decoration:
-                            const BoxDecoration(color: Colors.white, boxShadow: [
-                          BoxShadow(
-                              blurRadius: 6.0,
-                              spreadRadius: 0.5,
-                              color: Colors.black54,
-                              offset: Offset(0.7, 0.7))
-                        ]),
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:  [
-                           const Icon(Icons.image, color: Color(0xFFFFD54F)),
-                          const  SizedBox(
-                              width: 5.0,
-                            ),
-                            Text( AppLocalizations.of(context)!.gallery),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    });
-  }
+  // void showSheetCamerOrGallary({required BuildContext context}) async {
+  //   await showSlidingBottomSheet(context, builder: (context) {
+  //     return SlidingSheetDialog(
+  //       elevation: 8,
+  //       cornerRadius: 16,
+  //       snapSpec: const SnapSpec(
+  //         snap: true,
+  //         initialSnap: 0.400,
+  //         snappings: [0.4, 0.7, 0.400],
+  //         positioning: SnapPositioning.relativeToAvailableSpace,
+  //       ),
+  //       builder: (context, state) {
+  //         return Container(
+  //           height: 400,
+  //           child: Material(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(8.0),
+  //                   child: Center(
+  //                     child: Text(
+  //                       AppLocalizations.of(context)!.pickPhoto,
+  //                       style: const TextStyle(
+  //                           fontSize: 16,
+  //                           fontWeight: FontWeight.bold,
+  //                           color: Colors.black54),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(
+  //                   height: 20,
+  //                 ),
+  //                 GestureDetector(
+  //                   onTap: () {
+  //                     getImage(context, ImageSource.camera);
+  //                   },
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Container(
+  //                       height: 60,
+  //                       width: MediaQuery.of(context).size.width * 0.60,
+  //                       decoration: const BoxDecoration(
+  //                           color: Colors.white,
+  //                           boxShadow: [
+  //                             BoxShadow(
+  //                                 blurRadius: 6.0,
+  //                                 spreadRadius: 0.5,
+  //                                 color: Colors.black54,
+  //                                 offset: Offset(0.7, 0.7))
+  //                           ]),
+  //                       child: Center(
+  //                           child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: [
+  //                           const Icon(Icons.camera, color: Color(0xFFFFD54F)),
+  //                           const SizedBox(
+  //                             width: 5.0,
+  //                           ),
+  //                           Text(AppLocalizations.of(context)!.camera),
+  //                         ],
+  //                       )),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 GestureDetector(
+  //                   onTap: () {
+  //                     getImage(context, ImageSource.gallery);
+  //                   },
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Container(
+  //                       height: 60,
+  //                       width: MediaQuery.of(context).size.width * 0.60,
+  //                       decoration: const BoxDecoration(
+  //                           color: Colors.white,
+  //                           boxShadow: [
+  //                             BoxShadow(
+  //                                 blurRadius: 6.0,
+  //                                 spreadRadius: 0.5,
+  //                                 color: Colors.black54,
+  //                                 offset: Offset(0.7, 0.7))
+  //                           ]),
+  //                       child: Center(
+  //                           child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: [
+  //                           const Icon(Icons.image, color: Color(0xFFFFD54F)),
+  //                           const SizedBox(
+  //                             width: 5.0,
+  //                           ),
+  //                           Text(AppLocalizations.of(context)!.gallery),
+  //                         ],
+  //                       )),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     );
+  //   });
+  // }
 
   Widget showImage(BuildContext context) {
     final userInfoRealTime =
@@ -265,7 +383,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 imageUrl: userInfoRealTime.imageProfile,
-                placeholder: (context, url) => const CircularProgressIndicator(),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.person),
               ),
               const Positioned(
@@ -288,34 +407,33 @@ class ProfileScreen extends StatelessWidget {
           );
   }
 
-
   Future<void> startUpdateInfoUser(
       Users userInfo,
       TextEditingController name,
       TextEditingController lastName,
       TextEditingController email,
       XFile imageFile,
-      BuildContext context
-      ) async {
-
-    firebase_storage.Reference refStorage = firebase_storage.FirebaseStorage.instance.ref();
+      BuildContext context) async {
+    firebase_storage.Reference refStorage =
+        firebase_storage.FirebaseStorage.instance.ref();
     await refStorage
         .child("users")
         .child(userInfo.userId)
         .putFile(File(imageFile.path));
 
-       String url = await refStorage.child("users").child(userInfo.userId).getDownloadURL();
-
+    String url =
+        await refStorage.child("users").child(userInfo.userId).getDownloadURL();
 
     DatabaseReference ref =
         FirebaseDatabase.instance.ref().child("users").child(userInfo.userId);
     await ref.update({
-      "imageProfile": url.isEmpty?userInfo.imageProfile:url.toString(),
-      "firstName": name.text.isEmpty?userInfo.firstName:name.text,
-      "lastName": lastName.text.isEmpty?userInfo.lastName:lastName.text,
-      "email": email.text.isEmpty?userInfo.email:email.text.trim(),
-    }).whenComplete((){
-      Provider.of<InductorProfileScreen>(context,listen: false).updateState(false);
+      "imageProfile": url.isEmpty ? userInfo.imageProfile : url.toString(),
+      "firstName": name.text.isEmpty ? userInfo.firstName : name.text,
+      "lastName": lastName.text.isEmpty ? userInfo.lastName : lastName.text,
+      "email": email.text.isEmpty ? userInfo.email : email.text.trim(),
+    }).whenComplete(() {
+      Provider.of<InductorProfileScreen>(context, listen: false)
+          .updateState(false);
     });
   }
 }

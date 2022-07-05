@@ -38,6 +38,7 @@ import '../my_provider/close_botton_driverInfo.dart';
 import '../my_provider/nearsert_driver_provider.dart';
 import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/rider_id.dart';
+import '../my_provider/sheet_cardsc.dart';
 import '../notification.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/curanny_type.dart';
@@ -114,6 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final changeColor = Provider.of<ChangeColor>(context).isTrue;
     final postionDriverInfo =
         Provider.of<PositionDriverInfoProvider>(context).positionDriverInfo;
+    final sheetCarDsc = Provider.of<SheetCarDesc>(context).sheetValTaxi;
+    final sheetCarDscMed = Provider.of<SheetCarDesc>(context).sheetValMed;
+    final sheetCarDscBig = Provider.of<SheetCarDesc>(context).sheetValBig;
     createDriverNearIcon();
     createDriverNearIcon1();
     return WillPopScope(
@@ -139,22 +143,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                         child: Stack(
                           children: [
-                            GoogleMap(
-                              mapType: MapType.normal,
-                              initialCameraPosition:
-                                  _logicGoogleMap.kGooglePlex,
-                              myLocationButtonEnabled: true,
-                              myLocationEnabled: true,
-                              polylines: polylineSet,
-                              markers: markersSet,
-                              circles: circlesSet,
-                              onMapCreated:
-                                  (GoogleMapController controller) async {
-                                _logicGoogleMap.controllerGoogleMap
-                                    .complete(controller);
-                                newGoogleMapController = controller;
-                                locationPosition(context);
-                              },
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 70 / 100,
+                              child: GoogleMap(
+                                mapType: MapType.normal,
+                                initialCameraPosition:
+                                    _logicGoogleMap.kGooglePlex,
+                                myLocationButtonEnabled: true,
+                                myLocationEnabled: true,
+                                polylines: polylineSet,
+                                markers: markersSet,
+                                circles: circlesSet,
+                                onMapCreated:
+                                    (GoogleMapController controller) async {
+                                  _logicGoogleMap.controllerGoogleMap
+                                      .complete(controller);
+                                  newGoogleMapController = controller;
+                                  locationPosition(context);
+                                },
+                              ),
                             ),
                             Positioned(
                               bottom: 0.0,
@@ -190,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bottom: postionChang,
                                 child: Container(
                                   height: MediaQuery.of(context).size.height *
-                                      40 /
+                                      37 /
                                       100,
                                   decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -233,12 +241,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 100,
                                             child: Row(
                                               children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child:
-                                                      searchIconOrCancelBottom(
-                                                          tripDirectionDetails),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child:
+                                                        searchIconOrCancelBottom(
+                                                            tripDirectionDetails),
+                                                  ),
                                                 ),
                                                 changeTextWhereToOrTollpasses(
                                                     tripDirectionDetails),
@@ -257,19 +268,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 .width *
                                                             45 /
                                                             100),
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons
-                                                        .arrow_circle_down_outlined,
-                                                    color: Colors.purple,
-                                                    size: 35,
+                                                Expanded(
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                      Icons
+                                                          .arrow_circle_down_outlined,
+                                                      color: Colors.purple,
+                                                      size: 35,
+                                                    ),
+                                                    onPressed: () {
+                                                      Provider.of<PositionChang>(
+                                                              context,
+                                                              listen: false)
+                                                          .changValue(-500.0);
+                                                    },
                                                   ),
-                                                  onPressed: () {
-                                                    Provider.of<PositionChang>(
-                                                            context,
-                                                            listen: false)
-                                                        .changValue(-500.0);
-                                                  },
                                                 ),
                                               ],
                                             ),
@@ -283,10 +296,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Expanded(
-                                                  flex: 0,
                                                   child: GestureDetector(
                                                     onTap: () =>
                                                         changeAllProClickTaxiBox(),
@@ -319,29 +332,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             right: -10.0,
                                                             top: -10.0,
                                                             child: IconButton(
-                                                                onPressed: () => customBottomSheet
-                                                                    .showSheetCarInfo(
-                                                                        context:
-                                                                            context,
-                                                                        image:
-                                                                            const Image(
-                                                                          image:
-                                                                              AssetImage("assets/yellow.png"),
-                                                                          fit: BoxFit
-                                                                              .contain,
-                                                                        ),
-                                                                        title: AppLocalizations.of(context)!
-                                                                            .regularTaxi,
-                                                                        des: AppLocalizations.of(context)!
-                                                                            .sedanCar,
-                                                                        iconM: Icons
-                                                                            .money,
-                                                                        price:
-                                                                            "",
-                                                                        iconP: Icons
-                                                                            .person,
-                                                                        person:
-                                                                            "4"),
+                                                                onPressed: () => Provider.of<
+                                                                            SheetCarDesc>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .updateStateTaxi(
+                                                                        0),
                                                                 icon: opacityTaxi ==
                                                                         true
                                                                     ? const Icon(
@@ -387,11 +384,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: GestureDetector(
                                                     onTap: () async {
                                                       await changeAllProClickVanBox();
-                                                      await checkAllUserInfoReal(infoUserDataReal, context);
-                                                      infoUserDataReal
-                                                                  .country ==
-                                                              "Turkey"
-                                                      ||contry=="Turkey"
+                                                      await checkAllUserInfoReal(
+                                                          infoUserDataReal,
+                                                          context);
+                                                      infoUserDataReal.country ==
+                                                                  "Turkey" ||
+                                                              contry == "Turkey"
                                                           ? await showDialog(
                                                               context: context,
                                                               barrierDismissible:
@@ -431,26 +429,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             right: -10.0,
                                                             top: -10.0,
                                                             child: IconButton(
-                                                                onPressed: () => customBottomSheet.showSheetCarInfo(
-                                                                    context:
-                                                                        context,
-                                                                    image: const Image(
-                                                                        image: AssetImage(
-                                                                            "assets/mers.png")),
-                                                                    title: AppLocalizations.of(
-                                                                            context)!
-                                                                        .medium,
-                                                                    des: AppLocalizations.of(
-                                                                            context)!
-                                                                        .mediumCar,
-                                                                    iconM: Icons
-                                                                        .money,
-                                                                    price:
-                                                                        "....",
-                                                                    iconP: Icons
-                                                                        .person,
-                                                                    person:
-                                                                        "6-10"),
+                                                                onPressed: () {
+                                                                  Provider.of<SheetCarDesc>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .updateStateMed(
+                                                                          0);
+                                                                },
                                                                 icon: opacityVan ==
                                                                         true
                                                                     ? const Icon(
@@ -499,10 +485,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       await checkAllUserInfoReal(
                                                           infoUserDataReal,
                                                           context);
-                                                      infoUserDataReal
-                                                                  .country ==
-                                                              "Turkey"
-                                                          ||contry=="Turkey"
+                                                      infoUserDataReal.country ==
+                                                                  "Turkey" ||
+                                                              contry == "Turkey"
                                                           ? await showDialog(
                                                               context: context,
                                                               barrierDismissible:
@@ -540,26 +525,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             right: -10.0,
                                                             top: -10.0,
                                                             child: IconButton(
-                                                                onPressed: () => customBottomSheet.showSheetCarInfo(
-                                                                    context:
+                                                                onPressed: () => Provider.of<
+                                                                            SheetCarDesc>(
                                                                         context,
-                                                                    image: const Image(
-                                                                        image: AssetImage(
-                                                                            "assets/van.png")),
-                                                                    title: AppLocalizations.of(
-                                                                            context)!
-                                                                        .bigCommercial,
-                                                                    des: AppLocalizations.of(
-                                                                            context)!
-                                                                        .bigCar,
-                                                                    iconM: Icons
-                                                                        .money,
-                                                                    price:
-                                                                        "....",
-                                                                    iconP: Icons
-                                                                        .person,
-                                                                    person:
-                                                                        "11-19"),
+                                                                        listen:
+                                                                            false)
+                                                                    .updateStateBig(
+                                                                        0),
                                                                 icon: opacityVeto ==
                                                                         true
                                                                     ? const Icon(
@@ -681,6 +653,60 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 )),
+
+                            /// sheet Car desc
+                            AnimatedPositioned(
+                              child: customBottomSheet.showSheetCarInfoTaxi(
+                                  context: context,
+                                  image: const Image(
+                                    image: AssetImage("assets/yellow.png"),
+                                    fit: BoxFit.contain,
+                                  ),
+                                  title:
+                                      AppLocalizations.of(context)!.regularTaxi,
+                                  des: AppLocalizations.of(context)!.sedanCar,
+                                  iconM: Icons.money,
+                                  price: "",
+                                  iconP: Icons.person,
+                                  person: "4"),
+                              duration: const Duration(microseconds: 200),
+                              left: 0.0,
+                              right: 0.0,
+                              bottom: sheetCarDsc,
+                            ),
+                            AnimatedPositioned(
+                              child: customBottomSheet.showSheetCarInfoMedeum(
+                                  context: context,
+                                  image: const Image(
+                                      image: AssetImage("assets/mers.png")),
+                                  title: AppLocalizations.of(context)!.medium,
+                                  des: AppLocalizations.of(context)!.mediumCar,
+                                  iconM: Icons.money,
+                                  price: "....",
+                                  iconP: Icons.person,
+                                  person: "6-10"),
+                              duration: const Duration(microseconds: 200),
+                              left: 0.0,
+                              right: 0.0,
+                              bottom: sheetCarDscMed,
+                            ),
+                            AnimatedPositioned(
+                              child: customBottomSheet.showSheetCarInfoBig(
+                                  context: context,
+                                  image: const Image(
+                                      image: AssetImage("assets/van.png")),
+                                  title: AppLocalizations.of(context)!
+                                      .bigCommercial,
+                                  des: AppLocalizations.of(context)!.bigCar,
+                                  iconM: Icons.money,
+                                  price: "....",
+                                  iconP: Icons.person,
+                                  person: "11-19"),
+                              duration: const Duration(microseconds: 200),
+                              left: 0.0,
+                              right: 0.0,
+                              bottom: sheetCarDscBig,
+                            ),
 
                             ///cancel container
                             AnimatedPositioned(
@@ -1141,8 +1167,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method for switch text where to OR toll passes
   changeTextWhereToOrTollpasses(DirectionDetails? tripDirectionDetails) {
     if (tripDirectionDetails != null) {
-      return Expanded(
-          child: Text(
+      return Text(
         AppLocalizations.of(context)!.km +
             "  " +
             tripDirectionDetails.distanceText +
@@ -1153,12 +1178,14 @@ class _HomeScreenState extends State<HomeScreen> {
         style: TextStyle(color: Colors.blueAccent.shade700),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-      ));
+      );
     } else {
-      return Text(
-        AppLocalizations.of(context)!.whereTo,
-        style: const TextStyle(
-            color: Colors.black38, fontSize: 20, fontWeight: FontWeight.bold),
+      return Expanded(
+        child: Text(
+          AppLocalizations.of(context)!.whereTo,
+          style: const TextStyle(
+              color: Colors.black38, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       );
     }
   }
@@ -1367,23 +1394,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 restApp();
               }
             });
-            // else {
-            //   if (waitState == "wait") {
-            //     print("typenot:::$carOrderType");
-            //     Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
-            //     Provider.of<PositionCancelReq>(context, listen: false)
-            //         .updateValue(-400.0);
-            //     Provider.of<PositionChang>(context, listen: false)
-            //         .changValue(0.0);
-            //     DataBaseSrv().cancelRiderRequest(userProvider, context);
-            //     restApp();
-            //   }
-            // }
           }
         });
       }
-    } else {
-      // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
     }
   }
 

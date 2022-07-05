@@ -25,7 +25,7 @@ class _RatingWidgetState extends State<RatingWidget> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       backgroundColor: Colors.transparent,
       child: Container(
-        height: MediaQuery.of(context).size.height * 35 / 100,
+        height: 225,
         width: double.infinity,
         decoration: const BoxDecoration(color: Colors.white),
         child: SingleChildScrollView(
@@ -33,14 +33,17 @@ class _RatingWidgetState extends State<RatingWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                AppLocalizations.of(context)!.rate,
-                style: const TextStyle(
-                    color: Colors.black87,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  AppLocalizations.of(context)!.rate,
+                  style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 3 / 100),
+              const SizedBox(height:5),
               SmoothStarRating(
                 allowHalfRating: false,
                 starCount: 5,
@@ -66,9 +69,9 @@ class _RatingWidgetState extends State<RatingWidget> {
                     style:
                         const TextStyle(color: Colors.black87, fontSize: 20.0)),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 1 / 100),
+              const SizedBox(height:10),
               CustomWidget().customDivider(),
-              SizedBox(height: MediaQuery.of(context).size.height * 1 / 100),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
                   rateTODateBase(id);
@@ -76,8 +79,8 @@ class _RatingWidgetState extends State<RatingWidget> {
                 },
                 child: Center(
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 30 / 100,
-                    height: MediaQuery.of(context).size.height * 8 / 100,
+                    width: 120,
+                    height: 50,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
                         color: Colors.greenAccent.shade700),
