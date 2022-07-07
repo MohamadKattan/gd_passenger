@@ -49,7 +49,11 @@ class _SplashScreenState extends State<SplashScreen>
                   .child("users")
                   .child(infoUser.userId);
               await refuser.child("update").set(false);
-              SystemNavigator.pop();
+              if (Platform.isAndroid) {
+                SystemNavigator.pop();
+              } else {
+                exit(0);
+              }
             });
           } else if (infoUser.status == "") {
             Navigator.push(
@@ -104,10 +108,8 @@ class _SplashScreenState extends State<SplashScreen>
               "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
           : Tools().toastMsg('Could not launch');
     } else {
-      await canLaunch(
-              "https://www.apple.com/app-store/")
-          ? launch(
-              "https://www.apple.com/app-store/")
+      await canLaunch("https://www.apple.com/app-store/")
+          ? launch("https://www.apple.com/app-store/")
           : Tools().toastMsg('Could not launch');
     }
   }

@@ -27,7 +27,6 @@ import 'my_provider/profile_sheet.dart';
 import 'my_provider/rider_id.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'my_provider/sheet_cardsc.dart';
 import 'my_provider/userinfo_sheet_provider.dart';
 

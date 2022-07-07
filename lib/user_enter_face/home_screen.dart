@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             SizedBox(
                               height:
-                                  MediaQuery.of(context).size.height * 70 / 100,
+                                  MediaQuery.of(context).size.height * 85 / 100,
                               child: GoogleMap(
                                 mapType: MapType.normal,
                                 initialCameraPosition:

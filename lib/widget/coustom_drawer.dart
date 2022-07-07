@@ -137,7 +137,7 @@ Widget customDrawer(BuildContext context) {
                   if (Platform.isAndroid) {
                     SystemNavigator.pop();
                   }
-                  exit(0);
+                exit(0);
                 },
                 child: Row(
                   children: [
