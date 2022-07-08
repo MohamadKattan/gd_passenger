@@ -10,6 +10,7 @@ import 'model/directions_details.dart';
 
  final TextEditingController phoneNumber = TextEditingController();
  final TextEditingController email = TextEditingController();
+final TextEditingController password = TextEditingController();
  final  TextEditingController firstname = TextEditingController();
  final TextEditingController lastname = TextEditingController();
 

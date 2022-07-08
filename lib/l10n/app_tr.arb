@@ -84,5 +84,9 @@
   "myLocation": "Benim konumum",
   "dropOff": "Hedef",
   "arrivedInfo": "varış:2-3 dk",
-  "onWay": "yolda sürücü"
+  "onWay": "yolda sürücü",
+  "passWord": "Şifre",
+   "passWordR": "şifre gerekli",
+   "passWordShort": "Şifre kısa, daha az 8 karakter",
+     "del": "Hesabımı sil"
 }

@@ -77,6 +77,7 @@ class DataBaseSrv {
         "firstName": firstname.text,
         "lastName": lastname.text,
         "status":"ok",
+        "phoneNumber": phoneNumber,
         "update":false
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)

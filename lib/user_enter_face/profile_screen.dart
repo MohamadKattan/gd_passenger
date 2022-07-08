@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../my_provider/pick_image_provider.dart';
 import '../my_provider/profile_sheet.dart';
+import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -101,41 +102,73 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10.0),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            if (imageProvider == null) {
-                              Tools().toastMsg(
-                                  AppLocalizations.of(context)!.upImage);
-                            } else {
-                              Provider.of<InductorProfileScreen>(context,
-                                      listen: false)
-                                  .updateState(true);
-                              startUpdateInfoUser(userInfo, name, lastName, email,
-                                  imageFile, context);
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFFD54F),
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            height: MediaQuery.of(context).size.height * 10 / 100,
-                            width: MediaQuery.of(context).size.width * 80 / 100,
-                            child: Center(
-                              child: Text(
-                                AppLocalizations.of(context)!.update,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (imageProvider == null) {
+                                  Tools().toastMsg(
+                                      AppLocalizations.of(context)!.upImage);
+                                } else {
+                                  Provider.of<InductorProfileScreen>(context,
+                                          listen: false)
+                                      .updateState(true);
+                                  startUpdateInfoUser(userInfo, name, lastName, email,
+                                      imageFile, context);
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFD54F),
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                height: MediaQuery.of(context).size.height * 10 / 100,
+                                width: MediaQuery.of(context).size.width * 40 / 100,
+                                child: Center(
+                                  child: Text(
+                                    AppLocalizations.of(context)!.update,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                AuthSev().deleteAccount(context);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent.shade700,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                height: MediaQuery.of(context).size.height * 10 / 100,
+                                width: MediaQuery.of(context).size.width * 40 / 100,
+                                child: Center(
+                                  child: Text(
+                                    AppLocalizations.of(context)!.del,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -259,112 +292,6 @@ class ProfileScreen extends StatelessWidget {
       Tools().toastMsg(AppLocalizations.of(context)!.imageRequired);
     }
   }
-
-  // void showSheetCamerOrGallary({required BuildContext context}) async {
-  //   await showSlidingBottomSheet(context, builder: (context) {
-  //     return SlidingSheetDialog(
-  //       elevation: 8,
-  //       cornerRadius: 16,
-  //       snapSpec: const SnapSpec(
-  //         snap: true,
-  //         initialSnap: 0.400,
-  //         snappings: [0.4, 0.7, 0.400],
-  //         positioning: SnapPositioning.relativeToAvailableSpace,
-  //       ),
-  //       builder: (context, state) {
-  //         return Container(
-  //           height: 400,
-  //           child: Material(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(8.0),
-  //                   child: Center(
-  //                     child: Text(
-  //                       AppLocalizations.of(context)!.pickPhoto,
-  //                       style: const TextStyle(
-  //                           fontSize: 16,
-  //                           fontWeight: FontWeight.bold,
-  //                           color: Colors.black54),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 20,
-  //                 ),
-  //                 GestureDetector(
-  //                   onTap: () {
-  //                     getImage(context, ImageSource.camera);
-  //                   },
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.all(8.0),
-  //                     child: Container(
-  //                       height: 60,
-  //                       width: MediaQuery.of(context).size.width * 0.60,
-  //                       decoration: const BoxDecoration(
-  //                           color: Colors.white,
-  //                           boxShadow: [
-  //                             BoxShadow(
-  //                                 blurRadius: 6.0,
-  //                                 spreadRadius: 0.5,
-  //                                 color: Colors.black54,
-  //                                 offset: Offset(0.7, 0.7))
-  //                           ]),
-  //                       child: Center(
-  //                           child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: [
-  //                           const Icon(Icons.camera, color: Color(0xFFFFD54F)),
-  //                           const SizedBox(
-  //                             width: 5.0,
-  //                           ),
-  //                           Text(AppLocalizations.of(context)!.camera),
-  //                         ],
-  //                       )),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 GestureDetector(
-  //                   onTap: () {
-  //                     getImage(context, ImageSource.gallery);
-  //                   },
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.all(8.0),
-  //                     child: Container(
-  //                       height: 60,
-  //                       width: MediaQuery.of(context).size.width * 0.60,
-  //                       decoration: const BoxDecoration(
-  //                           color: Colors.white,
-  //                           boxShadow: [
-  //                             BoxShadow(
-  //                                 blurRadius: 6.0,
-  //                                 spreadRadius: 0.5,
-  //                                 color: Colors.black54,
-  //                                 offset: Offset(0.7, 0.7))
-  //                           ]),
-  //                       child: Center(
-  //                           child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: [
-  //                           const Icon(Icons.image, color: Color(0xFFFFD54F)),
-  //                           const SizedBox(
-  //                             width: 5.0,
-  //                           ),
-  //                           Text(AppLocalizations.of(context)!.gallery),
-  //                         ],
-  //                       )),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     );
-  //   });
-  // }
 
   Widget showImage(BuildContext context) {
     final userInfoRealTime =

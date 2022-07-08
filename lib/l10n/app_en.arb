@@ -31,13 +31,13 @@
   "@logInToTaxi": {
     "description": "LogIn to Garanti driver taxi"
   },
-  "newAccount": "Enter your Phone number  to be able to log in or create a new account",
+  "newAccount": "Enter your email & password to be able to log in or create a new account",
   "@newAccount": {
-    "description": "Enter your number & mail to be able to log in or create a new account"
+    "description": "Enter your email & password to be able to log in or create a new account"
   },
-  "enterNumber": "Write your phone number & mail",
+  "enterNumber": "Write your email & password",
   "@enterNumber": {
-    "description": "Enter your phone number"
+    "description": "Write your email & password"
   },
   "pickCountry": "Pick your country",
   "@pickCountry": {
@@ -346,5 +346,21 @@
   "onWay": "Your driver on way",
   "@onWay": {
     "description": "Your driver on way"
-  }
-}
+  },
+    "passWord": "Password",
+    "@passWord": {
+      "description": "passWord"
+    },
+      "passWordR": "Password required",
+        "@passWordR": {
+          "description": "passWord"
+        },
+ "passWordShort": "Password short an less 8 character",
+    "@passWordShort": {
+       "description": "passWord"
+   },
+    "del": "Delete my account",
+       "@del": {
+          "description": "passWord"
+      }
+ }

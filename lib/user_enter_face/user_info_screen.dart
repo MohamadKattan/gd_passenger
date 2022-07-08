@@ -1,5 +1,6 @@
 // add name photo after auth
 import 'dart:io';
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/my_provider/pick_image_provider.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../my_provider/userinfo_sheet_provider.dart';
 import '../repo/api_srv_geo.dart';
-
+GlobalKey globalKey = GlobalKey();
 class UserInfoScreen extends StatefulWidget {
 
   const UserInfoScreen({Key? key}) : super(key: key);
@@ -25,6 +26,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
    final ImagePicker _picker = ImagePicker();
    final CircularInductorCostem _inductorCostem =
   CircularInductorCostem();
+  static String result = "";
+  static String? resultCodeCon = "+90";
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserIdProvider>(context, listen: false);
@@ -35,6 +38,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        key: globalKey,
         body: Builder(
           builder:(_)=> SafeArea(
             child: Stack(
@@ -108,6 +112,68 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             keyboardType: TextInputType.name,
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: CountryListPick(
+                                    appBar: AppBar(
+                                      backgroundColor: Colors.amber[200],
+                                      title:  Text(AppLocalizations.of(context)!.pickCountry),
+                                    ),
+                                    theme: CountryTheme(
+                                      isShowFlag: true,
+                                      isShowTitle: false,
+                                      isShowCode: true,
+                                      isDownIcon: true,
+                                      showEnglishName: false,
+                                      labelColor: Colors.black54,
+                                      alphabetSelectedBackgroundColor:
+                                      const Color(0xFFFFD54F),
+                                      alphabetTextColor: Colors.deepOrange,
+                                      alphabetSelectedTextColor: Colors.deepPurple,
+                                    ),
+                                    initialSelection: resultCodeCon,
+                                    onChanged: (CountryCode? code) {
+                                      resultCodeCon = code?.dialCode;
+                                    },
+                                    useUiOverlay: true,
+                                    useSafeArea: false),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: TextField(
+                                  controller: phoneNumber,
+                                  maxLength: 15,
+                                  showCursor: true,
+                                  style: const TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.w600),
+                                  cursorColor: const Color(0xFFFFD54F),
+                                  decoration:  InputDecoration(
+                                    icon: const Padding(
+                                      padding: EdgeInsets.only(top: 15.0),
+                                      child: Icon(
+                                        Icons.phone,
+                                        color: Color(0xFFFFD54F),
+                                      ),
+                                    ),
+                                    fillColor:const Color(0xFFFFD54F),
+                                    label: Text(AppLocalizations.of(context)!.number),
+                                  ),
+                                  keyboardType: TextInputType.phone,
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 60),
                         GestureDetector(
                           onTap: () {
@@ -119,7 +185,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               checkBeforeSet(
                                   context,
                                   userProvider.getUser.uid,
-                                  phoneNumber.text.trim(),
                                  imageFile);
                             }
                           },
@@ -284,124 +349,20 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   }
 
   checkBeforeSet(
-      BuildContext context, String uid, String phoneNumber, XFile? imageFile) {
+      BuildContext context, String uid, XFile? imageFile) {
     if (firstname.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.nameRequired);
     } else if (lastname.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.lastRequired);
-    } else {
+    } else if (phoneNumber.text.isEmpty){
+      tools.toastMsg(AppLocalizations.of(context)!.numberEmpty);
+    }
+    else {
      ApiSrvGeo().getContry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
+     result="$resultCodeCon${phoneNumber.text.trim()}";
       srv.setImageToStorage(
-          firstname, lastname, uid, context, phoneNumber, imageFile!, email);
+          firstname, lastname, uid, context, result, imageFile!, email);
     }
   }
-
-  // void showSheetCamerOrGallary({required BuildContext context}) async {
-  //   await showSlidingBottomSheet(context, builder: (context) {
-  //     return SlidingSheetDialog(
-  //       elevation: 8,
-  //       cornerRadius: 16,
-  //       snapSpec: const SnapSpec(
-  //         snap: true,
-  //         initialSnap: 0.400,
-  //         snappings: [0.4, 0.7, 0.400],
-  //         positioning: SnapPositioning.relativeToAvailableSpace,
-  //       ),
-  //       builder: (context, state) {
-  //         return
-  //           SizedBox(
-  //           height: 400,
-  //           child: Material(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(8.0),
-  //                   child: Center(
-  //                     child: Text(
-  //                       AppLocalizations.of(context)!.pickPhoto,
-  //                       style: const TextStyle(
-  //                           fontSize: 16,
-  //                           fontWeight: FontWeight.bold,
-  //                           color: Colors.black54),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 const SizedBox(
-  //                   height: 20,
-  //                 ),
-  //                 GestureDetector(
-  //                   onTap: () {
-  //                     getImage(context, ImageSource.camera);
-  //                   },
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.all(8.0),
-  //                     child: Container(
-  //                       height: 60,
-  //                       width: MediaQuery.of(context).size.width * 0.60,
-  //                       decoration: const BoxDecoration(
-  //                           color: Colors.white,
-  //                           boxShadow: [
-  //                             BoxShadow(
-  //                                 blurRadius: 6.0,
-  //                                 spreadRadius: 0.5,
-  //                                 color: Colors.black54,
-  //                                 offset: Offset(0.7, 0.7))
-  //                           ]),
-  //                       child: Center(
-  //                           child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: [
-  //                           const Icon(Icons.camera, color: Color(0xFFFFD54F)),
-  //                           const SizedBox(
-  //                             width: 5.0,
-  //                           ),
-  //                           Text(AppLocalizations.of(context)!.camera),
-  //                         ],
-  //                       )),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 GestureDetector(
-  //                   onTap: () {
-  //                     getImage(context, ImageSource.gallery);
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.all(8.0),
-  //                     child: Container(
-  //                       height: 60,
-  //                       width: MediaQuery.of(context).size.width * 0.60,
-  //                       decoration: const BoxDecoration(
-  //                           color: Colors.white,
-  //                           boxShadow: [
-  //                             BoxShadow(
-  //                                 blurRadius: 6.0,
-  //                                 spreadRadius: 0.5,
-  //                                 color: Colors.black54,
-  //                                 offset: Offset(0.7, 0.7))
-  //                           ]),
-  //                       child: Center(
-  //                           child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: [
-  //                           const Icon(Icons.image, color: Color(0xFFFFD54F)),
-  //                           const SizedBox(
-  //                             width: 5.0,
-  //                           ),
-  //                           Text(AppLocalizations.of(context)!.gallery),
-  //                         ],
-  //                       )),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     );
-  //   });
-  // }
 }

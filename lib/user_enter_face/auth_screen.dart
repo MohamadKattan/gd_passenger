@@ -14,8 +14,8 @@ GlobalKey globalKey = GlobalKey();
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
-  static String result = "";
-  static String? resultCodeCon = "+90";
+  // static String result = "";
+  // static String? resultCodeCon = "+90";
   static AuthSev authSev = AuthSev();
   static final CircularInductorCostem _inductorCostem = CircularInductorCostem();
 
@@ -75,68 +75,69 @@ class AuthScreen extends StatelessWidget {
                       const SizedBox(
                         height: 25,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: CountryListPick(
-                                  appBar: AppBar(
-                                    backgroundColor: Colors.amber[200],
-                                    title:  Text(AppLocalizations.of(context)!.pickCountry),
-                                  ),
-                                  theme: CountryTheme(
-                                    isShowFlag: true,
-                                    isShowTitle: false,
-                                    isShowCode: true,
-                                    isDownIcon: true,
-                                    showEnglishName: false,
-                                    labelColor: Colors.black54,
-                                    alphabetSelectedBackgroundColor:
-                                        const Color(0xFFFFD54F),
-                                    alphabetTextColor: Colors.deepOrange,
-                                    alphabetSelectedTextColor: Colors.deepPurple,
-                                  ),
-                                  initialSelection: resultCodeCon,
-                                  onChanged: (CountryCode? code) {
-                                    resultCodeCon = code?.dialCode;
-                                  },
-                                  useUiOverlay: true,
-                                  useSafeArea: false),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: TextField(
-                                controller: phoneNumber,
-                                maxLength: 15,
-                                showCursor: true,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
-                                cursorColor: const Color(0xFFFFD54F),
-                                decoration:  InputDecoration(
-                                  icon: const Padding(
-                                    padding: EdgeInsets.only(top: 15.0),
-                                    child: Icon(
-                                      Icons.phone,
-                                      color: Color(0xFFFFD54F),
-                                    ),
-                                  ),
-                                  fillColor:const Color(0xFFFFD54F),
-                                  label: Text(AppLocalizations.of(context)!.number),
-                                ),
-                                keyboardType: TextInputType.phone,
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      ),
+                      /// cancel for now
+                      // Padding(
+                      //   padding: const EdgeInsets.all(15.0),
+                      //   child: Row(
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       Padding(
+                      //         padding: const EdgeInsets.only(top: 8.0),
+                      //         child: CountryListPick(
+                      //             appBar: AppBar(
+                      //               backgroundColor: Colors.amber[200],
+                      //               title:  Text(AppLocalizations.of(context)!.pickCountry),
+                      //             ),
+                      //             theme: CountryTheme(
+                      //               isShowFlag: true,
+                      //               isShowTitle: false,
+                      //               isShowCode: true,
+                      //               isDownIcon: true,
+                      //               showEnglishName: false,
+                      //               labelColor: Colors.black54,
+                      //               alphabetSelectedBackgroundColor:
+                      //                   const Color(0xFFFFD54F),
+                      //               alphabetTextColor: Colors.deepOrange,
+                      //               alphabetSelectedTextColor: Colors.deepPurple,
+                      //             ),
+                      //             initialSelection: resultCodeCon,
+                      //             onChanged: (CountryCode? code) {
+                      //               resultCodeCon = code?.dialCode;
+                      //             },
+                      //             useUiOverlay: true,
+                      //             useSafeArea: false),
+                      //       ),
+                      //       const SizedBox(
+                      //         width: 10,
+                      //       ),
+                      //       Expanded(
+                      //         flex: 1,
+                      //         child: TextField(
+                      //           controller: phoneNumber,
+                      //           maxLength: 15,
+                      //           showCursor: true,
+                      //           style: const TextStyle(
+                      //               fontSize: 16, fontWeight: FontWeight.w600),
+                      //           cursorColor: const Color(0xFFFFD54F),
+                      //           decoration:  InputDecoration(
+                      //             icon: const Padding(
+                      //               padding: EdgeInsets.only(top: 15.0),
+                      //               child: Icon(
+                      //                 Icons.phone,
+                      //                 color: Color(0xFFFFD54F),
+                      //               ),
+                      //             ),
+                      //             fillColor:const Color(0xFFFFD54F),
+                      //             label: Text(AppLocalizations.of(context)!.number),
+                      //           ),
+                      //           keyboardType: TextInputType.phone,
+                      //         ),
+                      //       ),
+                      //
+                      //     ],
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -153,25 +154,32 @@ class AuthScreen extends StatelessWidget {
                           keyboardType: TextInputType.emailAddress,
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                        child: Text(AppLocalizations.of(context)!.verificationCode),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: password,
+                          maxLength: 40,
+                          showCursor: true,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                          cursorColor: const Color(0xFFFFD54F),
+                          decoration: InputDecoration(
+                            fillColor: const Color(0xFFFFD54F),
+                            label: Text(AppLocalizations.of(context)!.passWord),
+                          ),
+                          keyboardType: TextInputType.visiblePassword,
+                        ),
                       ),
+                      ///Stop for now
+                      // SizedBox(
+                      //   height: 20,
+                      //   child: Text(AppLocalizations.of(context)!.verificationCode),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.only(top: 40),
                         child: GestureDetector(
                           onTap: () async {
-                            if (phoneNumber.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                 SnackBar(
-                                  behavior: SnackBarBehavior.fixed,
-                                  backgroundColor: Colors.red,
-                                  duration:const Duration(seconds: 3),
-                                  content: Text(AppLocalizations.of(context)!.numberEmpty),
-                                ),
-                              );
-                            }
-                           else if (email.text.isEmpty) {
+                            if (email.text.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   behavior: SnackBarBehavior.fixed,
@@ -181,11 +189,33 @@ class AuthScreen extends StatelessWidget {
                                 ),
                               );
                             }
+                           else if (password.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                 SnackBar(
+                                  behavior: SnackBarBehavior.fixed,
+                                  backgroundColor: Colors.red,
+                                  duration:const Duration(seconds: 3),
+                                  content: Text(AppLocalizations.of(context)!.passWordR),
+                                ),
+                              );
+                            }
+                           else if(password.text.length<8){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.fixed,
+                                  backgroundColor: Colors.red,
+                                  duration:const Duration(seconds: 3),
+                                  content: Text(AppLocalizations.of(context)!.passWordShort),
+                                ),
+                              );
+                            }
                             else {
-                              result = "$resultCodeCon${phoneNumber.text}";
-                              await authSev.createOrLoginWithEmail(result, context,email.text.trim());
+                              ///stop for now
+                              // result = "$resultCodeCon${phoneNumber.text}";
+                              await authSev.createOrLoginWithEmail(password.text.trim(), context,email.text.trim());
                               FocusScope.of(context).requestFocus(FocusNode());
-
+                              password.clear();
+                              email.clear();
                             }
                           },
                           child: Container(

@@ -39,15 +39,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Garanti Taxi needs needs access to the camera.</string>
+	<string>This app requires access to the camera to upload your profile photo.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to location when in the background and when open.</string>
+	<string>this app requires  access to your location when app working in background and when open for your current location will be displayed on the app map and used for directions nearby search results and travel times.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>this app requires  access to your location when app working in background and when open for your current location will be displayed on the app map and used for directions nearby search results and travel times.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>this app requires  access to your location when app working in background and when open for your current location will be displayed on the app map and used for directions nearby search results and travel times.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Garanti Taxi needs permission for the photo library.</string>
+	<string>This app requires access to the photo library to upload your profile photo.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
