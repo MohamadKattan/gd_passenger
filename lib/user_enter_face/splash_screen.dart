@@ -94,7 +94,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _animationController.dispose();
   }
@@ -108,8 +107,8 @@ class _SplashScreenState extends State<SplashScreen>
               "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
           : Tools().toastMsg('Could not launch');
     } else {
-      await canLaunch("https://www.apple.com/app-store/")
-          ? launch("https://www.apple.com/app-store/")
+      await canLaunch("https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
+          ? launch("https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
           : Tools().toastMsg('Could not launch');
     }
   }

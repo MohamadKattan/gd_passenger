@@ -29,8 +29,14 @@ class ProfileScreen extends StatelessWidget {
     final imageProvider = Provider.of<PickImageProvide>(context).imageProvider;
     final sheetVal = Provider.of<ProfileSheet>(context).valSheet;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.profile,
+            style: const TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: const Color(0xFFFFD54F),
+      ),
       body: Builder(
-        builder:(_)=> SafeArea(
+        builder: (_) => SafeArea(
           child: Stack(
             children: [
               Container(
@@ -44,10 +50,13 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       const SizedBox(height: 40.0),
                       GestureDetector(
-                          onTap: () => Provider.of<ProfileSheet>(context,listen: false).updateState(0),
+                          onTap: () =>
+                              Provider.of<ProfileSheet>(context, listen: false)
+                                  .updateState(0),
                           child: showImage(context)),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 15 / 100),
+                          height:
+                              MediaQuery.of(context).size.height * 15 / 100),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -116,8 +125,8 @@ class ProfileScreen extends StatelessWidget {
                                   Provider.of<InductorProfileScreen>(context,
                                           listen: false)
                                       .updateState(true);
-                                  startUpdateInfoUser(userInfo, name, lastName, email,
-                                      imageFile, context);
+                                  startUpdateInfoUser(userInfo, name, lastName,
+                                      email, imageFile, context);
                                 }
                               },
                               child: Container(
@@ -125,8 +134,12 @@ class ProfileScreen extends StatelessWidget {
                                   color: const Color(0xFFFFD54F),
                                   borderRadius: BorderRadius.circular(4.0),
                                 ),
-                                height: MediaQuery.of(context).size.height * 10 / 100,
-                                width: MediaQuery.of(context).size.width * 40 / 100,
+                                height: MediaQuery.of(context).size.height *
+                                    8 /
+                                    100,
+                                width: MediaQuery.of(context).size.width *
+                                    40 /
+                                    100,
                                 child: Center(
                                   child: Text(
                                     AppLocalizations.of(context)!.update,
@@ -152,8 +165,12 @@ class ProfileScreen extends StatelessWidget {
                                   color: Colors.redAccent.shade700,
                                   borderRadius: BorderRadius.circular(4.0),
                                 ),
-                                height: MediaQuery.of(context).size.height * 10 / 100,
-                                width: MediaQuery.of(context).size.width * 40 / 100,
+                                height: MediaQuery.of(context).size.height *
+                                    8 /
+                                    100,
+                                width: MediaQuery.of(context).size.width *
+                                    40 /
+                                    100,
                                 child: Center(
                                   child: Text(
                                     AppLocalizations.of(context)!.del,
@@ -182,8 +199,7 @@ class ProfileScreen extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0)
-                    ),
+                        borderRadius: BorderRadius.circular(8.0)),
                     height: 250,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -223,15 +239,16 @@ class ProfileScreen extends StatelessWidget {
                                   ]),
                               child: Center(
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.camera, color: Color(0xFFFFD54F)),
-                                      const SizedBox(
-                                        width: 5.0,
-                                      ),
-                                      Text(AppLocalizations.of(context)!.camera),
-                                    ],
-                                  )),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.camera,
+                                      color: Color(0xFFFFD54F)),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(AppLocalizations.of(context)!.camera),
+                                ],
+                              )),
                             ),
                           ),
                         ),
@@ -255,15 +272,16 @@ class ProfileScreen extends StatelessWidget {
                                   ]),
                               child: Center(
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.image, color: Color(0xFFFFD54F)),
-                                      const SizedBox(
-                                        width: 5.0,
-                                      ),
-                                      Text(AppLocalizations.of(context)!.gallery),
-                                    ],
-                                  )),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.image,
+                                      color: Color(0xFFFFD54F)),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(AppLocalizations.of(context)!.gallery),
+                                ],
+                              )),
                             ),
                           ),
                         ),
@@ -287,7 +305,7 @@ class ProfileScreen extends StatelessWidget {
       imageFile = _file!;
       Provider.of<PickImageProvide>(context, listen: false)
           .listingToPickImage(imageFile);
-      Provider.of<ProfileSheet>(context,listen: false).updateState(-400);
+      Provider.of<ProfileSheet>(context, listen: false).updateState(-400);
     } catch (e) {
       Tools().toastMsg(AppLocalizations.of(context)!.imageRequired);
     }

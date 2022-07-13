@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:lottie/lottie.dart' as loty;
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../config.dart';
@@ -57,17 +56,29 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AppLocalizations.of(context)!.pricesList,
-                  style: TextStyle(
-                    color: Colors.greenAccent.shade700,
-                    fontSize: 20.0,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.pricesList,
+                      style: TextStyle(
+                        color: Colors.greenAccent.shade700,
+                        fontSize: 20.0,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.redAccent,
+                      )),
+                ],
               ),
               CustomWidget().customDivider(),
               Padding(
@@ -503,11 +514,9 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                 "https://maps.googleapis.com/maps/api/place/details/json?place_id=${pre.placeId}&key=$mapKey");
             final res = await _getUrl.getUrlMethod(placeDetailsUrl);
             if (res == "failed") {
-
               return;
             }
             if (res["status"] == "OK") {
-
               Address address = Address(
                   placeFormattedAddress: "",
                   placeName: "",
@@ -586,6 +595,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
       polylineSet.add(polyline);
     });
     Navigator.pop(context);
+
     ///for fit line on map PolylinePoints
     LatLngBounds latLngBounds;
     if (pickUpLatling.latitude > dropOfLatling.latitude &&

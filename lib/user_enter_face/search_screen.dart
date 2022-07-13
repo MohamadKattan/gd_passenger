@@ -34,6 +34,10 @@ class _SearchScreenState extends State<SearchScreen> {
         onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
         child: SafeArea(
           child: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              child: const Icon(Icons.close),
+              backgroundColor:const Color(0xFFFFD54F),
+                onPressed: ()=>Navigator.pop(context)),
               body: SingleChildScrollView(
                   child: Column(
             children: [
