@@ -88,5 +88,7 @@
   "passWord": "Şifre",
    "passWordR": "şifre gerekli",
    "passWordShort": "Şifre kısa, daha az 8 karakter",
-     "del": "Hesabımı sil"
+     "del": "Hesabımı sil",
+  "passWrong": "Yanlış şifre !!",
+  "noNet": "Ağınızı kontrol edin !!"
 }

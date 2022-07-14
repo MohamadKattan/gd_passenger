@@ -362,5 +362,13 @@
     "del": "Delete my account",
        "@del": {
           "description": "passWord"
-      }
+      },
+  "passWrong": "PassWord Wrong !!",
+  "@passWrong": {
+    "description": "PassWord Wrong !!"
+  },
+  "noNet": "Check your network !!",
+  "@noNet": {
+    "description": "Check you net work !!"
+  }
  }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../my_provider/info_user_database_provider.dart';
 import '../tools/tools.dart';
 import 'home_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,8 +25,11 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   @override
-  initState() {
+  initState()  {
     TurnGps().turnGpsIfNot();
+    if (AuthSev().auth.currentUser?.uid != null){
+       DataBaseSrv().currentOnlineUserInfo(context);
+    }
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(seconds: 2),
@@ -34,11 +37,12 @@ class _SplashScreenState extends State<SplashScreen>
         upperBound: 0.6);
     _animationController.forward();
     _animationController.addStatusListener((status) async {
+      if (AuthSev().auth.currentUser?.uid == null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+      }
       if (status == AnimationStatus.completed) {
-        if (AuthSev().auth.currentUser?.uid == null) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const AuthScreen()));
-        } else if (AuthSev().auth.currentUser?.uid != null) {
+        if (AuthSev().auth.currentUser?.uid != null) {
           await DataBaseSrv().currentOnlineUserInfo(context);
           final infoUser =
               Provider.of<UserAllInfoDatabase>(context, listen: false).users;
@@ -55,13 +59,17 @@ class _SplashScreenState extends State<SplashScreen>
                 exit(0);
               }
             });
-          } else if (infoUser.status == "") {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const AuthScreen()));
-          } else if (infoUser.status == "info") {
+          }
+          else if (infoUser.status == "") {
+            Tools().toastMsg(AppLocalizations.of(context)!.noNet);
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+          }
+          else if (infoUser.status == "info") {
             Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const UserInfoScreen()));
-          } else if (infoUser.status == "ok") {
+          }
+          else if (infoUser.status == "ok") {
             Navigator.push(
                 context, MaterialPageRoute(builder: (_) => const HomeScreen()));
           }

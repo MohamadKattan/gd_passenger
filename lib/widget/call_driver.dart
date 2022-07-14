@@ -24,12 +24,18 @@ Widget callDriver(BuildContext context) {
             const SizedBox(
               height: 10,
             ),
-            Text(
-              AppLocalizations.of(context)!.callDriver,
-              style: const TextStyle(
-                  color: Colors.black87,
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.callDriver,
+                  style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                IconButton(onPressed: ()=>Navigator.pop(context), icon: const Icon(Icons.close,color: Colors.red))
+              ],
             ),
             GestureDetector(
               onTap: () async {

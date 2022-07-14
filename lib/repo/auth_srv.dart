@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../model/user.dart';
 import '../my_provider/info_user_database_provider.dart';
-import '../user_enter_face/home_screen.dart';
 import '../user_enter_face/user_info_screen.dart';
 
 // this class for Auth by firebase-phone method
@@ -195,18 +194,18 @@ class AuthSev {
       await getCurrentUserId();
       if (userCredential.user!.uid.isNotEmpty) {
         currentUser = userCredential.user!;
-        snapshot = await refuser.child("users").child(currentUser!.uid).get();
-        if (snapshot.exists && snapshot.key != null) {
-          Map<String, dynamic> map =
-              Map<String, dynamic>.from(snapshot.value as Map);
+        snapshot = await refuser.child(currentUser!.uid).get();
+        if (snapshot.exists) {
+          Map<String, dynamic> map = Map<String, dynamic>.from(snapshot.value as Map);
           Users _infoUser = Users.fromMap(map);
           Provider.of<UserAllInfoDatabase>(context, listen: false)
               .updateUser(_infoUser);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const HomeScreen()));
           Provider.of<TrueFalse>(context, listen: false)
               .changeStateBooling(false);
-        } else if (!snapshot.exists || snapshot.key!.isEmpty) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const SplashScreen()));
+        }
+        else if (!snapshot.exists){
           refuser.child(currentUser!.uid).set({
             "userId": currentUser!.uid,
             "imageProfile": "",
@@ -232,7 +231,13 @@ class AuthSev {
         }
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+      print("ttttttt"+e.code);
+      if(e.code=="wrong-password"){
+        _tools.toastMsg(AppLocalizations.of(context)!.passWrong);
+        Provider.of<TrueFalse>(context, listen: false)
+            .changeStateBooling(false);
+      }
+     else if (e.code == 'user-not-found') {
         try {
           userCredential = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
