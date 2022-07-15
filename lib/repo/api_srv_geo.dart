@@ -36,7 +36,10 @@ class ApiSrvGeo {
           latitude: position.latitude,
           longitude: position.longitude);
 
-      ref.child(userId!).child("country").set(st3);
+      // ref.child(userId!).child("country").set(st3);
+      ref.child(userId!).update({
+        "country":st3
+      });
 
       //for update
       Provider.of<AppData>(context, listen: false)
@@ -54,7 +57,10 @@ class ApiSrvGeo {
     if (response != "failed") {
       stContry = response["results"][0]["address_components"][5]["long_name"];
       contry=stContry;
-      ref.child(userId!).child("country").set(stContry);
+      // ref.child(userId!).child("country").set(stContry);
+      ref.child(userId!).update({
+        "country":stContry
+      });
     }
     return stContry;
   }

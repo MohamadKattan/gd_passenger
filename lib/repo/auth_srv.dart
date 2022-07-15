@@ -231,7 +231,6 @@ class AuthSev {
         }
       }
     } on FirebaseAuthException catch (e) {
-      print("ttttttt"+e.code);
       if(e.code=="wrong-password"){
         _tools.toastMsg(AppLocalizations.of(context)!.passWrong);
         Provider.of<TrueFalse>(context, listen: false)
