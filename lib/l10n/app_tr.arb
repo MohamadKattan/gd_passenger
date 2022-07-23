@@ -90,5 +90,7 @@
    "passWordShort": "Şifre kısa, daha az 8 karakter",
      "del": "Hesabımı sil",
   "passWrong": "Yanlış şifre !!",
-  "noNet": "Ağınızı kontrol edin !!"
+  "noNet": "Ağınızı kontrol edin !!",
+  "arrivedTime": "Gelme Süresi : 2-3 dk",
+  "chooseBefore": "Bir araba sipariş etmeden önce varış noktanızı seçin"
 }

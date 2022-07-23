@@ -1,6 +1,7 @@
 // this class will show all driver info
 
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
@@ -34,7 +35,7 @@ class DriverInfo {
     final isCloseTrue =
         Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
-        height: 210,
+        height: 220,
         decoration:  BoxDecoration(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -106,6 +107,24 @@ class DriverInfo {
                       carDriverInfo,
                       style: const TextStyle(color: Colors.black87, fontSize: 16),
                     ),
+                    const  SizedBox(width: 24.0,),
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: CachedNetworkImage(
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 60.0,
+                          height: 60.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        imageUrl: driverImage.isEmpty?"":driverImage,
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.person),
+                      ),
+                    )
                   ],
                 ),
               ),

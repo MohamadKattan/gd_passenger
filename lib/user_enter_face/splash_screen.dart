@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(seconds: 2),
-        lowerBound: 0.5,
+        lowerBound: 0.4,
         upperBound: 0.6);
     _animationController.forward();
     _animationController.addStatusListener((status) async {
@@ -56,14 +56,15 @@ class _SplashScreenState extends State<SplashScreen>
               if (Platform.isAndroid) {
                 SystemNavigator.pop();
               } else {
-                exit(0);
+                   Navigator.push(context, MaterialPageRoute(builder:(_)=>const HomeScreen()));
               }
             });
           }
           else if (infoUser.status == "") {
             Tools().toastMsg(AppLocalizations.of(context)!.noNet);
-            // Navigator.push(
-            //     context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+            Tools().toastMsg(AppLocalizations.of(context)!.noNet);
+           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(_)=>const SplashScreen()),
+                   (route) => false);
           }
           else if (infoUser.status == "info") {
             Navigator.push(context,

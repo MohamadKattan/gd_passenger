@@ -370,5 +370,9 @@
   "noNet": "Check your network !!",
   "@noNet": {
     "description": "Check you net work !!"
+  },
+  "arrivedTime": "Arrived time : 2-3 min",
+  "@arrivedTime": {
+    "description": "Check you net work !!"
   }
  }

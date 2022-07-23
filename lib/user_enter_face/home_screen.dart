@@ -45,7 +45,6 @@ import '../tools/curanny_type.dart';
 import '../tools/geoFire_methods_tools.dart';
 import '../widget/collect_money_dialog.dart';
 import '../widget/complain_onDriver.dart';
-import '../widget/driver_iconCar_info.dart';
 import '../widget/driver_info.dart';
 import '../widget/sorry_no_driver.dart';
 import '../widget/veto_van_price_info.dart';
@@ -198,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bottom: postionChang,
                                 child: Container(
                                   height: MediaQuery.of(context).size.height *
-                                      37 /
+                                      38 /
                                       100,
                                   decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -1041,12 +1040,12 @@ class _HomeScreenState extends State<HomeScreen> {
   /// this method for add icon new near driver on map
   void updateAvailableDriverOnMap() async {
     late String driverPhoneOnMap;
-    setState(() {
-      ///canceled
-      // markersSet.clear();
-    });
+    // setState(() {
+    // ///todo
+    //   markersSet.clear();
+    // });
 
-    Set<Marker> tMarker = {};
+
 
     for (NearestDriverAvailable driver
         in GeoFireMethods.listOfNearestDriverAvailable) {
@@ -1067,9 +1066,6 @@ class _HomeScreenState extends State<HomeScreen> {
         if (map["rating"] != null) {
           ratDriverRead = double.parse(map["rating"].toString());
         }
-        if (map["personImage"] != null) {
-          driverImage = map["personImage"].toString();
-        }
         if (map["carInfo"]["carType"] != null) {
           carDriverType = map["carInfo"]["carType"].toString();
         }
@@ -1087,14 +1083,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ? driversNearIcon
             : driversNearIcon1,
         infoWindow: InfoWindow(
-            onTap: () => showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => callDriverIconMap(context, driverPhoneOnMap)),
             title: " $fNameIcon $lNameIcon / " +
                 AppLocalizations.of(context)!.dropOff,
             snippet:
-                AppLocalizations.of(context)!.callDriver + driverPhoneOnMap),
+                AppLocalizations.of(context)!.arrivedTime),
         // rotation: MathMethods.createRandomNumber(120),
       );
 
@@ -1137,6 +1129,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       polylineSet.clear();
       markersSet.clear();
+      ///test
+      tMarker.clear();
       circlesSet.clear();
       polylineCoordinates.clear();
       tripDirectionDetails = null;
@@ -1145,6 +1139,7 @@ class _HomeScreenState extends State<HomeScreen> {
       waitState = "wait";
       carDriverInfo = "";
       driverName = "";
+      driverImage = "";
       driverPhone = "";
       timeTrip = "";
       driverId = "";
@@ -1381,11 +1376,11 @@ class _HomeScreenState extends State<HomeScreen> {
             carRideType = snap.toString();
             if (carRideType == carOrderType) {
               notifyDriver(ele, context, userProvider);
-              driverAvailable.removeAt(0);
+              ///test
+              driverAvailable.remove;
             }
             Future.delayed(const Duration(seconds: 60)).whenComplete(() {
               if (waitState == "wait") {
-                // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
                 Provider.of<PositionCancelReq>(context, listen: false)
                     .updateValue(-400.0);
                 Provider.of<PositionChang>(context, listen: false)
@@ -1488,6 +1483,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Map<String, dynamic>.from(event.snapshot.value as Map);
       if (map["carInfo"] != null) {
         carDriverInfo = map["carInfo"].toString();
+      }
+      if (map["driverImage"] != null) {
+       final  newdriverImage = map["driverImage"].toString();
+       setState((){
+         driverImage = newdriverImage;
+       });
       }
       if (map["driverName"] != null) {
         driverName = map["driverName"].toString();
