@@ -67,9 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
   late BitmapDescriptor driversNearIcon1;
   List<NearestDriverAvailable> driverAvailable = [];
   String state = "normal";
+  String waitDriver = "wait";
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
-  String waitState = "wait";
   double grofireRadr = 2;
   String carOrderType = "Taxi-4 seats";
   // AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
@@ -1045,8 +1045,6 @@ class _HomeScreenState extends State<HomeScreen> {
     //   markersSet.clear();
     // });
 
-
-
     for (NearestDriverAvailable driver
         in GeoFireMethods.listOfNearestDriverAvailable) {
       DatabaseReference ref =
@@ -1085,8 +1083,7 @@ class _HomeScreenState extends State<HomeScreen> {
         infoWindow: InfoWindow(
             title: " $fNameIcon $lNameIcon / " +
                 AppLocalizations.of(context)!.dropOff,
-            snippet:
-                AppLocalizations.of(context)!.arrivedTime),
+            snippet: AppLocalizations.of(context)!.arrivedTime),
         // rotation: MathMethods.createRandomNumber(120),
       );
 
@@ -1129,6 +1126,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       polylineSet.clear();
       markersSet.clear();
+      waitDriver = "wait";
       ///test
       tMarker.clear();
       circlesSet.clear();
@@ -1136,7 +1134,6 @@ class _HomeScreenState extends State<HomeScreen> {
       tripDirectionDetails = null;
       statusRide = "";
       newstatusRide = "";
-      waitState = "wait";
       carDriverInfo = "";
       driverName = "";
       driverImage = "";
@@ -1350,9 +1347,7 @@ class _HomeScreenState extends State<HomeScreen> {
 * will remove driver from map till finish his trip*/
   Future<void> searchNearestDriver(
       UserIdProvider userProvider, BuildContext context) async {
-    setState(() {
-      waitState = "wait";
-    });
+
     if (driverAvailable.isEmpty) {
       DataBaseSrv().cancelRiderRequest(userProvider, context);
       restApp();
@@ -1364,42 +1359,46 @@ class _HomeScreenState extends State<HomeScreen> {
       for (var ele in driverAvailable) {
         Provider.of<NearestDriverProvider>(context, listen: false)
             .updateState(ele);
-        DatabaseReference ref = FirebaseDatabase.instance
-            .ref()
-            .child("driver")
-            .child(ele.key)
-            .child("carInfo")
-            .child("carType");
-        await ref.once().then((value) {
+        DatabaseReference ref =
+            FirebaseDatabase.instance.ref().child("driver").child(ele.key);
+        await ref.child("carInfo").child("carType").once().then((value) async {
           final snap = value.snapshot.value;
           if (snap != null) {
             carRideType = snap.toString();
             if (carRideType == carOrderType) {
-              notifyDriver(ele, context, userProvider);
-              ///test
-              driverAvailable.remove;
+              await ref.child("newRide").once().then((value) {
+                if (value.snapshot.value != null) {
+                  final newRideStatus = value.snapshot.value;
+                  if (newRideStatus == "searching") {
+                    notifyDriver(ele, context, userProvider);
+                    driverAvailable.removeAt(0);
+                  } else {
+                    return;
+                  }
+                }
+              });
             }
-            Future.delayed(const Duration(seconds: 60)).whenComplete(() {
-              if (waitState == "wait") {
-                Provider.of<PositionCancelReq>(context, listen: false)
-                    .updateValue(-400.0);
-                Provider.of<PositionChang>(context, listen: false)
-                    .changValue(0.0);
-                DataBaseSrv().cancelRiderRequest(userProvider, context);
-                restApp();
-              }
-            });
           }
         });
       }
     }
+    Future.delayed(const Duration(seconds: 125)).whenComplete((){
+      if(waitDriver=="wait"){
+        // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
+        Provider.of<PositionCancelReq>(context, listen: false)
+            .updateValue(-400.0);
+        Provider.of<PositionChang>(context, listen: false).changValue(0.0);
+        DataBaseSrv().cancelRiderRequest(userProvider, context);
+        restApp();
+      }
+      else{
+        return;
+      }
+    });
   }
 
   Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
       UserIdProvider userProvider) async {
-    setState(() {
-      waitState = "";
-    });
     DataBaseSrv().sendRideRequestId(driver, context);
     DatabaseReference driverRef =
         FirebaseDatabase.instance.ref().child("driver").child(driver.key);
@@ -1412,60 +1411,73 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     const secondPassed = Duration(seconds: 1);
-    Timer.periodic(secondPassed, (timer) {
+    Timer.periodic(secondPassed, (timer) async {
       rideRequestTimeOut = rideRequestTimeOut - 1;
       after2MinTimeOut = after2MinTimeOut - 1;
       //1
       if (state != "requesting") {
+        // driverRef.child("newRide").set("searching");
         driverRef.child("newRide").set("canceled");
         driverRef.child("newRide").onDisconnect();
         timer.cancel();
         restApp();
         setState(() {
-          rideRequestTimeOut = 20;
-          after2MinTimeOut = 100;
+          rideRequestTimeOut = 25;
+          after2MinTimeOut = 125;
         });
-      }
-      //2
-      driverRef.child("newRide").onValue.listen((event) {
-        if (event.snapshot.value.toString() == "accepted") {
-          driverRef.child("newRide").onDisconnect();
-          timer.cancel();
-          setState(() {
-            rideRequestTimeOut = 20;
-            after2MinTimeOut = 100;
-            sound1 = true;
-            sound2 = true;
-            sound3 = true;
-          });
-        }
-      });
-      //3
-      if (rideRequestTimeOut == 0) {
-        driverRef.child("newRide").set("timeOut");
-        driverRef.child("newRide").onDisconnect();
-        timer.cancel();
-        setState(() {
-          rideRequestTimeOut = 20;
+      } else {
+        //1
+        driverRef.child("newRide").onValue.listen((event) async {
+          if (event.snapshot.value.toString() == "accepted") {
+            driverRef.child("newRide").onDisconnect();
+            timer.cancel();
+            setState(() {
+              waitDriver="";
+              rideRequestTimeOut = 25;
+              after2MinTimeOut = 125;
+              sound1 = true;
+              sound2 = true;
+              sound3 = true;
+            });
+          }
+          //2
+          // else if (event.snapshot.value.toString() == "canceled") {
+          //   timer.cancel();
+          //   restApp();
+          //   setState(() {
+          //     rideRequestTimeOut = 20;
+          //     after2MinTimeOut = 100;
+          //   });
+          // }
+          //3
+          else if (rideRequestTimeOut == 0) {
+            driverRef.child("newRide").set("timeOut");
+            driverRef.child("newRide").onDisconnect();
+            timer.cancel();
+            setState(() {
+              rideRequestTimeOut = 25;
+              // after2MinTimeOut = 100;
+            });
+            // Geofire.initialize("availableDrivers");
+            // Geofire.stopListener();
+            // Geofire.removeLocation(driver.key);
+            searchNearestDriver(userProvider, context);
+          }
+          //4
+          else if (after2MinTimeOut <= 0) {
+            timer.cancel();
+            setState(() {
+              after2MinTimeOut = 125;
+              rideRequestTimeOut = 25;
+            });
+            // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
+            Provider.of<PositionCancelReq>(context, listen: false)
+                .updateValue(-400.0);
+            Provider.of<PositionChang>(context, listen: false).changValue(0.0);
+            DataBaseSrv().cancelRiderRequest(userProvider, context);
+            restApp();
+          }
         });
-        Geofire.initialize("availableDrivers");
-        Geofire.removeLocation(driver.key);
-        Future.delayed(const Duration(seconds: 2))
-            .whenComplete(() => searchNearestDriver(userProvider, context));
-      }
-      //4
-      if (after2MinTimeOut <= 0) {
-        timer.cancel();
-        setState(() {
-          after2MinTimeOut = 100;
-          rideRequestTimeOut = 20;
-        });
-        Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
-        Provider.of<PositionCancelReq>(context, listen: false)
-            .updateValue(-400.0);
-        Provider.of<PositionChang>(context, listen: false).changValue(0.0);
-        DataBaseSrv().cancelRiderRequest(userProvider, context);
-        restApp();
       }
     });
   }
@@ -1485,10 +1497,10 @@ class _HomeScreenState extends State<HomeScreen> {
         carDriverInfo = map["carInfo"].toString();
       }
       if (map["driverImage"] != null) {
-       final  newdriverImage = map["driverImage"].toString();
-       setState((){
-         driverImage = newdriverImage;
-       });
+        final newdriverImage = map["driverImage"].toString();
+        setState(() {
+          driverImage = newdriverImage;
+        });
       }
       if (map["driverName"] != null) {
         driverName = map["driverName"].toString();

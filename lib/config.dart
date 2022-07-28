@@ -32,7 +32,7 @@ String fNameIcon = "";
 String lNameIcon = "";
  String driverImage = "";
 int rideRequestTimeOut = 25;
-int after2MinTimeOut = 100;
+int after2MinTimeOut = 125;
 String statusRide = "";
 String newstatusRide = "";
 String carDriverInfo = "";
@@ -50,6 +50,8 @@ String tourismCityName = "";
 String tourismCityPrice = "";
 String newValueDrop = "";
 String contry="";
+//version: 1.0.0+6 play store last build
+// version: 1.0.2 app store
 
 
 
