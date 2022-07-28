@@ -292,7 +292,7 @@ class AuthSev {
     await delUser.remove();
     _tools.toastMsg("deleted don");
     _tools.toastMsg("for finishing delete your account exit from app");
-    await _user.delete();
+    // await _user.delete();
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(_)=>const AuthScreen()), (route) => false);
   }
 }
