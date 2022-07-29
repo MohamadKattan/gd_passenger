@@ -92,5 +92,7 @@
   "passWrong": "Yanlış şifre !!",
   "noNet": "Ağınızı kontrol edin !!",
   "arrivedTime": "Gelme Süresi : 2-3 dk",
-  "chooseBefore": "Bir araba sipariş etmeden önce varış noktanızı seçin"
+  "chooseBefore": "Bir araba sipariş etmeden önce varış noktanızı seçin",
+  "try1": "Tekrar deneyin",
+  "interNetWeak": "İnternet ağı yok. Veya İnternet zayıf. İnternet ağınızı açın ve tekrar yüklemeyi deneyin !!!"
 }

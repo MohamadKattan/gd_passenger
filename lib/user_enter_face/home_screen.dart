@@ -188,7 +188,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-
                             /// order taxi and else...
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -652,7 +651,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 )),
-
                             /// sheet Car desc
                             AnimatedPositioned(
                               child: customBottomSheet.showSheetCarInfoTaxi(
@@ -706,7 +704,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: 0.0,
                               bottom: sheetCarDscBig,
                             ),
-
                             ///cancel container
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -722,7 +719,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         state = "normal";
                                       });
                                     })),
-
                             ///driver info
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),

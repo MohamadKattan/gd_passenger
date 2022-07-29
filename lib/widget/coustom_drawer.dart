@@ -7,6 +7,8 @@ import 'package:gd_passenger/user_enter_face/profile_screen.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../my_provider/buttom_color_pro.dart';
+import '../my_provider/double_value.dart';
 import '../tools/carousel_slider.dart';
 import '../user_enter_face/book_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -137,7 +139,10 @@ Widget customDrawer(BuildContext context) {
                   if (Platform.isAndroid) {
                     SystemNavigator.pop();
                   }
-                exit(0);
+                  Provider.of<DoubleValue>(context, listen: false)
+                      .value0Or1(0);
+                  Provider.of<ChangeColor>(context, listen: false)
+                      .updateState(false);
                 },
                 child: Row(
                   children: [

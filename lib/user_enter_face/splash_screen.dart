@@ -7,12 +7,13 @@ import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:gd_passenger/tools/turn_Gps.dart';
 import 'package:gd_passenger/user_enter_face/auth_screen.dart';
 import 'package:gd_passenger/user_enter_face/user_info_screen.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../my_provider/info_user_database_provider.dart';
 import '../tools/tools.dart';
 import 'home_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'inter_net_weak.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,11 +25,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
+  bool result = false;
   @override
-  initState()  {
+  initState() {
+    checkInternet();
     TurnGps().turnGpsIfNot();
-    if (AuthSev().auth.currentUser?.uid != null){
-       DataBaseSrv().currentOnlineUserInfo(context);
+    if (AuthSev().auth.currentUser?.uid != null) {
+      DataBaseSrv().currentOnlineUserInfo(context);
     }
     _animationController = AnimationController(
         vsync: this,
@@ -56,21 +59,17 @@ class _SplashScreenState extends State<SplashScreen>
               if (Platform.isAndroid) {
                 SystemNavigator.pop();
               } else {
-                   Navigator.push(context, MaterialPageRoute(builder:(_)=>const HomeScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const HomeScreen()));
               }
             });
-          }
-          else if (infoUser.status == "") {
-            Tools().toastMsg(AppLocalizations.of(context)!.noNet);
-            Tools().toastMsg(AppLocalizations.of(context)!.noNet);
-           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(_)=>const SplashScreen()),
-                   (route) => false);
-          }
-          else if (infoUser.status == "info") {
+          } else if (infoUser.status == "") {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const InterNetWeak()));
+          } else if (infoUser.status == "info") {
             Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const UserInfoScreen()));
-          }
-          else if (infoUser.status == "ok") {
+          } else if (infoUser.status == "ok") {
             Navigator.push(
                 context, MaterialPageRoute(builder: (_) => const HomeScreen()));
           }
@@ -116,9 +115,19 @@ class _SplashScreenState extends State<SplashScreen>
               "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
           : Tools().toastMsg('Could not launch');
     } else {
-      await canLaunch("https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
-          ? launch("https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
+      await canLaunch(
+              "https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
+          ? launch(
+              "https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
           : Tools().toastMsg('Could not launch');
+    }
+  }
+// this method for check internet
+  Future<void> checkInternet() async {
+    result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const InterNetWeak()));
     }
   }
 }

@@ -374,5 +374,13 @@
   "arrivedTime": "Arrived time : 2-3 min",
   "@arrivedTime": {
     "description": "Check you net work !!"
+  },
+  "interNetWeak": " No Internet net work .Or Internet weak . turn on your Internet network and try loading again !!!",
+  "@interNetWeak": {
+    "description": "Internet week try loading again !!!"
+  },
+  "try1": "Try again",
+  "@try1": {
+    "description": "Try again"
   }
- }
+}
