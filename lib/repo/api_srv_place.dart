@@ -15,7 +15,7 @@ class DropPlaceDetails {
   final GetUrl _getUrl = GetUrl();
   final CircularInductorCostem _costem = CircularInductorCostem();
 
-  void getPlaceAddressDetails(String placeId,BuildContext context) async {
+ Future <void> getPlaceAddressDetails(String placeId,BuildContext context) async {
     showDialog(
         context: context,
         builder:(context)=> _costem.circularInductorCostem(context)

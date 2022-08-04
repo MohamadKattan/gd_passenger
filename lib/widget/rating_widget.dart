@@ -8,8 +8,8 @@ import 'divider_box_.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RatingWidget extends StatefulWidget {
-  // final String id;
-  //  required this.id
+  // final String? id;
+  // required this.id
   const RatingWidget({Key? key}) : super(key: key);
 
   @override
@@ -43,7 +43,7 @@ class _RatingWidgetState extends State<RatingWidget> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height:5),
+              const SizedBox(height: 5),
               SmoothStarRating(
                 allowHalfRating: false,
                 starCount: 5,
@@ -69,7 +69,7 @@ class _RatingWidgetState extends State<RatingWidget> {
                     style:
                         const TextStyle(color: Colors.black87, fontSize: 20.0)),
               ),
-              const SizedBox(height:10),
+              const SizedBox(height: 10),
               CustomWidget().customDivider(),
               const SizedBox(height: 20),
               GestureDetector(
@@ -101,11 +101,8 @@ class _RatingWidgetState extends State<RatingWidget> {
 
 // this method for set rate to data base
   Future<void> rateTODateBase(String id) async {
-    DatabaseReference reference = FirebaseDatabase.instance
-        .ref()
-        .child("driver")
-        .child(id)
-        .child("rating");
+    DatabaseReference reference =
+        FirebaseDatabase.instance.ref().child("driver").child(id).child("rating");
 
     await reference.once().then((value) {
       if (value.snapshot.value != null) {

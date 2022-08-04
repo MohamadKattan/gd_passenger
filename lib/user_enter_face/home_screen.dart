@@ -28,6 +28,7 @@ import 'package:gd_passenger/widget/bottom_sheet.dart';
 import 'package:gd_passenger/widget/coustom_drawer.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
+import 'package:gd_passenger/widget/rating_widget.dart';
 import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -159,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _logicGoogleMap.controllerGoogleMap
                                       .complete(controller);
                                   newGoogleMapController = controller;
-                                  locationPosition(context);
+                                 await locationPosition(context);
                                 },
                               ),
                             ),
@@ -222,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         const SearchScreen()));
                                             if (res == "dataDir") {
                                               await getPlaceDerction(context);
-                                              checkAllUserInfoReal(
+                                            await  checkAllUserInfoReal(
                                                   infoUserDataReal, context);
                                             }
                                           },
@@ -789,7 +790,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-
               /// complain button
               statusRide == "accepted" || statusRide == "Driver arrived"
                   ? Padding(
@@ -822,8 +822,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ///this them main logic for diretion + marker+ polline conect with class api
   Future<void> getPlaceDerction(BuildContext context) async {
     /// from api geo
-    final initialPos =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final initialPos = Provider.of<AppData>(context, listen: false).pickUpLocation;
 
     ///from api srv place
     final finalPos =
@@ -843,7 +842,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       tripDirectionDetails = details;
     });
-    Navigator.pop(context);
 
     /// PolylinePoints method
     PolylinePoints polylinePoints = PolylinePoints();
@@ -875,6 +873,7 @@ class _HomeScreenState extends State<HomeScreen> {
       polylineSet.add(polyline);
     });
 
+    Navigator.pop(context);
     ///for fit line on map PolylinePoints
     LatLngBounds latLngBounds;
     if (pickUpLatling.latitude > dropOfLatling.latitude &&
@@ -1118,7 +1117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void restApp() {
+  Future<void> restApp() async {
     setState(() {
       polylineSet.clear();
       markersSet.clear();
@@ -1149,7 +1148,7 @@ class _HomeScreenState extends State<HomeScreen> {
       sound2 = false;
       sound3 = false;
     });
-    locationPosition(context);
+   await locationPosition(context);
   }
 
   // this method for switch text where to OR toll passes
@@ -1378,6 +1377,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }
+
     Future.delayed(const Duration(seconds: 125)).whenComplete((){
       if(waitDriver=="wait"){
         // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
@@ -1436,16 +1436,6 @@ class _HomeScreenState extends State<HomeScreen> {
               sound3 = true;
             });
           }
-          //2
-          // else if (event.snapshot.value.toString() == "canceled") {
-          //   timer.cancel();
-          //   restApp();
-          //   setState(() {
-          //     rideRequestTimeOut = 20;
-          //     after2MinTimeOut = 100;
-          //   });
-          // }
-          //3
           else if (rideRequestTimeOut == 0) {
             driverRef.child("newRide").set("timeOut");
             driverRef.child("newRide").onDisconnect();
@@ -1560,12 +1550,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Provider.of<RiderId>(context, listen: false)
                     .updateStatus(driverId);
               }
-              //   // showDialog(
-              //   //     context: context,
-              //   //     barrierDismissible: false,
-              //   //     builder: (BuildContext context) {
-              //   //       return RatingWidget(id: driverId);
-              //   //     });
+                // showDialog(
+                //     context: context,
+                //     barrierDismissible: false,
+                //     builder: (BuildContext context) {
+                //       return const RatingWidget();
+                //     });
               rideStreamSubscription.cancel();
             }
           }

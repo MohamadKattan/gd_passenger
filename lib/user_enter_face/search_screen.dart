@@ -29,96 +29,98 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final addressModle = Provider.of<AppData>(context).pickUpLocation;
     return WillPopScope(
-    onWillPop: ()async=>true,
+      onWillPop: () async => true,
       child: GestureDetector(
-        onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: SafeArea(
           child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.close),
-              backgroundColor:const Color(0xFFFFD54F),
-                onPressed: ()=>Navigator.pop(context)),
+              floatingActionButton: FloatingActionButton(
+                  child: const Icon(Icons.close),
+                  backgroundColor: const Color(0xFFFFD54F),
+                  onPressed: () => Navigator.pop(context)),
               body: SingleChildScrollView(
                   child: Column(
-            children: [
-              Container(
-                height: 120,
-                decoration: const BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10.0),
-                    bottomRight: Radius.circular(10.0))),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0, left: 10.0),
-                  child: TextField(
-                    maxLength: 25,
-                    onChanged: (val) {
-                  finedPlace(val, addressModle, context);
-                    },
-                    controller: whereEdit,
-                    showCursor: true,
-                    mouseCursor: MouseCursor.uncontrolled,
-                    autofocus: true,
-                    cursorWidth: 4.0,
-                    enabled: true,
-                    style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
-                    cursorColor: const Color(0xFFFFD54F),
-                    decoration:  InputDecoration(
-                  fillColor: const Color(0xFFFFD54F),
-                  border: InputBorder.none,
-                  icon: const Icon(
-                    Icons.search,
-                    color: Colors.white,
-                    size: 35,
-                  ),
-                  iconColor: Colors.white,
-                  hintText: AppLocalizations.of(context)!.whereTo,
-                  contentPadding: const EdgeInsets.all(10.0),
-                  hintStyle: const TextStyle(
-                      fontSize: 25,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.0),
-                  hoverColor: Color(0xFFFFD54F),
+                children: [
+                  Container(
+                    height: 120,
+                    decoration: const BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40.0, left: 10.0),
+                      child: TextField(
+                        maxLength: 25,
+                        onChanged: (val) async {
+                          await finedPlace(val, addressModle, context);
+                        },
+                        controller: whereEdit,
+                        showCursor: true,
+                        mouseCursor: MouseCursor.uncontrolled,
+                        autofocus: true,
+                        cursorWidth: 4.0,
+                        enabled: true,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white),
+                        cursorColor: const Color(0xFFFFD54F),
+                        decoration: InputDecoration(
+                          fillColor: const Color(0xFFFFD54F),
+                          border: InputBorder.none,
+                          icon: const Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 35,
+                          ),
+                          iconColor: Colors.white,
+                          hintText: AppLocalizations.of(context)!.whereTo,
+                          contentPadding: const EdgeInsets.all(10.0),
+                          hintStyle: const TextStyle(
+                              fontSize: 25,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.0),
+                          hoverColor: const Color(0xFFFFD54F),
+                        ),
+                        keyboardType: TextInputType.text,
+                      ),
                     ),
-                    keyboardType: TextInputType.text,
                   ),
-                ),
-              ),
-              placePredictionsList.isNotEmpty
-                  ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return PredictionsTitle(
-                          predictions: placePredictionsList[index]);
-                    },
-                    separatorBuilder: (context, index) =>
-                        customWidget.customDivider(),
-                    itemCount: placePredictionsList.length,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                  ),
-                    )
-                  : Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
-                  child: Center(
-                      child: Lottie.asset('assets/lf30_editor_jobovyne.json',
-                          height: 350, width: 350)),
-                    )
-            ],
-          ))),
+                  placePredictionsList.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              return PredictionsTitle(
+                                  predictions: placePredictionsList[index]);
+                            },
+                            separatorBuilder: (context, index) =>
+                                customWidget.customDivider(),
+                            itemCount: placePredictionsList.length,
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 40.0),
+                          child: Center(
+                              child: Lottie.asset(
+                                  'assets/lf30_editor_jobovyne.json',
+                                  height: 350,
+                                  width: 350)),
+                        )
+                ],
+              ))),
         ),
       ),
     );
   }
 
 // place api
-  void finedPlace(
+  Future<void> finedPlace(
       String placeName, Address addressModle, BuildContext context) async {
     if (placeName.length > 1) {
       final autocompleteUrl = Uri.parse(
@@ -153,7 +155,7 @@ class PredictionsTitle extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: GestureDetector(
-        onTap: () => dropPlaceDetails.getPlaceAddressDetails(
+        onTap: () async=> await dropPlaceDetails.getPlaceAddressDetails(
             predictions.placeId, context),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -174,13 +176,11 @@ class PredictionsTitle extends StatelessWidget {
                           fontSize: 20.0,
                           color: Colors.black,
                           overflow: TextOverflow.ellipsis)),
-                  Container(
-                    child: Text(predictions.secondaryText,
-                        style: const TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.black54,
-                            overflow: TextOverflow.ellipsis)),
-                  ),
+                  Text(predictions.secondaryText,
+                      style: const TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.black54,
+                          overflow: TextOverflow.ellipsis)),
                 ],
               ),
             )
