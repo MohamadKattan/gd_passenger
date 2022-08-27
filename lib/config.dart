@@ -8,11 +8,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'model/directions_details.dart';
 
- final TextEditingController phoneNumber = TextEditingController();
- final TextEditingController email = TextEditingController();
+final TextEditingController phoneNumber = TextEditingController();
+final TextEditingController email = TextEditingController();
 final TextEditingController password = TextEditingController();
- final  TextEditingController firstname = TextEditingController();
- final TextEditingController lastname = TextEditingController();
+final TextEditingController firstname = TextEditingController();
+final TextEditingController lastname = TextEditingController();
 
 String mapKey = "AIzaSyDh5NNwfDJFU27Y_yMpVcWeeepBQBbewmM";
 String serverToken =
@@ -30,7 +30,7 @@ GoogleMapController? newGoogleMapController;
 StreamSubscription<Position>? tripScreenStreamSubscription;
 String fNameIcon = "";
 String lNameIcon = "";
- String driverImage = "";
+String driverImage = "";
 int rideRequestTimeOut = 25;
 int after2MinTimeOut = 125;
 String statusRide = "";
@@ -49,12 +49,6 @@ String carRideType = "";
 String tourismCityName = "";
 String tourismCityPrice = "";
 String newValueDrop = "";
-String contry="";
+String contry = "";
 //version: 1.0.0+6 play store last build
 // version: 1.0.2 app store
-
-
-
-
-
-

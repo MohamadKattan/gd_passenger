@@ -18,13 +18,5 @@ class GeoFireMethods {
     int index = listOfNearestDriverAvailable.indexWhere((element) => element.key == driver.key);
     listOfNearestDriverAvailable[index].latitude = driver.latitude;
     listOfNearestDriverAvailable[index].longitude = driver.longitude;
-    // int myList = listOfNearestDriverAvailable.length;
-    // if(myList>0){
-    //   int index = listOfNearestDriverAvailable.indexWhere((element) => element.key == driver.key);
-    //   listOfNearestDriverAvailable[index].latitude = driver.latitude;
-    //   listOfNearestDriverAvailable[index].longitude = driver.longitude;
-    // }else{
-    //   listOfNearestDriverAvailable = [];
-    // }
   }
 }
