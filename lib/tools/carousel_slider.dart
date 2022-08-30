@@ -15,23 +15,25 @@ class ImageSliderDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(top: 25.0,right: AppLocalizations.of(context)!.hi=="مرحبا"?120.0:8.0,left: 8.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 25 / 100,
-        width : double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: CarouselSlider(
-          options: CarouselOptions(
-            autoPlay: true,
-            aspectRatio: 1.0,
-            enlargeCenterPage: true,
+      padding:  EdgeInsets.only(top: 25.0,right: AppLocalizations.of(context)!.hi=="مرحبا"?120.0:50.0,left: 8.0),
+      child: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 20 / 100,
+          width : MediaQuery.of(context).size.width * 60 / 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
           ),
-          items: imgList
-              .map((item) => Center(
-                  child: Image.asset(item, fit: BoxFit.cover, width: 500)))
-              .toList(),
+          child: CarouselSlider(
+            options: CarouselOptions(
+              autoPlay: true,
+              aspectRatio: 1.0,
+              enlargeCenterPage: true,
+            ),
+            items: imgList
+                .map((item) => Center(
+                    child: Image.asset(item, fit: BoxFit.cover, width: 300)))
+                .toList(),
+          ),
         ),
       ),
     );

@@ -12,10 +12,10 @@ Widget callDriver(BuildContext context) {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
     backgroundColor: Colors.transparent,
     child: Container(
-      height: MediaQuery.of(context).size.height * 20 / 100,
+      height: 200,
       width: double.infinity,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4.0), color: Colors.white),
+          borderRadius: BorderRadius.circular(12.0), color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,7 +30,7 @@ Widget callDriver(BuildContext context) {
                 Text(
                   AppLocalizations.of(context)!.callDriver,
                   style: const TextStyle(
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold),
                 ),
@@ -51,10 +51,11 @@ Widget callDriver(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.call, color: Colors.greenAccent.shade700),
+                   const SizedBox(width: 8.0),
                     Text(AppLocalizations.of(context)!.normalCall,
                         style: const TextStyle(
                           fontSize: 18.0,
-                          color: Colors.black,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center)
@@ -76,10 +77,11 @@ Widget callDriver(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.call, color: Colors.greenAccent.shade700),
+                    const SizedBox(width: 8.0),
                     Text(AppLocalizations.of(context)!.whatsApp,
                         style: const TextStyle(
                           fontSize: 18.0,
-                          color: Colors.black,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center)

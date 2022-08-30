@@ -38,6 +38,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        backgroundColor: const Color(0xFF00A3E0),
         key: globalKey,
         body: Builder(
           builder:(_)=> SafeArea(
@@ -51,11 +52,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 30),
                         Text(AppLocalizations.of(context)!.profile,
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
-                                fontSize: 30, color: Colors.black54)),
-                        const SizedBox(height: 40),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                        const SizedBox(height: 30),
                         GestureDetector(
                           onTap: ()=>
                             Provider.of<UserInfoSheet>(context,listen: false).updateState(0),
@@ -64,56 +68,90 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               width: 60,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: const Color(0xFFFFD54F)),
+                                  color: const Color(0xFF00A3E0)),
                               child: picked == null
-                                  ? const Icon(
-                                      Icons.add_a_photo_outlined,
-                                      size: 25,
-                                      color: Colors.white,
-                                    )
+                                  ?
+                              Image.asset("assets/add photo.png")
                                   : Image(
                                       image: FileImage(File(imageFile.path)),
                                       fit: BoxFit.fill,
                                     )),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        Container(
+                          height: 55,
+                          margin:const EdgeInsets.only(left: 8.0,right: 8.0),
+                          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
                           child: TextField(
                             controller: firstname,
-                            maxLength: 20,
                             showCursor: true,
                             style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                             cursorColor: const Color(0xFFFFD54F),
                             decoration: InputDecoration(
                               fillColor: const Color(0xFFFFD54F),
-                              label:
-                                  Text(AppLocalizations.of(context)!.firstName),
+                              hintText: AppLocalizations.of(context)!.firstName,
+                              icon: const Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.grey,
+                                  size: 25,
+                                ),
+                              ),
                             ),
                             keyboardType: TextInputType.name,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 55,
+                          margin:const EdgeInsets.only(left: 8.0,right: 8.0),
+                          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
                           child: TextField(
                             controller: lastname,
-                            maxLength: 20,
                             showCursor: true,
                             style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                             cursorColor: const Color(0xFFFFD54F),
                             decoration: InputDecoration(
                               fillColor: const Color(0xFFFFD54F),
-                              label: Text(AppLocalizations.of(context)!.lastName),
+                              hintText: AppLocalizations.of(context)!.lastName,
+                              icon: const Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.grey,
+                                  size: 25,
+                                ),
+                              ),
                             ),
                             keyboardType: TextInputType.name,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 55,
+                          margin:const EdgeInsets.only(left: 8.0,right: 8.0),
+                          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -151,7 +189,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 flex: 1,
                                 child: TextField(
                                   controller: phoneNumber,
-                                  maxLength: 15,
                                   showCursor: true,
                                   style: const TextStyle(
                                       fontSize: 16, fontWeight: FontWeight.w600),
@@ -161,11 +198,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                       padding: EdgeInsets.only(top: 15.0),
                                       child: Icon(
                                         Icons.phone,
-                                        color: Color(0xFFFFD54F),
+                                        color: Colors.grey,
                                       ),
                                     ),
                                     fillColor:const Color(0xFFFFD54F),
-                                    label: Text(AppLocalizations.of(context)!.number),
+                                    hintText: AppLocalizations.of(context)!.number
                                   ),
                                   keyboardType: TextInputType.phone,
                                 ),
@@ -174,7 +211,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 40),
                         GestureDetector(
                           onTap: () {
                             if (picked == null) {
@@ -194,14 +231,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               AppLocalizations.of(context)!.save,
                               style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             )),
-                            width: 180,
+                            width: 200,
                             height: 60,
                             decoration: BoxDecoration(
-                                color: const Color(0xFFFFD54F),
-                                borderRadius: BorderRadius.circular(4.0),
+                                color: const Color(0xFFFBC408),
+                                borderRadius: BorderRadius.circular(12.0),
                                 boxShadow: const [
                                   BoxShadow(
                                       color: Colors.black45,
@@ -221,7 +258,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     bottom: valSheet,
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF00A3E0),
                           borderRadius: BorderRadius.circular(8.0)
                       ),
                       height: 250,

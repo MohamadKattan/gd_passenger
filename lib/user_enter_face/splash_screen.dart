@@ -6,6 +6,7 @@ import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:gd_passenger/tools/turn_Gps.dart';
 import 'package:gd_passenger/user_enter_face/auth_screen.dart';
+import 'package:gd_passenger/user_enter_face/page_view.dart';
 import 'package:gd_passenger/user_enter_face/user_info_screen.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.addStatusListener((status) async {
       if (AuthSev().auth.currentUser?.uid == null) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+            context, MaterialPageRoute(builder: (_) => const MyPageView()));
       }
       if (status == AnimationStatus.completed) {
         if (AuthSev().auth.currentUser?.uid != null) {
@@ -84,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: const Color(0xFFFDD44F),
+      backgroundColor: const Color(0xFF00A3E0),
       body: SafeArea(
         child: ScaleTransition(
           scale: _animationController,
@@ -92,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen>
             height: _height,
             width: _width,
             child: Container(
-                color: const Color(0xFFFFD54F),
+                color: const Color(0xFF00A3E0),
                 child: Image.asset("assets/splash.png")),
           ),
         ),

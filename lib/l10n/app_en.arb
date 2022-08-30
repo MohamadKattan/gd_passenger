@@ -27,11 +27,11 @@
   "@tryAgain": {
     "description": " try again"
   },
-  "logInToTaxi": "Login to Garanti driver taxi",
+  "logInToTaxi": "Register",
   "@logInToTaxi": {
     "description": "LogIn to Garanti driver taxi"
   },
-  "newAccount": "Enter your email & password to be able to log in or create a new account",
+  "newAccount": "You can register with your e-mail address.\nWe will enter the profile information on the screen",
   "@newAccount": {
     "description": "Enter your email & password to be able to log in or create a new account"
   },
@@ -167,7 +167,7 @@
   "@lastName": {
     "description": "Last name"
   },
-  "email": "Email",
+  "email": "E-Mail Address.",
   "@email": {
     "description": "Email"
   },
@@ -382,5 +382,29 @@
   "try1": "Try again",
   "@try1": {
     "description": "Try again"
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip"
+  },
+  "into1": "In Garanti Taxi, you can choose the type of vehicle you want according to your needs!",
+  "@into1": {
+    "description": "into1"
+  },
+  "into2": "Choose your destination and enjoy the journey at the most affordable prices.",
+  "@into2": {
+    "description": "into2"
+  },
+  "into3": "You can use Garanti Taxi Application with 3 different language options!",
+  "@into3": {
+    "description": "into3"
+  },
+  "support": "Support",
+  "@support": {
+    "description": "Support"
+  },
+  "supportInfo": "Contact us for any information or questions.",
+  "@supportInfo": {
+    "description": "Contact us for any information or questions."
   }
 }

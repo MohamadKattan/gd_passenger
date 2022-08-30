@@ -18,8 +18,8 @@ Widget collectMoney(BuildContext context, int totalAmount) {
       height: 275,
       width: double.infinity,
       decoration:  BoxDecoration(
-        borderRadius: BorderRadius.circular(4.0),
-          color: Colors.white),
+        borderRadius: BorderRadius.circular(12.0),
+          color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -32,7 +32,7 @@ Widget collectMoney(BuildContext context, int totalAmount) {
             Text(
               AppLocalizations.of(context)!.amountTrip,
               style: const TextStyle(
-                  color: Colors.black87,
+                  color: Colors.white,
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold),
             ),
@@ -43,14 +43,14 @@ Widget collectMoney(BuildContext context, int totalAmount) {
                       "  " +
                       dropBottomProvider,
                   style:
-                      const TextStyle(color: Colors.black87, fontSize: 16.0)),
+                      const TextStyle(color: Colors.white, fontSize: 16.0)),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
                   AppLocalizations.of(context)!.total + "\$$totalAmount",
                   style:
-                      const TextStyle(color: Colors.black87, fontSize: 16.0)),
+                      const TextStyle(color: Colors.white, fontSize: 16.0)),
             ),
             CustomWidget().customDivider(),
             Padding(
@@ -65,11 +65,11 @@ Widget collectMoney(BuildContext context, int totalAmount) {
                     height: 50,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
-                        color: Colors.greenAccent.shade700),
+                        color: const Color(0xFFFBC408)),
                     child: Center(
                         child: Text(
                       AppLocalizations.of(context)!.ok,
-                      style: const TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
                     )),
                   ),
                 ),

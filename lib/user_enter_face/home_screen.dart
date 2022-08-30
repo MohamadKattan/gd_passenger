@@ -28,7 +28,6 @@ import 'package:gd_passenger/widget/bottom_sheet.dart';
 import 'package:gd_passenger/widget/coustom_drawer.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
-import 'package:gd_passenger/widget/rating_widget.dart';
 import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -143,6 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                         child: Stack(
                           children: [
+                            ///map
                             SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 85 / 100,
@@ -160,10 +160,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _logicGoogleMap.controllerGoogleMap
                                       .complete(controller);
                                   newGoogleMapController = controller;
-                                 await locationPosition(context);
+                                  await locationPosition(context);
                                 },
                               ),
                             ),
+                            /// arrow up
                             Positioned(
                               bottom: 0.0,
                               right: 0.0,
@@ -181,9 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           BorderRadius.circular(16.0)),
                                   child: const Center(
                                     child: Icon(
-                                      Icons.arrow_circle_up,
-                                      size: 40,
-                                      color: Colors.purple,
+                                      Icons.keyboard_arrow_up,
+                                      size: 50,
+                                      color: Color(0xFFFBC408),
                                     ),
                                   ),
                                 ),
@@ -197,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bottom: postionChang,
                                 child: Container(
                                   height: MediaQuery.of(context).size.height *
-                                      38 /
+                                      39 /
                                       100,
                                   decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -214,6 +215,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
+                                        /// arrow down
+                                        // GestureDetector(
+                                        //   onTap: () {
+                                        //     Provider.of<PositionChang>(context,
+                                        //             listen: false)
+                                        //         .changValue(-500.0);
+                                        //   },
+                                        //   child: const Icon(
+                                        //     Icons.keyboard_arrow_down_outlined,
+                                        //     color: Color(0xFFFBC408),
+                                        //     size: 45,
+                                        //   ),
+                                        // ),
+                                        const SizedBox(height: 6.0),
+                                        /// where to
                                         GestureDetector(
                                           onTap: () async {
                                             final res = await Navigator.push(
@@ -223,12 +239,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         const SearchScreen()));
                                             if (res == "dataDir") {
                                               await getPlaceDerction(context);
-                                            await  checkAllUserInfoReal(
+                                              await checkAllUserInfoReal(
                                                   infoUserDataReal, context);
                                             }
                                           },
                                           child: Container(
-                                            color: Colors.transparent,
+                                            margin: const EdgeInsets.only(left: 12.0,right: 12.0),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(14.0),
+                                              border:Border.all(width: 2.0, color: const Color(0xFFFBC408))
+                                            ),
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -239,54 +259,55 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 15.0 /
                                                 100,
                                             child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child:
-                                                        searchIconOrCancelBottom(
-                                                            tripDirectionDetails),
-                                                  ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(
+                                                          8.0),
+                                                  child:
+                                                      searchIconOrCancelBottom(
+                                                          tripDirectionDetails),
                                                 ),
                                                 changeTextWhereToOrTollpasses(
                                                     tripDirectionDetails),
-                                                tripDirectionDetails != null
-                                                    ? SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            5 /
-                                                            100)
-                                                    : SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            45 /
-                                                            100),
-                                                Expanded(
-                                                  child: IconButton(
-                                                    icon: const Icon(
-                                                      Icons
-                                                          .arrow_circle_down_outlined,
-                                                      color: Colors.purple,
-                                                      size: 35,
-                                                    ),
-                                                    onPressed: () {
-                                                      Provider.of<PositionChang>(
-                                                              context,
-                                                              listen: false)
-                                                          .changValue(-500.0);
-                                                    },
-                                                  ),
-                                                ),
+                                                ///stop after new
+                                                // tripDirectionDetails != null
+                                                //     ? SizedBox(
+                                                //         width: MediaQuery.of(
+                                                //                     context)
+                                                //                 .size
+                                                //                 .width *
+                                                //             5 /
+                                                //             100)
+                                                //     : SizedBox(
+                                                //         width: MediaQuery.of(
+                                                //                     context)
+                                                //                 .size
+                                                //                 .width *
+                                                //             45 /
+                                                //             100),
+                                                // Expanded(
+                                                //   child: IconButton(
+                                                //     icon: const Icon(
+                                                //       Icons
+                                                //           .arrow_circle_down_outlined,
+                                                //       color: Colors.purple,
+                                                //       size: 35,
+                                                //     ),
+                                                //     onPressed: () {
+                                                //       Provider.of<PositionChang>(
+                                                //               context,
+                                                //               listen: false)
+                                                //           .changValue(-500.0);
+                                                //     },
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                           ),
                                         ),
+                                       const SizedBox(height: 6.0),
                                         _customWidget.customDivider(),
                                         Padding(
                                           padding:
@@ -312,7 +333,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             child: _customWidget.carTypeBox(
                                                                 const Image(
                                                                     image: AssetImage(
-                                                                        "assets/yellow.png"),
+                                                                        "assets/yellow.png",
+                                                                    ),
                                                                     fit: BoxFit
                                                                         .contain),
                                                                 tripDirectionDetails !=
@@ -343,8 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     ? const Icon(
                                                                         Icons
                                                                             .info_outline,
-                                                                        color: Colors
-                                                                            .purple,
+                                                                        color: Color(0xFFFBC408),
                                                                         size:
                                                                             20,
                                                                       )
@@ -369,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           2),
                                                               color: taxiLine ==
                                                                       true
-                                                                  ? Colors.black
+                                                                  ? const Color(0xFF00A3E0)
                                                                   : Colors
                                                                       .transparent,
                                                             ),
@@ -441,8 +462,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     ? const Icon(
                                                                         Icons
                                                                             .info_outline,
-                                                                        color: Colors
-                                                                            .purple,
+                                                                        color: Color(0xFFFBC408),
                                                                         size:
                                                                             20,
                                                                       )
@@ -467,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           2),
                                                               color: vanLine ==
                                                                       true
-                                                                  ? Colors.black
+                                                                  ? const Color(0xFF00A3E0)
                                                                   : Colors
                                                                       .transparent,
                                                             ),
@@ -536,8 +556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     ? const Icon(
                                                                         Icons
                                                                             .info_outline,
-                                                                        color: Colors
-                                                                            .purple,
+                                                                        color: Color(0xFFFBC408),
                                                                         size:
                                                                             20,
                                                                       )
@@ -562,7 +581,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           2),
                                                               color: vetoLine ==
                                                                       true
-                                                                  ? Colors.black
+                                                                  ? const Color(0xFF00A3E0)
                                                                   : Colors
                                                                       .transparent,
                                                             ),
@@ -633,8 +652,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 decoration: BoxDecoration(
                                                   color: tripDirectionDetails !=
                                                           null
-                                                      ? const Color(0xFFFFD54F)
-                                                      : Colors.purple,
+                                                      ? const Color(0xFFFBC408)
+                                                      : const Color(0xFF00A3E0),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           15.0),
@@ -644,7 +663,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   AppLocalizations.of(context)!
                                                       .requestTaxi,
                                                   style: const TextStyle(
-                                                      fontSize: 18),
+                                                      fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white
+                                                  ),
                                                 )),
                                               )),
                                         ),
@@ -749,7 +771,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
                           radius: 30,
-                          backgroundColor: const Color(0xFFFFD54F),
+                          backgroundColor: const Color(0xFF00A3E0),
                           child: IconButton(
                               onPressed: () {
                                 checkAllUserInfoReal(infoUserDataReal, context);
@@ -760,7 +782,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               icon: const Icon(
                                 Icons.format_list_numbered_rtl_rounded,
-                                color: Colors.black54,
+                                color: Colors.white,
                                 size: 25,
                               )),
                         ),
@@ -784,12 +806,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               icon: const Icon(
                                 Icons.close,
-                                color: Colors.black54,
+                                color: Color(0xFFFBC408),
                                 size: 25,
                               )),
                         ),
                       ),
                     ),
+
               /// complain button
               statusRide == "accepted" || statusRide == "Driver arrived"
                   ? Padding(
@@ -822,7 +845,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ///this them main logic for diretion + marker+ polline conect with class api
   Future<void> getPlaceDerction(BuildContext context) async {
     /// from api geo
-    final initialPos = Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final initialPos =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
 
     ///from api srv place
     final finalPos =
@@ -874,6 +898,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     Navigator.pop(context);
+
     ///for fit line on map PolylinePoints
     LatLngBounds latLngBounds;
     if (pickUpLatling.latitude > dropOfLatling.latitude &&
@@ -1122,6 +1147,7 @@ class _HomeScreenState extends State<HomeScreen> {
       polylineSet.clear();
       markersSet.clear();
       waitDriver = "wait";
+
       ///test
       tMarker.clear();
       circlesSet.clear();
@@ -1148,7 +1174,7 @@ class _HomeScreenState extends State<HomeScreen> {
       sound2 = false;
       sound3 = false;
     });
-   await locationPosition(context);
+    await locationPosition(context);
   }
 
   // this method for switch text where to OR toll passes
@@ -1276,12 +1302,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.only(right: 4.0, left: 4.0),
       child: Container(
-        padding: const EdgeInsets.all(4.0),
+        margin:const EdgeInsets.only(left: 4.0,right: 4.0),
+        padding: const EdgeInsets.all(8.0),
         height: MediaQuery.of(context).size.height * 6 / 100,
         width: MediaQuery.of(context).size.width * 100,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4.0),
-            border: Border.all(color: Colors.purple, width: 2)),
+            border: Border.all(color: const Color(0xFFFBC408), width: 2)),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
               value: newValueDrop == "" ? value1 : newValueDrop,
@@ -1342,7 +1369,6 @@ class _HomeScreenState extends State<HomeScreen> {
 * will remove driver from map till finish his trip*/
   Future<void> searchNearestDriver(
       UserIdProvider userProvider, BuildContext context) async {
-
     if (driverAvailable.isEmpty) {
       DataBaseSrv().cancelRiderRequest(userProvider, context);
       restApp();
@@ -1378,16 +1404,15 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    Future.delayed(const Duration(seconds: 125)).whenComplete((){
-      if(waitDriver=="wait"){
+    Future.delayed(const Duration(seconds: 125)).whenComplete(() {
+      if (waitDriver == "wait") {
         // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
         Provider.of<PositionCancelReq>(context, listen: false)
             .updateValue(-400.0);
         Provider.of<PositionChang>(context, listen: false).changValue(0.0);
         DataBaseSrv().cancelRiderRequest(userProvider, context);
         restApp();
-      }
-      else{
+      } else {
         return;
       }
     });
@@ -1428,15 +1453,14 @@ class _HomeScreenState extends State<HomeScreen> {
             driverRef.child("newRide").onDisconnect();
             timer.cancel();
             setState(() {
-              waitDriver="";
+              waitDriver = "";
               rideRequestTimeOut = 25;
               after2MinTimeOut = 125;
               sound1 = true;
               sound2 = true;
               sound3 = true;
             });
-          }
-          else if (rideRequestTimeOut == 0) {
+          } else if (rideRequestTimeOut == 0) {
             driverRef.child("newRide").set("timeOut");
             driverRef.child("newRide").onDisconnect();
             timer.cancel();
@@ -1550,12 +1574,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Provider.of<RiderId>(context, listen: false)
                     .updateStatus(driverId);
               }
-                // showDialog(
-                //     context: context,
-                //     barrierDismissible: false,
-                //     builder: (BuildContext context) {
-                //       return const RatingWidget();
-                //     });
+              // showDialog(
+              //     context: context,
+              //     barrierDismissible: false,
+              //     builder: (BuildContext context) {
+              //       return const RatingWidget();
+              //     });
               rideStreamSubscription.cancel();
             }
           }

@@ -39,18 +39,22 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
         height: MediaQuery.of(context).size.height * 60 / 100,
         width: double.infinity,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0), color: Colors.white),
+            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
+              Container(
+               decoration: const BoxDecoration(
+                 color: Color(0xFF00A3E0),
+                 borderRadius: BorderRadius.only(topRight:Radius.circular(14.0),topLeft: Radius.circular(14.0))
+               ),
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   AppLocalizations.of(context)!.torzimTrip,
                   style: const TextStyle(
-                    color: Colors.black87,
+                    color: Colors.white,
                     fontSize: 12.0,
                   ),
                   textAlign: TextAlign.center,
@@ -64,8 +68,8 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       AppLocalizations.of(context)!.pricesList,
-                      style: TextStyle(
-                        color: Colors.greenAccent.shade700,
+                      style: const TextStyle(
+                        color:Color(0xFF00A3E0),
                         fontSize: 20.0,
                       ),
                       textAlign: TextAlign.center,
@@ -93,17 +97,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   },
                   child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: 55.0,
                       decoration: BoxDecoration(
+                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade700,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset: const Offset(3.0, 3.0))
-                          ]),
+                          borderRadius: BorderRadius.circular(4.0)),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -112,22 +110,22 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             flex: 1,
                             child: Text(
                               AppLocalizations.of(context)!.istanbul,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.greenAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 0,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Text(
                                 "\$100",
                                 style: TextStyle(
-                                    color: Colors.redAccent.shade700,
+                                    color: Color(0xFF00A3E0),
                                     fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
@@ -150,17 +148,12 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   },
                   child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: 55.0,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade700,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset: const Offset(3.0, 3.0))
-                          ]),
+                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -169,22 +162,22 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             flex: 1,
                             child: Text(
                               AppLocalizations.of(context)!.bursa,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.greenAccent.shade700,
+                                  color:Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 0,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Text(
                                 "\$220",
                                 style: TextStyle(
-                                    color: Colors.redAccent.shade700,
+                                    color: Color(0xFF00A3E0),
                                     fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
@@ -207,17 +200,12 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   },
                   child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: 55.0,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade700,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset: const Offset(3.0, 3.0))
-                          ]),
+                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                    ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -226,22 +214,22 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             flex: 1,
                             child: Text(
                               AppLocalizations.of(context)!.izmit,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.greenAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 0,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Text(
                                 "\$150",
                                 style: TextStyle(
-                                    color: Colors.redAccent.shade700,
+                                    color: Color(0xFF00A3E0),
                                     fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
@@ -264,17 +252,12 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   },
                   child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: 55.0,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade700,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset: const Offset(3.0, 3.0))
-                          ]),
+                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                    ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -283,22 +266,22 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             flex: 1,
                             child: Text(
                               AppLocalizations.of(context)!.sabanjah,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.greenAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 0,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Text(
                                 "\$180",
                                 style: TextStyle(
-                                    color: Colors.redAccent.shade700,
+                                    color: Color(0xFF00A3E0),
                                     fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
@@ -321,17 +304,12 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   },
                   child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: 55.0,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade700,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset: const Offset(3.0, 3.0))
-                          ]),
+                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                     ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -340,20 +318,20 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             flex: 1,
                             child: Text(
                               AppLocalizations.of(context)!.polo,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.greenAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               "\$300",
                               style: TextStyle(
-                                  color: Colors.redAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 20.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
@@ -375,17 +353,12 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   },
                   child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: 55.0,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade700,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset: const Offset(3.0, 3.0))
-                          ]),
+                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                     ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -394,22 +367,22 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             flex: 1,
                             child: Text(
                               AppLocalizations.of(context)!.sala,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.greenAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 0,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Text(
                                 "\$170",
                                 style: TextStyle(
-                                  color: Colors.redAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 20,
                                 ),
                                 textAlign: TextAlign.center,
@@ -433,17 +406,12 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                   },
                   child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: 55.0,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.shade700,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset: const Offset(3.0, 3.0))
-                          ]),
+                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                 ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -452,20 +420,20 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             flex: 1,
                             child: Text(
                               AppLocalizations.of(context)!.yalua,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.greenAccent.shade700,
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               "\$170",
                               style: TextStyle(
-                                color: Colors.redAccent.shade700,
+                                color: Color(0xFF00A3E0),
                                 fontSize: 20.0,
                               ),
                               textAlign: TextAlign.center,

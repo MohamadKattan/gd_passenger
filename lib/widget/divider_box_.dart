@@ -68,7 +68,7 @@ class CustomWidget {
       Image image, String text,String text1,BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 12.5 / 100,
-      width: MediaQuery.of(context).size.height * 20 / 100,
+      // width: MediaQuery.of(context).size.height * 20 / 100,
       decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         children: [
@@ -87,13 +87,14 @@ class CustomWidget {
           ),
             ),
           ),
-          Expanded(child: Row(
+          Expanded(
+              child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(Icons.person,size: 16.0,color: Colors.black38),
+              const Icon(Icons.person,size: 18.0,color: Colors.black38),
               const SizedBox(width: 4.0),
-              Text(text1,style: const TextStyle(fontSize: 12.0,color: Colors.black38),),
+              Text(text1,style: const TextStyle(fontSize: 18.0,color: Colors.black38),),
             ],
           ))
         ],

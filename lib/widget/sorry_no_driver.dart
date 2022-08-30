@@ -16,10 +16,10 @@ Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
     backgroundColor: Colors.transparent,
     child: Container(
-      height: MediaQuery.of(context).size.height * 45 / 100,
+      height: 250,
       width: double.infinity,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6.0), color: Colors.white),
+          borderRadius: BorderRadius.circular(16.0), color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,17 +27,18 @@ Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
           children: [
             Center(
                 child: Lottie.asset('assets/85557-empty.json',
-                    fit: BoxFit.fill, height: 160, width: 160)),
-            Text(
-              AppLocalizations.of(context)!.sorry,
-              style: const TextStyle(
-                  color: Colors.black87,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
+                    fit: BoxFit.contain, height: 130, width: 130)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                AppLocalizations.of(context)!.sorry,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 3 / 100),
-            CustomWidget().customDivider(),
-            SizedBox(height: MediaQuery.of(context).size.height * 3.5 / 100),
             GestureDetector(
               onTap: () {
                 Provider.of<PositionCancelReq>(context, listen: false)
@@ -49,17 +50,18 @@ Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
               },
               child: Center(
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 30 / 100,
-                  height: MediaQuery.of(context).size.height * 8 / 100,
+                  margin:const  EdgeInsets.all(8.0),
+                  width: 160.0,
+                  height: 50.0,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
-                      color: Colors.greenAccent.shade700),
+                      color:const Color(0xFFFBC408)),
                   child: Center(
                       child: Text(
                     AppLocalizations.of(context)!.ok,
                     style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 16.0,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold),
                   )),
                 ),

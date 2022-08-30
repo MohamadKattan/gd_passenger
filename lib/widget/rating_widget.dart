@@ -27,7 +27,9 @@ class _RatingWidgetState extends State<RatingWidget> {
       child: Container(
         height: 225,
         width: double.infinity,
-        decoration: const BoxDecoration(color: Colors.white),
+        decoration:  BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+            color: const Color(0xFF00A3E0)),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,7 +40,7 @@ class _RatingWidgetState extends State<RatingWidget> {
                 child: Text(
                   AppLocalizations.of(context)!.rate,
                   style: const TextStyle(
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold),
                 ),
@@ -67,7 +69,7 @@ class _RatingWidgetState extends State<RatingWidget> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(titleRate,
                     style:
-                        const TextStyle(color: Colors.black87, fontSize: 20.0)),
+                        const TextStyle(color: Colors.white, fontSize: 20.0)),
               ),
               const SizedBox(height: 10),
               CustomWidget().customDivider(),
@@ -82,12 +84,12 @@ class _RatingWidgetState extends State<RatingWidget> {
                     width: 120,
                     height: 50,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4.0),
-                        color: Colors.greenAccent.shade700),
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: const Color(0xFFFBC408)),
                     child: Center(
                         child: Text(
                       AppLocalizations.of(context)!.ok,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
                     )),
                   ),
                 ),

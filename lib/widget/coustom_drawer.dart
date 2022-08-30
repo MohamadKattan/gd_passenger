@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
@@ -13,182 +12,241 @@ import '../tools/carousel_slider.dart';
 import '../user_enter_face/book_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../user_enter_face/support_screen.dart';
+
 Widget customDrawer(BuildContext context) {
   double rightVal = MediaQuery.of(context).size.width * 25 / 100;
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    height: MediaQuery.of(context).size.height,
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(colors: [
-        Color(0xFFFFD54F),
-        Color(0xFFFFD55F),
-        Color(0xFFFFD56F),
-        Color(0xFFFFD57F),
-      ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        DrawerHeader(
-          child: Padding(
-            padding: EdgeInsets.only(
-                left: AppLocalizations.of(context)!.hi == "مرحبا" ? 0.0 : 80.0,
-                right:
-                    AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 0.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                showImage(context),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                showUserName(context),
-                showUserPhone(context),
-              ],
+  return SingleChildScrollView(
+    child: Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(colors: [
+          Color(0xFF00A3E0),
+          Color(0xFF00A3E0),
+          Colors.white,
+          Colors.white,
+          Colors.white,
+          Colors.white,
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DrawerHeader(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: AppLocalizations.of(context)!.hi == "مرحبا" ? 0.0 : 80.0,
+                  right:
+                      AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  showImage(context),
+                  const SizedBox(
+                    height: 8.0,
+                  ),
+                  showUserName(context),
+                  showUserPhone(context),
+                ],
+              ),
             ),
           ),
-        ),
-        Column(
-          children: [
-            const SizedBox(
-              height: 4.0,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  right: AppLocalizations.of(context)!.hi == "مرحبا"
-                      ? rightVal
-                      : 8.0,
-                  left: 8.0),
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const BookingScreen())),
-                child: Row(children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.history,
-                      color: Colors.black45,
-                      size: 35,
+          Column(
+            children: [
+              const SizedBox(
+                height: 4.0,
+              ),
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      right: AppLocalizations.of(context)!.hi == "مرحبا"
+                          ? rightVal
+                          : 8.0,
+                      left: 8.0),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BookingScreen())),
+                    child: Row(children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.history,
+                          color: Colors.black45,
+                          size: 35,
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: Text(
+                            AppLocalizations.of(context)!.book,
+                            style: const TextStyle(
+                                color: Colors.black45,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                          ))
+                    ]),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              CustomWidget().customDivider(),
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 8.0,
+                      right: AppLocalizations.of(context)!.hi == "مرحبا"
+                          ? rightVal
+                          : 8.0),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ProfileScreen())),
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child:
+                              Icon(Icons.person, color: Colors.black45, size: 35),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.profile,
+                          style: const TextStyle(
+                              color: Colors.black45,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 8.0),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Text(
-                        AppLocalizations.of(context)!.book,
-                        style: const TextStyle(
+                ),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              CustomWidget().customDivider(),
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 8.0,
+                      right: AppLocalizations.of(context)!.hi == "مرحبا"
+                          ? rightVal
+                          : 8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder:
+                    (_)=>const SupportScreen()));
+                    },
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.support,
                             color: Colors.black45,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold),
-                      ))
-                ]),
-              ),
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            CustomWidget().customDivider(),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: 8.0,
-                  right: AppLocalizations.of(context)!.hi == "مرحبا"
-                      ? rightVal
-                      : 8.0),
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ProfileScreen())),
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child:
-                          Icon(Icons.person, color: Colors.black45, size: 35),
+                            size: 35.0,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.support,
+                          style: const TextStyle(
+                              color: Colors.black45,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.profile,
-                      style: const TextStyle(
-                          color: Colors.black45,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            CustomWidget().customDivider(),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: 8.0,
-                  right: AppLocalizations.of(context)!.hi == "مرحبا"
-                      ? rightVal
-                      : 8.0),
-              child: GestureDetector(
-                onTap: () {
-                  if (Platform.isAndroid) {
-                    SystemNavigator.pop();
-                  }
-                  Provider.of<DoubleValue>(context, listen: false)
-                      .value0Or1(0);
-                  Provider.of<ChangeColor>(context, listen: false)
-                      .updateState(false);
-                },
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.exit_to_app,
+              CustomWidget().customDivider(),
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 8.0,
+                      right: AppLocalizations.of(context)!.hi == "مرحبا"
+                          ? rightVal
+                          : 8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (Platform.isAndroid) {
+                        SystemNavigator.pop();
+                      }
+                      Provider.of<DoubleValue>(context, listen: false)
+                          .value0Or1(0);
+                      Provider.of<ChangeColor>(context, listen: false)
+                          .updateState(false);
+                    },
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.exit_to_app,
+                            color: Colors.black45,
+                            size: 35.0,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.exit,
+                          style: const TextStyle(
+                              color: Colors.black45,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              CustomWidget().customDivider(),
+              Expanded(
+                flex: 0,
+                  child: ImageSliderDemo()),
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: 8.0,
+                      left: 8.0,
+                      bottom: 8.0,
+                      right: AppLocalizations.of(context)!.hi == "مرحبا"
+                          ? 120.0
+                          : 50.0),
+                  child: const Text(
+                    "Garanti taxi v1.0.0",
+                    style: TextStyle(
                         color: Colors.black45,
-                        size: 35.0,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.exit,
-                      style: const TextStyle(
-                          color: Colors.black45,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-            ),
-            CustomWidget().customDivider(),
-            ImageSliderDemo(),
-            Padding(
-              padding: EdgeInsets.only(
-                  top: 8.0,
-                  left: 8.0,
-                  bottom: 8.0,
-                  right: AppLocalizations.of(context)!.hi == "مرحبا"
-                      ? 120.0
-                      : 8.0),
-              child: const Text(
-                "Garanti taxi v1.0.0",
-                style: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
-        ),
-      ],
+              )
+            ],
+          ),
+        ],
+      ),
     ),
   );
 }

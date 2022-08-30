@@ -7,7 +7,6 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../config.dart';
 
 GlobalKey globalKey = GlobalKey();
@@ -17,18 +16,20 @@ class AuthScreen extends StatelessWidget {
   // static String result = "";
   // static String? resultCodeCon = "+90";
   static AuthSev authSev = AuthSev();
-  static final CircularInductorCostem _inductorCostem = CircularInductorCostem();
+  static final CircularInductorCostem _inductorCostem =
+      CircularInductorCostem();
 
   @override
   Widget build(BuildContext context) {
     bool myTimerProvider = Provider.of<TrueFalse>(context).isTrue;
     MediaQuery.of(context).size;
     return WillPopScope(
-      onWillPop: ()async=>false,
+      onWillPop: () async => false,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: SafeArea(
           child: Scaffold(
+            backgroundColor: const Color(0xFF00A3E0),
             key: globalKey,
             body: Stack(
               children: [
@@ -38,145 +39,109 @@ class AuthScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
-                       Text(
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset("assets/splash.png",
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Text(
                         AppLocalizations.of(context)!.logInToTaxi,
-                        style:const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                             overflow: TextOverflow.fade),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                       Text(
-                        AppLocalizations.of(context)!.newAccount,
-                        textAlign: TextAlign.center,
-                        style:const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black26,
-                            overflow: TextOverflow.fade),
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                       Text(
-                         AppLocalizations.of(context)!.enterNumber ,
-                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            overflow: TextOverflow.fade),
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      /// cancel for now
-                      // Padding(
-                      //   padding: const EdgeInsets.all(15.0),
-                      //   child: Row(
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       Padding(
-                      //         padding: const EdgeInsets.only(top: 8.0),
-                      //         child: CountryListPick(
-                      //             appBar: AppBar(
-                      //               backgroundColor: Colors.amber[200],
-                      //               title:  Text(AppLocalizations.of(context)!.pickCountry),
-                      //             ),
-                      //             theme: CountryTheme(
-                      //               isShowFlag: true,
-                      //               isShowTitle: false,
-                      //               isShowCode: true,
-                      //               isDownIcon: true,
-                      //               showEnglishName: false,
-                      //               labelColor: Colors.black54,
-                      //               alphabetSelectedBackgroundColor:
-                      //                   const Color(0xFFFFD54F),
-                      //               alphabetTextColor: Colors.deepOrange,
-                      //               alphabetSelectedTextColor: Colors.deepPurple,
-                      //             ),
-                      //             initialSelection: resultCodeCon,
-                      //             onChanged: (CountryCode? code) {
-                      //               resultCodeCon = code?.dialCode;
-                      //             },
-                      //             useUiOverlay: true,
-                      //             useSafeArea: false),
-                      //       ),
-                      //       const SizedBox(
-                      //         width: 10,
-                      //       ),
-                      //       Expanded(
-                      //         flex: 1,
-                      //         child: TextField(
-                      //           controller: phoneNumber,
-                      //           maxLength: 15,
-                      //           showCursor: true,
-                      //           style: const TextStyle(
-                      //               fontSize: 16, fontWeight: FontWeight.w600),
-                      //           cursorColor: const Color(0xFFFFD54F),
-                      //           decoration:  InputDecoration(
-                      //             icon: const Padding(
-                      //               padding: EdgeInsets.only(top: 15.0),
-                      //               child: Icon(
-                      //                 Icons.phone,
-                      //                 color: Color(0xFFFFD54F),
-                      //               ),
-                      //             ),
-                      //             fillColor:const Color(0xFFFFD54F),
-                      //             label: Text(AppLocalizations.of(context)!.number),
-                      //           ),
-                      //           keyboardType: TextInputType.phone,
-                      //         ),
-                      //       ),
-                      //
-                      //     ],
-                      //   ),
-                      // ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          controller: email,
-                          maxLength: 40,
-                          showCursor: true,
+                        padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                        child: Text(
+                          AppLocalizations.of(context)!.newAccount,
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                          cursorColor: const Color(0xFFFFD54F),
-                          decoration: InputDecoration(
-                            fillColor: const Color(0xFFFFD54F),
-                            label: Text(AppLocalizations.of(context)!.email),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white70,
+                              overflow: TextOverflow.fade),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0,left: 8.0),
+                        child: Container(
+                          height: 55,
+                          margin: const EdgeInsets.only(left: 4.0,right: 4.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                          child: TextField(
+                            controller: email,
+                            showCursor: true,
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                            cursorColor: const Color(0xFFFFD54F),
+                            decoration: InputDecoration(
+                              fillColor: const Color(0xFFFFD54F),
+                              hintText: AppLocalizations.of(context)!.email,
+                              icon: const Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Icon(
+                                  Icons.mail,
+                                  color: Colors.grey,
+                                  size: 25,
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          controller: password,
-                          maxLength: 40,
-                          showCursor: true,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                          cursorColor: const Color(0xFFFFD54F),
-                          decoration: InputDecoration(
-                            fillColor: const Color(0xFFFFD54F),
-                            label: Text(AppLocalizations.of(context)!.passWord),
+                        child: Container(
+                          height: 55,
+                          margin: const EdgeInsets.only(left: 4.0,right: 4.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
-                          keyboardType: TextInputType.visiblePassword,
+                          child: TextField(
+                            controller: password,
+                            showCursor: true,
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                            cursorColor: const Color(0xFFFFD54F),
+                            decoration: InputDecoration(
+                              fillColor: const Color(0xFFFFD54F),
+                              hintText: AppLocalizations.of(context)!.passWord,
+                              icon: const Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Icon(
+                                  Icons.key,
+                                  color: Colors.grey,
+                                  size: 25,
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.visiblePassword,
+                          ),
                         ),
                       ),
-                      ///Stop for now
-                      // SizedBox(
-                      //   height: 20,
-                      //   child: Text(AppLocalizations.of(context)!.verificationCode),
-                      // ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 40),
+                        padding: const EdgeInsets.only(top: 20),
                         child: GestureDetector(
                           onTap: () async {
                             if (email.text.isEmpty) {
@@ -184,54 +149,57 @@ class AuthScreen extends StatelessWidget {
                                 SnackBar(
                                   behavior: SnackBarBehavior.fixed,
                                   backgroundColor: Colors.red,
-                                  duration:const Duration(seconds: 3),
-                                  content: Text(AppLocalizations.of(context)!.emailRequired),
+                                  duration: const Duration(seconds: 3),
+                                  content: Text(AppLocalizations.of(context)!
+                                      .emailRequired),
                                 ),
                               );
-                            }
-                           else if (password.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                 SnackBar(
-                                  behavior: SnackBarBehavior.fixed,
-                                  backgroundColor: Colors.red,
-                                  duration:const Duration(seconds: 3),
-                                  content: Text(AppLocalizations.of(context)!.passWordR),
-                                ),
-                              );
-                            }
-                           else if(password.text.length<8){
+                            } else if (password.text.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   behavior: SnackBarBehavior.fixed,
                                   backgroundColor: Colors.red,
-                                  duration:const Duration(seconds: 3),
-                                  content: Text(AppLocalizations.of(context)!.passWordShort),
+                                  duration: const Duration(seconds: 3),
+                                  content: Text(
+                                      AppLocalizations.of(context)!.passWordR),
                                 ),
                               );
-                            }
-                            else {
+                            } else if (password.text.length < 8) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.fixed,
+                                  backgroundColor: Colors.red,
+                                  duration: const Duration(seconds: 3),
+                                  content: Text(AppLocalizations.of(context)!
+                                      .passWordShort),
+                                ),
+                              );
+                            } else {
                               ///stop for now
                               // result = "$resultCodeCon${phoneNumber.text}";
-                              await authSev.createOrLoginWithEmail(password.text.trim(), context,email.text.trim());
+                              await authSev.createOrLoginWithEmail(
+                                  password.text.trim(),
+                                  context,
+                                  email.text.trim());
                               FocusScope.of(context).requestFocus(FocusNode());
                               password.clear();
                               email.clear();
                             }
                           },
                           child: Container(
-                            child:  Center(
+                            child: Center(
                                 child: Text(
-                                  AppLocalizations.of(context)!.signUp,
+                              AppLocalizations.of(context)!.signUp,
                               style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             )),
-                            width: 180,
+                            width: 200,
                             height: 60,
                             decoration: BoxDecoration(
-                                color: const Color(0xFFFFD54F),
-                                borderRadius: BorderRadius.circular(4.0),
+                                color: const Color(0xFFFBC408),
+                                borderRadius: BorderRadius.circular(12.0),
                                 boxShadow: const [
                                   BoxShadow(
                                       color: Colors.black45,
@@ -252,7 +220,7 @@ class AuthScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                myTimerProvider==true
+                myTimerProvider == true
                     ? Opacity(
                         opacity: 0.9,
                         child: Container(
@@ -260,7 +228,8 @@ class AuthScreen extends StatelessWidget {
                           decoration: (const BoxDecoration(
                             color: Colors.black,
                           )),
-                          child: _inductorCostem.circularInductorCostem(context),
+                          child:
+                              _inductorCostem.circularInductorCostem(context),
                         ),
                       )
                     : const Text("")
