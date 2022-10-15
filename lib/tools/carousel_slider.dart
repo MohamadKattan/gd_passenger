@@ -25,7 +25,7 @@ class ImageSliderDemo extends StatelessWidget {
           ),
           child: CarouselSlider(
             options: CarouselOptions(
-              autoPlay: true,
+              autoPlay: false,
               aspectRatio: 1.0,
               enlargeCenterPage: true,
             ),

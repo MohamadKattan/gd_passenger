@@ -19,7 +19,8 @@ class ApiSrvGeo {
       Position position, BuildContext context) async {
     String placeAddress = "";
     String st1, st2, st3, st4;
-    var url = Uri.parse("https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey");
+    var url = Uri.parse(
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey");
     final response = await _getUrl.getUrlMethod(url);
     if (response != "failed") {
       st1 = response["results"][0]["address_components"][3]["long_name"];
@@ -27,19 +28,21 @@ class ApiSrvGeo {
       st3 = response["results"][0]["address_components"][5]["long_name"];
       st4 = response["results"][0]["address_components"][6]["long_name"];
 
-      placeAddress = st1 + "," + st2 + "," + st3 + "," + st4 ;
+      placeAddress = st1 + "," + st2 + "," + st3 + "," + st4;
       //from module
-      Address userPickUpAddress =  Address(
+      Address userPickUpAddress = Address(
           placeFormattedAddress: "",
           placeName: placeAddress,
           placeId: "",
           latitude: position.latitude,
           longitude: position.longitude);
-
-      // ref.child(userId!).child("country").set(st3);
-      ref.child(userId!).update({
-        "country":st3
-      });
+      if (st3 == 'Turkey') {
+        ref.child(userId!).update({"country": st3});
+      } else if (st4 == 'Turkey') {
+        ref.child(userId!).update({"country": st4});
+      } else {
+        ref.child(userId!).update({"country": st3});
+      }
 
       //for update
       Provider.of<AppData>(context, listen: false)
@@ -48,19 +51,28 @@ class ApiSrvGeo {
     return placeAddress;
   }
 
-  Future<dynamic>getContry()async{
+  Future<String> getContry() async {
     String stContry = "";
+    String stContry1 = "";
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    var url = Uri.parse("https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey");
+    var url = Uri.parse(
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey");
     final response = await _getUrl.getUrlMethod(url);
     if (response != "failed") {
       stContry = response["results"][0]["address_components"][5]["long_name"];
-      contry=stContry;
-      // ref.child(userId!).child("country").set(stContry);
-      ref.child(userId!).update({
-        "country":stContry
-      });
+      stContry1 = response["results"][0]["address_components"][6]["long_name"];
+      if(stContry=='Turkey'){
+        contry = stContry;
+        ref.child(userId!).update({"country": stContry});
+      }
+      else if(stContry1=='Turkey'){
+        contry = stContry1;
+        ref.child(userId!).update({"country": stContry1});
+      }else{
+        contry = stContry;
+        ref.child(userId!).update({"country": stContry});
+      }
     }
     return stContry;
   }

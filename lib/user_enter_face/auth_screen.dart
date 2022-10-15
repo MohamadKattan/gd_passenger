@@ -2,6 +2,7 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
+import 'package:gd_passenger/user_enter_face/how_use.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
@@ -220,6 +221,21 @@ class AuthScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                Positioned(
+                  left: 0.0,
+                    top: 0.0,
+                    child: GestureDetector(
+                      onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const HowToUse())),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                  children: [
+                        Image.asset("assets/infoIcon.png",height: 55,width: 55),
+                        Text(AppLocalizations.of(context)!.st2,style:const TextStyle(color: Colors.white))
+                  ],
+                ),
+                      ),
+                    )),
                 myTimerProvider == true
                     ? Opacity(
                         opacity: 0.9,

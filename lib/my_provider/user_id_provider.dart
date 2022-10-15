@@ -10,6 +10,7 @@ class UserIdProvider extends ChangeNotifier{
    late User _currentUserId;
    late Users users;
    User get getUser=> _currentUserId;
+
   Future <void> getUserIdProvider()async {
     _currentUserId=await _authSev.getCurrentUserId();
     notifyListeners();

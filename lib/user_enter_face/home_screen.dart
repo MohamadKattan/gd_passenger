@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -43,6 +44,7 @@ import '../notification.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/curanny_type.dart';
 import '../tools/geoFire_methods_tools.dart';
+import '../widget/call_driver_map.dart';
 import '../widget/collect_money_dialog.dart';
 import '../widget/complain_onDriver.dart';
 import '../widget/driver_info.dart';
@@ -70,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String waitDriver = "wait";
   late StreamSubscription<DatabaseEvent> rideStreamSubscription;
   bool isTimeRequstTrip = false;
-  double grofireRadr = 2;
+  double grofireRadr = 4;
   String carOrderType = "Taxi-4 seats";
   // AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
   AudioPlayer audioPlayer = AudioPlayer();
@@ -81,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    DataBaseSrv().currentOnlineUserInfo(context);
     audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
     super.initState();
   }
@@ -161,6 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .complete(controller);
                                   newGoogleMapController = controller;
                                   await locationPosition(context);
+                                  await DataBaseSrv()
+                                      .currentOnlineUserInfo(context);
                                 },
                               ),
                             ),
@@ -190,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
+
                             /// order taxi and else...
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -229,6 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         //   ),
                                         // ),
                                         const SizedBox(height: 6.0),
+
                                         /// where to
                                         GestureDetector(
                                           onTap: () async {
@@ -238,17 +243,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     builder: (context) =>
                                                         const SearchScreen()));
                                             if (res == "dataDir") {
+                                              changeAllProClickTaxiBox();
                                               await getPlaceDerction(context);
-                                              await checkAllUserInfoReal(
-                                                  infoUserDataReal, context);
+                                              //todo
+                                              // await checkAllUserInfoReal(
+                                              //     infoUserDataReal, context);
                                             }
                                           },
                                           child: Container(
-                                            margin: const EdgeInsets.only(left: 12.0,right: 12.0),
+                                            margin: const EdgeInsets.only(
+                                                left: 12.0, right: 12.0),
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(14.0),
-                                              border:Border.all(width: 2.0, color: const Color(0xFFFBC408))
-                                            ),
+                                                borderRadius:
+                                                    BorderRadius.circular(14.0),
+                                                border: Border.all(
+                                                    width: 2.0,
+                                                    color: const Color(
+                                                        0xFFFBC408))),
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -259,12 +270,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 15.0 /
                                                 100,
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Padding(
                                                   padding:
-                                                      const EdgeInsets.all(
-                                                          8.0),
+                                                      const EdgeInsets.all(8.0),
                                                   child:
                                                       searchIconOrCancelBottom(
                                                           tripDirectionDetails),
@@ -307,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                         ),
-                                       const SizedBox(height: 6.0),
+                                        const SizedBox(height: 6.0),
                                         _customWidget.customDivider(),
                                         Padding(
                                           padding:
@@ -326,29 +337,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     child: Stack(
                                                       children: [
                                                         Opacity(
-                                                            opacity: opacityTaxi ==
-                                                                    true
-                                                                ? 1
-                                                                : 0.3,
-                                                            child: _customWidget.carTypeBox(
-                                                                const Image(
-                                                                    image: AssetImage(
-                                                                        "assets/yellow.png",
-                                                                    ),
-                                                                    fit: BoxFit
-                                                                        .contain),
-                                                                tripDirectionDetails !=
-                                                                            null &&
-                                                                        carTypePro !=
-                                                                            "" &&
-                                                                        carTypePro ==
-                                                                            "Taxi-4 seats"
-                                                                    ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}"
-                                                                    : AppLocalizations.of(
-                                                                            context)!
-                                                                        .taxi,
-                                                                "4",
-                                                                context)),
+                                                            opacity:
+                                                                opacityTaxi ==
+                                                                        true
+                                                                    ? 1
+                                                                    : 0.3,
+                                                            child: _customWidget
+                                                                .carTypeBox(
+                                                                    const Image(
+                                                                        image:
+                                                                            AssetImage(
+                                                                          "assets/yellow.png",
+                                                                        ),
+                                                                        fit: BoxFit
+                                                                            .contain),
+                                                                    tripDirectionDetails != null &&
+                                                                            carTypePro !=
+                                                                                "" &&
+                                                                            carTypePro ==
+                                                                                "Taxi-4 seats"
+                                                                        ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}"
+                                                                        : AppLocalizations.of(context)!
+                                                                            .taxi,
+                                                                    "4",
+                                                                    context)),
                                                         Positioned(
                                                             right: -10.0,
                                                             top: -10.0,
@@ -365,7 +377,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     ? const Icon(
                                                                         Icons
                                                                             .info_outline,
-                                                                        color: Color(0xFFFBC408),
+                                                                        color: Color(
+                                                                            0xFFFBC408),
                                                                         size:
                                                                             20,
                                                                       )
@@ -390,7 +403,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           2),
                                                               color: taxiLine ==
                                                                       true
-                                                                  ? const Color(0xFF00A3E0)
+                                                                  ? const Color(
+                                                                      0xFF00A3E0)
                                                                   : Colors
                                                                       .transparent,
                                                             ),
@@ -404,9 +418,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: GestureDetector(
                                                     onTap: () async {
                                                       await changeAllProClickVanBox();
-                                                      await checkAllUserInfoReal(
-                                                          infoUserDataReal,
-                                                          context);
+                                                      //todo
+                                                      // await checkAllUserInfoReal(
+                                                      //     infoUserDataReal,
+                                                      //     context);
                                                       infoUserDataReal.country ==
                                                                   "Turkey" ||
                                                               contry == "Turkey"
@@ -462,7 +477,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     ? const Icon(
                                                                         Icons
                                                                             .info_outline,
-                                                                        color: Color(0xFFFBC408),
+                                                                        color: Color(
+                                                                            0xFFFBC408),
                                                                         size:
                                                                             20,
                                                                       )
@@ -487,7 +503,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           2),
                                                               color: vanLine ==
                                                                       true
-                                                                  ? const Color(0xFF00A3E0)
+                                                                  ? const Color(
+                                                                      0xFF00A3E0)
                                                                   : Colors
                                                                       .transparent,
                                                             ),
@@ -501,9 +518,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: GestureDetector(
                                                     onTap: () async {
                                                       changeAllProClickVetoBox();
-                                                      await checkAllUserInfoReal(
-                                                          infoUserDataReal,
-                                                          context);
+                                                      //todo
+                                                      // await checkAllUserInfoReal(
+                                                      //     infoUserDataReal,
+                                                      //     context);
                                                       infoUserDataReal.country ==
                                                                   "Turkey" ||
                                                               contry == "Turkey"
@@ -556,7 +574,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     ? const Icon(
                                                                         Icons
                                                                             .info_outline,
-                                                                        color: Color(0xFFFBC408),
+                                                                        color: Color(
+                                                                            0xFFFBC408),
                                                                         size:
                                                                             20,
                                                                       )
@@ -581,7 +600,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           2),
                                                               color: vetoLine ==
                                                                       true
-                                                                  ? const Color(0xFF00A3E0)
+                                                                  ? const Color(
+                                                                      0xFF00A3E0)
                                                                   : Colors
                                                                       .transparent,
                                                             ),
@@ -664,9 +684,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       .requestTaxi,
                                                   style: const TextStyle(
                                                       fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white
-                                                  ),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
                                                 )),
                                               )),
                                         ),
@@ -674,6 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 )),
+
                             /// sheet Car desc
                             AnimatedPositioned(
                               child: customBottomSheet.showSheetCarInfoTaxi(
@@ -727,6 +748,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: 0.0,
                               bottom: sheetCarDscBig,
                             ),
+
                             ///cancel container
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -736,12 +758,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: CancelTaxi().cancelTaxiRequest(
                                     context: context,
                                     userIdProvider: userProvider,
-                                    voidCallback: () {
-                                      restApp();
+                                    voidCallback: () async {
+                                       restApp();
                                       setState(() {
                                         state = "normal";
                                       });
                                     })),
+
                             ///driver info
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -751,8 +774,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: DriverInfo().driverInfoContainer(
                                     context: context,
                                     userIdProvider: userProvider,
-                                    voidCallback: () {
-                                      restApp();
+                                    voidCallback: () async {
+                                       restApp();
                                       setState(() {
                                         state = "normal";
                                       });
@@ -774,7 +797,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: const Color(0xFF00A3E0),
                           child: IconButton(
                               onPressed: () {
-                                checkAllUserInfoReal(infoUserDataReal, context);
+                                //todo
+                                // checkAllUserInfoReal(infoUserDataReal, context);
                                 Provider.of<DoubleValue>(context, listen: false)
                                     .value0Or1(1);
                                 Provider.of<ChangeColor>(context, listen: false)
@@ -842,7 +866,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ///this them main logic for diretion + marker+ polline conect with class api
+  //this them main logic for diretion + marker+ polline conect with class api
   Future<void> getPlaceDerction(BuildContext context) async {
     /// from api geo
     final initialPos =
@@ -966,7 +990,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  ///this method for got current location after that run geofire method for got the drivers nearest
+  //this method for got current location after that run geofire method for got the drivers nearest
+
   Future<dynamic> locationPosition(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -1004,11 +1029,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     ///Not for chacking
     await _apiMethods.searchCoordinatesAddress(position, context);
-    geoFireInitialize();
+    await geoFireInitialize();
   }
 
-  /// this method for display nearest driver available from rider in list by using geoFire
-  void geoFireInitialize() {
+  // this method for display nearest driver available from rider in list by using geoFire
+  Future<void> geoFireInitialize() async {
     final currentPosition =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     Geofire.initialize("availableDrivers");
@@ -1057,11 +1082,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  /// this method for add icon new near driver on map
+  // this method for add icon new near driver on map
   void updateAvailableDriverOnMap() async {
     late String driverPhoneOnMap;
     // setState(() {
-    // ///todo
     //   markersSet.clear();
     // });
 
@@ -1101,9 +1125,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ? driversNearIcon
             : driversNearIcon1,
         infoWindow: InfoWindow(
-            title: " $fNameIcon $lNameIcon / " +
-                AppLocalizations.of(context)!.dropOff,
-            snippet: AppLocalizations.of(context)!.arrivedTime),
+            onTap: () => showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => callDriverOnMap(context, driverPhoneOnMap)),
+            title: " $fNameIcon $lNameIcon",
+            snippet:
+                ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOnMap'),
         // rotation: MathMethods.createRandomNumber(120),
       );
 
@@ -1119,22 +1147,24 @@ class _HomeScreenState extends State<HomeScreen> {
     // });
   }
 
-  ///this Method for custom icon driver near
+  //this Method for custom icon driver near taxi
   void createDriverNearIcon() {
     ImageConfiguration imageConfiguration =
-        createLocalImageConfiguration(context, size: const Size(0.6, 0.6));
-    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/yellowcar.png")
+        createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
+    BitmapDescriptor.fromAssetImage(imageConfiguration,
+        Platform.isAndroid?"assets/yellowcar1.png":"assets/yellowcar.png")
         .then((value) {
       setState(() {
         driversNearIcon = value;
       });
     });
   }
-
+  //this Method for custom icon driver near van
   void createDriverNearIcon1() {
     ImageConfiguration imageConfiguration =
-        createLocalImageConfiguration(context, size: const Size(0.6, 0.6));
-    BitmapDescriptor.fromAssetImage(imageConfiguration, "assets/blackcar.png")
+        createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
+    BitmapDescriptor.fromAssetImage(imageConfiguration,
+        Platform.isAndroid?"assets/blackcar1.png":"assets/blackcar.png")
         .then((value) {
       setState(() {
         driversNearIcon1 = value;
@@ -1142,13 +1172,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> restApp() async {
+// this method for clean req after cancel
+ restApp() {
     setState(() {
       polylineSet.clear();
       markersSet.clear();
       waitDriver = "wait";
-
-      ///test
       tMarker.clear();
       circlesSet.clear();
       polylineCoordinates.clear();
@@ -1165,7 +1194,7 @@ class _HomeScreenState extends State<HomeScreen> {
       rating = 0.0;
       carRideType = "";
       carOrderType = "Taxi-4 seats";
-      grofireRadr = 2;
+      grofireRadr = 4;
       tourismCityName = "";
       tourismCityPrice = "";
       driverNewLocation = const LatLng(0.0, 0.0);
@@ -1174,7 +1203,15 @@ class _HomeScreenState extends State<HomeScreen> {
       sound2 = false;
       sound3 = false;
     });
-    await locationPosition(context);
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Taxi-4 seats");
+    locationPosition(context);
   }
 
   // this method for switch text where to OR toll passes
@@ -1207,7 +1244,7 @@ class _HomeScreenState extends State<HomeScreen> {
   searchIconOrCancelBottom(DirectionDetails? tripDirectionDetails) {
     if (tripDirectionDetails != null) {
       return IconButton(
-          onPressed: () => restApp(),
+          onPressed: ()  =>  restApp(),
           icon: const Icon(
             Icons.cancel,
             color: Colors.redAccent,
@@ -1224,6 +1261,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method for change all provider state when click taxiBox
   Future<void> changeAllProClickTaxiBox() async {
+    setState(() {
+      carOrderType = "Taxi-4 seats";
+      grofireRadr = 4;
+    });
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
     Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
@@ -1232,14 +1273,15 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Taxi-4 seats");
-    setState(() {
-      carOrderType = "Taxi-4 seats";
-      grofireRadr = 2;
-    });
+    geoFireInitialize();
   }
 
   // this method will change all provider state when click on van box
   Future<void> changeAllProClickVanBox() async {
+    setState(() {
+      carOrderType = "Medium commercial-6-10 seats";
+      grofireRadr = 30;
+    });
     Provider.of<LineTaxi>(context, listen: false).changelineVan(true);
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
@@ -1248,14 +1290,15 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Medium commercial-6-10 seats");
-    setState(() {
-      carOrderType = "Medium commercial-6-10 seats";
-      grofireRadr = 10;
-    });
+    geoFireInitialize();
   }
 
   // this method will change all provider state when click on Veto box
   Future<void> changeAllProClickVetoBox() async {
+    setState(() {
+      carOrderType = "Big commercial-11-19 seats";
+      grofireRadr = 30;
+    });
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(true);
     Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
@@ -1264,10 +1307,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Big commercial-11-19 seats");
-    setState(() {
-      carOrderType = "Big commercial-11-19 seats";
-      grofireRadr = 10;
-    });
+    geoFireInitialize();
   }
 
 // this method for check any amount will set to   Ride Request collection
@@ -1296,13 +1336,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-//dropBottom
+//dropBottom payment way cash or card
   Widget dropBottomCustom(BuildContext context, String dropBottomProvider) {
     String? value1 = AppLocalizations.of(context)!.cash;
     return Padding(
       padding: const EdgeInsets.only(right: 4.0, left: 4.0),
       child: Container(
-        margin:const EdgeInsets.only(left: 4.0,right: 4.0),
+        margin: const EdgeInsets.only(left: 4.0, right: 4.0),
         padding: const EdgeInsets.all(8.0),
         height: MediaQuery.of(context).size.height * 6 / 100,
         width: MediaQuery.of(context).size.width * 100,
@@ -1371,7 +1411,7 @@ class _HomeScreenState extends State<HomeScreen> {
       UserIdProvider userProvider, BuildContext context) async {
     if (driverAvailable.isEmpty) {
       DataBaseSrv().cancelRiderRequest(userProvider, context);
-      restApp();
+       restApp();
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -1404,20 +1444,19 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    Future.delayed(const Duration(seconds: 125)).whenComplete(() {
+    Future.delayed(const Duration(seconds: 125)).whenComplete(() async {
       if (waitDriver == "wait") {
-        // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
         Provider.of<PositionCancelReq>(context, listen: false)
             .updateValue(-400.0);
         Provider.of<PositionChang>(context, listen: false).changValue(0.0);
         DataBaseSrv().cancelRiderRequest(userProvider, context);
-        restApp();
+         restApp();
       } else {
         return;
       }
     });
   }
-
+// this mehtod if driver in list of driver for sent notify after take his token
   Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
       UserIdProvider userProvider) async {
     DataBaseSrv().sendRideRequestId(driver, context);
@@ -1441,7 +1480,7 @@ class _HomeScreenState extends State<HomeScreen> {
         driverRef.child("newRide").set("canceled");
         driverRef.child("newRide").onDisconnect();
         timer.cancel();
-        restApp();
+         restApp();
         setState(() {
           rideRequestTimeOut = 25;
           after2MinTimeOut = 125;
@@ -1485,7 +1524,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 .updateValue(-400.0);
             Provider.of<PositionChang>(context, listen: false).changValue(0.0);
             DataBaseSrv().cancelRiderRequest(userProvider, context);
-            restApp();
+             restApp();
           }
         });
       }
@@ -1570,15 +1609,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
             if (res == "close") {
               if (map["driverId"] != null) {
-                driverId = map["driverId"].toString();
-                Provider.of<RiderId>(context, listen: false)
-                    .updateStatus(driverId);
+                setState(() {
+                  driverId = map["driverId"].toString();
+                  Provider.of<RiderId>(context, listen: false)
+                      .updateStatus(driverId);
+                });
               }
               // showDialog(
               //     context: context,
               //     barrierDismissible: false,
               //     builder: (BuildContext context) {
-              //       return const RatingWidget();
+              //       return  const RatingWidget();
               //     });
               rideStreamSubscription.cancel();
             }
@@ -1666,14 +1707,26 @@ class _HomeScreenState extends State<HomeScreen> {
   // this metod for change voice conect to languge
 
   Future<void> soundAccepted() async {
+    String val = AppLocalizations.of(context)!.taxi;
     if (sound1 == true) {
-      if (AppLocalizations.of(context)!.taxi == "Taksi") {
-        await audioCache.play("commingtr.mp3");
-      } else if (AppLocalizations.of(context)!.taxi == "تاكسي") {
-        await audioCache.play("dcomingtoyouar.wav");
-      } else {
-        await audioCache.play("onway.wav");
+      switch(val){
+        case'Taksi':
+          await audioCache.play("commingtr.mp3");
+          break;
+        case'تاكسي':
+          await audioCache.play("dcomingtoyouar.wav");
+          break;
+        default:
+          await audioCache.play("onway.wav");
+          break;
       }
+      // if (AppLocalizations.of(context)!.taxi == "Taksi") {
+      //   await audioCache.play("commingtr.mp3");
+      // } else if (AppLocalizations.of(context)!.taxi == "تاكسي") {
+      //   await audioCache.play("dcomingtoyouar.wav");
+      // } else {
+      //   await audioCache.play("onway.wav");
+      // }
     }
     await Future.delayed(const Duration(seconds: 5));
     setState(() {
@@ -1682,14 +1735,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> soundArrived() async {
+    String val = AppLocalizations.of(context)!.taxi;
     if (sound2 == true) {
-      if (AppLocalizations.of(context)!.taxi == "Taksi") {
-        await audioCache.play("arrivedtr.mp3");
-      } else if (AppLocalizations.of(context)!.taxi == "تاكسي") {
-        await audioCache.play("darrivedtoyouar.wav");
-      } else {
-        await audioCache.play("waiten.wav");
+      switch(val){
+        case'Taksi':
+          await audioCache.play("arrivedtr.mp3");
+          break;
+        case'تاكسي':
+          await audioCache.play("darrivedtoyouar.wav");
+          break;
+        default:
+          await audioCache.play("waiten.wav");
+          break;
       }
+      // if (AppLocalizations.of(context)!.taxi == "Taksi") {
+      //   await audioCache.play("arrivedtr.mp3");
+      // } else if (AppLocalizations.of(context)!.taxi == "تاكسي") {
+      //   await audioCache.play("darrivedtoyouar.wav");
+      // } else {
+      //   await audioCache.play("waiten.wav");
+      // }
     }
     await Future.delayed(const Duration(seconds: 5));
     setState(() {
@@ -1698,14 +1763,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> soundTripStart() async {
+    String val = AppLocalizations.of(context)!.taxi;
     if (sound3 == true) {
-      if (AppLocalizations.of(context)!.taxi == "Taksi") {
-        await audioCache.play("starttr.mp3");
-      } else if (AppLocalizations.of(context)!.taxi == "تاكسي") {
-        await audioCache.play("youintripar.wav");
-      } else {
-        await audioCache.play("intripen.wav");
+      switch(val){
+        case'Taksi':
+          await audioCache.play("starttr.mp3");
+          break;
+        case'تاكسي':
+          await audioCache.play("youintripar.wav");
+          break;
+        default:
+          await audioCache.play("intripen.wav");
+          break;
       }
+      // if (AppLocalizations.of(context)!.taxi == "Taksi") {
+      //   await audioCache.play("starttr.mp3");
+      // } else if (AppLocalizations.of(context)!.taxi == "تاكسي") {
+      //   await audioCache.play("youintripar.wav");
+      // } else {
+      //   await audioCache.play("intripen.wav");
+      // }
     }
     await Future.delayed(const Duration(seconds: 5));
     setState(() {
@@ -1713,5 +1790,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  ///================================End==========================================
+  ///================================End=======================================
+
 }

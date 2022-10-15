@@ -46,7 +46,7 @@
   "lastRequired": "Soyadı gerekli",
   "emailRequired": "Email gereklidir",
   "com": "@ veya .com e-posta adresinizi kontrol edin, yanlış bir şey var",
-  "callDriver": "Bir sürücü arayın",
+  "callDriver": "şoförü Arayın",
   "normalCall": "Normal arama",
   "whatsApp": "Whatsapp araması",
   "amountTrip": "Bu seyahatin toplam tutarı",
@@ -100,5 +100,11 @@
   "into2": "Gidecegin yeri belirle ve en uygun fiyatlarla yolculugun tadini gikar.",
   "into3": "Garanti Taksi Uygulasini 3 ayri dil seçenekleriyle kullanabilirsin!",
   "support": "Destek",
-  "supportInfo": "Herhangi bir bilgi veya soru sormak için bize ulasin."
+  "supportInfo": "Herhangi bir bilgi veya soru sormak için bize ulasin.",
+  "st1": "1. araba çağır",
+  "st2": "Bilgi",
+  "st3": "2. Araba sana doğru geliyor.",
+  "st4": "3. sürücü sizi bekliyor",
+  "st5": "4. Hedefinize yolculuk başladı",
+  "st6": "5. Hedefinize ulaştınız. Garanti Taksi ile keyifli bir deneyim dileriz."
 }

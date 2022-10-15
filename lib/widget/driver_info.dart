@@ -24,8 +24,8 @@ import 'call_driver.dart';
 import 'divider_box_.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-var uuid = const Uuid();
 
+var uuid = const Uuid();
 
 class DriverInfo {
   Widget driverInfoContainer(
@@ -36,7 +36,7 @@ class DriverInfo {
         Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
         height: 220,
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20.0),
                 topRight: Radius.circular(20.0)),
@@ -54,91 +54,122 @@ class DriverInfo {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                    child: SingleChildScrollView(
-                     scrollDirection: Axis.horizontal,
-                      child: Row(
-                  children: [
-                       Expanded(
-                         flex:0,
-                         child: Text(
-                          AppLocalizations.of(context)!.driverStatus,
-                          style: const TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                       ),
-                  const  SizedBox(width: 3.0,),
-                      Expanded(
-                        flex: 0,
-                        child: Text(newstatusRide,
-                            style:  TextStyle(
-                                color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
-                      ),
-                      const  SizedBox(width: 3.0),
-                       Expanded(
-                         flex: 0,
-                         child: Text(
-                          AppLocalizations.of(context)!.time,
-                          style:const TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                       ),
-                      const  SizedBox(width: 3.0),
-                      Expanded(
-                        flex: 0,
-                        child: Text(timeTrip == "" ? "...." : timeTrip,
-                            style:  TextStyle(
-                                color: Colors.green.shade700, fontSize: 20.0,fontWeight: FontWeight.bold)),
-                      ),
-                  ],
-                ),
-                    )),
-              ),
-              CustomWidget().customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                     Text(
-                      AppLocalizations.of(context)!.carDetails,
-                      style: const TextStyle(color: Colors.black, fontSize: 20),
+                padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 0,
+                    child: Text(
+                      AppLocalizations.of(context)!.driverStatus,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Colors.black, fontSize: 16),
                     ),
-                    const  SizedBox(width: 4.0,),
-                    Text(
-                      carDriverInfo,
-                      style: const TextStyle(color: Colors.black87, fontSize: 16),
-                    ),
-                    const  SizedBox(width: 24.0,),
-                    CircleAvatar(
-                      radius: 30,
+                  ),
+                  const SizedBox(
+                    width: 3.0,
+                  ),
+                  Expanded(
+                    flex: 0,
+                    child: Text(newstatusRide,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: Colors.green.shade700,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  const SizedBox(width: 100.0),
+                  Expanded(
+                    flex: 0,
+                    child: CircleAvatar(
+                      radius: 25,
                       backgroundColor: Colors.white,
                       child: CachedNetworkImage(
                         imageBuilder: (context, imageProvider) => Container(
-                          width: 60.0,
-                          height: 60.0,
+                          width: 50.0,
+                          height: 50.0,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
                           ),
                         ),
-                        imageUrl: driverImage.isEmpty?"":driverImage,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.person),
+                        imageUrl: driverImage.isEmpty ? "" : driverImage,
+                        placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                        const Icon(Icons.person),
                       ),
-                    )
+                    ),
+                  )
+                ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0,right: 15.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 0,
+                        child: Text(
+                          AppLocalizations.of(context)!.time,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                      ),
+                      const SizedBox(width: 3.0),
+                      Expanded(
+                        flex: 0,
+                        child: Text(timeTrip == "" ? "...." : timeTrip,
+                            style: TextStyle(
+                                color: Colors.green.shade700,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              CustomWidget().customDivider(),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0,right: 8.0,top: 4.0),
+                child: Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.carDetails,
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                    ),
+                    const SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      carDriverInfo,
+                      style:
+                          const TextStyle(color: Colors.black87, fontSize: 16),
+                    ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 8.0,right: 8.0,top: 8.0,bottom: 4.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                      Text(
                       AppLocalizations.of(context)!.driverName,
-                      style: const TextStyle(color: Colors.black, fontSize: 20),
+                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
                     ),
                     const  SizedBox(width: 4.0,),
                     Text(
                       driverName,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(color: Colors.black87, fontSize: 16),
                     ),
                     const SizedBox(width: 10.0),
@@ -156,32 +187,33 @@ class DriverInfo {
               ),
               CustomWidget().customDivider(),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0,bottom: 8.0),
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                       iconSize: 40.0,
-                      icon: Icon(Icons.call, color: Colors.greenAccent.shade700),
+                      icon:
+                          Icon(Icons.call, color: Colors.greenAccent.shade700),
                       onPressed: () async {
-                     showDialog(context: context,
-                         barrierDismissible: false,
-                         builder:(_)=>callDriver(context));
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => callDriver(context));
                       },
                     ),
                     // statusRide == "Trip Started"
-                        IconButton(
-                            iconSize: 40.0,
-                            color: Colors.black12,
-                            icon: Icon(Icons.map,
-                                color: Colors.blueAccent.shade700),
-                            onPressed: () => openGoogleMap(context)),
-                    isCloseTrue == true?
                     IconButton(
                         iconSize: 40.0,
+                        color: Colors.black12,
                         icon:
-                            Icon(Icons.close, color: Colors.redAccent.shade700),
+                            Icon(Icons.map, color: Colors.blueAccent.shade700),
+                        onPressed: () => openGoogleMap(context)),
+                    IconButton(
+                        iconSize: 40.0,
+                        icon: Icon(Icons.close,
+                            color: Colors.redAccent.shade700),
                         onPressed: () async {
                           voidCallback();
                           NearestDriverAvailable _nearestDriverAvailable =
@@ -194,20 +226,42 @@ class DriverInfo {
                               .updateState(-400.0);
                           Provider.of<PositionChang>(context, listen: false)
                               .changValue(0.0);
-                        await   deleteRideRequesr(context);
-                            GeoFireMethods.listOfNearestDriverAvailable.clear();
-
-                        }):const Text(""),
+                          await deleteRideRequesr(context);
+                          GeoFireMethods.listOfNearestDriverAvailable
+                              .clear();
+                        }),
+                    // isCloseTrue == true
+                    //     ? IconButton(
+                    //         iconSize: 40.0,
+                    //         icon: Icon(Icons.close,
+                    //             color: Colors.redAccent.shade700),
+                    //         onPressed: () async {
+                    //           voidCallback();
+                    //           NearestDriverAvailable _nearestDriverAvailable =
+                    //               NearestDriverAvailable("", 0.0, 0.0);
+                    //           Provider.of<NearestDriverProvider>(context,
+                    //                   listen: false)
+                    //               .updateState(_nearestDriverAvailable);
+                    //           Provider.of<PositionDriverInfoProvider>(context,
+                    //                   listen: false)
+                    //               .updateState(-400.0);
+                    //           Provider.of<PositionChang>(context, listen: false)
+                    //               .changValue(0.0);
+                    //           await deleteRideRequesr(context);
+                    //           GeoFireMethods.listOfNearestDriverAvailable
+                    //               .clear();
+                    //         })
+                    //     : const Text(""),
+                    ///stop
                     IconButton(
                         iconSize: 40.0,
-                        icon:
-                        Icon(Icons.star, color: Colors.yellow.shade700),
+                        icon: Icon(Icons.star, color: Colors.yellow.shade700),
                         onPressed: () {
-                          showDialog(context: context,barrierDismissible: false, builder:(_)=>
-                          const RatingWidget()
-                          );
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const RatingWidget());
                         }),
-
                   ],
                 ),
               ),
@@ -217,31 +271,33 @@ class DriverInfo {
   }
 
   Future<void> deleteRideRequesr(BuildContext context) async {
-    final pickUpLoc=Provider.of<AppData>(context, listen: false).pickUpLocation;
-    final dropOffLoc=
+    final pickUpLoc =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final dropOffLoc =
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
     final userID = AuthSev().auth.currentUser?.uid;
-    DatabaseReference ref =
-    FirebaseDatabase.instance.ref()
+    DatabaseReference ref = FirebaseDatabase.instance
+        .ref()
         .child("users")
         .child(userID!)
         .child("history")
         .child(uuid.v4());
     ref.set({
-      "pickAddress":pickUpLoc.placeName,
-      "dropAddress":dropOffLoc.placeName,
-      "trip":"don",
+      "pickAddress": pickUpLoc.placeName,
+      "dropAddress": dropOffLoc.placeName,
+      "trip": "don",
     }).whenComplete(() async {
       DatabaseReference refRideRequest =
-      FirebaseDatabase.instance.ref().child("Ride Request").child(userID);
+          FirebaseDatabase.instance.ref().child("Ride Request").child(userID);
       await refRideRequest.remove();
     });
   }
 
   Future<void> openGoogleMap(BuildContext context) async {
-    final dropOff=Provider.of<PlaceDetailsDropProvider>(context, listen: false)
-        .dropOfLocation;
+    final dropOff =
+        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+            .dropOfLocation;
     String url =
         "https://www.google.com/maps/search/?api=1&query=${dropOff.latitude},${dropOff.longitude}";
     await canLaunch(url)

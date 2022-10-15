@@ -406,5 +406,29 @@
   "supportInfo": "Contact us for any information or questions.",
   "@supportInfo": {
     "description": "Contact us for any information or questions."
+  },
+  "st1": "1.Order a car",
+  "@st1": {
+    "description": "Order a car"
+  },
+  "st2": "Info",
+  "@st2": {
+    "description": "info"
+  },
+  "st3": "2. The car is on its way to you.",
+  "@st3": {
+    "description": "way"
+  },
+  "st4": "3. driver waiting for you",
+  "@st4": {
+    "description": "way"
+  },
+  "st5": "4. Journey started to your destination",
+  "@st5": {
+    "description": "way"
+  },
+  "st6": "5. You have arrived at your destination. We wish you a pleasant experience with Garanti Taxi",
+  "@st6": {
+    "description": "pleasant"
   }
 }

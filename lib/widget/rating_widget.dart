@@ -8,7 +8,7 @@ import 'divider_box_.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RatingWidget extends StatefulWidget {
-  // final String? id;
+  // final String id;
   // required this.id
   const RatingWidget({Key? key}) : super(key: key);
 
@@ -103,17 +103,18 @@ class _RatingWidgetState extends State<RatingWidget> {
 
 // this method for set rate to data base
   Future<void> rateTODateBase(String id) async {
+    print("xxxxxx$id");
     DatabaseReference reference =
-        FirebaseDatabase.instance.ref().child("driver").child(id).child("rating");
+        FirebaseDatabase.instance.ref().child("driver").child(id);
 
-    await reference.once().then((value) {
+    await reference.child("rating").once().then((value) {
       if (value.snapshot.value != null) {
         double oldRating = double.parse(value.snapshot.value.toString());
         double newRating = oldRating + rating;
         double result = newRating / 2;
-        reference.set(result.toStringAsFixed(2));
+        reference.child('rating').set(result.toStringAsFixed(2));
       } else {
-        reference.set(rating.toStringAsFixed(2));
+        reference.child("rating").set(rating.toStringAsFixed(2));
       }
     });
   }

@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:gd_passenger/tools/turn_Gps.dart';
-import 'package:gd_passenger/user_enter_face/auth_screen.dart';
 import 'package:gd_passenger/user_enter_face/page_view.dart';
 import 'package:gd_passenger/user_enter_face/user_info_screen.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';

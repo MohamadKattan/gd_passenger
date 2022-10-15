@@ -22,7 +22,7 @@ class AuthSev {
   late final DataSnapshot snapshot;
   final TextEditingController codeText = TextEditingController();
   //this method for got user id
-  Future<User?> createOrLoginWithEmail(
+  Future<void> createOrLoginWithEmail(
       String pass, BuildContext context, String email) async {
     Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
     try {
