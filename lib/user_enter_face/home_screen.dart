@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
 
-                            /// order taxi and else...
+                            /// main container what include car types car drop button request button
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
                                 right: 0.0,
@@ -243,11 +243,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     builder: (context) =>
                                                         const SearchScreen()));
                                             if (res == "dataDir") {
-                                              changeAllProClickTaxiBox();
+                                               changeAllProClickTaxiBox();
                                               await getPlaceDerction(context);
-                                              //todo
-                                              // await checkAllUserInfoReal(
-                                              //     infoUserDataReal, context);
                                             }
                                           },
                                           child: Container(
@@ -320,6 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         const SizedBox(height: 6.0),
                                         _customWidget.customDivider(),
+                                        /// row of 3 car type
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
@@ -418,10 +416,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: GestureDetector(
                                                     onTap: () async {
                                                       await changeAllProClickVanBox();
-                                                      //todo
-                                                      // await checkAllUserInfoReal(
-                                                      //     infoUserDataReal,
-                                                      //     context);
                                                       infoUserDataReal.country ==
                                                                   "Turkey" ||
                                                               contry == "Turkey"
@@ -518,10 +512,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: GestureDetector(
                                                     onTap: () async {
                                                       changeAllProClickVetoBox();
-                                                      //todo
-                                                      // await checkAllUserInfoReal(
-                                                      //     infoUserDataReal,
-                                                      //     context);
                                                       infoUserDataReal.country ==
                                                                   "Turkey" ||
                                                               contry == "Turkey"
@@ -616,8 +606,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         const SizedBox(
                                           height: 10,
                                         ),
+                                        /// drop of botton
                                         dropBottomCustom(
                                             context, dropBottomProvider),
+                                        /// request button
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: GestureDetector(
@@ -1027,7 +1019,6 @@ class _HomeScreenState extends State<HomeScreen> {
     newGoogleMapController
         ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    ///Not for chacking
     await _apiMethods.searchCoordinatesAddress(position, context);
     await geoFireInitialize();
   }
@@ -1456,6 +1447,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
+
 // this mehtod if driver in list of driver for sent notify after take his token
   Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
       UserIdProvider userProvider) async {

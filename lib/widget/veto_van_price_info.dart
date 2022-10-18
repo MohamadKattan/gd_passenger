@@ -8,10 +8,8 @@ import '../config.dart';
 import '../model/address.dart';
 import '../model/place_predictions.dart';
 import '../my_provider/app_data.dart';
-import '../my_provider/info_user_database_provider.dart';
 import '../my_provider/placeDetails_drop_provider.dart';
 import '../repo/api_srv_dir.dart';
-import '../repo/data_base_srv.dart';
 import '../tools/get_url.dart';
 import 'custom_circuler.dart';
 import 'divider_box_.dart';
@@ -28,7 +26,7 @@ class VetoVanPriceTurkeyJust extends StatefulWidget {
 
 class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
   final GetUrl _getUrl = GetUrl();
-  List<PlacePredictions> placePredictions = [];
+  // List<PlacePredictions> placePredictions = [];
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -627,15 +625,5 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
       circlesSet.add(pickUpLocCircle);
       circlesSet.add(dropOffLocCircle);
     });
-  }
-
-  void _checkUserInfo(BuildContext context) {
-    final infoUserDataReal =
-        Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-    if (infoUserDataReal == null) {
-      DataBaseSrv().currentOnlineUserInfo(context);
-    } else {
-      return;
-    }
   }
 }
