@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:gd_passenger/user_enter_face/auth_screen.dart';
 import '../widget/pageview_content.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -17,13 +16,13 @@ class MyPageView extends StatelessWidget {
       child: Scaffold(
         body: PageView(
           controller: controller,
-          onPageChanged: (index) {
-            if (index == 2) {
-              Future.delayed(const Duration(seconds: 3)).whenComplete(() =>
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const AuthScreen())));
-            }
-          },
+          // onPageChanged: (index) {
+          //   if (index == 2) {
+          //     Future.delayed(const Duration(seconds: 3)).whenComplete(() =>
+          //         Navigator.push(context,
+          //             MaterialPageRoute(builder: (_) => const AuthScreen())));
+          //   }
+          // },
           children: <Widget>[
             pageViewContent(
                 context, "assets/firstPageView.png",title1, controller),

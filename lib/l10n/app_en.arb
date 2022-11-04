@@ -275,42 +275,6 @@
   "@sorry": {
     "description": "No driver available try again"
   },
-  "torzimTrip": "The vehicle you have chosen is a tourism vehicle it is for a daily of 12 hour and it is forbidden to make short distances",
-  "@torzimTrip": {
-    "description": "This type of car for tourism trip"
-  },
-  "pricesList": "Prices list",
-  "@pricesList": {
-    "description": "Prices list"
-  },
-  "istanbul": "Trip in  Istanbul City : ",
-  "@istanbul": {
-    "description": "Trip in  Istanbul City : "
-  },
-  "bursa": "Trip from Istanbul to Bursa : ",
-  "@bursa": {
-    "description": "Trip from Istanbul to Bursa : "
-  },
-  "izmit": "Trip from Istanbul to Izmit : ",
-  "@izmit": {
-    "description": "Trip from Istanbul to Izmit : "
-  },
-  "sabanjah": "from Istanbul to spanca:",
-  "@sabanjah": {
-    "description": "from Istanbul to spanca:"
-  },
-  "polo": "Trip from Istanbul to bolu abant : ",
-  "@polo": {
-    "description": "Trip from Istanbul to bolu abant : "
-  },
-  "sala": "Trip from Istanbul to şile:",
-  "@sala": {
-    "description": "Trip from Istanbul to şile:"
-  },
-  "yalua": "Trip from Istanbul to yalova :",
-  "@yalua": {
-    "description": "Trip from Istanbul to yalova :"
-  },
   "arrived": "Driver arrived",
   "@arrived": {
     "description": "Driver arrived"
@@ -430,5 +394,363 @@
   "st6": "5. You have arrived at your destination. We wish you a pleasant experience with Garanti Taxi",
   "@st6": {
     "description": "pleasant"
+  },
+  "torzimTrip": "The vehicle you have chosen is a tourism vehicle it is for a daily of 12 hour and it is forbidden to make short distances",
+  "@torzimTrip": {
+    "description": "This type of car for tourism trip"
+  },
+  "pricesList": "Prices list",
+  "@pricesList": {
+    "description": "Prices list"
+  },
+  "istanbul": "Trip in  Istanbul City : ",
+  "@istanbul": {
+    "description": "Trip in  Istanbul City : "
+  },
+  "bursa": "Trip from Istanbul to Bursa : ",
+  "@bursa": {
+    "description": "Trip from Istanbul to Bursa : "
+  },
+  "izmit": "Trip from Istanbul to Izmit : ",
+  "@izmit": {
+    "description": "Trip from Istanbul to Izmit : "
+  },
+  "sabanjah": "from Istanbul to spanca:",
+  "@sabanjah": {
+    "description": "from Istanbul to spanca:"
+  },
+  "polo": "Trip from Istanbul to bolu abant : ",
+  "@polo": {
+    "description": "Trip from Istanbul to bolu abant : "
+  },
+  "sala": "Trip from Istanbul to şile:",
+  "@sala": {
+    "description": "Trip from Istanbul to şile:"
+  },
+  "yalua": "Trip from Istanbul to yalova :",
+  "@yalua": {
+    "description": "Trip from Istanbul to yalova :"
+  },
+  "bursaMain": "Trip in  Bursa City : ",
+  "@bursaMain": {
+    "description": "Trip in  Bursa City  : "
+  },
+  "bursaYal": "Trip from Bursa to yalova :",
+  "@bursaYal": {
+    "description": "Trip from Bursa to yalova :"
+  },
+  "bursaIst": "Trip from Bursa to Istanbul :",
+  "@bursaIst": {
+    "description": "Trip from Bursa to Istanbul :"
+  },
+  "bursaSpan": "Trip from Bursa to spanca :",
+  "@bursaSpan": {
+    "description": "Trip from Bursa to spanca :"
+  },
+  "bursaIzn": "Trip from Bursa to Izmite :",
+  "@bursaIzm": {
+    "description": "Trip from Bursa to Izmite :"
+  },
+  "bursaPol": "Trip from Bursa to Bolu :",
+  "@bursaPol": {
+    "description": "Trip from Bursa to Bolu :"
+  },
+
+  "spanMain": "Trip in  spanca City : ",
+  "@spanMain": {
+    "description": "Trip in  spanca City  : "
+  },
+
+  "spanYal": "Trip from spanca to yalova :",
+  "@spanYal": {
+    "description": "Trip from spanca to yalova :"
+  },
+
+  "spanIst": "Trip from spanca to Istanbul :",
+  "@spanIst": {
+    "description": "Trip from spanca to Istanbul :"
+  },
+  "spanBursa": "Trip from spanca to Bursa :",
+  "@spanBursa": {
+    "description": "Trip from spanca to Bursa:"
+  },
+  "spanIzn": "Trip from spanca to Izmite :",
+  "@spanIzn": {
+    "description": "Trip from spanca to Izmite :"
+  },
+  "spanPol": "Trip from spanca to Bolu :",
+  "@spanPol": {
+    "description": "Trip from spanca to Bolu :"
+  },
+
+  "trapzonMain": "Trip in  Trabzon City : ",
+  "@trapzonMain": {
+    "description": "Trip in  Trabzon City : "
+  },
+
+  "trapzonUzu": "Trip from Trabzon to Uzun gol :",
+  "@trapzonUzu": {
+    "description": "Trip from Trabzon to Uzun gol :"
+  },
+
+  "trapzonAyd": "Trip from Trabzon to Ayder :",
+  "@trapzonAyd": {
+    "description": "Trip from Trabzon to Ayder :"
+  },
+  "trapzonRiz": "Trip from Trabzon to Rize :",
+  "@trapzonRiz": {
+    "description": "Trip from Trabzon to Rize:"
+  },
+  "trapzonGir": "Trip from Trabzon to Giresun :",
+  "@trapzonGir": {
+    "description": "Trip from Trabzon to Giresun :"
+  },
+  "trapzonOndu": "Trip from Trabzon to ondu :",
+  "@trapzonOndu": {
+    "description": "Trip from Trabzon to ondu :"
+  },
+
+  "uzunMain": "Trip in  Uzun gol City : ",
+  "@uzunMain": {
+    "description": "Trip in  Uzun gol City : "
+  },
+
+  "uzuTrapzon": "Trip from Uzun gol to Trabzon :",
+  "@uzuTrapzon": {
+    "description": "Trip from Uzun gol to Trabzon :"
+  },
+
+  "uzuAyd": "Trip from Uzun gol to Ayder :",
+  "@uzuAyd": {
+    "description": "Trip from Uzun gol to Ayder :"
+  },
+  "uzuRiz": "Trip from Uzun gol to Rize :",
+  "@uzuRiz": {
+    "description": "Trip from Uzun gol to Rize:"
+  },
+  "uzuOndu": "Trip from Uzun gol to ondu :",
+  "@uzuOndu": {
+    "description": "Trip from Uzun gol to ondu :"
+  },
+
+  "antalMain": "Trip in Antalya City : ",
+  "@antalMain": {
+    "description": "Trip in Antalya City : "
+  },
+
+  "antalManar": "Trip from Antalya to Manavgat :",
+  "@antalManar": {
+    "description": "Trip from Antalya to Manavgat :"
+  },
+
+  "antalMarr": "Trip from Antalya to Marmaris :",
+  "@antalMarr": {
+    "description": "Trip from Antalya to Marmaris :"
+  },
+
+  "antalBoder": "Trip from Antalya to Bodrum :",
+  "@antalBoder": {
+    "description": "Trip from Antalya to Bodrum :"
+  },
+  "antalIzmir": "Trip from Antalya to Izmir :",
+  "@antalIzmir": {
+    "description": "Trip from Antalya to Izmir :"
+  },
+  "antalAlan": "Trip from Antalya to Alanya :",
+  "@antalAlan": {
+    "description": "Trip from Antalya to Alanya :"
+  },
+  "bodMain": "Trip in Bodrum City : ",
+  "@bodMain": {
+    "description": "Trip in Bodrum City : "
+  },
+
+  "bodAntaly": "Trip from Bodrum to Antalya :",
+  "@bodAntaly": {
+    "description": "Trip from Bodrum to Antalya :"
+  },
+  "bodIzmir": "Trip from Bodrum to Izmir :",
+  "@bodIzmir": {
+    "description": "Trip from Bodrum to Izmir :"
+  },
+  "bodMarmar": "Trip from Bodrum to Marmaris :",
+  "@bodMarmar": {
+    "description": "Trip from Bodrum to Marmaris :"
+  },
+  "advanceReservation": "Advance reservation",
+  "@advanceReservation": {
+    "description": "Advance reservation"
+  },
+  "takeAdvanceReservation": "Take advantage\n of the early booking service",
+  "@takeAdvanceReservation": {
+    "description": "Take advantage of the early booking service"
+  },
+  "exAdvanceReservation": "By using this service, you can book a car early.\n Just select the country,city and car type and check the list of drivers.\n View the driver's rating and car photos,then contact the driver directly.\n Via a phone call or WhatsApp and agree with the driver about the time and price of the trip.",
+  "@exAdvanceReservation": {
+    "description": "exAdvance reservation"
+  },
+  "choseCountry": "Choose Country",
+  "@choseCountry": {
+    "description": "Chose Country"
+  },
+  "turkey": "Turkey",
+  "@turkey": {
+    "description": "Turkey"
+  },
+  "choosesCity": "Choose City",
+  "@choosesCity": {
+    "description": "choose City"
+  },
+  "istanbulCity": "Istanbul",
+  "@istanbulCity": {
+    "description": "Istanbul"
+  },
+  "bursaCity": "Bursa",
+  "@bursaCity": {
+    "description": "Bursa"
+  },
+  "antalyaCity": "Antalya",
+  "@antalyaCity": {
+    "description": "Antalya"
+  },
+  "trapzonCity": "Trabzon",
+  "@trapzonCity": {
+    "description": "Trabzon"
+  },
+  "bodrumCity": "Bodrum",
+  "@bodrumCity": {
+    "description": "Bodrum"
+  },
+  "sapancaCity": "sapanca",
+  "@sapancaCity": {
+    "description": "sapanca"
+  },
+  "sak": "Saudi Arabia",
+  "@sak": {
+    "description": "Saudi Arabia"
+  },
+  "uas": "Arab Emirates",
+  "@uas": {
+    "description": "Arab Emirates"
+  },
+  "kwt": "Kuwait",
+  "@kwt": {
+    "description": "Kuwait"
+  },
+  "qutar": "Qatar",
+  "@qutar": {
+    "description": "Qatar"
+  },
+  "morocco": "Morocco",
+  "@morocco": {
+    "description": "Morocco"
+  },
+  "rayad": "Riyadh",
+  "@rayad": {
+    "description": "Riyadh"
+  },
+  "jdah": "Jeddah",
+  "@jdah": {
+    "description": "Jeddah"
+  },
+  "makkah": "Mecca",
+  "@makkah": {
+    "description": "Mecca"
+  },
+  "alMadinah": "Medina",
+  "@alMadinah": {
+    "description": "Medina"
+  },
+  "abodoubi": "Abu Dhabi",
+  "@abodoubi": {
+    "description": "Abu Dhabi"
+  },
+  "dubai": "Dubai",
+  "@dubai": {
+    "description": "Dubai"
+  },
+  "kuwaitCity":"Kuwait City",
+  "@kuwaitCity": {
+    "description": "Kuwait City"
+  },
+  "alAhmadi":"Ahmadi city",
+  "@alAhmadi": {
+    "description": "Ahmadi city"
+  },
+  "douha":"Doha",
+  "@douha": {
+    "description": "Doha"
+  },
+  "morRibat":"Rabat",
+  "@morRibat": {
+    "description": "Rabat"
+  },
+  "morDar":"Casablanca",
+  "@morDar": {
+    "description": "aldaar albayda"
+  },
+  "morFas":"Tangier",
+  "@morFas": {
+    "description": "Tangier"
+  },
+  "morMarksgh":"Marrakesh",
+  "@morMarksgh": {
+    "description": "Marrakesh"
+  },
+  "chooseCarType":"Choose the type of car",
+  "@chooseCarType": {
+    "description": "Choose the type of car"
+  },
+  "middleCar":"A medium touring car of 6-10 passengers",
+  "@middleCar": {
+    "description": "Medium tourist car from 6-10"
+  },
+  "bigCar1":"A medium touring car of 11-19 passengers",
+  "@bigCar1": {
+    "description": "Medium tourist car from 6-10"
+  },
+  "search":"Searching",
+  "@search": {
+    "description": "Search"
+  },
+  "listOfDrivers":"List of available drivers",
+  "@listOfDrivers": {
+    "description": "List of Drivers"
+  },
+  "profileDriver":"Driver info",
+  "@profileDriver": {
+    "description": "Driver info"
+  },
+  "countryCity":"Country & city",
+  "@countryCity": {
+    "description": "Country & city"
+  },
+  "carType":"Car class",
+  "@carType": {
+    "description": "Car class"
+  },
+  "phone":"Phone number ",
+  "@phone": {
+    "description": "Phone number "
+  },
+  "carPlCK":"Car plate",
+  "@carPlCK": {
+    "description": "Car plate"
+  },
+  "forgotPass":"Forgot passWord ?",
+  "@forgotPass": {
+    "description": "Forgot passWord ?"
+  },
+  "exForgotPass":"If you forgot your account password,\n type your account email in the field below\n and then click the button below\n to send a link to your email address in order to type a new password",
+  "@exForgotPass": {
+    "description": "ex Forgot passWord ?"
+  },
+  "send":"send",
+  "@send": {
+    "description": "send"
+  },
+  "emailCheck":"The operation\n was completed successfully.\n Check your email",
+  "@emailCheck": {
+    "description": "send"
   }
 }

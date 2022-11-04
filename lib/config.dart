@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'model/directions_details.dart';
+import 'model/driverPreBook.dart';
 
 final TextEditingController phoneNumber = TextEditingController();
 final TextEditingController email = TextEditingController();
@@ -38,6 +39,7 @@ String newstatusRide = "";
 String carDriverInfo = "";
 LatLng driverNewLocation = const LatLng(0.0, 0.0);
 String driverName = "";
+String carPlack = "";
 String driverPhone = "";
 String carDriverType = "";
 String timeTrip = "";
@@ -50,5 +52,4 @@ String tourismCityName = "";
 String tourismCityPrice = "";
 String newValueDrop = "";
 String contry = "";
-//version: 1.0.0+6 play store last build
-// version: 1.0.2 app store
+List<DriverPreBook> driverPreBookList = [];

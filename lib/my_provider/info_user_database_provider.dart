@@ -14,7 +14,8 @@ class UserAllInfoDatabase extends ChangeNotifier {
       email: "",
       status: "",
       country: "",
-      update: false);
+      update: false,
+      country0: "");
   void updateUser(Users users1) {
     users = users1;
     notifyListeners();

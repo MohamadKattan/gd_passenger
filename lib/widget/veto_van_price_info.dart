@@ -496,8 +496,6 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
               Provider.of<PlaceDetailsDropProvider>(context, listen: false)
                   .updateDropOfLocation(address);
               _getPlaceDerction(context);
-              // Future.delayed(const Duration(microseconds: 100))
-              //     .whenComplete(() => Navigator.pop(context));
             }
           });
         }
@@ -518,6 +516,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
 
     final pickUpLatling = LatLng(initialPos.latitude, initialPos.longitude);
     final dropOfLatling = LatLng(finalPos.latitude, finalPos.longitude);
+
     showDialog(
         context: context,
         builder: (context) =>
@@ -561,7 +560,6 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
       polylineSet.add(polyline);
     });
     Navigator.pop(context);
-
     ///for fit line on map PolylinePoints
     LatLngBounds latLngBounds;
     if (pickUpLatling.latitude > dropOfLatling.latitude &&

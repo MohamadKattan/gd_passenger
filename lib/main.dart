@@ -19,7 +19,10 @@ import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'my_provider/carTypeBook_provider.dart';
+import 'my_provider/city_provider.dart';
 import 'my_provider/close_botton_driverInfo.dart';
+import 'my_provider/country_provider.dart';
 import 'my_provider/indector_profile_screen.dart';
 import 'my_provider/nearsert_driver_provider.dart';
 import 'my_provider/positon_driver_info_provide.dart';
@@ -75,6 +78,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserInfoSheet()),
         ChangeNotifierProvider(create: (context) => ProfileSheet()),
         ChangeNotifierProvider(create: (context) => SheetCarDesc()),
+        ChangeNotifierProvider(create: (context) => CountryProvider()),
+        ChangeNotifierProvider(create: (context) => CityProvider()),
+        ChangeNotifierProvider(create: (context) => CarTypeBook()),
       ],
       builder: (context, _) {
         return const MaterialApp(

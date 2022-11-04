@@ -1,0 +1,199 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../my_provider/true_false.dart';
+import '../widget/custom_circuler.dart';
+import '../widget/sent_passdon.dart';
+
+class ForgotPass extends StatefulWidget {
+  const ForgotPass({Key? key}) : super(key: key);
+  static final CircularInductorCostem _inductorCostem =
+      CircularInductorCostem();
+
+  @override
+  State<ForgotPass> createState() => _ForgotPassState();
+}
+
+class _ForgotPassState extends State<ForgotPass> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _email = TextEditingController();
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    bool myTimerProvider = Provider.of<TrueFalse>(context).isTrue;
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: const Color(0xFF00A3E0),
+      appBar: AppBar(
+        title: Text(
+          AppLocalizations.of(context)!.forgotPass,
+          textAlign: TextAlign.start,
+          style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
+              overflow: TextOverflow.fade),
+        ),
+        backgroundColor: const Color(0xFF00A3E0),
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    "assets/splash.png",
+                    width: 125,
+                    height: 125,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.forgotPass,
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      overflow: TextOverflow.fade),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    AppLocalizations.of(context)!.exForgotPass,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white70,
+                        overflow: TextOverflow.fade),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                  child: Container(
+                    height: 55,
+                    margin: const EdgeInsets.only(left: 4.0, right: 4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: TextField(
+                      controller:_email,
+                      showCursor: true,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
+                      cursorColor: const Color(0xFFFFD54F),
+                      decoration: InputDecoration(
+                        fillColor: const Color(0xFFFFD54F),
+                        hintText: AppLocalizations.of(context)!.email,
+                        icon: const Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Icon(
+                            Icons.mail,
+                            color: Colors.grey,
+                            size: 25,
+                          ),
+                        ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (_email.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.fixed,
+                            backgroundColor: Colors.red,
+                            duration: const Duration(seconds: 3),
+                            content: Text(
+                                AppLocalizations.of(context)!.emailRequired),
+                          ),
+                        );
+                      } else {
+                        Provider.of<TrueFalse>(context, listen: false)
+                            .changeStateBooling(true);
+                        try{
+                            await  _auth.sendPasswordResetEmail(email:_email.text.trim())
+                              .whenComplete(() {
+                            Provider.of<TrueFalse>(context, listen: false)
+                                .changeStateBooling(false);
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) => sendPassDon(context));
+                          });
+                        }catch(ex){
+                          print(ex.toString());
+                        }
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        _email.clear();
+                      }
+                    },
+                    child: Container(
+                      child: Center(
+                          child: Text(
+                        AppLocalizations.of(context)!.send,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      )),
+                      width: 200,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFFBC408),
+                          borderRadius: BorderRadius.circular(12.0),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.black45,
+                                offset: Offset(0.10, 0.7),
+                                spreadRadius: 0.9)
+                          ]),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          myTimerProvider == true
+              ? Opacity(
+                  opacity: 0.9,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: (const BoxDecoration(
+                      color: Colors.black,
+                    )),
+                    child: ForgotPass._inductorCostem.circularInductorCostem(context),
+                  ),
+                )
+              : const Text("")
+        ],
+      ),
+    ));
+  }
+}

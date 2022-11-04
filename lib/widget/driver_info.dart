@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../config.dart';
+import '../google_map_methods.dart';
 import '../model/nearest _driver_ available.dart';
 import '../my_provider/app_data.dart';
 import '../my_provider/close_botton_driverInfo.dart';
@@ -31,11 +32,12 @@ class DriverInfo {
   Widget driverInfoContainer(
       {required BuildContext context,
       required VoidCallback voidCallback,
-      required UserIdProvider userIdProvider}) {
+      required UserIdProvider userIdProvider,
+      }) {
     final isCloseTrue =
         Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
-        height: 220,
+        height: 250,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -44,7 +46,7 @@ class DriverInfo {
               BoxShadow(
                   blurRadius: 6.0,
                   spreadRadius: 0.5,
-                  color: Colors.black54,
+                  color: Colors.white,
                   offset: Offset(0.7, 0.7))
             ],
             color: Colors.white.withOpacity(0.8)),
@@ -54,133 +56,190 @@ class DriverInfo {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 8.0),
+                padding:
+                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 0,
-                    child: Text(
-                      AppLocalizations.of(context)!.driverStatus,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: Colors.black, fontSize: 16),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 3.0,
-                  ),
-                  Expanded(
-                    flex: 0,
-                    child: Text(newstatusRide,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Colors.green.shade700,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  const SizedBox(width: 100.0),
-                  Expanded(
-                    flex: 0,
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.white,
-                      child: CachedNetworkImage(
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 50.0,
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.cover),
-                          ),
-                        ),
-                        imageUrl: driverImage.isEmpty ? "" : driverImage,
-                        placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                        const Icon(Icons.person),
-                      ),
-                    ),
-                  )
-                ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0,right: 15.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 0,
-                        child: Text(
-                          AppLocalizations.of(context)!.time,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.black, fontSize: 16),
-                        ),
+                      Column(
+                        children: [
+                          Expanded(
+                            flex: 0,
+                            child: Text(
+                              AppLocalizations.of(context)!.driverStatus,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 3.0,
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child: Text(newstatusRide,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Colors.greenAccent.shade700,
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 3.0),
+                      SizedBox(
+                          width: newstatusRide ==
+                                  AppLocalizations.of(context)!.accepted
+                              ? 130
+                              : 90),
                       Expanded(
-                        flex: 0,
-                        child: Text(timeTrip == "" ? "...." : timeTrip,
-                            style: TextStyle(
-                                color: Colors.green.shade700,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold)),
-                      ),
+                          flex: 0,
+                          child: Container(
+                            height: 60,
+                            width: newstatusRide ==
+                                    AppLocalizations.of(context)!.accepted
+                                ? 60
+                                : 120,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(12.0),
+                                border:
+                                    Border.all(width: 2.5, color: Colors.grey)),
+                            child: Center(
+                              child: Text(
+                                timeTrip == "" ? "...." : timeTrip,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ))
+                      // Expanded(
+                      //   flex: 0,
+                      //   child: CircleAvatar(
+                      //     radius: 25,
+                      //     backgroundColor: Colors.white,
+                      //     child: CachedNetworkImage(
+                      //       imageBuilder: (context, imageProvider) => Container(
+                      //         width: 50.0,
+                      //         height: 50.0,
+                      //         decoration: BoxDecoration(
+                      //           shape: BoxShape.circle,
+                      //           image: DecorationImage(
+                      //               image: imageProvider, fit: BoxFit.cover),
+                      //         ),
+                      //       ),
+                      //       imageUrl: driverImage.isEmpty ? "" : driverImage,
+                      //       placeholder: (context, url) =>
+                      //       const CircularProgressIndicator(),
+                      //       errorWidget: (context, url, error) =>
+                      //       const Icon(Icons.person),
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 3.0,
+              ),
               CustomWidget().customDivider(),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0,right: 8.0,top: 4.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      AppLocalizations.of(context)!.carDetails,
-                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 0,
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.white,
+                              child: CachedNetworkImage(
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                imageUrl:
+                                    driverImage.isEmpty ? "" : driverImage,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.person),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(
+                                      width: 2.0, color: Colors.grey)),
+                              child: SmoothStarRating(
+                                allowHalfRating: true,
+                                starCount: 5,
+                                rating: ratDriverRead,
+                                size: 15.0,
+                                color: Colors.yellow.shade700,
+                                borderColor: Colors.yellow.shade700,
+                                spacing: 0.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child: Text(
+                              driverName,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  color: Colors.black87, fontSize: 16),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(
-                      width: 4.0,
-                    ),
-                    Text(
-                      carDriverInfo,
-                      style:
-                          const TextStyle(color: Colors.black87, fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0,right: 8.0,top: 8.0,bottom: 4.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                     Text(
-                      AppLocalizations.of(context)!.driverName,
-                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                    const  SizedBox(width: 4.0,),
-                    Text(
-                      driverName,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.black87, fontSize: 16),
-                    ),
-                    const SizedBox(width: 10.0),
-                    SmoothStarRating(
-                      allowHalfRating: true,
-                      starCount: 5,
-                      rating: ratDriverRead,
-                      size: 15.0,
-                      color: Colors.yellow.shade700,
-                      borderColor: Colors.yellow.shade700,
-                      spacing:0.0,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 0,
+                            child: Text(
+                              carPlack.toUpperCase(),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child: Text(
+                              carDriverInfo,
+                              style: const TextStyle(
+                                  color: Colors.black26, fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -212,23 +271,22 @@ class DriverInfo {
                         onPressed: () => openGoogleMap(context)),
                     IconButton(
                         iconSize: 40.0,
-                        icon: Icon(Icons.close,
-                            color: Colors.redAccent.shade700),
+                        icon:
+                            Icon(Icons.close, color: Colors.redAccent.shade700),
                         onPressed: () async {
                           voidCallback();
                           NearestDriverAvailable _nearestDriverAvailable =
-                          NearestDriverAvailable("", 0.0, 0.0);
+                              NearestDriverAvailable("", 0.0, 0.0);
                           Provider.of<NearestDriverProvider>(context,
-                              listen: false)
+                                  listen: false)
                               .updateState(_nearestDriverAvailable);
                           Provider.of<PositionDriverInfoProvider>(context,
-                              listen: false)
+                                  listen: false)
                               .updateState(-400.0);
                           Provider.of<PositionChang>(context, listen: false)
                               .changValue(0.0);
                           await deleteRideRequesr(context);
-                          GeoFireMethods.listOfNearestDriverAvailable
-                              .clear();
+
                         }),
                     // isCloseTrue == true
                     //     ? IconButton(

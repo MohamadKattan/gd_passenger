@@ -1,5 +1,4 @@
 // auth screen
-import 'package:country_list_pick/country_list_pick.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/user_enter_face/how_use.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../config.dart';
+import 'forgot_pass.dart';
 
 GlobalKey globalKey = GlobalKey();
 
@@ -44,7 +44,8 @@ class AuthScreen extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset("assets/splash.png",
+                        child: Image.asset(
+                          "assets/splash.png",
                           width: 150,
                           height: 150,
                           fit: BoxFit.contain,
@@ -62,7 +63,7 @@ class AuthScreen extends StatelessWidget {
                         height: 10,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                         child: Text(
                           AppLocalizations.of(context)!.newAccount,
                           textAlign: TextAlign.center,
@@ -77,10 +78,10 @@ class AuthScreen extends StatelessWidget {
                         height: 10,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 8.0,left: 8.0),
+                        padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                         child: Container(
                           height: 55,
-                          margin: const EdgeInsets.only(left: 4.0,right: 4.0),
+                          margin: const EdgeInsets.only(left: 4.0, right: 4.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16.0),
@@ -114,7 +115,7 @@ class AuthScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
                           height: 55,
-                          margin: const EdgeInsets.only(left: 4.0,right: 4.0),
+                          margin: const EdgeInsets.only(left: 4.0, right: 4.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16.0),
@@ -140,6 +141,30 @@ class AuthScreen extends StatelessWidget {
                             keyboardType: TextInputType.visiblePassword,
                           ),
                         ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(''),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const ForgotPass())),
+                              child: Text(
+                                AppLocalizations.of(context)!.forgotPass,
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white,
+                                    overflow: TextOverflow.fade),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -222,18 +247,21 @@ class AuthScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: 0.0,
+                    left: 0.0,
                     top: 0.0,
                     child: GestureDetector(
-                      onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const HowToUse())),
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const HowToUse())),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
-                  children: [
-                        Image.asset("assets/infoIcon.png",height: 55,width: 55),
-                        Text(AppLocalizations.of(context)!.st2,style:const TextStyle(color: Colors.white))
-                  ],
-                ),
+                          children: [
+                            Image.asset("assets/infoIcon.png",
+                                height: 55, width: 55),
+                            Text(AppLocalizations.of(context)!.st2,
+                                style: const TextStyle(color: Colors.white))
+                          ],
+                        ),
                       ),
                     )),
                 myTimerProvider == true

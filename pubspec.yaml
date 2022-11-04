@@ -97,6 +97,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/reservtion.jpeg
     - assets/van.png
     - assets/002.png
     - assets/infoIcon.png

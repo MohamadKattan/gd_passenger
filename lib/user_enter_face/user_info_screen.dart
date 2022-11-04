@@ -371,7 +371,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   Future<void> getImage(BuildContext context, ImageSource source) async {
     try {
       final XFile? _file = await _picker.pickImage(
-          source: source, maxWidth: 150.0, maxHeight: 150.0, imageQuality: 80);
+          source: source, maxWidth: 500.0, maxHeight: 500.0, imageQuality: 100);
       setState(() {
         imageFile = _file!;
       });
@@ -379,7 +379,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           .listingToPickImage(imageFile);
       Provider.of<UserInfoSheet>(context,listen: false).updateState(-400);
     } catch (e) {
-      print("image ${e.toString()}");
       tools.toastMsg(AppLocalizations.of(context)!.imageRequired);
       tools.toastMsg(e.toString());
     }
@@ -395,7 +394,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       tools.toastMsg(AppLocalizations.of(context)!.numberEmpty);
     }
     else {
-     ApiSrvGeo().getContry();
+     ApiSrvGeo().getCountry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
      result="$resultCodeCon${phoneNumber.text.trim()}";
       srv.setImageToStorage(

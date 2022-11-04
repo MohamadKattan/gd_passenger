@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen>
     }
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 1),
         lowerBound: 0.4,
         upperBound: 0.6);
     _animationController.forward();
@@ -122,6 +122,7 @@ class _SplashScreenState extends State<SplashScreen>
           : Tools().toastMsg('Could not launch');
     }
   }
+
 // this method for check internet
   Future<void> checkInternet() async {
     result = await InternetConnectionChecker().hasConnection;

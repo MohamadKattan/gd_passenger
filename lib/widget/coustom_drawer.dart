@@ -9,52 +9,59 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../my_provider/buttom_color_pro.dart';
 import '../my_provider/double_value.dart';
 import '../tools/carousel_slider.dart';
+import '../user_enter_face/advance_reservation.dart';
 import '../user_enter_face/book_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../user_enter_face/support_screen.dart';
 
 Widget customDrawer(BuildContext context) {
   double rightVal = MediaQuery.of(context).size.width * 25 / 100;
-  return SingleChildScrollView(
-    child: Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color(0xFF00A3E0),
-          Color(0xFF00A3E0),
-          Colors.white,
-          Colors.white,
-          Colors.white,
-          Colors.white,
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+  return Stack(
+    children: [
+      Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [
+            Color(0xFF00A3E0),
+            Color(0xFF00A3E0),
+            Colors.white,
+            Colors.white,
+            Colors.white,
+            Colors.white,
+            Colors.white,
+            Colors.white,
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          DrawerHeader(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: AppLocalizations.of(context)!.hi == "مرحبا" ? 0.0 : 80.0,
-                  right:
-                      AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 0.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  showImage(context),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  showUserName(context),
-                  showUserPhone(context),
-                ],
+      DrawerHeader(
+        child: Padding(
+          padding: EdgeInsets.only(
+              left: AppLocalizations.of(context)!.hi == "مرحبا" ? 0.0 : 80.0,
+              right:
+              AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 0.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              showImage(context),
+              const SizedBox(
+                height: 8.0,
               ),
-            ),
+              showUserName(context),
+              showUserPhone(context),
+            ],
           ),
-          Column(
+        ),
+      ),
+      Positioned(
+        top: 150,
+        left: 0.0,
+        right: 0.0,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(
                 height: 4.0,
@@ -103,6 +110,46 @@ Widget customDrawer(BuildContext context) {
                 flex: 0,
                 child: Padding(
                   padding: EdgeInsets.only(
+                      right: AppLocalizations.of(context)!.hi == "مرحبا"
+                          ? rightVal
+                          : 8.0,
+                      left: 8.0),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AdvanceReservation())),
+                    child: Row(children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.timer,
+                          color: Colors.black45,
+                          size: 35,
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: Text(
+                            AppLocalizations.of(context)!.advanceReservation,
+                            style: const TextStyle(
+                                color: Colors.black45,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                          ))
+                    ]),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              CustomWidget().customDivider(),
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
                       left: 8.0,
                       right: AppLocalizations.of(context)!.hi == "مرحبا"
                           ? rightVal
@@ -117,7 +164,7 @@ Widget customDrawer(BuildContext context) {
                         const Padding(
                           padding: EdgeInsets.all(8.0),
                           child:
-                              Icon(Icons.person, color: Colors.black45, size: 35),
+                          Icon(Icons.person, color: Colors.black45, size: 35),
                         ),
                         const SizedBox(
                           width: 8.0,
@@ -148,8 +195,8 @@ Widget customDrawer(BuildContext context) {
                           : 8.0),
                   child: GestureDetector(
                     onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder:
-                    (_)=>const SupportScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder:
+                          (_)=>const SupportScreen()));
                     },
                     child: Row(
                       children: [
@@ -222,7 +269,7 @@ Widget customDrawer(BuildContext context) {
               ),
               CustomWidget().customDivider(),
               Expanded(
-                flex: 0,
+                  flex: 0,
                   child: ImageSliderDemo()),
               Expanded(
                 flex: 0,
@@ -234,54 +281,72 @@ Widget customDrawer(BuildContext context) {
                       right: AppLocalizations.of(context)!.hi == "مرحبا"
                           ? 120.0
                           : 50.0),
-                  child: const Text(
-                    "Garanti taxi v1.0.0",
-                    style: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                  child: const Center(
+                    child: Text(
+                      "Garanti taxi v1.0.0",
+                      style: TextStyle(
+                          color: Colors.black45,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               )
             ],
           ),
-        ],
+        ),
       ),
-    ),
+    ],
   );
 }
 
 Widget showImage(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime.imageProfile != null
-      ? Expanded(
-          child: CachedNetworkImage(
-            imageBuilder: (context, imageProvider) => Container(
-              width: 60.0,
-              height: 60.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-              ),
-            ),
-            imageUrl: userInfoRealTime.imageProfile,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) => const Icon(Icons.person),
-          ),
-        )
-      : const Expanded(
-          flex: 0,
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.person,
-              color: Colors.black12,
-              size: 35,
-            ),
-          ),
-        );
+  return Expanded(
+    child: CachedNetworkImage(
+      imageBuilder: (context, imageProvider) => Container(
+        width: 60.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+        ),
+      ),
+      imageUrl: userInfoRealTime.imageProfile,
+      placeholder: (context, url) => const CircularProgressIndicator(),
+      errorWidget: (context, url, error) => const Icon(Icons.person),
+    ),
+  );
+  ///OLD CODE TODO
+  // userInfoRealTime.imageProfile != null
+    //   ? Expanded(
+    //       child: CachedNetworkImage(
+    //         imageBuilder: (context, imageProvider) => Container(
+    //           width: 60.0,
+    //           height: 60.0,
+    //           decoration: BoxDecoration(
+    //             shape: BoxShape.circle,
+    //             image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+    //           ),
+    //         ),
+    //         imageUrl: userInfoRealTime.imageProfile,
+    //         placeholder: (context, url) => const CircularProgressIndicator(),
+    //         errorWidget: (context, url, error) => const Icon(Icons.person),
+    //       ),
+    //     )
+    //   : const Expanded(
+    //       flex: 0,
+    //       child: CircleAvatar(
+    //         radius: 30,
+    //         backgroundColor: Colors.white,
+    //         child: Icon(
+    //           Icons.person,
+    //           color: Colors.black12,
+    //           size: 35,
+    //         ),
+    //       ),
+    //     );
 }
 
 Widget showUserName(BuildContext context) {

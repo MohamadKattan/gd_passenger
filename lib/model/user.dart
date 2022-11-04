@@ -10,6 +10,7 @@ class Users {
   String country;
   String status;
   bool update;
+  String country0;
   Users(
       {required this.firstName,
       required this.lastName,
@@ -19,7 +20,9 @@ class Users {
       required this.email,
       required this.country,
       required this.status,
-      required this.update});
+      required this.update,
+        required this.country0
+      });
 
   static Users fromMap(Map<String, dynamic> map) {
     return Users(
@@ -30,6 +33,7 @@ class Users {
       phoneNumber: map["phoneNumber"],
       email: map["email"],
       country: map["country"],
+      country0:map["country0"],
       status: map["status"],
       update: map["update"],
     );

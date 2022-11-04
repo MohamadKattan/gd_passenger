@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/google_map_methods.dart';
@@ -44,11 +46,18 @@ import '../notification.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/curanny_type.dart';
 import '../tools/geoFire_methods_tools.dart';
+import '../tools/math_methods.dart';
+import '../widget/antalya_veto.dart';
+import '../widget/bodrun_veto.dart';
+import '../widget/bursa_veto.dart';
 import '../widget/call_driver_map.dart';
 import '../widget/collect_money_dialog.dart';
 import '../widget/complain_onDriver.dart';
 import '../widget/driver_info.dart';
 import '../widget/sorry_no_driver.dart';
+import '../widget/spanca_veto.dart';
+import '../widget/trabzon_veto.dart';
+import '../widget/uzungol_veto.dart';
 import '../widget/veto_van_price_info.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -62,8 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final CustomWidget _customWidget = CustomWidget();
   CustomBottomSheet customBottomSheet = CustomBottomSheet();
   final LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
-  final ApiSrvGeo _apiMethods = ApiSrvGeo();
-  late Position currentPosition;
   bool nearDriverAvailableLoaded = false;
   late BitmapDescriptor driversNearIcon;
   late BitmapDescriptor driversNearIcon1;
@@ -74,12 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isTimeRequstTrip = false;
   double grofireRadr = 4;
   String carOrderType = "Taxi-4 seats";
-  // AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
   AudioPlayer audioPlayer = AudioPlayer();
   late AudioCache audioCache;
   bool sound1 = false;
   bool sound2 = false;
   bool sound3 = false;
+  late Timer closeTimerSearch;
 
   @override
   void initState() {
@@ -107,8 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     final postionCancel = Provider.of<PositionCancelReq>(context).value;
-    final dropBottomProvider =
-        Provider.of<DropBottomValue>(context).valueDropBottom;
+    final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
     final infoUserDataReal = Provider.of<UserAllInfoDatabase>(context).users;
@@ -130,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
               customDrawer(context),
               TweenAnimationBuilder(
                   tween: Tween<double>(begin: 0.0, end: value),
-                  duration: const Duration(milliseconds: 100),
+                  duration: const Duration(milliseconds: 500),
                   builder: (_, double val, __) {
                     return Transform(
                       transform: Matrix4.identity()
@@ -161,12 +167,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _logicGoogleMap.controllerGoogleMap
                                       .complete(controller);
                                   newGoogleMapController = controller;
-                                  await locationPosition(context);
+                                  await _logicGoogleMap
+                                      .locationPosition(context)
+                                      .whenComplete(() async {
+                                    await geoFireInitialize();
+                                  });
                                   await DataBaseSrv()
                                       .currentOnlineUserInfo(context);
                                 },
                               ),
                             ),
+
                             /// arrow up
                             Positioned(
                               bottom: 0.0,
@@ -243,8 +254,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     builder: (context) =>
                                                         const SearchScreen()));
                                             if (res == "dataDir") {
-                                               changeAllProClickTaxiBox();
-                                              await getPlaceDerction(context);
+                                              changeAllProClickTaxiBox();
+                                              await getPlaceDirection(context);
                                             }
                                           },
                                           child: Container(
@@ -279,6 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 changeTextWhereToOrTollpasses(
                                                     tripDirectionDetails),
+
                                                 ///stop after new
                                                 // tripDirectionDetails != null
                                                 //     ? SizedBox(
@@ -317,6 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         const SizedBox(height: 6.0),
                                         _customWidget.customDivider(),
+
                                         /// row of 3 car type
                                         Padding(
                                           padding:
@@ -415,17 +428,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 Expanded(
                                                   child: GestureDetector(
                                                     onTap: () async {
-                                                      await changeAllProClickVanBox();
-                                                      infoUserDataReal.country ==
-                                                                  "Turkey" ||
-                                                              contry == "Turkey"
-                                                          ? await showDialog(
-                                                              context: context,
-                                                              barrierDismissible:
-                                                                  false,
-                                                              builder: (_) =>
-                                                                  const VetoVanPriceTurkeyJust())
-                                                          : null;
+                                                      changeAllProClickVanBox();
+
+                                                      ///todo old code
+                                                      // infoUserDataReal.country ==
+                                                      //             "Turkey" ||
+                                                      //         contry == "Turkey"
+                                                      //     ? await showDialog(
+                                                      //         context: context,
+                                                      //         barrierDismissible:
+                                                      //             false,
+                                                      //         builder: (_) =>
+                                                      //             const VetoVanPriceTurkeyJust())
+                                                      //     : null;
+                                                      checkAnyListTurCityOpen(
+                                                          infoUserDataReal);
                                                     },
                                                     child: Stack(
                                                       children: [
@@ -510,18 +527,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 Expanded(
                                                   child: GestureDetector(
-                                                    onTap: () async {
+                                                    onTap: () {
                                                       changeAllProClickVetoBox();
-                                                      infoUserDataReal.country ==
-                                                                  "Turkey" ||
-                                                              contry == "Turkey"
-                                                          ? await showDialog(
-                                                              context: context,
-                                                              barrierDismissible:
-                                                                  false,
-                                                              builder: (_) =>
-                                                                  const VetoVanPriceTurkeyJust())
-                                                          : null;
+                                                      checkAnyListTurCityOpen(
+                                                          infoUserDataReal);
+
+                                                      ///todo old code
+                                                      // infoUserDataReal.country ==
+                                                      //             "Turkey" ||
+                                                      //         contry == "Turkey"
+                                                      //     ? await showDialog(
+                                                      //         context: context,
+                                                      //         barrierDismissible:
+                                                      //             false,
+                                                      //         builder: (_) =>
+                                                      //             const VetoVanPriceTurkeyJust())
+                                                      //     : null;
                                                     },
                                                     child: Stack(
                                                       children: [
@@ -606,9 +627,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         const SizedBox(
                                           height: 10,
                                         ),
+
                                         /// drop of botton
                                         dropBottomCustom(
                                             context, dropBottomProvider),
+
                                         /// request button
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -639,12 +662,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   setState(() {
                                                     state = "requesting";
                                                   });
+                                                  countFullTimeRequest(
+                                                      userProvider);
                                                   driverAvailable = GeoFireMethods
                                                       .listOfNearestDriverAvailable;
-                                                  searchNearestDriver(
-                                                    userProvider,
-                                                    context,
-                                                  );
+                                                  print('fffffff${driverAvailable.length}');
+                                                   searchNearestDriver(userProvider);
                                                   gotDriverInfo(context);
                                                 }
                                               },
@@ -751,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context: context,
                                     userIdProvider: userProvider,
                                     voidCallback: () async {
-                                       restApp();
+                                    await  restApp();
                                       setState(() {
                                         state = "normal";
                                       });
@@ -767,7 +790,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context: context,
                                     userIdProvider: userProvider,
                                     voidCallback: () async {
-                                       restApp();
+                                      await restApp();
                                       setState(() {
                                         state = "normal";
                                       });
@@ -789,8 +812,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: const Color(0xFF00A3E0),
                           child: IconButton(
                               onPressed: () {
-                                //todo
-                                // checkAllUserInfoReal(infoUserDataReal, context);
                                 Provider.of<DoubleValue>(context, listen: false)
                                     .value0Or1(1);
                                 Provider.of<ChangeColor>(context, listen: false)
@@ -858,228 +879,101 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  //this them main logic for diretion + marker+ polline conect with class api
-  Future<void> getPlaceDerction(BuildContext context) async {
-    /// from api geo
-    final initialPos =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
-
-    ///from api srv place
-    final finalPos =
-        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
-            .dropOfLocation;
-
-    final pickUpLatling = LatLng(initialPos.latitude, initialPos.longitude);
-    final dropOfLatling = LatLng(finalPos.latitude, finalPos.longitude);
-    showDialog(
-        context: context,
-        builder: (context) =>
-            CircularInductorCostem().circularInductorCostem(context));
-
-    ///from api dir
-    final details = await ApiSrvDir.obtainPlaceDirectionDetails(
-        pickUpLatling, dropOfLatling, context);
-    setState(() {
-      tripDirectionDetails = details;
-    });
-
-    /// PolylinePoints method
-    PolylinePoints polylinePoints = PolylinePoints();
-    List<PointLatLng> decodedPolylineResult =
-        polylinePoints.decodePolyline(details!.enCodingPoints);
-    polylineCoordinates.clear();
-
-    if (decodedPolylineResult.isNotEmpty) {
-      ///new add
-      for (var pointLatLng in decodedPolylineResult) {
-        polylineCoordinates
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
-      }
-    }
-    polylineSet.clear();
-    setState(() {
-      ///property PolylinePoints
-      Polyline polyline = Polyline(
-          polylineId: const PolylineId("polylineId"),
-          color: Colors.greenAccent.shade700,
-          width: 6,
-          geodesic: true,
-          startCap: Cap.roundCap,
-          endCap: Cap.roundCap,
-          jointType: JointType.round,
-          points: polylineCoordinates);
-
-      ///set from above
-      polylineSet.add(polyline);
-    });
-
-    Navigator.pop(context);
-
-    ///for fit line on map PolylinePoints
-    LatLngBounds latLngBounds;
-    if (pickUpLatling.latitude > dropOfLatling.latitude &&
-        pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
-    } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
-          northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
-    } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
-          northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
-    } else {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
-    }
-    newGoogleMapController
-        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
-
-    ///Marker
-    Marker markerPickUpLocation = Marker(
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-        infoWindow: InfoWindow(
-            title: initialPos.placeName,
-            snippet: AppLocalizations.of(context)!.myLocation),
-        position: LatLng(pickUpLatling.latitude, pickUpLatling.longitude),
-        markerId: const MarkerId("pickUpId"));
-
-    Marker markerDropOfLocation = Marker(
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueRed,
-        ),
-        infoWindow: InfoWindow(
-            title: finalPos.placeName,
-            snippet: AppLocalizations.of(context)!.dropOff),
-        position: LatLng(dropOfLatling.latitude, dropOfLatling.longitude),
-        markerId: const MarkerId("dropOfId"));
-
-    setState(() {
-      markersSet.add(markerPickUpLocation);
-      markersSet.add(markerDropOfLocation);
-    });
-
-    ///Circle
-    Circle pickUpLocCircle = Circle(
-        fillColor: Colors.white,
-        radius: 14.0,
-        center: pickUpLatling,
-        strokeWidth: 2,
-        strokeColor: Colors.grey,
-        circleId: const CircleId("pickUpId"));
-
-    Circle dropOffLocCircle = Circle(
-        fillColor: Colors.white,
-        radius: 14.0,
-        center: dropOfLatling,
-        strokeWidth: 2,
-        strokeColor: Colors.grey,
-        circleId: const CircleId("dropOfId"));
-    setState(() {
-      circlesSet.add(pickUpLocCircle);
-      circlesSet.add(dropOffLocCircle);
-    });
-  }
-
+  ///======Start got current loction + geoFire for add all drivers on map who are close to rider=========
   //this method for got current location after that run geofire method for got the drivers nearest
-
-  Future<dynamic> locationPosition(BuildContext context) async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    currentPosition = position;
-    // to fitch LatLng in google map
-    LatLng latLngPosition = LatLng(position.latitude, position.longitude);
-
-    // update on google map
-    CameraPosition cameraPosition = CameraPosition(
-        target: latLngPosition, zoom: 16.50, tilt: 80.0, bearing: 35.0);
-    newGoogleMapController
-        ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-
-    await _apiMethods.searchCoordinatesAddress(position, context);
-    await geoFireInitialize();
-  }
+  ///todo old code
+  // Future<dynamic> locationPosition(BuildContext context) async {
+  //   bool serviceEnabled;
+  //   LocationPermission permission;
+  //   // Test if location services are enabled.
+  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     return Future.error('Location services are disabled.');
+  //   }
+  //   permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       return Future.error('Location permissions are denied');
+  //     }
+  //   }
+  //   if (permission == LocationPermission.deniedForever) {
+  //     // Permissions are denied forever, handle appropriately.
+  //     return Future.error(
+  //         'Location permissions are permanently denied, we cannot request permissions.');
+  //   }
+  //   // When we reach here, permissions are granted and we can
+  //   // continue accessing the position of the device.
+  //   Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
+  //   currentPosition = position;
+  //   // to fitch LatLng in google map
+  //   LatLng latLngPosition = LatLng(position.latitude, position.longitude);
+  //
+  //   // update on google map
+  //   CameraPosition cameraPosition = CameraPosition(
+  //       target: latLngPosition, zoom: 17.0, tilt: 0.0, bearing: 0.0);
+  //   newGoogleMapController
+  //       ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  //
+  //   await _apiMethods.searchCoordinatesAddress(position, context);
+  // }
 
   // this method for display nearest driver available from rider in list by using geoFire
   Future<void> geoFireInitialize() async {
+    Geofire.initialize("availableDrivers");
     final currentPosition =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
-    Geofire.initialize("availableDrivers");
-    Geofire.queryAtLocation(
-            currentPosition.latitude, currentPosition.longitude, grofireRadr)
-        ?.listen((map) async {
-      if (map != null) {
-        var callBack = map['callBack'];
 
-        switch (callBack) {
-          case Geofire.onKeyEntered:
-            NearestDriverAvailable nearestDriverAvailable =
-                NearestDriverAvailable("", 0.0, 0.0);
-            nearestDriverAvailable.key = map['key'];
-            nearestDriverAvailable.latitude = map['latitude'];
-            nearestDriverAvailable.longitude = map['longitude'];
-            GeoFireMethods.listOfNearestDriverAvailable
-                .add(nearestDriverAvailable);
-            if (nearDriverAvailableLoaded == true) {
+    try{
+      Geofire.queryAtLocation(
+          currentPosition.latitude, currentPosition.longitude, 15)
+          ?.listen((map) async {
+        if (map != null) {
+          var callBack = map['callBack'];
+          switch (callBack) {
+            case Geofire.onKeyEntered:
+              NearestDriverAvailable nearestDriverAvailable = NearestDriverAvailable("", 0.0, 0.0);
+              nearestDriverAvailable.key = map['key'];
+              nearestDriverAvailable.latitude = map['latitude'];
+              nearestDriverAvailable.longitude = map['longitude'];
+              GeoFireMethods.listOfNearestDriverAvailable.add(nearestDriverAvailable);
+              // updateAvailableDriverOnMap();
+              break;
+            case Geofire.onKeyExited:
+              GeoFireMethods.removeDriverFromList(map["key"]);
+              break;
+
+            case Geofire.onKeyMoved:
+              NearestDriverAvailable nearestDriverAvailable =
+              NearestDriverAvailable("", 0.0, 0.0);
+              nearestDriverAvailable.key = map['key'];
+              nearestDriverAvailable.latitude = map['latitude'];
+              nearestDriverAvailable.longitude = map['longitude'];
+              GeoFireMethods.updateDriverNearLocation(nearestDriverAvailable);
               updateAvailableDriverOnMap();
-            }
-
-            break;
-
-          case Geofire.onKeyExited:
-            GeoFireMethods.removeDriverFromList(map["key"]);
-            break;
-
-          case Geofire.onKeyMoved:
-            // Update your key's location
-            NearestDriverAvailable nearestDriverAvailable =
-                NearestDriverAvailable("", 0.0, 0.0);
-            nearestDriverAvailable.key = map['key'];
-            nearestDriverAvailable.latitude = map['latitude'];
-            nearestDriverAvailable.longitude = map['longitude'];
-            GeoFireMethods.updateDriverNearLocation(nearestDriverAvailable);
-            updateAvailableDriverOnMap();
-            break;
-
-          case Geofire.onGeoQueryReady:
-            updateAvailableDriverOnMap();
-            break;
+              break;
+            case Geofire.onGeoQueryReady:
+              updateAvailableDriverOnMap();
+              break;
+          }
         }
+        setState(() {});
+      }).onError((er){
+        if (kDebugMode) {
+          print(er.toString());
+        }
+      });
+    }on PlatformException{
+      if (kDebugMode) {
+        print('PlatformException geo fire');
       }
-      setState(() {});
-    });
+    }
   }
 
   // this method for add icon new near driver on map
   void updateAvailableDriverOnMap() async {
     late String driverPhoneOnMap;
-    // setState(() {
-    //   markersSet.clear();
-    // });
-
     for (NearestDriverAvailable driver
         in GeoFireMethods.listOfNearestDriverAvailable) {
       DatabaseReference ref =
@@ -1123,7 +1017,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: " $fNameIcon $lNameIcon",
             snippet:
                 ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOnMap'),
-        // rotation: MathMethods.createRandomNumber(120),
+        rotation: MathMethods.createRandomNumber(5),
       );
 
       tMarker.add(marker);
@@ -1131,78 +1025,35 @@ class _HomeScreenState extends State<HomeScreen> {
         markersSet.add(marker);
       });
     }
-
-    ///cancel
-    // setState(() {
-    //   markersSet=tMarker;
-    // });
   }
 
   //this Method for custom icon driver near taxi
   void createDriverNearIcon() {
     ImageConfiguration imageConfiguration =
         createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
-    BitmapDescriptor.fromAssetImage(imageConfiguration,
-        Platform.isAndroid?"assets/yellowcar1.png":"assets/yellowcar.png")
+    BitmapDescriptor.fromAssetImage(
+            imageConfiguration,
+            Platform.isAndroid
+                ? "assets/yellowcar1.png"
+                : "assets/yellowcar.png")
         .then((value) {
       setState(() {
         driversNearIcon = value;
       });
     });
   }
+
   //this Method for custom icon driver near van
   void createDriverNearIcon1() {
     ImageConfiguration imageConfiguration =
         createLocalImageConfiguration(context, size: const Size(1.0, 1.0));
     BitmapDescriptor.fromAssetImage(imageConfiguration,
-        Platform.isAndroid?"assets/blackcar1.png":"assets/blackcar.png")
+            Platform.isAndroid ? "assets/blackcar1.png" : "assets/blackcar.png")
         .then((value) {
       setState(() {
         driversNearIcon1 = value;
       });
     });
-  }
-
-// this method for clean req after cancel
- restApp() {
-    setState(() {
-      polylineSet.clear();
-      markersSet.clear();
-      waitDriver = "wait";
-      tMarker.clear();
-      circlesSet.clear();
-      polylineCoordinates.clear();
-      tripDirectionDetails = null;
-      statusRide = "";
-      newstatusRide = "";
-      carDriverInfo = "";
-      driverName = "";
-      driverImage = "";
-      driverPhone = "";
-      timeTrip = "";
-      driverId = "";
-      titleRate = "";
-      rating = 0.0;
-      carRideType = "";
-      carOrderType = "Taxi-4 seats";
-      grofireRadr = 4;
-      tourismCityName = "";
-      tourismCityPrice = "";
-      driverNewLocation = const LatLng(0.0, 0.0);
-      markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
-      sound1 = false;
-      sound2 = false;
-      sound3 = false;
-    });
-    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
-    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
-    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
-    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
-    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
-    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
-    Provider.of<CarTypeProvider>(context, listen: false)
-        .updateCarType("Taxi-4 seats");
-    locationPosition(context);
   }
 
   // this method for switch text where to OR toll passes
@@ -1235,7 +1086,7 @@ class _HomeScreenState extends State<HomeScreen> {
   searchIconOrCancelBottom(DirectionDetails? tripDirectionDetails) {
     if (tripDirectionDetails != null) {
       return IconButton(
-          onPressed: ()  =>  restApp(),
+          onPressed: () async => await restApp(),
           icon: const Icon(
             Icons.cancel,
             color: Colors.redAccent,
@@ -1264,7 +1115,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Taxi-4 seats");
-    geoFireInitialize();
   }
 
   // this method will change all provider state when click on van box
@@ -1281,7 +1131,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Medium commercial-6-10 seats");
-    geoFireInitialize();
   }
 
   // this method will change all provider state when click on Veto box
@@ -1298,7 +1147,57 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Big commercial-11-19 seats");
-    geoFireInitialize();
+  }
+
+  // this method for check any city in turkey and open list of city tur
+  void checkAnyListTurCityOpen(Users infoUserDataReal) {
+    switch (infoUserDataReal.country) {
+      case 'İstanbul':
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const VetoVanPriceTurkeyJust());
+        break;
+      case 'Antalya':
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const AntalyVeto());
+        break;
+      case 'Muğla':
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const BodrunVeto());
+        break;
+      case 'Bursa':
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const BursaVeto());
+        break;
+      case 'Sakarya':
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const SapancaVeto());
+        break;
+      case 'Trabzon':
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const TrabzonVeto());
+        break;
+      case 'Çaykara':
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const UzungolVeto());
+        break;
+      default:
+        null;
+        break;
+    }
   }
 
 // this method for check any amount will set to   Ride Request collection
@@ -1393,21 +1292,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ///================================Start========================================
+  ///================================Start Trip methods=========================
+
+  //this them main logic for diretion + marker+ polline conect with class api
+  Future<void> getPlaceDirection(BuildContext context) async {
+    /// current position
+    final initialPos =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+
+    ///from api srv place drop of position
+    final finalPos =
+        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+            .dropOfLocation;
+
+    final pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
+    final dropOfLatLng = LatLng(finalPos.latitude, finalPos.longitude);
+
+    showDialog(
+        context: context,
+        builder: (context) =>
+            CircularInductorCostem().circularInductorCostem(context));
+
+    ///from api dir
+    final details = await ApiSrvDir.obtainPlaceDirectionDetails(
+        pickUpLatLng, dropOfLatLng, context);
+    setState(() {
+      tripDirectionDetails = details;
+    });
+    final color = Colors.greenAccent.shade700;
+    Navigator.pop(context);
+    addPloyLine(details!, pickUpLatLng, dropOfLatLng, color);
+  }
+
 /* this method when rider will do order it will send notification
 * to nearest driver [0] id driver it will cancel will switch to another
 * driver if no found drivers will cancel this trip and if driver accepted
 * will remove driver from map till finish his trip*/
-  Future<void> searchNearestDriver(
-      UserIdProvider userProvider, BuildContext context) async {
-    if (driverAvailable.isEmpty) {
-      DataBaseSrv().cancelRiderRequest(userProvider, context);
-       restApp();
+  Future<void> searchNearestDriver(UserIdProvider userProvider) async {
+    print('hahahah${driverAvailable.length}');
+    if(driverAvailable.isEmpty){
+      closeTimerSearch.cancel();
+      Provider.of<PositionCancelReq>(context, listen: false)
+          .updateValue(-400.0);
+      Provider.of<PositionChang>(context, listen: false).changValue(0.0);
+      await  restApp();
       showDialog(
           context: context,
           barrierDismissible: false,
           builder: (_) => sorryNoDriverDialog(context, userProvider));
-    } else if (driverAvailable.isNotEmpty) {
+    }
+   else if (driverAvailable.isNotEmpty) {
       for (var ele in driverAvailable) {
         Provider.of<NearestDriverProvider>(context, listen: false)
             .updateState(ele);
@@ -1422,10 +1356,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (value.snapshot.value != null) {
                   final newRideStatus = value.snapshot.value;
                   if (newRideStatus == "searching") {
-                    notifyDriver(ele, context, userProvider);
-                    driverAvailable.removeAt(0);
-                  } else {
-                    return;
+                    notifyDriver(ele, context,userProvider);
+                    int index = driverAvailable.indexWhere((element) => element.key==ele.key);
+                    driverAvailable.removeAt(index);
                   }
                 }
               });
@@ -1434,23 +1367,16 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }
-
-    Future.delayed(const Duration(seconds: 125)).whenComplete(() async {
-      if (waitDriver == "wait") {
-        Provider.of<PositionCancelReq>(context, listen: false)
-            .updateValue(-400.0);
-        Provider.of<PositionChang>(context, listen: false).changValue(0.0);
-        DataBaseSrv().cancelRiderRequest(userProvider, context);
-         restApp();
-      } else {
-        return;
-      }
-    });
+   else {
+      print('stop notify');
+      return;
+    }
   }
 
-// this mehtod if driver in list of driver for sent notify after take his token
-  Future<void> notifyDriver(NearestDriverAvailable driver, BuildContext context,
-      UserIdProvider userProvider) async {
+
+// this method if driver in list of driver for sent notify after take his token
+  Future<void> notifyDriver(
+      NearestDriverAvailable driver, BuildContext context, UserIdProvider userProvider) async {
     DataBaseSrv().sendRideRequestId(driver, context);
     DatabaseReference driverRef =
         FirebaseDatabase.instance.ref().child("driver").child(driver.key);
@@ -1458,69 +1384,53 @@ class _HomeScreenState extends State<HomeScreen> {
     final snapshot = await driverRef.child("token").get();
     if (snapshot.value != null) {
       String token = snapshot.value.toString();
-      SendNotification().sendNotificationToDriver(context, token);
-    } else {
+     await SendNotification().sendNotificationToDriver(context, token);
+      const secondPassed = Duration(seconds: 1);
+      Timer.periodic(secondPassed, (timer) async {
+        rideRequestTimeOut = rideRequestTimeOut - 1;
+        after2MinTimeOut = after2MinTimeOut - 1;
+        //1
+        if (state != "requesting") {
+          // driverRef.child("newRide").set("searching");
+          driverRef.child("newRide").set("canceled");
+          driverRef.child("newRide").onDisconnect();
+          timer.cancel();
+        } else {
+          //1
+          driverRef.child("newRide").onValue.listen((event) async {
+            if (event.snapshot.value.toString() == "accepted") {
+              driverRef.child("newRide").onDisconnect();
+              timer.cancel();
+              setState(() {
+                waitDriver = "";
+                rideRequestTimeOut = 25;
+                after2MinTimeOut = 125;
+                sound1 = true;
+                sound2 = true;
+                sound3 = true;
+              });
+            } else if (event.snapshot.value.toString() == "canceled") {
+              driverRef.child("newRide").onDisconnect();
+              timer.cancel();
+              setState(() {
+                rideRequestTimeOut = 25;
+              });
+              searchNearestDriver(userProvider);
+            } else if (rideRequestTimeOut == 0) {
+              driverRef.child("newRide").set("timeOut");
+              driverRef.child("newRide").onDisconnect();
+              timer.cancel();
+              setState(() {
+                rideRequestTimeOut = 25;
+              });
+              searchNearestDriver(userProvider);
+            }
+          });
+        }
+      });
+    }else{
       return;
     }
-    const secondPassed = Duration(seconds: 1);
-    Timer.periodic(secondPassed, (timer) async {
-      rideRequestTimeOut = rideRequestTimeOut - 1;
-      after2MinTimeOut = after2MinTimeOut - 1;
-      //1
-      if (state != "requesting") {
-        // driverRef.child("newRide").set("searching");
-        driverRef.child("newRide").set("canceled");
-        driverRef.child("newRide").onDisconnect();
-        timer.cancel();
-         restApp();
-        setState(() {
-          rideRequestTimeOut = 25;
-          after2MinTimeOut = 125;
-        });
-      } else {
-        //1
-        driverRef.child("newRide").onValue.listen((event) async {
-          if (event.snapshot.value.toString() == "accepted") {
-            driverRef.child("newRide").onDisconnect();
-            timer.cancel();
-            setState(() {
-              waitDriver = "";
-              rideRequestTimeOut = 25;
-              after2MinTimeOut = 125;
-              sound1 = true;
-              sound2 = true;
-              sound3 = true;
-            });
-          } else if (rideRequestTimeOut == 0) {
-            driverRef.child("newRide").set("timeOut");
-            driverRef.child("newRide").onDisconnect();
-            timer.cancel();
-            setState(() {
-              rideRequestTimeOut = 25;
-              // after2MinTimeOut = 100;
-            });
-            // Geofire.initialize("availableDrivers");
-            // Geofire.stopListener();
-            // Geofire.removeLocation(driver.key);
-            searchNearestDriver(userProvider, context);
-          }
-          //4
-          else if (after2MinTimeOut <= 0) {
-            timer.cancel();
-            setState(() {
-              after2MinTimeOut = 125;
-              rideRequestTimeOut = 25;
-            });
-            // Tools().toastMsg(AppLocalizations.of(context)!.noCarAvailable);
-            Provider.of<PositionCancelReq>(context, listen: false)
-                .updateValue(-400.0);
-            Provider.of<PositionChang>(context, listen: false).changValue(0.0);
-            DataBaseSrv().cancelRiderRequest(userProvider, context);
-             restApp();
-          }
-        });
-      }
-    });
   }
 
   // this method for got driver info from Ride request collection
@@ -1542,6 +1452,9 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           driverImage = newdriverImage;
         });
+      }
+      if (map["driverName"] != null) {
+        carPlack = map["carPlack"].toString();
       }
       if (map["driverName"] != null) {
         driverName = map["driverName"].toString();
@@ -1567,6 +1480,33 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             newstatusRide = AppLocalizations.of(context)!.accepted;
           });
+          Provider.of<PositionDriverInfoProvider>(context, listen: false)
+              .updateState(0.0);
+          Provider.of<PositionCancelReq>(context, listen: false)
+              .updateValue(-400.0);
+          Provider.of<CloseButtonProvider>(context, listen: false)
+              .updateState(false);
+          Geofire.stopListener();
+          deleteGeoFireMarker();
+          if (driverNewLocation != null) {
+            Set<Marker> tMarker1 = {};
+            Marker marker = Marker(
+              markerId: MarkerId("myDriver$driverId"),
+              position: driverNewLocation,
+              icon: carDriverType == "Taxi-4 seats"
+                  ? driversNearIcon
+                  : driversNearIcon1,
+              infoWindow: InfoWindow(
+                  title: " $fNameIcon $lNameIcon",
+                  snippet: AppLocalizations.of(context)!.onWay),
+              // rotation: MathMethods.createRandomNumber(120),
+            );
+
+            tMarker1.add(marker);
+            setState(() {
+              markersSet.add(marker);
+            });
+          }
         } else if (statusRide == "arrived") {
           await audioPlayer.stop();
           soundArrived();
@@ -1613,6 +1553,9 @@ class _HomeScreenState extends State<HomeScreen> {
               //     builder: (BuildContext context) {
               //       return  const RatingWidget();
               //     });
+              ///todo new code
+              markersSet.removeWhere(
+                  (ele) => ele.markerId.value.contains("myDriver"));
               rideStreamSubscription.cancel();
             }
           }
@@ -1620,33 +1563,59 @@ class _HomeScreenState extends State<HomeScreen> {
               .updateState(true);
         }
       }
-      if (statusRide == "accepted") {
-        Provider.of<PositionDriverInfoProvider>(context, listen: false)
-            .updateState(0.0);
-        Provider.of<PositionCancelReq>(context, listen: false)
-            .updateValue(-400.0);
-        Provider.of<CloseButtonProvider>(context, listen: false)
-            .updateState(false);
-        Geofire.stopListener();
-        deleteGeoFireMarker();
-        if (driverNewLocation != null) {
-          Set<Marker> tMarker1 = {};
-          Marker marker = Marker(
-            markerId: MarkerId("myDriver$driverId"),
-            position: driverNewLocation,
-            icon: carDriverType == "Taxi-4 seats"
-                ? driversNearIcon
-                : driversNearIcon1,
-            infoWindow: InfoWindow(
-                title: " $fNameIcon $lNameIcon",
-                snippet: AppLocalizations.of(context)!.onWay),
-            // rotation: MathMethods.createRandomNumber(120),
-          );
 
-          tMarker1.add(marker);
-          setState(() {
-            markersSet.add(marker);
-          });
+      ///todo old code
+      // if (statusRide == "accepted") {
+      //   Provider.of<PositionDriverInfoProvider>(context, listen: false)
+      //       .updateState(0.0);
+      //   Provider.of<PositionCancelReq>(context, listen: false)
+      //       .updateValue(-400.0);
+      //   Provider.of<CloseButtonProvider>(context, listen: false)
+      //       .updateState(false);
+      //   Geofire.stopListener();
+      //   deleteGeoFireMarker();
+      //   if (driverNewLocation != null) {
+      //     Set<Marker> tMarker1 = {};
+      //     Marker marker = Marker(
+      //       markerId: MarkerId("myDriver$driverId"),
+      //       position: driverNewLocation,
+      //       icon: carDriverType == "Taxi-4 seats"
+      //           ? driversNearIcon
+      //           : driversNearIcon1,
+      //       infoWindow: InfoWindow(
+      //           title: " $fNameIcon $lNameIcon",
+      //           snippet: AppLocalizations.of(context)!.onWay),
+      //       // rotation: MathMethods.createRandomNumber(120),
+      //     );
+      //
+      //     tMarker1.add(marker);
+      //     setState(() {
+      //       markersSet.add(marker);
+      //     });
+      //   }
+      // }
+    });
+  }
+
+  ///todo OldCode this method for count full time request
+  Future<void> countFullTimeRequest(UserIdProvider userProvider) async {
+    int _count = 125;
+    closeTimerSearch = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      _count = _count - 1;
+      if(_count==0){
+        closeTimerSearch.cancel();
+        timer.cancel();
+        if (waitDriver == "wait") {
+          Provider.of<PositionCancelReq>(context, listen: false)
+              .updateValue(-400.0);
+          Provider.of<PositionChang>(context, listen: false).changValue(0.0);
+          await  restApp();
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => sorryNoDriverDialog(context, userProvider));
+        } else {
+          return;
         }
       }
     });
@@ -1662,8 +1631,10 @@ class _HomeScreenState extends State<HomeScreen> {
       isTimeRequstTrip = true;
       final details = await ApiSrvDir.obtainPlaceDirectionDetails(
           driverCurrentLocation, riderLoc, context);
+      final color = Colors.blueAccent.shade700;
+      addPloyLine(details!, riderLoc, driverCurrentLocation, color);
       setState(() {
-        timeTrip = details!.durationText.toString();
+        timeTrip = details.durationText.toString();
       });
       isTimeRequstTrip = false;
     }
@@ -1682,11 +1653,119 @@ class _HomeScreenState extends State<HomeScreen> {
       isTimeRequstTrip = true;
       final details = await ApiSrvDir.obtainPlaceDirectionDetails(
           riderLocPickUp, riderLocDropOff, context);
+      final color = Colors.greenAccent.shade700;
+      addPloyLine(details!, riderLocPickUp, riderLocDropOff, color);
       setState(() {
-        timeTrip = details!.durationText.toString();
+        timeTrip = details.durationText.toString();
       });
       isTimeRequstTrip = false;
     }
+  }
+
+// this method for add polyLine after got pick and drop
+  addPloyLine(DirectionDetails details, LatLng pickUpLatLng,
+      LatLng dropOfLatLng, Color colors) {
+    /// current placeName
+    final pickUpName =
+        Provider.of<AppData>(context, listen: false).pickUpLocation.placeName;
+
+    ///from api srv place drop of position
+    final dropOffName =
+        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+            .dropOfLocation
+            .placeName;
+
+    /// PolylinePoints method
+    PolylinePoints polylinePoints = PolylinePoints();
+    List<PointLatLng> decodedPolylineResult =
+        polylinePoints.decodePolyline(details.enCodingPoints);
+    polylineCoordinates.clear();
+    if (decodedPolylineResult.isNotEmpty) {
+      for (var pointLatLng in decodedPolylineResult) {
+        polylineCoordinates
+            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      }
+    }
+    polylineSet.clear();
+    setState(() {
+      Polyline polyline = Polyline(
+          polylineId: const PolylineId("polylineId"),
+          color: colors,
+          width: 6,
+          geodesic: true,
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+          jointType: JointType.round,
+          points: polylineCoordinates);
+      polylineSet.add(polyline);
+    });
+
+    // Navigator.pop(context);
+
+    ///for fit line on map PolylinePoints
+    LatLngBounds latLngBounds;
+    if (pickUpLatLng.latitude > dropOfLatLng.latitude &&
+        pickUpLatLng.longitude > dropOfLatLng.longitude) {
+      latLngBounds =
+          LatLngBounds(southwest: dropOfLatLng, northeast: pickUpLatLng);
+    } else if (pickUpLatLng.longitude > dropOfLatLng.longitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(pickUpLatLng.latitude, dropOfLatLng.longitude),
+          northeast: LatLng(dropOfLatLng.latitude, pickUpLatLng.longitude));
+    } else if (pickUpLatLng.latitude > dropOfLatLng.latitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(dropOfLatLng.latitude, pickUpLatLng.longitude),
+          northeast: LatLng(pickUpLatLng.latitude, dropOfLatLng.longitude));
+    } else {
+      latLngBounds =
+          LatLngBounds(southwest: dropOfLatLng, northeast: pickUpLatLng);
+    }
+    newGoogleMapController
+        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 50.0));
+
+    ///Marker
+    Marker markerPickUpLocation = Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+        infoWindow: InfoWindow(
+            title: pickUpName,
+            snippet: AppLocalizations.of(context)!.myLocation),
+        position: LatLng(pickUpLatLng.latitude, pickUpLatLng.longitude),
+        markerId: const MarkerId("pickUpId"));
+
+    Marker markerDropOfLocation = Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueRed,
+        ),
+        infoWindow: InfoWindow(
+            title: dropOffName, snippet: AppLocalizations.of(context)!.dropOff),
+        position: LatLng(dropOfLatLng.latitude, dropOfLatLng.longitude),
+        markerId: const MarkerId("dropOfId"));
+
+    setState(() {
+      markersSet.add(markerPickUpLocation);
+      markersSet.add(markerDropOfLocation);
+    });
+
+    ///Circle
+    Circle pickUpLocCircle = Circle(
+        fillColor: Colors.white,
+        radius: 6.0,
+        center: pickUpLatLng,
+        strokeWidth: 1,
+        strokeColor: Colors.grey,
+        circleId: const CircleId("pickUpId"));
+
+    Circle dropOffLocCircle = Circle(
+        fillColor: Colors.white,
+        radius: 6.0,
+        center: dropOfLatLng,
+        strokeWidth: 1,
+        strokeColor: Colors.grey,
+        circleId: const CircleId("dropOfId"));
+    setState(() {
+      circlesSet.add(pickUpLocCircle);
+      circlesSet.add(dropOffLocCircle);
+    });
   }
 
 // this method for delete all taxi when on taxi accepted
@@ -1696,16 +1775,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // this metod for change voice conect to languge
-
+  // this method for change voice connect to language
   Future<void> soundAccepted() async {
     String val = AppLocalizations.of(context)!.taxi;
     if (sound1 == true) {
-      switch(val){
-        case'Taksi':
+      switch (val) {
+        case 'Taksi':
           await audioCache.play("commingtr.mp3");
           break;
-        case'تاكسي':
+        case 'تاكسي':
           await audioCache.play("dcomingtoyouar.wav");
           break;
         default:
@@ -1729,11 +1807,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> soundArrived() async {
     String val = AppLocalizations.of(context)!.taxi;
     if (sound2 == true) {
-      switch(val){
-        case'Taksi':
+      switch (val) {
+        case 'Taksi':
           await audioCache.play("arrivedtr.mp3");
           break;
-        case'تاكسي':
+        case 'تاكسي':
           await audioCache.play("darrivedtoyouar.wav");
           break;
         default:
@@ -1757,11 +1835,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> soundTripStart() async {
     String val = AppLocalizations.of(context)!.taxi;
     if (sound3 == true) {
-      switch(val){
-        case'Taksi':
+      switch (val) {
+        case 'Taksi':
           await audioCache.play("starttr.mp3");
           break;
-        case'تاكسي':
+        case 'تاكسي':
           await audioCache.play("youintripar.wav");
           break;
         default:
@@ -1782,6 +1860,56 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // this method for clean req after cancel
+  Future<void> restApp() async {
+    await Geofire.stopListener();
+    setState(() {
+      driverAvailable.clear();
+      GeoFireMethods.listOfNearestDriverAvailable.clear();
+      polylineSet.clear();
+      markersSet.clear();
+      waitDriver = "wait";
+      after2MinTimeOut = 125;
+      rideRequestTimeOut = 25;
+      tMarker.clear();
+      circlesSet.clear();
+      polylineCoordinates.clear();
+      tripDirectionDetails = null;
+      statusRide = "";
+      newstatusRide = "";
+      carDriverInfo = "";
+      driverName = "";
+      driverImage = "";
+      driverPhone = "";
+      timeTrip = "";
+      driverId = "";
+      titleRate = "";
+      rating = 0.0;
+      carRideType = "";
+      carOrderType = "Taxi-4 seats";
+      grofireRadr = 4;
+      tourismCityName = "";
+      tourismCityPrice = "";
+      driverNewLocation = const LatLng(0.0, 0.0);
+      ///todo old code
+      // markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
+      sound1 = false;
+      sound2 = false;
+      sound3 = false;
+    });
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Taxi-4 seats");
+    print('restAppdriver${driverAvailable.length}');
+    print('restAppgeo${GeoFireMethods.listOfNearestDriverAvailable.length}');
+    await LogicGoogleMap().locationPosition(context).whenComplete(() async {
+      await geoFireInitialize();
+    });
+  }
   ///================================End=======================================
-
 }
