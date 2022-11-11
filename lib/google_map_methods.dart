@@ -15,7 +15,6 @@ class LogicGoogleMap {
   //instant current location on map before any request on map
   Completer<GoogleMapController> controllerGoogleMap = Completer();
 
-
 // set location
   final CameraPosition kGooglePlex = const CameraPosition(
     target: LatLng(41.084253576036936, 28.89201922194848),

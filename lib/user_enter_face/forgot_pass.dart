@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -18,11 +19,7 @@ class ForgotPass extends StatefulWidget {
 class _ForgotPassState extends State<ForgotPass> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _email = TextEditingController();
-  @override
-  void dispose() {
-    _email.dispose();
-    super.dispose();
-  }
+
   @override
   Widget build(BuildContext context) {
     bool myTimerProvider = Provider.of<TrueFalse>(context).isTrue;
@@ -96,7 +93,7 @@ class _ForgotPassState extends State<ForgotPass> {
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: TextField(
-                      controller:_email,
+                      controller: _email,
                       showCursor: true,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w600),
@@ -137,21 +134,27 @@ class _ForgotPassState extends State<ForgotPass> {
                       } else {
                         Provider.of<TrueFalse>(context, listen: false)
                             .changeStateBooling(true);
-                        try{
-                            await  _auth.sendPasswordResetEmail(email:_email.text.trim())
-                              .whenComplete(() {
-                            Provider.of<TrueFalse>(context, listen: false)
-                                .changeStateBooling(false);
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (_) => sendPassDon(context));
+                        try {
+                          setLan().whenComplete(() async {
+                            await _auth
+                                .sendPasswordResetEmail(
+                                    email: _email.text.trim())
+                                .whenComplete(() {
+                              Provider.of<TrueFalse>(context, listen: false)
+                                  .changeStateBooling(false);
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => sendPassDon(context));
+                              _email.clear();
+                            });
                           });
-                        }catch(ex){
-                          print(ex.toString());
+                        } catch (ex) {
+                          if (kDebugMode) {
+                            print(ex.toString());
+                          }
                         }
                         FocusScope.of(context).requestFocus(FocusNode());
-                        _email.clear();
                       }
                     },
                     child: Container(
@@ -188,12 +191,28 @@ class _ForgotPassState extends State<ForgotPass> {
                     decoration: (const BoxDecoration(
                       color: Colors.black,
                     )),
-                    child: ForgotPass._inductorCostem.circularInductorCostem(context),
+                    child: ForgotPass._inductorCostem
+                        .circularInductorCostem(context),
                   ),
                 )
               : const Text("")
         ],
       ),
     ));
+  }
+
+  Future<void> setLan() async {
+    String val = AppLocalizations.of(context)!.forgotPass;
+    switch (val) {
+      case 'Şifremi Unuttum?':
+        await FirebaseAuth.instance.setLanguageCode("tr");
+        break;
+      case 'نسيت كلمة السر ؟':
+        await FirebaseAuth.instance.setLanguageCode("ar");
+        break;
+      default:
+        await FirebaseAuth.instance.setLanguageCode("en");
+        break;
+    }
   }
 }

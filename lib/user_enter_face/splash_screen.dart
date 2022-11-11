@@ -30,9 +30,9 @@ class _SplashScreenState extends State<SplashScreen>
   initState() {
     checkInternet();
     TurnGps().turnGpsIfNot();
-    if (AuthSev().auth.currentUser?.uid != null) {
-      DataBaseSrv().currentOnlineUserInfo(context);
-    }
+    // if (AuthSev().auth.currentUser?.uid != null) {
+    //   DataBaseSrv().currentOnlineUserInfo(context);
+    // }
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(seconds: 1),

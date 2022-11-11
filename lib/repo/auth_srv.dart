@@ -52,6 +52,7 @@ class AuthSev {
             "pass":pass,
             "phoneNumber": "",
             "country": "",
+            "country0":"",
             "status": "info",
             "update": false
           }).whenComplete(() async {
@@ -90,6 +91,7 @@ class AuthSev {
               "pass":pass,
               "phoneNumber": "",
               "country": "",
+              "country0":"",
               "status": "info",
               "update": false
             }).whenComplete(() async {

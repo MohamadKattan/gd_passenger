@@ -40,13 +40,13 @@ class CancelTaxi {
                 style:const TextStyle(color: Colors.black45),
               ),
               GestureDetector(
-                  onTap: () {
-                    voidCallback();
-                    DataBaseSrv().cancelRiderRequest(userIdProvider, context);
+                  onTap: () async {
                     Provider.of<PositionCancelReq>(context, listen: false)
                         .updateValue(-400.0);
                     Provider.of<PositionChang>(context, listen: false)
                         .changValue(0.0);
+                  await  DataBaseSrv().cancelRiderRequest(userIdProvider, context);
+                    voidCallback();
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(top: 15.0),

@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
+import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:gd_passenger/widget/rating_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
@@ -34,8 +35,8 @@ class DriverInfo {
       required VoidCallback voidCallback,
       required UserIdProvider userIdProvider,
       }) {
-    final isCloseTrue =
-        Provider.of<CloseButtonProvider>(context, listen: false).isClose;
+    // final isCloseTrue =
+    //     Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
         height: 250,
         decoration: BoxDecoration(
@@ -72,7 +73,7 @@ class DriverInfo {
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                   color: Colors.black,
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -85,7 +86,7 @@ class DriverInfo {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: Colors.greenAccent.shade700,
-                                    fontSize: 25.0,
+                                    fontSize: 20.0,
                                     fontWeight: FontWeight.bold)),
                           ),
                         ],
@@ -94,7 +95,7 @@ class DriverInfo {
                           width: newstatusRide ==
                                   AppLocalizations.of(context)!.accepted
                               ? 130
-                              : 90),
+                              : 50),
                       Expanded(
                           flex: 0,
                           child: Container(
@@ -119,29 +120,6 @@ class DriverInfo {
                               ),
                             ),
                           ))
-                      // Expanded(
-                      //   flex: 0,
-                      //   child: CircleAvatar(
-                      //     radius: 25,
-                      //     backgroundColor: Colors.white,
-                      //     child: CachedNetworkImage(
-                      //       imageBuilder: (context, imageProvider) => Container(
-                      //         width: 50.0,
-                      //         height: 50.0,
-                      //         decoration: BoxDecoration(
-                      //           shape: BoxShape.circle,
-                      //           image: DecorationImage(
-                      //               image: imageProvider, fit: BoxFit.cover),
-                      //         ),
-                      //       ),
-                      //       imageUrl: driverImage.isEmpty ? "" : driverImage,
-                      //       placeholder: (context, url) =>
-                      //       const CircularProgressIndicator(),
-                      //       errorWidget: (context, url, error) =>
-                      //       const Icon(Icons.person),
-                      //     ),
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
@@ -274,19 +252,13 @@ class DriverInfo {
                         icon:
                             Icon(Icons.close, color: Colors.redAccent.shade700),
                         onPressed: () async {
-                          voidCallback();
-                          NearestDriverAvailable _nearestDriverAvailable =
-                              NearestDriverAvailable("", 0.0, 0.0);
-                          Provider.of<NearestDriverProvider>(context,
-                                  listen: false)
-                              .updateState(_nearestDriverAvailable);
                           Provider.of<PositionDriverInfoProvider>(context,
-                                  listen: false)
+                              listen: false)
                               .updateState(-400.0);
                           Provider.of<PositionChang>(context, listen: false)
                               .changValue(0.0);
-                          await deleteRideRequesr(context);
-
+                          deleteRideRequesr(context);
+                          voidCallback();
                         }),
                     // isCloseTrue == true
                     //     ? IconButton(

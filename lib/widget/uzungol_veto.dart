@@ -47,8 +47,9 @@ class _UzungolVetoState extends State<UzungolVeto> {
               Container(
                 decoration: const BoxDecoration(
                     color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(topRight:Radius.circular(14.0),topLeft: Radius.circular(14.0))
-                ),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(14.0),
+                        topLeft: Radius.circular(14.0))),
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   AppLocalizations.of(context)!.torzimTrip,
@@ -68,7 +69,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
                     child: Text(
                       AppLocalizations.of(context)!.pricesList,
                       style: const TextStyle(
-                        color:Color(0xFF00A3E0),
+                        color: Color(0xFF00A3E0),
                         fontSize: 20.0,
                       ),
                       textAlign: TextAlign.center,
@@ -98,7 +99,8 @@ class _UzungolVetoState extends State<UzungolVeto> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                          border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                          border: Border.all(
+                              width: 2.0, color: const Color(0xFFFBC408)),
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0)),
                       child: Row(
@@ -124,8 +126,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
                               child: Text(
                                 "\$80",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -151,7 +152,8 @@ class _UzungolVetoState extends State<UzungolVeto> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,7 +165,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
                               AppLocalizations.of(context)!.uzuTrapzon,
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color:Color(0xFF00A3E0),
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
@@ -176,8 +178,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
                               child: Text(
                                 "\$190",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -203,7 +204,8 @@ class _UzungolVetoState extends State<UzungolVeto> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -228,8 +230,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
                               child: Text(
                                 "\$170",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -255,7 +256,8 @@ class _UzungolVetoState extends State<UzungolVeto> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -280,8 +282,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
                               child: Text(
                                 "\$140",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -307,7 +308,8 @@ class _UzungolVetoState extends State<UzungolVeto> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -330,8 +332,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
                             child: Text(
                               "\$220",
                               style: TextStyle(
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 20.0),
+                                  color: Color(0xFF00A3E0), fontSize: 20.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -350,6 +351,11 @@ class _UzungolVetoState extends State<UzungolVeto> {
   // this method for static cities location for tourism trip
   Future<void> tourismCities(
       String tourismCityName, BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) =>
+            CircularInductorCostem().circularInductorCostem(context));
+
     final addressModle =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     if (tourismCityName.length > 1) {
@@ -414,10 +420,6 @@ class _UzungolVetoState extends State<UzungolVeto> {
 
     final pickUpLatling = LatLng(initialPos.latitude, initialPos.longitude);
     final dropOfLatling = LatLng(finalPos.latitude, finalPos.longitude);
-    showDialog(
-        context: context,
-        builder: (context) =>
-            CircularInductorCostem().circularInductorCostem(context));
 
     ///from api dir
     final details = await ApiSrvDir.obtainPlaceDirectionDetails(
@@ -425,12 +427,11 @@ class _UzungolVetoState extends State<UzungolVeto> {
     setState(() {
       tripDirectionDetails = details;
     });
-    Navigator.pop(context);
 
     /// PolylinePoints method
     PolylinePoints polylinePoints = PolylinePoints();
     List<PointLatLng> decodedPolylineResult =
-    polylinePoints.decodePolyline(details!.enCodingPoints);
+        polylinePoints.decodePolyline(details!.enCodingPoints);
     polylineCoordinates.clear();
 
     if (decodedPolylineResult.isNotEmpty) {
@@ -457,33 +458,58 @@ class _UzungolVetoState extends State<UzungolVeto> {
       polylineSet.add(polyline);
     });
     Navigator.pop(context);
+    Navigator.pop(context);
 
     ///for fit line on map PolylinePoints
-    LatLngBounds latLngBounds;
-    if (pickUpLatling.latitude > dropOfLatling.latitude &&
-        pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
-    } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
-          northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
-    } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
-          northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
+    // LatLngBounds latLngBounds;
+    // if (pickUpLatling.latitude > dropOfLatling.latitude &&
+    //     pickUpLatling.longitude > dropOfLatling.longitude) {
+    //   latLngBounds =
+    //       LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    // } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
+    //   latLngBounds = LatLngBounds(
+    //       southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
+    //       northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
+    // } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
+    //   latLngBounds = LatLngBounds(
+    //       southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
+    //       northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
+    // } else {
+    //   latLngBounds =
+    //       LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    // }
+    // newGoogleMapController
+    //     ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+
+    double nLat, nLon, sLat, sLon;
+
+    if (dropOfLatling.latitude <= pickUpLatling.latitude) {
+      sLat = dropOfLatling.latitude;
+      nLat = pickUpLatling.latitude;
     } else {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+      sLat = pickUpLatling.latitude;
+      nLat = dropOfLatling.latitude;
     }
+    if (dropOfLatling.longitude <= pickUpLatling.longitude) {
+      sLon = dropOfLatling.longitude;
+      nLon = pickUpLatling.longitude;
+    } else {
+      sLon = pickUpLatling.longitude;
+      nLon = dropOfLatling.longitude;
+    }
+    LatLngBounds latLngBounds = LatLngBounds(
+      northeast: LatLng(nLat, nLon),
+      southwest: LatLng(sLat, sLon),
+    );
+
     newGoogleMapController
-        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 50.0));
 
     ///Marker
     Marker markerPickUpLocation = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
         infoWindow:
-        InfoWindow(title: initialPos.placeName, snippet: "My Location"),
+            InfoWindow(title: initialPos.placeName, snippet: "My Location"),
         position: LatLng(pickUpLatling.latitude, pickUpLatling.longitude),
         markerId: const MarkerId("pickUpId"));
 
@@ -492,7 +518,7 @@ class _UzungolVetoState extends State<UzungolVeto> {
           BitmapDescriptor.hueRed,
         ),
         infoWindow:
-        InfoWindow(title: finalPos.placeName, snippet: "Drop off Location"),
+            InfoWindow(title: finalPos.placeName, snippet: "Drop off Location"),
         position: LatLng(dropOfLatling.latitude, dropOfLatling.longitude),
         markerId: const MarkerId("dropOfId"));
 

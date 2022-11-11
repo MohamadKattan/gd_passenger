@@ -401,6 +401,10 @@ class _AntalyVetoState extends State<AntalyVeto> {
   // this method for static cities location for tourism trip
   Future<void> tourismCities(
       String tourismCityName, BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) =>
+            CircularInductorCostem().circularInductorCostem(context));
     final addressModle =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     if (tourismCityName.length > 1) {
@@ -465,10 +469,6 @@ class _AntalyVetoState extends State<AntalyVeto> {
 
     final pickUpLatling = LatLng(initialPos.latitude, initialPos.longitude);
     final dropOfLatling = LatLng(finalPos.latitude, finalPos.longitude);
-    showDialog(
-        context: context,
-        builder: (context) =>
-            CircularInductorCostem().circularInductorCostem(context));
 
     ///from api dir
     final details = await ApiSrvDir.obtainPlaceDirectionDetails(
@@ -476,7 +476,6 @@ class _AntalyVetoState extends State<AntalyVeto> {
     setState(() {
       tripDirectionDetails = details;
     });
-    Navigator.pop(context);
 
     /// PolylinePoints method
     PolylinePoints polylinePoints = PolylinePoints();
@@ -508,27 +507,52 @@ class _AntalyVetoState extends State<AntalyVeto> {
       polylineSet.add(polyline);
     });
     Navigator.pop(context);
+    Navigator.pop(context);
 
     ///for fit line on map PolylinePoints
-    LatLngBounds latLngBounds;
-    if (pickUpLatling.latitude > dropOfLatling.latitude &&
-        pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
-    } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
-          northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
-    } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
-          northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
-    } else {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    // LatLngBounds latLngBounds;
+    // if (pickUpLatling.latitude > dropOfLatling.latitude &&
+    //     pickUpLatling.longitude > dropOfLatling.longitude) {
+    //   latLngBounds =
+    //       LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    // } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
+    //   latLngBounds = LatLngBounds(
+    //       southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
+    //       northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
+    // } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
+    //   latLngBounds = LatLngBounds(
+    //       southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
+    //       northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
+    // } else {
+    //   latLngBounds =
+    //       LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    // }
+    // newGoogleMapController
+    //     ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+
+    double nLat, nLon, sLat, sLon;
+
+    if (dropOfLatling.latitude <= pickUpLatling.latitude ) {
+      sLat = dropOfLatling.latitude;
+      nLat = pickUpLatling.latitude ;
+    }else{
+      sLat = pickUpLatling.latitude ;
+      nLat = dropOfLatling.latitude;
     }
+    if (dropOfLatling.longitude <= pickUpLatling.longitude) {
+      sLon = dropOfLatling.longitude;
+      nLon = pickUpLatling.longitude;
+    }else{
+      sLon = pickUpLatling.longitude;
+      nLon = dropOfLatling.longitude;
+    }
+    LatLngBounds latLngBounds=  LatLngBounds(
+      northeast: LatLng(nLat, nLon),
+      southwest: LatLng(sLat, sLon),
+    );
+
     newGoogleMapController
-        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 50.0));
 
     ///Marker
     Marker markerPickUpLocation = Marker(

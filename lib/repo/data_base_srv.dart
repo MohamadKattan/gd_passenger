@@ -185,13 +185,13 @@ class DataBaseSrv {
 
   // this method for send ride Request Id to driver collection in newride child for notification
   Future<void> sendRideRequestId(
-      NearestDriverAvailable driver, BuildContext context) async {
+      String driverId, BuildContext context) async {
     final userId =
         Provider.of<UserAllInfoDatabase>(context, listen: false).users;
     DatabaseReference driverRef = FirebaseDatabase.instance
         .ref()
         .child("driver")
-        .child(driver.key)
+        .child(driverId)
         .child("newRide");
     final snap = await driverRef.get();
     if (snap.value != null && snap.value == "searching") {

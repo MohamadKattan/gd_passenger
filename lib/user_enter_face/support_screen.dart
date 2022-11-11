@@ -70,8 +70,8 @@ class SupportScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              await canLaunch("https://wa.me/+905366034616")
-                  ? launch("https://wa.me/+905366034616")
+              await canLaunch("https://wa.me/+905057743644")
+                  ? launch("https://wa.me/+905057743644")
                   : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
             },
             child: Container(
@@ -87,7 +87,7 @@ class SupportScreen extends StatelessWidget {
                   Icon(Icons.phone, size: 35, color: Color(0xFF00A3E0)),
                   SizedBox(width: 18.0),
                   Text(
-                    "+90 0536 603 4616",
+                    "+905057743644",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 24,

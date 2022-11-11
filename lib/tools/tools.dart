@@ -15,6 +15,17 @@ class Tools {
         fontSize: 16.0);
   }
 
+  void tostRead(String msg,Color color) {
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: color,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
   Widget timerAuth(BuildContext context) {
     final CountDownController downController = CountDownController();
     return CircularCountDownTimer(

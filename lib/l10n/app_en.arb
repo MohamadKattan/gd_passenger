@@ -752,5 +752,9 @@
   "emailCheck":"The operation\n was completed successfully.\n Check your email",
   "@emailCheck": {
     "description": "send"
+  },
+  "ready":"Ready for using",
+  "@ready": {
+    "description": "Ready for using"
   }
 }

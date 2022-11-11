@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:lottie/lottie.dart';
@@ -39,9 +40,9 @@ class InterNetWeak extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (_) => const SplashScreen())));
-              } else {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const SplashScreen()));
+              }
+              else {
+               return;
               }
             },
             child: Container(

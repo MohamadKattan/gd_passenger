@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:gd_passenger/model/user.dart';
 import 'package:gd_passenger/my_provider/indector_profile_screen.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
+import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../my_provider/pick_image_provider.dart';
 import '../my_provider/profile_sheet.dart';
-import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -166,7 +166,7 @@ class ProfileScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: GestureDetector(
                               onTap: () {
-                                AuthSev().deleteAccount(context);
+                              fakeDelete(userInfo, context);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -384,6 +384,21 @@ class ProfileScreen extends StatelessWidget {
     }).whenComplete(() {
       Provider.of<InductorProfileScreen>(context, listen: false)
           .updateState(false);
+    });
+  }
+
+  Future<void> fakeDelete(
+      Users userInfo,
+      BuildContext context) async {
+
+    DatabaseReference ref =
+    FirebaseDatabase.instance.ref().child("users").child(userInfo.userId);
+    await ref.update({
+      "status": "info",
+    }).whenComplete(() {
+      Provider.of<InductorProfileScreen>(context, listen: false)
+          .updateState(false);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(_)=>const SplashScreen()), (route) => false);
     });
   }
 }

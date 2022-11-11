@@ -44,10 +44,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-               decoration: const BoxDecoration(
-                 color: Color(0xFF00A3E0),
-                 borderRadius: BorderRadius.only(topRight:Radius.circular(14.0),topLeft: Radius.circular(14.0))
-               ),
+                decoration: const BoxDecoration(
+                    color: Color(0xFF00A3E0),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(14.0),
+                        topLeft: Radius.circular(14.0))),
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   AppLocalizations.of(context)!.torzimTrip,
@@ -67,7 +68,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                     child: Text(
                       AppLocalizations.of(context)!.pricesList,
                       style: const TextStyle(
-                        color:Color(0xFF00A3E0),
+                        color: Color(0xFF00A3E0),
                         fontSize: 20.0,
                       ),
                       textAlign: TextAlign.center,
@@ -97,7 +98,8 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
+                          border: Border.all(
+                              width: 2.0, color: const Color(0xFFFBC408)),
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0)),
                       child: Row(
@@ -123,8 +125,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                               child: Text(
                                 "\$100",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -148,10 +149,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
-                       ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -162,7 +164,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                               AppLocalizations.of(context)!.bursa,
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color:Color(0xFF00A3E0),
+                                  color: Color(0xFF00A3E0),
                                   fontSize: 16.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
@@ -175,8 +177,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                               child: Text(
                                 "\$220",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -200,10 +201,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
-                    ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -227,8 +229,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                               child: Text(
                                 "\$150",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -252,10 +253,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
-                    ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -279,8 +281,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                               child: Text(
                                 "\$180",
                                 style: TextStyle(
-                                    color: Color(0xFF00A3E0),
-                                    fontSize: 20.0),
+                                    color: Color(0xFF00A3E0), fontSize: 20.0),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -304,10 +305,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
-                     ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -329,8 +331,7 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                             child: Text(
                               "\$300",
                               style: TextStyle(
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 20.0),
+                                  color: Color(0xFF00A3E0), fontSize: 20.0),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -353,10 +354,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
-                     ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -406,10 +408,11 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
                       width: double.infinity,
                       height: 55.0,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(width: 2.0, color: const Color(0xFFFBC408)),
-                 ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(
+                            width: 2.0, color: const Color(0xFFFBC408)),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -452,6 +455,10 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
   // this method for static cities location for tourism trip
   Future<void> tourismCities(
       String tourismCityName, BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) =>
+            CircularInductorCostem().circularInductorCostem(context));
     final addressModle =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     if (tourismCityName.length > 1) {
@@ -517,10 +524,10 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
     final pickUpLatling = LatLng(initialPos.latitude, initialPos.longitude);
     final dropOfLatling = LatLng(finalPos.latitude, finalPos.longitude);
 
-    showDialog(
-        context: context,
-        builder: (context) =>
-            CircularInductorCostem().circularInductorCostem(context));
+    // showDialog(
+    //     context: context,
+    //     builder: (context) =>
+    //         CircularInductorCostem().circularInductorCostem(context));
 
     ///from api dir
     final details = await ApiSrvDir.obtainPlaceDirectionDetails(
@@ -528,7 +535,9 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
     setState(() {
       tripDirectionDetails = details;
     });
-    Navigator.pop(context);
+
+    ///todo
+    // Navigator.pop(context);
 
     /// PolylinePoints method
     PolylinePoints polylinePoints = PolylinePoints();
@@ -560,26 +569,52 @@ class _VetoVanPriceTurkeyJustState extends State<VetoVanPriceTurkeyJust> {
       polylineSet.add(polyline);
     });
     Navigator.pop(context);
+    Navigator.pop(context);
+
     ///for fit line on map PolylinePoints
-    LatLngBounds latLngBounds;
-    if (pickUpLatling.latitude > dropOfLatling.latitude &&
-        pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
-    } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
-          northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
-    } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
-      latLngBounds = LatLngBounds(
-          southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
-          northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
+    // LatLngBounds latLngBounds;
+    // if (pickUpLatling.latitude > dropOfLatling.latitude &&
+    //     pickUpLatling.longitude > dropOfLatling.longitude) {
+    //   latLngBounds =
+    //       LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    // } else if (pickUpLatling.longitude > dropOfLatling.longitude) {
+    //   latLngBounds = LatLngBounds(
+    //       southwest: LatLng(pickUpLatling.latitude, dropOfLatling.longitude),
+    //       northeast: LatLng(dropOfLatling.latitude, pickUpLatling.longitude));
+    // } else if (pickUpLatling.latitude > dropOfLatling.latitude) {
+    //   latLngBounds = LatLngBounds(
+    //       southwest: LatLng(dropOfLatling.latitude, pickUpLatling.longitude),
+    //       northeast: LatLng(pickUpLatling.latitude, dropOfLatling.longitude));
+    // } else {
+    //   latLngBounds =
+    //       LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+    // }
+    // newGoogleMapController
+    //     ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+
+    double nLat, nLon, sLat, sLon;
+
+    if (dropOfLatling.latitude <= pickUpLatling.latitude) {
+      sLat = dropOfLatling.latitude;
+      nLat = pickUpLatling.latitude;
     } else {
-      latLngBounds =
-          LatLngBounds(southwest: dropOfLatling, northeast: pickUpLatling);
+      sLat = pickUpLatling.latitude;
+      nLat = dropOfLatling.latitude;
     }
+    if (dropOfLatling.longitude <= pickUpLatling.longitude) {
+      sLon = dropOfLatling.longitude;
+      nLon = pickUpLatling.longitude;
+    } else {
+      sLon = pickUpLatling.longitude;
+      nLon = dropOfLatling.longitude;
+    }
+    LatLngBounds latLngBounds = LatLngBounds(
+      northeast: LatLng(nLat, nLon),
+      southwest: LatLng(sLat, sLon),
+    );
+
     newGoogleMapController
-        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+        ?.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 50.0));
 
     ///Marker
     Marker markerPickUpLocation = Marker(

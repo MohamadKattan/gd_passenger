@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
-import '../my_provider/position_v_chnge.dart';
-import '../my_provider/posotoion_cancel_request.dart';
-import 'divider_box_.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
@@ -40,12 +36,12 @@ Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                Provider.of<PositionCancelReq>(context, listen: false)
-                    .updateValue(-400.0);
-                Provider.of<PositionChang>(context, listen: false)
-                    .changValue(0.0);
-                DataBaseSrv().cancelRiderRequest(userProvider, context);
+              onTap: () async {
+                // Provider.of<PositionCancelReq>(context, listen: false)
+                //     .updateValue(-400.0);
+                // Provider.of<PositionChang>(context, listen: false)
+                //     .changValue(0.0);
+               await DataBaseSrv().cancelRiderRequest(userProvider, context);
                 Navigator.pop(context);
               },
               child: Center(
