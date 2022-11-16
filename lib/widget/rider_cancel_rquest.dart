@@ -17,7 +17,7 @@ class CancelTaxi {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
-        height: MediaQuery.of(context).size.height * 33 / 100,
+        height: MediaQuery.of(context).size.height * 42 / 100,
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),

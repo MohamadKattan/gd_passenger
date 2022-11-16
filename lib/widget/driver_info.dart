@@ -4,18 +4,12 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
-import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:gd_passenger/widget/rating_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../config.dart';
-import '../google_map_methods.dart';
-import '../model/nearest _driver_ available.dart';
 import '../my_provider/app_data.dart';
-import '../my_provider/close_botton_driverInfo.dart';
-import '../my_provider/nearsert_driver_provider.dart';
 import '../my_provider/placeDetails_drop_provider.dart';
 import '../my_provider/position_v_chnge.dart';
 import '../my_provider/positon_driver_info_provide.dart';
@@ -38,7 +32,7 @@ class DriverInfo {
     // final isCloseTrue =
     //     Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
-        height: 250,
+        height: MediaQuery.of(context).size.height * 42 / 100,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -212,6 +206,7 @@ class DriverInfo {
                             flex: 0,
                             child: Text(
                               carDriverInfo,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                   color: Colors.black26, fontSize: 20),
                             ),

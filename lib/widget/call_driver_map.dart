@@ -1,8 +1,11 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../tools/tools.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-Widget callDriverOnMap(BuildContext context,String driverPhoneOnMap) {
+Widget callDriverOnMap(BuildContext context, String phone) {
+  print(phone);
   return Dialog(
     elevation: 1.0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -30,14 +33,18 @@ Widget callDriverOnMap(BuildContext context,String driverPhoneOnMap) {
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold),
                 ),
-                IconButton(onPressed: ()=>Navigator.pop(context), icon: const Icon(Icons.close,color: Colors.red))
+                IconButton(onPressed: (){
+                  // driverPhoneOnMap='';
+                  Navigator.pop(context);
+                } ,icon: const Icon(Icons.close,color: Colors.red))
               ],
             ),
             GestureDetector(
               onTap: () async {
-                await canLaunch("tel:$driverPhoneOnMap")
-                    ? launch("tel:$driverPhoneOnMap")
+                await canLaunch("tel:$phone")
+                    ? launch("tel:$phone")
                     : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
+                // driverPhoneOnMap='';
                 Navigator.pop(context);
               },
               child: Padding(
@@ -61,9 +68,10 @@ Widget callDriverOnMap(BuildContext context,String driverPhoneOnMap) {
             ),
             GestureDetector(
               onTap: () async {
-                await canLaunch("https://wa.me/$driverPhoneOnMap")
-                    ? launch("https://wa.me/$driverPhoneOnMap")
+                await canLaunch("https://wa.me/$phone")
+                    ? launch("https://wa.me/$phone")
                     : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
+                // driverPhoneOnMap='';
                 Navigator.pop(context);
               },
               child: Padding(
