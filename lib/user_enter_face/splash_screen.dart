@@ -10,6 +10,7 @@ import 'package:gd_passenger/user_enter_face/user_info_screen.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../my_provider/indector_netWeekPro.dart';
 import '../my_provider/info_user_database_provider.dart';
 import '../tools/tools.dart';
 import 'home_screen.dart';
@@ -35,8 +36,8 @@ class _SplashScreenState extends State<SplashScreen>
     // }
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(seconds: 1),
-        lowerBound: 0.4,
+        duration: const Duration(milliseconds: 800),
+        lowerBound: 0.3,
         upperBound: 0.6);
     _animationController.forward();
     _animationController.addStatusListener((status) async {
@@ -47,8 +48,8 @@ class _SplashScreenState extends State<SplashScreen>
       if (status == AnimationStatus.completed) {
         if (AuthSev().auth.currentUser?.uid != null) {
           await DataBaseSrv().currentOnlineUserInfo(context);
-          final infoUser =
-              Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+          await Future.delayed(const Duration(milliseconds: 200));
+          final infoUser = Provider.of<UserAllInfoDatabase>(context,listen: false).users;
           if (infoUser.update == true) {
             await goToPlayStore().whenComplete(() async {
               DatabaseReference refuser = FirebaseDatabase.instance
@@ -64,6 +65,8 @@ class _SplashScreenState extends State<SplashScreen>
               }
             });
           } else if (infoUser.status == "") {
+            Provider.of<IndectorNetWeek>(context, listen: false)
+                .updateState(true);
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const InterNetWeak()));
           } else if (infoUser.status == "info") {
@@ -123,10 +126,11 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-// this method for check internet
+  // this method for check internet
   Future<void> checkInternet() async {
     result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
+      Provider.of<IndectorNetWeek>(context, listen: false).updateState(true);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const InterNetWeak()));
     }

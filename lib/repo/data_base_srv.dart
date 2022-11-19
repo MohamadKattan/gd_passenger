@@ -13,13 +13,10 @@ import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/tools/tools.dart';
-import 'package:gd_passenger/user_enter_face/home_screen.dart';
 import 'package:gd_passenger/user_enter_face/splash_screen.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../config.dart';
-import '../model/nearest _driver_ available.dart';
 import '../my_provider/derictionDetails_provide.dart';
 import 'auth_srv.dart';
 
@@ -36,7 +33,7 @@ class DataBaseSrv {
       String uid,
       BuildContext context,
       String phoneNumber,
-      XFile imageFile,
+      File imageFile,
       TextEditingController email) async {
     await refStorage
         .child("users")

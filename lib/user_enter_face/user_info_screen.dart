@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
-import 'package:gd_passenger/my_provider/pick_image_provider.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
@@ -12,9 +11,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../my_provider/userinfo_sheet_provider.dart';
 import '../repo/api_srv_geo.dart';
-GlobalKey globalKey = GlobalKey();
-class UserInfoScreen extends StatefulWidget {
 
+GlobalKey globalKey = GlobalKey();
+
+class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key}) : super(key: key);
 
   @override
@@ -22,17 +22,18 @@ class UserInfoScreen extends StatefulWidget {
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
-  XFile imageFile =XFile("");
-   final ImagePicker _picker = ImagePicker();
-   final CircularInductorCostem _inductorCostem =
-  CircularInductorCostem();
+  // XFile imageFile = XFile("");
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+  final CircularInductorCostem _inductorCostem = CircularInductorCostem();
   static String result = "";
   static String? resultCodeCon = "+90";
+
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
-    final picked = Provider.of<PickImageProvide>(context).imageProvider;
+    // final picked = Provider.of<PickImageProvide>(context).imageProvider;
     bool providerTrue = Provider.of<TrueFalse>(context).isTrue;
     final valSheet = Provider.of<UserInfoSheet>(context).valSheet;
     return WillPopScope(
@@ -41,7 +42,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         backgroundColor: const Color(0xFF00A3E0),
         key: globalKey,
         body: Builder(
-          builder:(_)=> SafeArea(
+          builder: (_) => SafeArea(
             child: Stack(
               children: [
                 SizedBox(
@@ -61,29 +62,32 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 color: Colors.white)),
                         const SizedBox(height: 30),
                         GestureDetector(
-                          onTap: ()=>
-                            Provider.of<UserInfoSheet>(context,listen: false).updateState(0),
-                          child: Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: const Color(0xFF00A3E0)),
-                              child: picked == null
-                                  ?
-                              Image.asset("assets/add photo.png")
-                                  : Image(
-                                      image: FileImage(File(imageFile.path)),
-                                      fit: BoxFit.fill,
-                                    )),
-                        ),
+                            onTap: () => Provider.of<UserInfoSheet>(context,
+                                    listen: false)
+                                .updateState(0),
+                            child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: const Color(0xFF00A3E0)),
+                                child: _imageFile == null
+                                    ? Image.asset("assets/add photo.png")
+                                    : Image.file(File(_imageFile!.path))
+
+                                ///
+                                // Image(
+                                //     image: FileImage(File(imageFile.path)),
+                                //     fit: BoxFit.fill,
+                                //   )),
+                                )),
                         const SizedBox(
                           height: 30,
                         ),
                         Container(
                           height: 55,
-                          margin:const EdgeInsets.only(left: 8.0,right: 8.0),
-                          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                          margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16.0),
@@ -114,8 +118,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         ),
                         Container(
                           height: 55,
-                          margin:const EdgeInsets.only(left: 8.0,right: 8.0),
-                          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                          margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16.0),
@@ -146,8 +150,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         ),
                         Container(
                           height: 55,
-                          margin:const EdgeInsets.only(left: 8.0,right: 8.0),
-                          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                          margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16.0),
@@ -161,7 +165,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 child: CountryListPick(
                                     appBar: AppBar(
                                       backgroundColor: Colors.amber[200],
-                                      title:  Text(AppLocalizations.of(context)!.pickCountry),
+                                      title: Text(AppLocalizations.of(context)!
+                                          .pickCountry),
                                     ),
                                     theme: CountryTheme(
                                       isShowFlag: true,
@@ -171,9 +176,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                       showEnglishName: false,
                                       labelColor: Colors.black54,
                                       alphabetSelectedBackgroundColor:
-                                      const Color(0xFFFFD54F),
+                                          const Color(0xFFFFD54F),
                                       alphabetTextColor: Colors.deepOrange,
-                                      alphabetSelectedTextColor: Colors.deepPurple,
+                                      alphabetSelectedTextColor:
+                                          Colors.deepPurple,
                                     ),
                                     initialSelection: resultCodeCon,
                                     onChanged: (CountryCode? code) {
@@ -191,38 +197,35 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   controller: phoneNumber,
                                   showCursor: true,
                                   style: const TextStyle(
-                                      fontSize: 16, fontWeight: FontWeight.w600),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
                                   cursorColor: const Color(0xFFFFD54F),
-                                  decoration:  InputDecoration(
-                                    icon: const Padding(
-                                      padding: EdgeInsets.only(top: 15.0),
-                                      child: Icon(
-                                        Icons.phone,
-                                        color: Colors.grey,
+                                  decoration: InputDecoration(
+                                      icon: const Padding(
+                                        padding: EdgeInsets.only(top: 15.0),
+                                        child: Icon(
+                                          Icons.phone,
+                                          color: Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                    fillColor:const Color(0xFFFFD54F),
-                                    hintText: AppLocalizations.of(context)!.number
-                                  ),
+                                      fillColor: const Color(0xFFFFD54F),
+                                      hintText:
+                                          AppLocalizations.of(context)!.number),
                                   keyboardType: TextInputType.phone,
                                 ),
                               ),
-
                             ],
                           ),
                         ),
                         const SizedBox(height: 40),
                         GestureDetector(
                           onTap: () {
-                            if (picked == null) {
+                            if (_imageFile == null) {
                               tools.toastMsg(
                                   AppLocalizations.of(context)!.imageRequired);
-                            }
-                            else {
-                              checkBeforeSet(
-                                  context,
-                                  userProvider.getUser.uid,
-                                 imageFile);
+                            } else {
+                              checkBeforeSet(context, userProvider.getUser.uid,
+                                  _imageFile!);
                             }
                           },
                           child: Container(
@@ -259,8 +262,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                           color: const Color(0xFF00A3E0),
-                          borderRadius: BorderRadius.circular(8.0)
-                      ),
+                          borderRadius: BorderRadius.circular(8.0)),
                       height: 250,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -300,15 +302,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                     ]),
                                 child: Center(
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(Icons.camera, color: Color(0xFFFFD54F)),
-                                        const SizedBox(
-                                          width: 5.0,
-                                        ),
-                                        Text(AppLocalizations.of(context)!.camera),
-                                      ],
-                                    )),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.camera,
+                                        color: Color(0xFFFFD54F)),
+                                    const SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(AppLocalizations.of(context)!.camera),
+                                  ],
+                                )),
                               ),
                             ),
                           ),
@@ -332,15 +335,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                     ]),
                                 child: Center(
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(Icons.image, color: Color(0xFFFFD54F)),
-                                        const SizedBox(
-                                          width: 5.0,
-                                        ),
-                                        Text(AppLocalizations.of(context)!.gallery),
-                                      ],
-                                    )),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.image,
+                                        color: Color(0xFFFFD54F)),
+                                    const SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(AppLocalizations.of(context)!.gallery),
+                                  ],
+                                )),
                               ),
                             ),
                           ),
@@ -356,7 +360,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             color: Colors.black,
                           )),
                           child:
-                            _inductorCostem.circularInductorCostem(context),
+                              _inductorCostem.circularInductorCostem(context),
                         ),
                       )
                     : const Text(""),
@@ -370,35 +374,34 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   Future<void> getImage(BuildContext context, ImageSource source) async {
     try {
-      final XFile? _file = await _picker.pickImage(
-          source: source, maxWidth: 500.0, maxHeight: 500.0, imageQuality: 100);
+      final _file = await _picker.pickImage(
+          source: source, maxWidth: 500, maxHeight: 500, imageQuality: 100);
+      if (_file == null) return;
       setState(() {
-        imageFile = _file!;
+        _imageFile = File(_file.path);
       });
-      Provider.of<PickImageProvide>(context, listen: false)
-          .listingToPickImage(imageFile);
-      Provider.of<UserInfoSheet>(context,listen: false).updateState(-400);
+      Provider.of<UserInfoSheet>(context, listen: false).updateState(-400);
+      // Provider.of<PickImageProvide>(context, listen: false)
+      //     .listingToPickImage(_imageFile!);
     } catch (e) {
       tools.toastMsg(AppLocalizations.of(context)!.imageRequired);
       tools.toastMsg(e.toString());
     }
   }
 
-  checkBeforeSet(
-      BuildContext context, String uid, XFile? imageFile) {
+  checkBeforeSet(BuildContext context, String uid, File imageFile) {
     if (firstname.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.nameRequired);
     } else if (lastname.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.lastRequired);
-    } else if (phoneNumber.text.isEmpty){
+    } else if (phoneNumber.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.numberEmpty);
-    }
-    else {
-     ApiSrvGeo().getCountry();
+    } else {
+      ApiSrvGeo().getCountry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
-     result="$resultCodeCon${phoneNumber.text.trim()}";
+      result = "$resultCodeCon${phoneNumber.text.trim()}";
       srv.setImageToStorage(
-          firstname, lastname, uid, context, result, imageFile!, email);
+          firstname, lastname, uid, context, result, imageFile, email);
     }
   }
 }

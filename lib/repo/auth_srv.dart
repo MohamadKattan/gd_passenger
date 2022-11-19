@@ -134,4 +134,8 @@ class AuthSev {
     // await _user.delete();
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(_)=>const AuthScreen()), (route) => false);
   }
+
+  Future<void> singOut()async{
+   await auth.signOut();
+  }
 }

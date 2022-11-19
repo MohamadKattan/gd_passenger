@@ -41,7 +41,6 @@ import '../my_provider/close_botton_driverInfo.dart';
 import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/rider_id.dart';
 import '../my_provider/sheet_cardsc.dart';
-import '../notification.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/curanny_type.dart';
 import '../tools/geoFire_methods_tools.dart';
@@ -117,8 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     final postionCancel = Provider.of<PositionCancelReq>(context).value;
-    final dropBottomProvider =
-        Provider.of<DropBottomValue>(context).valueDropBottom;
+    final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
     final infoUserDataReal = Provider.of<UserAllInfoDatabase>(context).users;
@@ -176,8 +174,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .whenComplete(() async {
                                     await geoFireInitialize()
                                         .whenComplete(() async {
-                                      await Future.delayed(
-                                          const Duration(seconds: 5));
+                                      // await Future.delayed(
+                                      //     const Duration(seconds: 5));
                                       // setCloseTomeDriver();
                                       Tools().tostRead(
                                           AppLocalizations.of(context)!.ready,
@@ -932,9 +930,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     await _apiMethods.searchCoordinatesAddress(position, context);
-    // await geoFireInitialize();
-    // Tools().tostRead(
-    //     AppLocalizations.of(context)!.ready, Colors.greenAccent.shade700);
   }
 
   // this method for display nearest driver available from rider in list by using geoFire
@@ -1001,7 +996,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
   }
-
+/// todo this method stoped
   Future<void> setCloseTomeDriver() async {
     driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
     if (kDebugMode) {
@@ -1172,7 +1167,6 @@ class _HomeScreenState extends State<HomeScreen> {
       carOrderType = "Taxi-4 seats";
       grofireRadr = 4;
     });
-    // GeoFireMethods.listOfNearestDriverAvailable.clear();
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
     Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
@@ -1181,7 +1175,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Taxi-4 seats");
-    // geoFireInitialize();
   }
 
   // this method will change all provider state when click on van box
@@ -1191,7 +1184,6 @@ class _HomeScreenState extends State<HomeScreen> {
       carOrderType = "Medium commercial-6-10 seats";
       grofireRadr = 30;
     });
-    // GeoFireMethods.listOfNearestDriverAvailable.clear();
     Provider.of<LineTaxi>(context, listen: false).changelineVan(true);
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
@@ -1200,7 +1192,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
     Provider.of<CarTypeProvider>(context, listen: false)
         .updateCarType("Medium commercial-6-10 seats");
-    // geoFireInitialize();
   }
 
   // this method will change all provider state when click on Veto box
@@ -1210,7 +1201,6 @@ class _HomeScreenState extends State<HomeScreen> {
       carOrderType = "Big commercial-11-19 seats";
       grofireRadr = 30;
     });
-    // GeoFireMethods.listOfNearestDriverAvailable.clear();
     Provider.of<LineTaxi>(context, listen: false).changelineVeto(true);
     Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
     Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
@@ -1446,7 +1436,6 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (_) => sorryNoDriverDialog(context, userProvider));
       restApp();
       locationPosition(context);
-      Tools().tostRead('No Driver try again', Colors.red);
     } else if (keyDriverAvailable.isNotEmpty) {
       if (kDebugMode) {
         print('this method start${keyDriverAvailable.length}');
@@ -1495,9 +1484,9 @@ class _HomeScreenState extends State<HomeScreen> {
 // this method if driver in list of driver for sent notify after take his token
   Future<void> notifyDriver(String driverId, BuildContext context,
       UserIdProvider userProvider) async {
-    rideRequestTimeOut = 20;
+    rideRequestTimeOut = 25;
     late Timer _timer;
-    DataBaseSrv().sendRideRequestId(driverId, context);
+   await DataBaseSrv().sendRideRequestId(driverId, context);
     DatabaseReference _driverRef =
         FirebaseDatabase.instance.ref().child("driver").child(driverId);
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -1506,7 +1495,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _timer.cancel();
         timer.cancel();
         setState(() {
-          rideRequestTimeOut = 20;
+          rideRequestTimeOut = 25;
         });
         _driverRef.child("newRide").set("timeOut");
         _driverRef.child("newRide").onDisconnect();
@@ -1516,16 +1505,17 @@ class _HomeScreenState extends State<HomeScreen> {
         searchNearestDriver(userProvider);
       }
     });
-    await _driverRef.child("token").once().then((value) async {
-      final snapshot = value.snapshot.value;
-      String token = snapshot.toString();
-      SendNotification().sendNotificationToDriver(context, token);
+    //todo delete send token
+    // await _driverRef.child("token").once().then((value) async {
+    //   final snapshot = value.snapshot.value;
+    //   String token = snapshot.toString();
+    //   SendNotification().sendNotificationToDriver(context, token);
       //1
       if (state != "requesting") {
         _timer.cancel();
         setState(() {
-          rideRequestTimeOut = 20;
-          after2MinTimeOut = 160;
+          rideRequestTimeOut = 25;
+          after2MinTimeOut = 200;
         });
         _driverRef.child("newRide").set("canceled");
         _driverRef.child("newRide").onDisconnect();
@@ -1537,8 +1527,8 @@ class _HomeScreenState extends State<HomeScreen> {
             closeTimerSearch.cancel();
             setState(() {
               waitDriver = "";
-              rideRequestTimeOut = 20;
-              after2MinTimeOut = 160;
+              rideRequestTimeOut = 25;
+              after2MinTimeOut = 200;
               sound1 = true;
               sound2 = true;
               sound3 = true;
@@ -1555,7 +1545,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         });
       }
-    });
   }
 
   // this method for got driver info from Ride request collection
@@ -1708,7 +1697,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> countFullTimeRequest(UserIdProvider userProvider) async {
-    int _count = 160;
+    int _count = 200;
     closeTimerSearch =
         Timer.periodic(const Duration(seconds: 1), (timer) async {
       _count = _count - 1;
@@ -1998,8 +1987,8 @@ class _HomeScreenState extends State<HomeScreen> {
       polylineSet.clear();
       markersSet.clear();
       waitDriver = "wait";
-      after2MinTimeOut = 120;
-      rideRequestTimeOut = 20;
+      after2MinTimeOut = 200;
+      rideRequestTimeOut = 25;
       tMarker.clear();
       circlesSet.clear();
       polylineCoordinates.clear();

@@ -9,8 +9,8 @@ import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../my_provider/pick_image_provider.dart';
 import '../my_provider/profile_sheet.dart';
+import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,12 +21,13 @@ class ProfileScreen extends StatelessWidget {
   static final TextEditingController lastName = TextEditingController();
   static final TextEditingController email = TextEditingController();
   static final ImagePicker _picker = ImagePicker();
-  static late XFile imageFile;
+  // static late XFile? imageFile;
+  static File? _imageFile;
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserAllInfoDatabase>(context).users;
     bool isTrue = Provider.of<InductorProfileScreen>(context).isTrue;
-    final imageProvider = Provider.of<PickImageProvide>(context).imageProvider;
+    // final imageProvider = Provider.of<PickImageProvide>(context).imageProvider;
     final sheetVal = Provider.of<ProfileSheet>(context).valSheet;
     return Scaffold(
       appBar: AppBar(
@@ -59,10 +60,10 @@ class ProfileScreen extends StatelessWidget {
                               MediaQuery.of(context).size.height * 10 / 100),
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14.0),
-                          border: Border.all(width: 2.0,color: const Color(0xFF00A3E0))
-                        ),
-                        margin: const EdgeInsets.only(left: 8.0,right: 8.0),
+                            borderRadius: BorderRadius.circular(14.0),
+                            border: Border.all(
+                                width: 2.0, color: const Color(0xFF00A3E0))),
+                        margin: const EdgeInsets.only(left: 8.0, right: 8.0),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           style: const TextStyle(
@@ -82,9 +83,9 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14.0),
-                            border: Border.all(width: 2.0,color: const Color(0xFF00A3E0))
-                        ),
-                        margin: const EdgeInsets.only(left: 8.0,right: 8.0),
+                            border: Border.all(
+                                width: 2.0, color: const Color(0xFF00A3E0))),
+                        margin: const EdgeInsets.only(left: 8.0, right: 8.0),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           style: const TextStyle(
@@ -104,9 +105,9 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14.0),
-                            border: Border.all(width: 2.0,color: const Color(0xFF00A3E0))
-                        ),
-                        margin: const EdgeInsets.only(left: 8.0,right: 8.0),
+                            border: Border.all(
+                                width: 2.0, color: const Color(0xFF00A3E0))),
+                        margin: const EdgeInsets.only(left: 8.0, right: 8.0),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           style: const TextStyle(
@@ -130,7 +131,7 @@ class ProfileScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: GestureDetector(
                               onTap: () {
-                                if (imageProvider == null) {
+                                if (_imageFile == null) {
                                   Tools().toastMsg(
                                       AppLocalizations.of(context)!.upImage);
                                 } else {
@@ -138,7 +139,7 @@ class ProfileScreen extends StatelessWidget {
                                           listen: false)
                                       .updateState(true);
                                   startUpdateInfoUser(userInfo, name, lastName,
-                                      email, imageFile, context);
+                                      email, context, _imageFile!);
                                 }
                               },
                               child: Container(
@@ -166,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: GestureDetector(
                               onTap: () {
-                              fakeDelete(userInfo, context);
+                                fakeDelete(userInfo, context);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -305,11 +306,12 @@ class ProfileScreen extends StatelessWidget {
 
   Future<void> getImage(BuildContext context, ImageSource source) async {
     try {
-      final XFile? _file = await _picker.pickImage(
+      final _file = await _picker.pickImage(
           source: source, maxWidth: 60.0, maxHeight: 60.0, imageQuality: 80);
-      imageFile = _file!;
-      Provider.of<PickImageProvide>(context, listen: false)
-          .listingToPickImage(imageFile);
+      if (_file == null) return;
+      _imageFile = File(_file.path);
+      // Provider.of<PickImageProvide>(context, listen: false)
+      //     .listingToPickImage(imageFile);
       Provider.of<ProfileSheet>(context, listen: false).updateState(-400);
     } catch (e) {
       Tools().toastMsg(AppLocalizations.of(context)!.imageRequired);
@@ -362,8 +364,8 @@ class ProfileScreen extends StatelessWidget {
       TextEditingController name,
       TextEditingController lastName,
       TextEditingController email,
-      XFile imageFile,
-      BuildContext context) async {
+      BuildContext context,
+      File imageFile) async {
     firebase_storage.Reference refStorage =
         firebase_storage.FirebaseStorage.instance.ref();
     await refStorage
@@ -387,18 +389,19 @@ class ProfileScreen extends StatelessWidget {
     });
   }
 
-  Future<void> fakeDelete(
-      Users userInfo,
-      BuildContext context) async {
-
+  Future<void> fakeDelete(Users userInfo, BuildContext context) async {
     DatabaseReference ref =
-    FirebaseDatabase.instance.ref().child("users").child(userInfo.userId);
+        FirebaseDatabase.instance.ref().child("users").child(userInfo.userId);
     await ref.update({
       "status": "info",
     }).whenComplete(() {
       Provider.of<InductorProfileScreen>(context, listen: false)
           .updateState(false);
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(_)=>const SplashScreen()), (route) => false);
+      AuthSev().singOut();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const SplashScreen()),
+          (route) => false);
     });
   }
 }
