@@ -198,7 +198,7 @@ class DriverInfo {
                               carPlack.toUpperCase(),
                               style: const TextStyle(
                                   color: Colors.black,
-                                  fontSize: 24,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),

@@ -156,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               height:
                                   MediaQuery.of(context).size.height * 55 / 100,
                               child: GoogleMap(
+                                padding: EdgeInsets.only(bottom: Platform.isIOS?65.0:8.0),
                                 mapType: MapType.normal,
                                 initialCameraPosition:
                                     _logicGoogleMap.kGooglePlex,
@@ -1323,11 +1324,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Image.asset(
                               "assets/iconDrop.png",
                               fit: BoxFit.contain,
-                              width: 50.0,
-                              height: 50.0,
+                              width: 30.0,
+                              height: 30.0,
                             ),
-                      const SizedBox(width: 10.0),
-                      Text(value),
+                      const SizedBox(width: 4.0),
+                      Text(value,style: const TextStyle(fontSize: 14),),
                     ],
                   ),
                 );
