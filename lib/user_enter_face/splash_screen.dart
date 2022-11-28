@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (status == AnimationStatus.completed) {
         if (AuthSev().auth.currentUser?.uid != null) {
           await DataBaseSrv().currentOnlineUserInfo(context);
-          await Future.delayed(const Duration(milliseconds: 200));
+          await Future.delayed(const Duration(milliseconds: 300));
           final infoUser = Provider.of<UserAllInfoDatabase>(context,listen: false).users;
           if (infoUser.update == true) {
             await goToPlayStore().whenComplete(() async {

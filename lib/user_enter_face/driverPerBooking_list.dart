@@ -86,32 +86,99 @@ class DriverPreBooking extends StatelessWidget {
 
   Widget listOfDrivers(
       BuildContext context, int index, List<DriverPreBook> driverPreBookList) {
-    return Container(
-        margin: const EdgeInsets.all(12.0),
-        padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.0),
-            border: Border.all(width: 1.0, color: const Color(0xFF00A3E0))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 0,
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.white,
+    return GestureDetector(
+      onTap: ()=>Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => DriverProfile(
+                  driverPreBookList, index))),
+      child: Container(
+          margin: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.0),
+              border: Border.all(width: 1.0, color: const Color(0xFF00A3E0))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 0,
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.white,
+                        child: CachedNetworkImage(
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 50.0,
+                            height: 50.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          imageUrl: driverPreBookList[index].driverImage,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.person),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Expanded(
+                      flex: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(width: 2.0, color: Colors.grey)),
+                        child: SmoothStarRating(
+                          allowHalfRating: true,
+                          starCount: 5,
+                          rating: ratDriverRead,
+                          size: 10.0,
+                          color: Colors.yellow.shade700,
+                          borderColor: Colors.yellow.shade700,
+                          spacing: 0.0,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Expanded(
+                      flex: 0,
+                      child: Text(
+                        driverPreBookList[index].firstName,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style:
+                            const TextStyle(color: Colors.black87, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 8.0, right: 8.0, bottom: 4.0, top: 4.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 0,
                       child: CachedNetworkImage(
                         imageBuilder: (context, imageProvider) => Container(
-                          width: 50.0,
-                          height: 50.0,
+                          width: 90.0,
+                          height: 60.0,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(
+                                color: const Color(0xFFFFD54F), width: 1.0),
                             image: DecorationImage(
                                 image: imageProvider, fit: BoxFit.cover),
                           ),
@@ -123,110 +190,50 @@ class DriverPreBooking extends StatelessWidget {
                             const Icon(Icons.person),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Expanded(
-                    flex: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(8.0),
-                          border: Border.all(width: 2.0, color: Colors.grey)),
-                      child: SmoothStarRating(
-                        allowHalfRating: true,
-                        starCount: 5,
-                        rating: ratDriverRead,
-                        size: 10.0,
-                        color: Colors.yellow.shade700,
-                        borderColor: Colors.yellow.shade700,
-                        spacing: 0.0,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Expanded(
-                    flex: 0,
-                    child: Text(
-                      driverPreBookList[index].firstName,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style:
-                          const TextStyle(color: Colors.black87, fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 8.0, right: 8.0, bottom: 4.0, top: 4.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 0,
-                    child: CachedNetworkImage(
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: 90.0,
-                        height: 60.0,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(12.0),
-                          border: Border.all(
-                              color: const Color(0xFFFFD54F), width: 1.0),
-                          image: DecorationImage(
-                              image: imageProvider, fit: BoxFit.cover),
-                        ),
-                      ),
-                      imageUrl: driverPreBookList[index].driverImage,
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.person),
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Expanded(
-                      flex: 0,
-                      child: Text(
-                        driverPreBookList[index].country +
-                            '-' +
-                            driverPreBookList[index].city,
-                        style: const TextStyle(
-                            fontSize: 12, color: Color(0xFF00A3E0)),
-                      )),
-                  Expanded(
-                      flex: 0,
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => DriverProfile(
-                                          driverPreBookList, index))),
-                              child: const Icon(
-                                Icons.info,
-                                color: Color(0xFFFFD54F),
-                                size: 24,
-                              )),
-                          const SizedBox(width: 12.0),
-                          GestureDetector(
-                              onTap: () => showDialog(
-                                  context: context,
-                                  builder: (_) => _callDriver(
-                                      context, driverPreBookList, index)),
-                              child: Icon(
-                                Icons.phone,
-                                color: Colors.greenAccent.shade700,
-                                size: 24,
-                              )),
-                        ],
-                      ))
-                ],
-              ),
-            )
-          ],
-        ));
+                    const SizedBox(height: 3),
+                    Expanded(
+                        flex: 0,
+                        child: Text(
+                          driverPreBookList[index].country +
+                              '-' +
+                              driverPreBookList[index].city,
+                          style: const TextStyle(
+                              fontSize: 12, color: Color(0xFF00A3E0)),
+                        )),
+                    Expanded(
+                        flex: 0,
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => DriverProfile(
+                                            driverPreBookList, index))),
+                                child: const Icon(
+                                  Icons.info,
+                                  color: Color(0xFFFFD54F),
+                                  size: 24,
+                                )),
+                            const SizedBox(width: 12.0),
+                            GestureDetector(
+                                onTap: () => showDialog(
+                                    context: context,
+                                    builder: (_) => _callDriver(
+                                        context, driverPreBookList, index)),
+                                child: Icon(
+                                  Icons.phone,
+                                  color: Colors.greenAccent.shade700,
+                                  size: 24,
+                                )),
+                          ],
+                        ))
+                  ],
+                ),
+              )
+            ],
+          )),
+    );
   }
 
   Widget _callDriver(

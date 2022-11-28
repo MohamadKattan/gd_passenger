@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
+import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/profile_screen.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +39,7 @@ Widget customDrawer(BuildContext context) {
         child: Padding(
           padding: EdgeInsets.only(
               left: AppLocalizations.of(context)!.hi == "مرحبا" ? 0.0 : 80.0,
-              right:
-              AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 0.0),
+              right: AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 0.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -102,9 +102,9 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 8.0,
-              ),
+              // const SizedBox(
+              //   height: 8.0,
+              // ),
               CustomWidget().customDivider(),
               Expanded(
                 flex: 0,
@@ -142,9 +142,9 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 8.0,
-              ),
+              // const SizedBox(
+              //   height: 8.0,
+              // ),
               CustomWidget().customDivider(),
               Expanded(
                 flex: 0,
@@ -163,8 +163,8 @@ Widget customDrawer(BuildContext context) {
                       children: [
                         const Padding(
                           padding: EdgeInsets.all(8.0),
-                          child:
-                          Icon(Icons.person, color: Colors.black45, size: 35),
+                          child: Icon(Icons.person,
+                              color: Colors.black45, size: 35),
                         ),
                         const SizedBox(
                           width: 8.0,
@@ -181,9 +181,9 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 8.0,
-              ),
+              // const SizedBox(
+              //   height: 8.0,
+              // ),
               CustomWidget().customDivider(),
               Expanded(
                 flex: 0,
@@ -195,8 +195,10 @@ Widget customDrawer(BuildContext context) {
                           : 8.0),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder:
-                          (_)=>const SupportScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const SupportScreen()));
                     },
                     child: Row(
                       children: [
@@ -233,14 +235,46 @@ Widget customDrawer(BuildContext context) {
                           ? rightVal
                           : 8.0),
                   child: GestureDetector(
+                    onTap: () async {
+                      toPlayStore(context);
+                    },
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.car_crash,
+                            color: Colors.black45,
+                            size: 35.0,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.beDriver,
+                          style: const TextStyle(
+                              color: Colors.black45,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              CustomWidget().customDivider(),
+              Expanded(
+                flex: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 8.0,
+                      right: AppLocalizations.of(context)!.hi == "مرحبا"
+                          ? rightVal
+                          : 8.0),
+                  child: GestureDetector(
                     onTap: () {
-                      if (Platform.isAndroid) {
-                        SystemNavigator.pop();
-                      }
-                      Provider.of<DoubleValue>(context, listen: false)
-                          .value0Or1(0);
-                      Provider.of<ChangeColor>(context, listen: false)
-                          .updateState(false);
+                      singOut(context);
                     },
                     child: Row(
                       children: [
@@ -268,9 +302,7 @@ Widget customDrawer(BuildContext context) {
                 ),
               ),
               CustomWidget().customDivider(),
-              Expanded(
-                  flex: 0,
-                  child: ImageSliderDemo()),
+              Expanded(flex: 0, child: ImageSliderDemo()),
               Expanded(
                 flex: 0,
                 child: Padding(
@@ -300,6 +332,30 @@ Widget customDrawer(BuildContext context) {
   );
 }
 
+// this method for go to driver app
+Future<void> toPlayStore(BuildContext context) async {
+  if (Platform.isAndroid) {
+    String _url =
+        'https://play.google.com/store/apps/details?id=com.garanti.garantitaxidriver&hl=tr';
+    await Tools().lunchUrl(context, _url);
+  } else {
+    String _url =
+        'https://apps.apple.com/tr/app/garantitaxi-driver/id1635534414';
+    await Tools().lunchUrl(context, _url);
+  }
+}
+
+// this method for exit from app without sing out
+void singOut(BuildContext context) {
+  if (Platform.isAndroid) {
+    SystemNavigator.pop();
+  } else {
+    Provider.of<DoubleValue>(context, listen: false).value0Or1(0);
+    Provider.of<ChangeColor>(context, listen: false).updateState(false);
+  }
+}
+
+// image user
 Widget showImage(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
@@ -318,37 +374,39 @@ Widget showImage(BuildContext context) {
       errorWidget: (context, url, error) => const Icon(Icons.person),
     ),
   );
+
   ///OLD CODE TODO
   // userInfoRealTime.imageProfile != null
-    //   ? Expanded(
-    //       child: CachedNetworkImage(
-    //         imageBuilder: (context, imageProvider) => Container(
-    //           width: 60.0,
-    //           height: 60.0,
-    //           decoration: BoxDecoration(
-    //             shape: BoxShape.circle,
-    //             image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-    //           ),
-    //         ),
-    //         imageUrl: userInfoRealTime.imageProfile,
-    //         placeholder: (context, url) => const CircularProgressIndicator(),
-    //         errorWidget: (context, url, error) => const Icon(Icons.person),
-    //       ),
-    //     )
-    //   : const Expanded(
-    //       flex: 0,
-    //       child: CircleAvatar(
-    //         radius: 30,
-    //         backgroundColor: Colors.white,
-    //         child: Icon(
-    //           Icons.person,
-    //           color: Colors.black12,
-    //           size: 35,
-    //         ),
-    //       ),
-    //     );
+  //   ? Expanded(
+  //       child: CachedNetworkImage(
+  //         imageBuilder: (context, imageProvider) => Container(
+  //           width: 60.0,
+  //           height: 60.0,
+  //           decoration: BoxDecoration(
+  //             shape: BoxShape.circle,
+  //             image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+  //           ),
+  //         ),
+  //         imageUrl: userInfoRealTime.imageProfile,
+  //         placeholder: (context, url) => const CircularProgressIndicator(),
+  //         errorWidget: (context, url, error) => const Icon(Icons.person),
+  //       ),
+  //     )
+  //   : const Expanded(
+  //       flex: 0,
+  //       child: CircleAvatar(
+  //         radius: 30,
+  //         backgroundColor: Colors.white,
+  //         child: Icon(
+  //           Icons.person,
+  //           color: Colors.black12,
+  //           size: 35,
+  //         ),
+  //       ),
+  //     );
 }
 
+//name user
 Widget showUserName(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
@@ -358,6 +416,7 @@ Widget showUserName(BuildContext context) {
       : Expanded(child: Text(AppLocalizations.of(context)!.welcomeBack));
 }
 
+//phone user
 Widget showUserPhone(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;

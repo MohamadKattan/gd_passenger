@@ -756,5 +756,9 @@
   "ready":"Ready for using",
   "@ready": {
     "description": "Ready for using"
+  },
+  "beDriver":"be a driver!!",
+  "@beDriver": {
+    "description": "be a driver"
   }
 }

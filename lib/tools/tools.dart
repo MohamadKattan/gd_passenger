@@ -2,6 +2,8 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Tools {
   void toastMsg(String msg) {
@@ -51,5 +53,11 @@ class Tools {
       },
       onComplete: () {},
     );
+  }
+
+  Future<void>lunchUrl(BuildContext context,String url)async{
+    await canLaunch(url)
+        ? launch(url)
+        : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
   }
 }

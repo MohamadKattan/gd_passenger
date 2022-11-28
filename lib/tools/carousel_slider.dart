@@ -18,8 +18,8 @@ class ImageSliderDemo extends StatelessWidget {
       padding:  EdgeInsets.only(top: 25.0,right: AppLocalizations.of(context)!.hi=="مرحبا"?120.0:50.0,left: 8.0),
       child: Center(
         child: Container(
-          height: MediaQuery.of(context).size.height * 15 / 100,
-          width : MediaQuery.of(context).size.width * 60 / 100,
+          height: MediaQuery.of(context).size.height * 12 / 100,
+          width : MediaQuery.of(context).size.width * 40 / 100,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
           ),

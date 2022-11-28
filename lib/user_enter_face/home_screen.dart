@@ -1520,7 +1520,8 @@ class _HomeScreenState extends State<HomeScreen> {
         });
         _driverRef.child("newRide").set("canceled");
         _driverRef.child("newRide").onDisconnect();
-      } else {
+      }
+      else {
         _driverRef.child("newRide").onValue.listen((event) async {
           if (event.snapshot.value.toString() == "accepted") {
             _driverRef.child("newRide").onDisconnect();

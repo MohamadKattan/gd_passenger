@@ -184,5 +184,6 @@
   "exForgotPass":"Hesap şifrenizi unuttuysanız,\n aşağıdaki alana hesap e-postanızı yazın\n ve ardından yeni bir şifre yazmak için e-posta adresinize\n bir bağlantı göndermek için aşağıdaki düğmeyi tıklayın.",
   "send":"göndermek",
   "emailCheck":"İşlem başarıyla tamamlandı.\n E-postanızı kontrol edin",
-  "ready":"Kullanıma hazır"
+  "ready":"Kullanıma hazır",
+  "beDriver":"sürücü ol!!"
 }
