@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
+import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/profile_screen.dart';
 import 'package:gd_passenger/widget/divider_box_.dart';

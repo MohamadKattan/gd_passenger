@@ -29,54 +29,19 @@ class _SplashScreenState extends State<SplashScreen>
   bool result = false;
   @override
   initState() {
-    checkInternet();
-    TurnGps().turnGpsIfNot();
+     TurnGps().turnGpsIfNot();
     // if (AuthSev().auth.currentUser?.uid != null) {
     //   DataBaseSrv().currentOnlineUserInfo(context);
     // }
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 800),
-        lowerBound: 0.3,
-        upperBound: 0.6);
+        duration: const Duration(milliseconds: 200),
+        lowerBound: 0.4,
+        upperBound: 0.5);
     _animationController.forward();
     _animationController.addStatusListener((status) async {
-      if (AuthSev().auth.currentUser?.uid == null) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const MyPageView()));
-      }
       if (status == AnimationStatus.completed) {
-        if (AuthSev().auth.currentUser?.uid != null) {
-          await DataBaseSrv().currentOnlineUserInfo(context);
-          await Future.delayed(const Duration(milliseconds: 300));
-          final infoUser = Provider.of<UserAllInfoDatabase>(context,listen: false).users;
-          if (infoUser.update == true) {
-            await goToPlayStore().whenComplete(() async {
-              DatabaseReference refuser = FirebaseDatabase.instance
-                  .ref()
-                  .child("users")
-                  .child(infoUser.userId);
-              await refuser.child("update").set(false);
-              if (Platform.isAndroid) {
-                SystemNavigator.pop();
-              } else {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen()));
-              }
-            });
-          } else if (infoUser.status == "") {
-            Provider.of<IndectorNetWeek>(context, listen: false)
-                .updateState(true);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const InterNetWeak()));
-          } else if (infoUser.status == "info") {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const UserInfoScreen()));
-          } else if (infoUser.status == "ok") {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-          }
-        }
+        await checkInternet();
       }
     });
     super.initState();
@@ -132,7 +97,51 @@ class _SplashScreenState extends State<SplashScreen>
     if (result == false) {
       Provider.of<IndectorNetWeek>(context, listen: false).updateState(true);
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const InterNetWeak()));
+          MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:10)));
+    }
+    else{
+      if (AuthSev().auth.currentUser?.uid == null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const MyPageView()));
+      }
+      else{
+        if (AuthSev().auth.currentUser?.uid != null) {
+          await DataBaseSrv().currentOnlineUserInfo(context).whenComplete(() async {
+            await Future.delayed(const Duration(seconds: 2));
+            final infoUser =
+                Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+            if (infoUser.update == true) {
+              await goToPlayStore().whenComplete(() async {
+                DatabaseReference refuser = FirebaseDatabase.instance
+                    .ref()
+                    .child("users")
+                    .child(infoUser.userId);
+                await refuser.child("update").set(false);
+                if (Platform.isAndroid) {
+                  SystemNavigator.pop();
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const HomeScreen()));
+                }
+              });
+            }
+            else{DataBaseSrv().checkStateUserInfo(context);}
+            // else if (infoUser.status == "") {
+            //   Provider.of<IndectorNetWeek>(context, listen: false)
+            //       .updateState(true);
+            //   Navigator.push(context,
+            //       MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:1,)));
+            // }
+            // else if (infoUser.status == "info") {
+            //   Navigator.push(context,
+            //       MaterialPageRoute(builder: (_) => const UserInfoScreen()));
+            // }
+            // else if (infoUser.status == "ok") {
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+            // }
+          });
+        }}
     }
   }
 }

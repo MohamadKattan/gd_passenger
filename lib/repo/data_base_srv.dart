@@ -13,12 +13,18 @@ import 'package:gd_passenger/my_provider/placeDetails_drop_provider.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:gd_passenger/tools/tools.dart';
+import 'package:gd_passenger/user_enter_face/auth_screen.dart';
 import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../config.dart';
 import '../my_provider/derictionDetails_provide.dart';
+import '../my_provider/indector_netWeekPro.dart';
+import '../user_enter_face/home_screen.dart';
+import '../user_enter_face/inter_net_weak.dart';
+import '../user_enter_face/user_info_screen.dart';
 import 'auth_srv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DataBaseSrv {
   final Tools _tools = Tools();
@@ -73,9 +79,9 @@ class DataBaseSrv {
         "imageProfile": url.toString(),
         "firstName": firstname.text,
         "lastName": lastname.text,
-        "status":"ok",
+        "status": "ok",
         "phoneNumber": phoneNumber,
-        "update":false
+        "update": false
       }).whenComplete(() {
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
@@ -105,7 +111,37 @@ class DataBaseSrv {
         return;
       }
     } catch (ex) {
-      // Tools().toastMsg("Welcome DATA!!");
+      Tools().toastMsg(AppLocalizations.of(context)!.noNet);
+    }
+  }
+
+// use in net week screen
+  Future<void> currentOnlineUserInfoInNet(BuildContext context) async {
+    final currentUser = AuthSev().auth.currentUser;
+    late final DataSnapshot snapshot;
+    try {
+      final ref = FirebaseDatabase.instance.ref();
+      snapshot = await ref.child("users").child(currentUser!.uid).get();
+      if (snapshot.value != null) {
+        Map<String, dynamic> map =
+            Map<String, dynamic>.from(snapshot.value as Map);
+        Users infoUser = Users.fromMap(map);
+        Provider.of<UserAllInfoDatabase>(context, listen: false)
+            .updateUser(infoUser);
+        await Future.delayed(const Duration(seconds: 2));
+        checkStateUserInfo(context);
+      } else {
+        await AuthSev().auth.signOut();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+      }
+    } catch (ex) {
+      Tools().toastMsg(AppLocalizations.of(context)!.noNet);
+      Tools().toastMsg('!!!');
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const SplashScreen()),
+          (route) => false);
     }
   }
 
@@ -181,8 +217,7 @@ class DataBaseSrv {
   }
 
   // this method for send ride Request Id to driver collection in newride child for notification
-  Future<void> sendRideRequestId(
-      String driverId, BuildContext context) async {
+  Future<void> sendRideRequestId(String driverId, BuildContext context) async {
     final userId =
         Provider.of<UserAllInfoDatabase>(context, listen: false).users;
     DatabaseReference driverRef = FirebaseDatabase.instance
@@ -197,6 +232,34 @@ class DataBaseSrv {
       } catch (e) {
         e.toString();
       }
+    }
+  }
+
+  // this mehtod for check State after got data from condition net week
+  Future<void> checkStateUserInfo(BuildContext context) async {
+    final infoUser =
+        Provider.of<UserAllInfoDatabase>(context, listen: false).users.status;
+    switch (infoUser) {
+      case "":
+        Provider.of<IndectorNetWeek>(context, listen: false)
+            .updateState(true);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:0,)));
+        break;
+      case "info":
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const UserInfoScreen()));
+        break;
+      case "ok":
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+        break;
+      default:
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const SplashScreen()),
+            (route) => false);
+        break;
     }
   }
 }

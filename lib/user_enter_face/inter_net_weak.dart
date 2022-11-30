@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/user_enter_face/page_view.dart';
-import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,7 +11,8 @@ import '../repo/data_base_srv.dart';
 import '../widget/custom_circuler.dart';
 
 class InterNetWeak extends StatefulWidget {
-  const InterNetWeak({Key? key}) : super(key: key);
+ final  int timeNet;
+   const InterNetWeak({Key? key,required this.timeNet}) : super(key: key);
 
   @override
   State<InterNetWeak> createState() => _InterNetWeakState();
@@ -52,37 +52,6 @@ class _InterNetWeakState extends State<InterNetWeak> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              // GestureDetector(
-              //   onTap: () async {
-              //     if (AuthSev().auth.currentUser?.uid != null) {
-              //       await DataBaseSrv().currentOnlineUserInfo(context).whenComplete(
-              //           () => Navigator.push(
-              //               context,
-              //               MaterialPageRoute(
-              //                   builder: (_) => const SplashScreen())));
-              //     } else {
-              //       return;
-              //     }
-              //   },
-              //   child: Container(
-              //     height: 40,
-              //     width: 110,
-              //     decoration: BoxDecoration(
-              //       color: Colors.red.shade700,
-              //       borderRadius: BorderRadius.circular(4.0),
-              //     ),
-              //     child: Center(
-              //       child: Text(
-              //         AppLocalizations.of(context)!.try1,
-              //         textAlign: TextAlign.center,
-              //         style: const TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 16.0,
-              //             fontWeight: FontWeight.bold),
-              //       ),
-              //     ),
-              //   ),
-              // )
             ],
           ),
           valIndector == true
@@ -98,17 +67,14 @@ class _InterNetWeakState extends State<InterNetWeak> {
       (InternetConnectionStatus status) async {
         switch (status) {
           case InternetConnectionStatus.connected:
+           await Future.delayed(Duration(seconds: widget.timeNet));
             if (AuthSev().auth.currentUser?.uid != null) {
               listener.cancel();
-              await DataBaseSrv()
-                  .currentOnlineUserInfo(context)
-                  .whenComplete(() {
-                Provider.of<IndectorNetWeek>(context, listen: false)
-                    .updateState(false);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const SplashScreen()));
-              });
-            } else if (AuthSev().auth.currentUser?.uid == null) {
+              await DataBaseSrv().currentOnlineUserInfoInNet(context);
+              Provider.of<IndectorNetWeek>(context, listen: false)
+                  .updateState(false);
+            }
+            else if (AuthSev().auth.currentUser?.uid == null) {
               listener.cancel();
               Provider.of<IndectorNetWeek>(context, listen: false)
                   .updateState(false);
