@@ -6,7 +6,6 @@ import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:gd_passenger/tools/turn_Gps.dart';
 import 'package:gd_passenger/user_enter_face/page_view.dart';
-import 'package:gd_passenger/user_enter_face/user_info_screen.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -97,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (result == false) {
       Provider.of<IndectorNetWeek>(context, listen: false).updateState(true);
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:10)));
+          MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:8)));
     }
     else{
       if (AuthSev().auth.currentUser?.uid == null) {

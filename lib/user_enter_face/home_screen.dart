@@ -88,9 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool sound2 = false;
   bool sound3 = false;
   late Timer closeTimerSearch;
+  bool updateDriverOnMap = true;
 
   @override
   void initState() {
+    Geofire.initialize("availableDrivers");
     audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
     // locationPosition(context);
     super.initState();
@@ -116,7 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final postionChang = Provider.of<PositionChang>(context).val;
     final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     final postionCancel = Provider.of<PositionCancelReq>(context).value;
-    final dropBottomProvider = Provider.of<DropBottomValue>(context).valueDropBottom;
+    final dropBottomProvider =
+        Provider.of<DropBottomValue>(context).valueDropBottom;
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
     userProvider.getUserIdProvider();
     final infoUserDataReal = Provider.of<UserAllInfoDatabase>(context).users;
@@ -156,7 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               height:
                                   MediaQuery.of(context).size.height * 55 / 100,
                               child: GoogleMap(
-                                padding: EdgeInsets.only(bottom: Platform.isIOS?65.0:8.0),
+                                padding: EdgeInsets.only(
+                                    bottom: Platform.isIOS ? 65.0 : 8.0),
                                 mapType: MapType.normal,
                                 initialCameraPosition:
                                     _logicGoogleMap.kGooglePlex,
@@ -188,34 +192,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                               ),
                             ),
-
                             /// arrow up
-                            Positioned(
-                              bottom: 0.0,
-                              right: 0.0,
-                              left: 0.0,
-                              child: GestureDetector(
-                                onTap: () => Provider.of<PositionChang>(context,
-                                        listen: false)
-                                    .changValue(0.0),
-                                child: Container(
-                                  height: 45,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.circular(16.0)),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.keyboard_arrow_up,
-                                      size: 50,
-                                      color: Color(0xFFFBC408),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-
+                            // Positioned(
+                            //   bottom: 0.0,
+                            //   right: 0.0,
+                            //   left: 0.0,
+                            //   child: GestureDetector(
+                            //     onTap: () => Provider.of<PositionChang>(context,
+                            //             listen: false)
+                            //         .changValue(0.0),
+                            //     child: Container(
+                            //       height: 45,
+                            //       width: MediaQuery.of(context).size.width,
+                            //       decoration: BoxDecoration(
+                            //           color: Colors.white,
+                            //           borderRadius:
+                            //               BorderRadius.circular(16.0)),
+                            //       child: const Center(
+                            //         child: Icon(
+                            //           Icons.keyboard_arrow_up,
+                            //           size: 50,
+                            //           color: Color(0xFFFBC408),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             /// main container what include car types car drop button request button
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -241,7 +243,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
-                                        const SizedBox(height: 6.0),
+                                        SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                2 /
+                                                100),
 
                                         /// where to
                                         GestureDetector(
@@ -325,7 +332,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(height: 6.0),
+                                        SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                2 /
+                                                100),
                                         _customWidget.customDivider(),
 
                                         /// row of 3 car type
@@ -622,15 +634,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                               ]),
                                         ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-
+                                        SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                2 /
+                                                100),
                                         /// drop of botton
                                         dropBottomCustom(
                                             context, dropBottomProvider),
-
                                         /// request button
+                                        SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                2 /
+                                                100),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: GestureDetector(
@@ -663,13 +682,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   DataBaseSrv()
                                                       .saveRiderRequest(
                                                           context, amount);
-                                                  setState(() {
                                                     state = "requesting";
-                                                  });
                                                   countFullTimeRequest(
                                                       userProvider);
                                                   gotKeyOfDriver(userProvider);
-                                                  gotDriverInfo(context);
+                                                  gotDriverInfo();
                                                 }
                                               },
                                               child: AnimatedContainer(
@@ -710,7 +727,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 )),
-
                             /// sheet Car desc
                             AnimatedPositioned(
                               child: customBottomSheet.showSheetCarInfoTaxi(
@@ -764,7 +780,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: 0.0,
                               bottom: sheetCarDscBig,
                             ),
-
                             ///cancel container
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -776,13 +791,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     userIdProvider: userProvider,
                                     voidCallback: () async {
                                       closeTimerSearch.cancel();
-                                      setState(() {
                                         state = "normal";
-                                      });
                                       locationPosition(context);
                                       restApp();
                                     })),
-
                             ///driver info
                             AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
@@ -793,9 +805,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context: context,
                                     userIdProvider: userProvider,
                                     voidCallback: () async {
-                                      setState(() {
-                                        state = "normal";
-                                      });
+                                      state = "normal";
                                       restApp();
                                       driverAvailable.clear();
                                       GeoFireMethods
@@ -935,13 +945,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method for display nearest driver available from rider in list by using geoFire
   Future<void> geoFireInitialize() async {
-    Geofire.initialize("availableDrivers");
     final currentPosition =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
-
     try {
-      Geofire.queryAtLocation(
-              currentPosition.latitude, currentPosition.longitude, 5)
+      Geofire.queryAtLocation
+        (currentPosition.latitude, currentPosition.longitude,5)
           ?.listen((map) async {
         if (map != null) {
           var callBack = map['callBack'];
@@ -952,20 +960,22 @@ class _HomeScreenState extends State<HomeScreen> {
               nearestDriverAvailable.key = map['key'];
               nearestDriverAvailable.latitude = map['latitude'];
               nearestDriverAvailable.longitude = map['longitude'];
-              await Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-                GeoFireMethods.listOfNearestDriverAvailable
-                    .add(nearestDriverAvailable);
-              });
+              GeoFireMethods.listOfNearestDriverAvailable
+                  .add(nearestDriverAvailable);
               if (kDebugMode) {
                 print(
                     "hhh${GeoFireMethods.listOfNearestDriverAvailable.length}");
               }
-              if (GeoFireMethods.listOfNearestDriverAvailable.isNotEmpty) {
-                updateAvailableDriverOnMap();
-              }
+              // updateAvailableDriverOnMap();
               break;
             case Geofire.onKeyExited:
-              GeoFireMethods.removeDriverFromList(map["key"]);
+              NearestDriverAvailable nearestDriverAvailable =
+              NearestDriverAvailable("", 0.0, 0.0);
+              nearestDriverAvailable.key = map['key'];
+              nearestDriverAvailable.latitude = map['latitude'];
+              nearestDriverAvailable.longitude = map['longitude'];
+              GeoFireMethods.removeDriverFromList(nearestDriverAvailable);
+              // GeoFireMethods.removeDriverFromList(map["key"]);
               break;
 
             case Geofire.onKeyMoved:
@@ -993,94 +1003,103 @@ class _HomeScreenState extends State<HomeScreen> {
         print('PlatformException geo fire');
       }
     }
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
   }
-/// todo this method stoped
-  Future<void> setCloseTomeDriver() async {
-    driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
-    if (kDebugMode) {
-      print('hellllll:::${driverAvailable.length}');
-    }
-    await Future.delayed(const Duration(seconds: 15));
-    if (driverAvailable.length <
-        GeoFireMethods.listOfNearestDriverAvailable.length) {
-      driverAvailable.clear();
-      driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
-      if (kDebugMode) {
-        print('newhellllll:${driverAvailable.length}');
-      }
-    } else {
-      if (kDebugMode) {
-        print('NoUpdatenewhellllll:${driverAvailable.length}');
-      }
-      return;
-    }
-  }
+
+  /// todo this method stoped
+  // Future<void> setCloseTomeDriver() async {
+  //   driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
+  //   if (kDebugMode) {
+  //     print('hellllll:::${driverAvailable.length}');
+  //   }
+  //   await Future.delayed(const Duration(seconds: 15));
+  //   if (driverAvailable.length <
+  //       GeoFireMethods.listOfNearestDriverAvailable.length) {
+  //     driverAvailable.clear();
+  //     driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
+  //     if (kDebugMode) {
+  //       print('newhellllll:${driverAvailable.length}');
+  //     }
+  //   } else {
+  //     if (kDebugMode) {
+  //       print('NoUpdatenewhellllll:${driverAvailable.length}');
+  //     }
+  //     return;
+  //   }
+  // }
 
   // this method for add icon new near driver on map
   void updateAvailableDriverOnMap() async {
-    late String driverPhoneOneOnMap;
-    late String phone;
-    for (NearestDriverAvailable driver
-        in GeoFireMethods.listOfNearestDriverAvailable) {
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref().child("driver").child(driver.key);
-      await ref.once().then((value) {
-        final snap = value.snapshot.value;
-        if (snap == null) {
-          return;
-        }
-        Map<String, dynamic> map = Map<String, dynamic>.from(snap as Map);
-        if (map["firstName"] != null) {
-          fNameIcon = map["firstName"].toString();
-        }
-        if (map["lastName"] != null) {
-          lNameIcon = map["lastName"].toString();
-        }
-        if (map["rating"] != null) {
-          ratDriverRead = double.parse(map["rating"].toString());
-        }
-        if (map["carInfo"]["carType"] != null) {
-          carDriverType = map["carInfo"]["carType"].toString();
-        }
-        if (map["phoneNumber"] != null) {
-          setState(() {
-            driverPhoneOneOnMap = map["phoneNumber"].toString();
-          });
-        }
-      });
-      LatLng driverAvailablePosititon =
-          LatLng(driver.latitude, driver.longitude);
-      Marker marker = Marker(
-        markerId: MarkerId("driver${driver.key}"),
-        position: driverAvailablePosititon,
-        icon: carDriverType == "Taxi-4 seats"
-            ? driversNearIcon
-            : driversNearIcon1,
-        infoWindow: InfoWindow(
-            onTap: () async {
-              await ref.child('phoneNumber').once().then((value) {
-                if (value.snapshot.value != null) {
-                  phone = value.snapshot.value.toString();
-                }
-              });
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => callDriverOnMap(context, phone));
-            },
-            title: " $fNameIcon $lNameIcon",
-            snippet:
-                ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
-        rotation: MathMethods.createRandomNumber(360),
-      );
-
-      // tMarker.add(marker);
-      setState(() {
-        markersSet.add(marker);
-      });
+    if(updateDriverOnMap==true){
+      if (kDebugMode) {
+        print('update drivers on Map');
+      }
+      if (GeoFireMethods.listOfNearestDriverAvailable.isEmpty) return;
+      late String driverPhoneOneOnMap;
+      late String phone;
+      for (NearestDriverAvailable driver
+      in GeoFireMethods.listOfNearestDriverAvailable) {
+        DatabaseReference ref =
+        FirebaseDatabase.instance.ref().child("driver").child(driver.key);
+        await ref.once().then((value) {
+          final snap = value.snapshot.value;
+          if (snap == null) {
+            return;
+          }
+          Map<String, dynamic> map = Map<String, dynamic>.from(snap as Map);
+          if (map["firstName"] != null) {
+            fNameIcon = map["firstName"].toString();
+          }
+          if (map["lastName"] != null) {
+            lNameIcon = map["lastName"].toString();
+          }
+          if (map["rating"] != null) {
+            ratDriverRead = double.parse(map["rating"].toString());
+          }
+          if (map["carInfo"]["carType"] != null) {
+            carTypeOnUpdateGeo = map["carInfo"]["carType"].toString();
+          }
+          if (map["phoneNumber"] != null) {
+            setState(() {
+              driverPhoneOneOnMap = map["phoneNumber"].toString();
+            });
+          }
+        });
+        LatLng driverAvailablePosititon =
+        LatLng(driver.latitude, driver.longitude);
+        Marker marker = Marker(
+          markerId: MarkerId("driver${driver.key}"),
+          position: driverAvailablePosititon,
+          icon: carTypeOnUpdateGeo == "Taxi-4 seats"
+              ? driversNearIcon
+              : driversNearIcon1,
+          infoWindow: InfoWindow(
+              onTap: () async {
+                await ref.child('phoneNumber').once().then((value) {
+                  if (value.snapshot.value != null) {
+                    phone = value.snapshot.value.toString();
+                  }
+                });
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => callDriverOnMap(context, phone));
+              },
+              title: " $fNameIcon $lNameIcon",
+              snippet:
+              ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
+          rotation: MathMethods.createRandomNumber(360),
+        );
+        // tMarker.add(marker);
+        setState(() {
+          markersSet.add(marker);
+        });
+      }
+    }else{
+      if (kDebugMode) {
+        print('No update drivers on Map');
+      }
+      return;
     }
   }
 
@@ -1164,7 +1183,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method for change all provider state when click taxiBox
   Future<void> changeAllProClickTaxiBox() async {
     setState(() {
-      markersSet.clear();
+      // markersSet.clear();
       carOrderType = "Taxi-4 seats";
       grofireRadr = 4;
     });
@@ -1181,7 +1200,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method will change all provider state when click on van box
   Future<void> changeAllProClickVanBox() async {
     setState(() {
-      markersSet.clear();
+      // markersSet.clear();
       carOrderType = "Medium commercial-6-10 seats";
       grofireRadr = 30;
     });
@@ -1198,7 +1217,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method will change all provider state when click on Veto box
   Future<void> changeAllProClickVetoBox() async {
     setState(() {
-      markersSet.clear();
+      // markersSet.clear();
       carOrderType = "Big commercial-11-19 seats";
       grofireRadr = 30;
     });
@@ -1279,15 +1298,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return amount;
   }
 
-// this method for got user info from database if it was null befoer user start his request a driver
-  Future<void> checkAllUserInfoReal(
-      Users? infoUserDataReal, BuildContext context) async {
-    if (infoUserDataReal == null) {
-      DataBaseSrv().currentOnlineUserInfo(context);
-    } else {
-      return;
-    }
-  }
+///this method for got user info from database if it was null befoer user start his request a driver
+//   Future<void> checkAllUserInfoReal(
+//       Users? infoUserDataReal, BuildContext context) async {
+//     if (infoUserDataReal == null) {
+//       DataBaseSrv().currentOnlineUserInfo(context);
+//     } else {
+//       return;
+//     }
+//   }
 
 //dropBottom payment way cash or card
   Widget dropBottomCustom(BuildContext context, String dropBottomProvider) {
@@ -1328,7 +1347,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 30.0,
                             ),
                       const SizedBox(width: 4.0),
-                      Text(value,style: const TextStyle(fontSize: 14),),
+                      Text(
+                        value,
+                        style: const TextStyle(fontSize: 14),
+                      ),
                     ],
                   ),
                 );
@@ -1403,29 +1425,6 @@ class _HomeScreenState extends State<HomeScreen> {
 // this method when rider will do order
   Future<void> searchNearestDriver(UserIdProvider userProvider) async {
     DatabaseReference _ref = FirebaseDatabase.instance.ref().child("driver");
-
-    // for (var idDriver in keyDriverAvailable) {
-    //   int index = keyDriverAvailable
-    //       .indexWhere((element) => element == idDriver);
-    //   await _ref.child(idDriver).child("carInfo").child("carType").once().then((value) async {
-    //     final snap = value.snapshot.value;
-    //     if (snap != null) {
-    //       carRideType = snap.toString();
-    //       if (carRideType == carOrderType) {
-    //         await _ref.child(idDriver).child("newRide").once().then((value) async {
-    //           if (value.snapshot.value != null) {
-    //             final newRideStatus = value.snapshot.value;
-    //             if (newRideStatus == "searching") {
-    //               notifyDriver(idDriver, context, userProvider);
-    //               keyDriverAvailable.removeAt(index);
-    //           }}
-    //         });
-    //       }
-    //       else{keyDriverAvailable.removeAt(index);}
-    //     }
-    //   });
-    // }
-    ///
     if (keyDriverAvailable.isEmpty) {
       closeTimerSearch.cancel();
       Provider.of<PositionCancelReq>(context, listen: false)
@@ -1437,9 +1436,13 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (_) => sorryNoDriverDialog(context, userProvider));
       restApp();
       locationPosition(context);
-    } else if (keyDriverAvailable.isNotEmpty) {
       if (kDebugMode) {
-        print('this method start${keyDriverAvailable.length}');
+        print('No driver stopped notify');
+      }
+    }
+    else if (keyDriverAvailable.isNotEmpty) {
+      if (kDebugMode) {
+        print('Notify driver No : ${keyDriverAvailable.length}');
       }
       String idDriver = keyDriverAvailable[0];
       await _ref
@@ -1460,13 +1463,14 @@ class _HomeScreenState extends State<HomeScreen> {
               if (value.snapshot.value != null) {
                 final newRideStatus = value.snapshot.value;
                 if (newRideStatus == "searching") {
-                  if (kDebugMode) {
-                    print('notifyDriver');
-                  }
                   notifyDriver(idDriver, context, userProvider);
-                  Future.delayed(const Duration(seconds: 2)).whenComplete(() {
-                    keyDriverAvailable.removeAt(0);
-                  });
+                  if (kDebugMode) {
+                    print('notify Driver start');
+                  }
+                  keyDriverAvailable.removeAt(0);
+                  // Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+                  //   keyDriverAvailable.removeAt(0);
+                  // });
                 } else {
                   keyDriverAvailable.removeAt(0);
                   searchNearestDriver(userProvider);
@@ -1485,94 +1489,102 @@ class _HomeScreenState extends State<HomeScreen> {
 // this method if driver in list of driver for sent notify after take his token
   Future<void> notifyDriver(String driverId, BuildContext context,
       UserIdProvider userProvider) async {
+    DatabaseReference _driverRef =
+    FirebaseDatabase.instance.ref().child("driver").child(driverId);
     rideRequestTimeOut = 25;
     late Timer _timer;
-   await DataBaseSrv().sendRideRequestId(driverId, context);
-    DatabaseReference _driverRef =
-        FirebaseDatabase.instance.ref().child("driver").child(driverId);
+     await DataBaseSrv().sendRideRequestId(driverId, context);
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       rideRequestTimeOut = rideRequestTimeOut - 1;
-      if (rideRequestTimeOut <= 0) {
+      if (state != "requesting") {
+        rideRequestTimeOut = 25;
+        after2MinTimeOut = 200;
+        _driverRef.child("newRide").set("canceled");
+        _driverRef.child("newRide").onDisconnect();
         _timer.cancel();
         timer.cancel();
-        setState(() {
+        if (kDebugMode) {
+          print('rider has canceled');
+        }
+      }
+     else if (rideRequestTimeOut <= 0) {
+         _timer.cancel();
+          timer.cancel();
           rideRequestTimeOut = 25;
-        });
         _driverRef.child("newRide").set("timeOut");
         _driverRef.child("newRide").onDisconnect();
         if (kDebugMode) {
-          print('timeOut');
+          print('timeOut  Research another Driver');
         }
         searchNearestDriver(userProvider);
       }
     });
-    //todo delete send token
+    ///todo delete send token
     // await _driverRef.child("token").once().then((value) async {
     //   final snapshot = value.snapshot.value;
     //   String token = snapshot.toString();
     //   SendNotification().sendNotificationToDriver(context, token);
-      //1
-      if (state != "requesting") {
+    //1
+     _driverRef.child("newRide").onValue.listen((event) {
+      if (event.snapshot.value.toString() == "accepted") {
+        _driverRef.child("newRide").onDisconnect();
         _timer.cancel();
+        closeTimerSearch.cancel();
         setState(() {
+          waitDriver = "";
           rideRequestTimeOut = 25;
           after2MinTimeOut = 200;
+          sound1 = true;
+          sound2 = true;
+          sound3 = true;
         });
-        _driverRef.child("newRide").set("canceled");
+        if (kDebugMode) {
+          print('Driver has Accepted');
+        }
+      }
+      if (event.snapshot.value.toString() == "canceled") {
         _driverRef.child("newRide").onDisconnect();
+        if (kDebugMode) {
+          print('driver has canceled');
+        }
+          rideRequestTimeOut = 1;
       }
-      else {
-        _driverRef.child("newRide").onValue.listen((event) async {
-          if (event.snapshot.value.toString() == "accepted") {
-            _driverRef.child("newRide").onDisconnect();
-            _timer.cancel();
-            closeTimerSearch.cancel();
-            setState(() {
-              waitDriver = "";
-              rideRequestTimeOut = 25;
-              after2MinTimeOut = 200;
-              sound1 = true;
-              sound2 = true;
-              sound3 = true;
-            });
-          }
-          if (event.snapshot.value.toString() == "canceled") {
-            _driverRef.child("newRide").onDisconnect();
-            if (kDebugMode) {
-              print('33333:driver canceled');
-            }
-            setState(() {
-              rideRequestTimeOut = 2;
-            });
-          }
-        });
-      }
+    });
   }
 
   // this method for got driver info from Ride request collection
-  Future<void> gotDriverInfo(BuildContext context) async {
+  Future<void> gotDriverInfo() async {
     if (kDebugMode) {
-      print('gotDriverStart');
+      print('GOT DRIVER INFO');
     }
     final id = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+    final carType = Provider.of<CarTypeProvider>(context,listen: false).carType;
     DatabaseReference reference =
         FirebaseDatabase.instance.ref().child("Ride Request").child(id.userId);
     rideStreamSubscription = reference.onValue.listen((event) async {
       if (event.snapshot.value == null) {
+        if (kDebugMode) {
+          print('NO DRIVER INFO VAL NULL');
+        }
         return;
+      }
+      if (kDebugMode) {
+        print('HAS DRIVER INFO VAL != NULL');
       }
       Map<String, dynamic> map =
           Map<String, dynamic>.from(event.snapshot.value as Map);
       if (map["carInfo"] != null) {
-        setState(() {
-          carDriverInfo = map["carInfo"].toString();
-        });
+        // setState(() {
+        //   carDriverInfo = map["carInfo"].toString();
+        // });
+        carDriverInfo = map["carInfo"].toString();
       }
       if (map["driverImage"] != null) {
         final newdriverImage = map["driverImage"].toString();
-        setState(() {
-          driverImage = newdriverImage;
-        });
+        driverImage = newdriverImage;
+        // setState(() {
+        //   driverImage = newdriverImage;
+        // });
       }
       if (map["driverName"] != null) {
         carPlack = map["carPlack"].toString();
@@ -1592,15 +1604,19 @@ class _HomeScreenState extends State<HomeScreen> {
         final driverLongitude =
             double.parse(map["driverLocation"]["longitude"].toString());
         LatLng driverCurrentLocation = LatLng(driverLatitude, driverLongitude);
-        setState(() {
-          driverNewLocation = driverCurrentLocation;
-        });
-        if (statusRide == "accepted") {
+        ///todo
+        // setState(() {
+        //   driverNewLocation = driverCurrentLocation;
+        // });
+        driverNewLocation = driverCurrentLocation;
+        if  (statusRide == "accepted") {
           soundAccepted();
           setState(() {
             newstatusRide = AppLocalizations.of(context)!.accepted;
+            markersSet.removeWhere((ele) => ele.markerId.value.contains("driver"));
           });
-        } else if (statusRide == "arrived") {
+        }
+        else if (statusRide == "arrived") {
           await audioPlayer.stop();
           soundArrived();
           setState(() {
@@ -1608,7 +1624,8 @@ class _HomeScreenState extends State<HomeScreen> {
             timeTrip = "";
             newstatusRide = AppLocalizations.of(context)!.arrived;
           });
-        } else if (statusRide == "onride") {
+        }
+        else if (statusRide == "onride") {
           await audioPlayer.stop();
           soundTripStart();
           // setState(() {
@@ -1620,11 +1637,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Marker marker = Marker(
               markerId: MarkerId("myDriver$driverId"),
               position: driverNewLocation,
-              icon: carDriverType == "Taxi-4 seats"
+              icon: carType == "Taxi-4 seats"
                   ? driversNearIcon
                   : driversNearIcon1,
               infoWindow: InfoWindow(
-                  title: " $fNameIcon $lNameIcon",
+                  title: driverName,
                   snippet: AppLocalizations.of(context)!.onWay),
               rotation: MathMethods.createRandomNumber(360),
             );
@@ -1636,11 +1653,14 @@ class _HomeScreenState extends State<HomeScreen> {
             updateTorRidePickToDropOff(context);
             trickDriverCaronTrpe(driverNewLocation, marker);
           }
-        } else if (statusRide == "ended") {
+        }
+        else if (statusRide == "ended") {
           setState(() {
             statusRide = "Trip finished";
             timeTrip = "";
             newstatusRide = AppLocalizations.of(context)!.finished;
+            markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
+            updateDriverOnMap=true;
           });
           await audioPlayer.stop();
           if (map["total"] != null) {
@@ -1672,23 +1692,24 @@ class _HomeScreenState extends State<HomeScreen> {
             .updateValue(-400.0);
         Provider.of<CloseButtonProvider>(context, listen: false)
             .updateState(false);
+        markersSet.clear();
+        updateDriverOnMap=false;
         await Geofire.stopListener();
         await deleteGeoFireMarker();
-        Set<Marker> tMarker1 = {};
+        // Set<Marker> tMarker1 = {};
         if (driverNewLocation.latitude != 0.0) {
+          // tMarker1.add(marker);
           Marker marker = Marker(
             markerId: MarkerId("myDriver$driverId"),
             position: driverNewLocation,
-            icon: carDriverType == "Taxi-4 seats"
+            icon: carTypeOnUpdateGeo == "Taxi-4 seats"
                 ? driversNearIcon
                 : driversNearIcon1,
             infoWindow: InfoWindow(
-                title: " $fNameIcon $lNameIcon",
+                title: " $driverName",
                 snippet: AppLocalizations.of(context)!.onWay),
             rotation: MathMethods.createRandomNumber(360),
           );
-
-          tMarker1.add(marker);
           setState(() {
             markersSet.add(marker);
           });
@@ -1739,6 +1760,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final color = Colors.blueAccent.shade700;
       const double valPadding = 100.0;
       addPloyLine(details!, riderLoc, driverCurrentLocation, color, valPadding);
+      markersSet.removeWhere((ele) => ele.markerId.value.contains("dropOfId"));
       isTimeRequstTrip = false;
     }
   }
@@ -1986,8 +2008,13 @@ class _HomeScreenState extends State<HomeScreen> {
   // this method for clean req after cancel
   Future<void> restApp() async {
     setState(() {
+      updateDriverOnMap=true;
       polylineSet.clear();
-      markersSet.clear();
+      markersSet.removeWhere((ele) => ele.markerId.value.contains("pickUpId"));
+      markersSet.removeWhere((ele) => ele.markerId.value.contains("dropOfId"));
+      // markersSet.clear();
+      fNameIcon = "";
+      lNameIcon = "";
       waitDriver = "wait";
       after2MinTimeOut = 200;
       rideRequestTimeOut = 25;
@@ -2011,7 +2038,6 @@ class _HomeScreenState extends State<HomeScreen> {
       tourismCityName = "";
       tourismCityPrice = "";
       driverNewLocation = const LatLng(0.0, 0.0);
-      markersSet.removeWhere((ele) => ele.markerId.value.contains("myDriver"));
       sound1 = false;
       sound2 = false;
       sound3 = false;

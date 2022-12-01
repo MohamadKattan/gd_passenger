@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gd_passenger/model/user.dart';
@@ -19,10 +20,11 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
   static final TextEditingController name = TextEditingController();
   static final TextEditingController lastName = TextEditingController();
-  static final TextEditingController email = TextEditingController();
+  static final TextEditingController _phone = TextEditingController();
   static final ImagePicker _picker = ImagePicker();
-  // static late XFile? imageFile;
   static File? _imageFile;
+  static String result = "";
+  static String? resultCodeCon = "+90";
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserAllInfoDatabase>(context).users;
@@ -102,26 +104,74 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 15.0),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14.0),
-                            border: Border.all(
-                                width: 2.0, color: const Color(0xFF00A3E0))),
-                        margin: const EdgeInsets.only(left: 8.0, right: 8.0),
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16.0),
-                          controller: email,
-                          maxLines: 1,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.edit, size: 30.0),
-                            hintText: userInfo.email,
-                            hintStyle: const TextStyle(
-                                color: Colors.black54, fontSize: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14.0),
+                                border: Border.all(
+                                    width: 2.0, color: const Color(0xFF00A3E0))),
+                            margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                            padding: const EdgeInsets.all(8.0),
+                            child: CountryListPick(
+                                appBar: AppBar(
+                                  backgroundColor: Colors.amber[200],
+                                  title: Text(AppLocalizations.of(context)!
+                                      .pickCountry),
+                                ),
+                                theme: CountryTheme(
+                                  isShowFlag: true,
+                                  isShowTitle: false,
+                                  isShowCode: true,
+                                  isDownIcon: true,
+                                  showEnglishName: false,
+                                  labelColor: Colors.black54,
+                                  alphabetSelectedBackgroundColor:
+                                  const Color(0xFFFFD54F),
+                                  alphabetTextColor: Colors.deepOrange,
+                                  alphabetSelectedTextColor:
+                                  Colors.deepPurple,
+                                ),
+                                initialSelection: resultCodeCon,
+                                onChanged: (CountryCode? code) {
+                                  resultCodeCon = code?.dialCode;
+                                },
+                                useUiOverlay: true,
+                                useSafeArea: false),
                           ),
-                        ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14.0),
+                                  border: Border.all(
+                                      width: 2.0, color: const Color(0xFF00A3E0))),
+                              margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: _phone,
+                                showCursor: true,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600),
+                                cursorColor: const Color(0xFFFFD54F),
+                                decoration: InputDecoration(
+                                    icon: const Padding(
+                                      padding: EdgeInsets.only(top: 15.0),
+                                      child: Icon(
+                                        Icons.phone,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    fillColor: const Color(0xFFFFD54F),
+                                    hintText:userInfo.phoneNumber),
+                                keyboardType: TextInputType.phone,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 10.0),
                       Row(
@@ -139,7 +189,7 @@ class ProfileScreen extends StatelessWidget {
                                           listen: false)
                                       .updateState(true);
                                   startUpdateInfoUser(userInfo, name, lastName,
-                                      email, context, _imageFile!);
+                                      _phone, context, _imageFile!);
                                 }
                               },
                               child: Container(
@@ -348,13 +398,19 @@ class ProfileScreen extends StatelessWidget {
                       size: 35, color: Colors.white)),
             ],
           )
-        : const CircleAvatar(
+        :  CircleAvatar(
             radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.person,
-              color: Colors.black12,
-              size: 35,
+            backgroundColor: Colors.grey,
+            child: Stack(
+              children: const [
+                Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 35,
+                ),
+                Icon(Icons.add_a_photo_outlined,
+                    size: 15, color: Colors.red)
+              ],
             ),
           );
   }
@@ -363,7 +419,7 @@ class ProfileScreen extends StatelessWidget {
       Users userInfo,
       TextEditingController name,
       TextEditingController lastName,
-      TextEditingController email,
+      TextEditingController phoneNumber,
       BuildContext context,
       File imageFile) async {
     firebase_storage.Reference refStorage =
@@ -376,13 +432,16 @@ class ProfileScreen extends StatelessWidget {
     String url =
         await refStorage.child("users").child(userInfo.userId).getDownloadURL();
 
+    if(phoneNumber.text.isNotEmpty){
+      result = "$resultCodeCon${phoneNumber.text.trim()}";
+    }
     DatabaseReference ref =
         FirebaseDatabase.instance.ref().child("users").child(userInfo.userId);
     await ref.update({
       "imageProfile": url.isEmpty ? userInfo.imageProfile : url.toString(),
       "firstName": name.text.isEmpty ? userInfo.firstName : name.text,
       "lastName": lastName.text.isEmpty ? userInfo.lastName : lastName.text,
-      "email": email.text.isEmpty ? userInfo.email : email.text.trim(),
+      "phoneNumber": result == "" ? userInfo.phoneNumber : result.trim(),
     }).whenComplete(() {
       Provider.of<InductorProfileScreen>(context, listen: false)
           .updateState(false);

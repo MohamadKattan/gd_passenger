@@ -32,6 +32,9 @@ class CancelTaxi {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: MediaQuery.of(context).size.height *
+                  3 /
+                  100),
               Center(
                   child: Lottie.asset('assets/71796-searching-taxi.json',
                       height: 150, width: 250, fit: BoxFit.contain)),

@@ -76,7 +76,7 @@ class DataBaseSrv {
     try {
       await refuser.update({
         "userId": uid.toString(),
-        "imageProfile": url.toString(),
+        "imageProfile":url.toString(),
         "firstName": firstname.text,
         "lastName": lastname.text,
         "status": "ok",

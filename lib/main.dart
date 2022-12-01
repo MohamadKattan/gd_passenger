@@ -19,6 +19,7 @@ import 'package:gd_passenger/my_provider/user_id_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 import 'my_provider/carTypeBook_provider.dart';
 import 'my_provider/city_provider.dart';
 import 'my_provider/close_botton_driverInfo.dart';
@@ -36,6 +37,7 @@ import 'my_provider/userinfo_sheet_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Wakelock.enable();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
 

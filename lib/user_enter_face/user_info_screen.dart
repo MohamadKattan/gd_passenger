@@ -23,7 +23,7 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   // XFile imageFile = XFile("");
-  File? _imageFile;
+   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final CircularInductorCostem _inductorCostem = CircularInductorCostem();
   static String result = "";
@@ -220,13 +220,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         const SizedBox(height: 40),
                         GestureDetector(
                           onTap: () {
-                            if (_imageFile == null) {
-                              tools.toastMsg(
-                                  AppLocalizations.of(context)!.imageRequired);
-                            } else {
-                              checkBeforeSet(context, userProvider.getUser.uid,
-                                  _imageFile!);
-                            }
+                            // if (_imageFile == null) {
+                            //   tools.toastMsg(
+                            //       AppLocalizations.of(context)!.imageRequired);
+                            // } else {
+                            //   checkBeforeSet(context, userProvider.getUser.uid,
+                            //       _imageFile!);
+                            // }
+                              checkBeforeSet(context, userProvider.getUser.uid);
                           },
                           child: Container(
                             child: Center(
@@ -389,7 +390,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
-  checkBeforeSet(BuildContext context, String uid, File imageFile) {
+  checkBeforeSet(BuildContext context, String uid) {
     if (firstname.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.nameRequired);
     } else if (lastname.text.isEmpty) {
@@ -400,8 +401,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ApiSrvGeo().getCountry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       result = "$resultCodeCon${phoneNumber.text.trim()}";
-      srv.setImageToStorage(
-          firstname, lastname, uid, context, result, imageFile, email);
+      if(_imageFile==null){
+        srv.setUserinfoToDataBase('',uid, firstname, lastname, context, result, email);
+      }else{
+        srv.setImageToStorage(
+            firstname, lastname, uid, context, result, _imageFile!, email);
+      }
     }
   }
 }

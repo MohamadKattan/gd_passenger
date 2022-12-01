@@ -118,8 +118,8 @@ class DriverInfo {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 3.0,
+              SizedBox(
+                height:MediaQuery.of(context).size.height * 3 / 100,
               ),
               CustomWidget().customDivider(),
               Padding(
@@ -133,7 +133,8 @@ class DriverInfo {
                         children: [
                           Expanded(
                             flex: 0,
-                            child: CircleAvatar(
+                            child: driverImage==""?const Text('')
+                                :CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.white,
                               child: CachedNetworkImage(
@@ -148,8 +149,7 @@ class DriverInfo {
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                imageUrl:
-                                    driverImage.isEmpty ? "" : driverImage,
+                                imageUrl: driverImage,
                                 placeholder: (context, url) =>
                                     const CircularProgressIndicator(),
                                 errorWidget: (context, url, error) =>
@@ -217,7 +217,13 @@ class DriverInfo {
                   ],
                 ),
               ),
+              SizedBox(
+                height:MediaQuery.of(context).size.height * 3 / 100,
+              ),
               CustomWidget().customDivider(),
+              SizedBox(
+                height:MediaQuery.of(context).size.height * 3 / 100,
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                 child: Row(

@@ -5,5 +5,5 @@ class NearestDriverAvailable {
   late double latitude;
   late double longitude;
 
-  NearestDriverAvailable(this.key, this.latitude, this.longitude);
+  NearestDriverAvailable(this.key,this.latitude, this.longitude);
 }
