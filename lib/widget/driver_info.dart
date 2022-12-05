@@ -119,7 +119,7 @@ class DriverInfo {
                 ),
               ),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 3 / 100,
+                height:MediaQuery.of(context).size.height * 1 / 100,
               ),
               CustomWidget().customDivider(),
               Padding(
@@ -218,83 +218,56 @@ class DriverInfo {
                 ),
               ),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 3 / 100,
+                height:MediaQuery.of(context).size.height * 1 / 100,
               ),
               CustomWidget().customDivider(),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 3 / 100,
+                height:MediaQuery.of(context).size.height * 1 / 100,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    iconSize: 40.0,
+                    icon:
+                        Icon(Icons.call, color: Colors.greenAccent.shade700),
+                    onPressed: () async {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => callDriver(context));
+                    },
+                  ),
+                  IconButton(
+                      iconSize: 40.0,
+                      color: Colors.black12,
+                      icon:
+                          Icon(Icons.map, color: Colors.blueAccent.shade700),
+                      onPressed: () => openGoogleMap(context)),
+                  IconButton(
                       iconSize: 40.0,
                       icon:
-                          Icon(Icons.call, color: Colors.greenAccent.shade700),
+                          Icon(Icons.close, color: Colors.redAccent.shade700),
                       onPressed: () async {
+                        Provider.of<PositionDriverInfoProvider>(context,
+                            listen: false)
+                            .updateState(-400.0);
+                        Provider.of<PositionChang>(context, listen: false)
+                            .changValue(0.0);
+                        deleteRideRequesr(context);
+                        voidCallback();
+                      }),
+                  IconButton(
+                      iconSize: 40.0,
+                      icon: Icon(Icons.star, color: Colors.yellow.shade700),
+                      onPressed: () {
                         showDialog(
                             context: context,
                             barrierDismissible: false,
-                            builder: (_) => callDriver(context));
-                      },
-                    ),
-                    // statusRide == "Trip Started"
-                    IconButton(
-                        iconSize: 40.0,
-                        color: Colors.black12,
-                        icon:
-                            Icon(Icons.map, color: Colors.blueAccent.shade700),
-                        onPressed: () => openGoogleMap(context)),
-                    IconButton(
-                        iconSize: 40.0,
-                        icon:
-                            Icon(Icons.close, color: Colors.redAccent.shade700),
-                        onPressed: () async {
-                          Provider.of<PositionDriverInfoProvider>(context,
-                              listen: false)
-                              .updateState(-400.0);
-                          Provider.of<PositionChang>(context, listen: false)
-                              .changValue(0.0);
-                          deleteRideRequesr(context);
-                          voidCallback();
-                        }),
-                    // isCloseTrue == true
-                    //     ? IconButton(
-                    //         iconSize: 40.0,
-                    //         icon: Icon(Icons.close,
-                    //             color: Colors.redAccent.shade700),
-                    //         onPressed: () async {
-                    //           voidCallback();
-                    //           NearestDriverAvailable _nearestDriverAvailable =
-                    //               NearestDriverAvailable("", 0.0, 0.0);
-                    //           Provider.of<NearestDriverProvider>(context,
-                    //                   listen: false)
-                    //               .updateState(_nearestDriverAvailable);
-                    //           Provider.of<PositionDriverInfoProvider>(context,
-                    //                   listen: false)
-                    //               .updateState(-400.0);
-                    //           Provider.of<PositionChang>(context, listen: false)
-                    //               .changValue(0.0);
-                    //           await deleteRideRequesr(context);
-                    //           GeoFireMethods.listOfNearestDriverAvailable
-                    //               .clear();
-                    //         })
-                    //     : const Text(""),
-                    ///stop
-                    IconButton(
-                        iconSize: 40.0,
-                        icon: Icon(Icons.star, color: Colors.yellow.shade700),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (_) => const RatingWidget());
-                        }),
-                  ],
-                ),
+                            builder: (_) => const RatingWidget());
+                      }),
+                ],
               ),
             ],
           ),
