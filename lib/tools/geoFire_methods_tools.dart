@@ -7,11 +7,11 @@ class GeoFireMethods {
   static List<NearestDriverAvailable> listOfNearestDriverAvailable = [];
 
 // this method for removeDriverFromList if driver off line
-  static void removeDriverFromList(NearestDriverAvailable driver) {
-    // int index = listOfNearestDriverAvailable
-    //     .indexWhere((element) => element.key == driver.key);
-    // listOfNearestDriverAvailable.removeAt(index);
-    listOfNearestDriverAvailable.remove(driver);
+  static void removeDriverFromList(String  key) {
+    int index = listOfNearestDriverAvailable
+        .indexWhere((element) => element.key == key);
+    listOfNearestDriverAvailable.removeAt(index);
+    // listOfNearestDriverAvailable.remove(driver);
   }
 
   // this method fpr update live driver location  for rider got the best result

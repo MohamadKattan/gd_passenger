@@ -76,7 +76,7 @@ class DataBaseSrv {
     try {
       await refuser.update({
         "userId": uid.toString(),
-        "imageProfile":url.toString(),
+        "imageProfile": url.toString(),
         "firstName": firstname.text,
         "lastName": lastname.text,
         "status": "ok",
@@ -241,10 +241,13 @@ class DataBaseSrv {
         Provider.of<UserAllInfoDatabase>(context, listen: false).users.status;
     switch (infoUser) {
       case "":
-        Provider.of<IndectorNetWeek>(context, listen: false)
-            .updateState(true);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:0,)));
+        Provider.of<IndectorNetWeek>(context, listen: false).updateState(true);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const InterNetWeak(
+                      timeNet: 0,
+                    )));
         break;
       case "info":
         Navigator.push(
@@ -262,4 +265,5 @@ class DataBaseSrv {
         break;
     }
   }
+
 }

@@ -33,6 +33,7 @@ import 'my_provider/rider_id.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'my_provider/sheet_cardsc.dart';
+import 'my_provider/timeTrip_statusRide.dart';
 import 'my_provider/userinfo_sheet_provider.dart';
 
 void main() async {
@@ -40,13 +41,10 @@ void main() async {
   Wakelock.enable();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-
   FlutterNativeSplash.removeAfter(initialization);
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
-
-// this method for native splash screen
 void initialization(BuildContext context) async {
   await Future.delayed(const Duration(seconds: 1));
 }
@@ -85,6 +83,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CityProvider()),
         ChangeNotifierProvider(create: (context) => CarTypeBook()),
         ChangeNotifierProvider(create: (context) => IndectorNetWeek()),
+        ChangeNotifierProvider(create: (context) => TimeTripStatusRide()),
       ],
       builder: (context, _) {
         return const MaterialApp(

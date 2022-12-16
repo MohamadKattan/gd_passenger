@@ -185,5 +185,6 @@
   "send":"göndermek",
   "emailCheck":"İşlem başarıyla tamamlandı.\n E-postanızı kontrol edin",
   "ready":"Kullanıma hazır",
-  "beDriver":"sürücü ol!!"
+  "beDriver":"sürücü ol!!",
+  "driverCancelTrip":"Sürücü yolculuğu iptal etti"
 }

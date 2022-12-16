@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 
 class PositionChang extends ChangeNotifier {
   double val = 0.0;
-
   changValue(double chang) {
     val = chang;
     notifyListeners();

@@ -192,7 +192,7 @@ class ApiSrvDir {
     double distanceTravleFare = (directionDetails.distanceVale / 1000) * 0.60;
     double fareAmont = timeTravleFare + distanceTravleFare;
     if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Turkey") {
-      culculFinal = fareAmont * 13 + 0.70 * 13.00;
+      culculFinal = fareAmont * 10 + 0.70 * 10.00;
     }
     else if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Morocco") {
       culculFinal = fareAmont * 10 + 0.70 * 10.00;

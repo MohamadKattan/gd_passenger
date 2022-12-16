@@ -106,39 +106,26 @@ class _SplashScreenState extends State<SplashScreen>
       else{
         if (AuthSev().auth.currentUser?.uid != null) {
           await DataBaseSrv().currentOnlineUserInfo(context).whenComplete(() async {
-            await Future.delayed(const Duration(seconds: 2));
-            final infoUser =
-                Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-            if (infoUser.update == true) {
-              await goToPlayStore().whenComplete(() async {
-                DatabaseReference refuser = FirebaseDatabase.instance
-                    .ref()
-                    .child("users")
-                    .child(infoUser.userId);
-                await refuser.child("update").set(false);
-                if (Platform.isAndroid) {
-                  SystemNavigator.pop();
-                } else {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const HomeScreen()));
-                }
-              });
-            }
-            else{DataBaseSrv().checkStateUserInfo(context);}
-            // else if (infoUser.status == "") {
-            //   Provider.of<IndectorNetWeek>(context, listen: false)
-            //       .updateState(true);
-            //   Navigator.push(context,
-            //       MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:1,)));
-            // }
-            // else if (infoUser.status == "info") {
-            //   Navigator.push(context,
-            //       MaterialPageRoute(builder: (_) => const UserInfoScreen()));
-            // }
-            // else if (infoUser.status == "ok") {
-            //   Navigator.push(
-            //       context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-            // }
+            await Future.delayed(const Duration(seconds: 2)).whenComplete(() async {
+              final infoUser =
+                  Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+              if (infoUser.update == true) {
+                await goToPlayStore().whenComplete(() async {
+                  DatabaseReference refuser = FirebaseDatabase.instance
+                      .ref()
+                      .child("users")
+                      .child(infoUser.userId);
+                  await refuser.child("update").set(false);
+                  if (Platform.isAndroid) {
+                    SystemNavigator.pop();
+                  } else {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const HomeScreen()));
+                  }
+                });
+              }
+              else{await DataBaseSrv().checkStateUserInfo(context);}
+            });
           });
         }}
     }

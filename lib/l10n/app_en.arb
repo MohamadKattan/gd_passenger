@@ -95,9 +95,9 @@
   "@medium": {
     "description": "Medium"
   },
-  "mediumCar": "Medium commercial car",
+  "mediumCar": "Medium commercial",
   "@mediumCar": {
-    "description": "Medium commercial car"
+    "description": "Medium commercial"
   },
   "bigCommercial": "Big Commercial",
   "@bigCommercial": {
@@ -760,5 +760,9 @@
   "beDriver":"be a driver!!",
   "@beDriver": {
     "description": "be a driver"
+  },
+  "driverCancelTrip":"The driver canceled the trip",
+  "@driverCancelTrip": {
+    "description": "driver cancel"
   }
 }

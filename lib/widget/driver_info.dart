@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:gd_passenger/widget/rating_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,10 +12,12 @@ import '../my_provider/app_data.dart';
 import '../my_provider/placeDetails_drop_provider.dart';
 import '../my_provider/position_v_chnge.dart';
 import '../my_provider/positon_driver_info_provide.dart';
+import '../my_provider/timeTrip_statusRide.dart';
 import '../my_provider/user_id_provider.dart';
 import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
 import 'call_driver.dart';
+import 'custom_circuler.dart';
 import 'divider_box_.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -29,10 +30,9 @@ class DriverInfo {
       required VoidCallback voidCallback,
       required UserIdProvider userIdProvider,
       }) {
-    // final isCloseTrue =
-    //     Provider.of<CloseButtonProvider>(context, listen: false).isClose;
+    // final isCloseTrue =//     Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
-        height: MediaQuery.of(context).size.height * 42 / 100,
+        // height: MediaQuery.of(context).size.height * 42 / 100,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -45,6 +45,7 @@ class DriverInfo {
                   offset: Offset(0.7, 0.7))
             ],
             color: Colors.white.withOpacity(0.8)),
+        padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,12 +77,16 @@ class DriverInfo {
                           ),
                           Expanded(
                             flex: 0,
-                            child: Text(newstatusRide,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.greenAccent.shade700,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
+                            child: Consumer<TimeTripStatusRide>(
+                              builder: (BuildContext context, _value, Widget? child) {
+                                return  Text(_value.statusRude,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        color:statusRide =='0'? Colors.red.shade700:Colors.greenAccent.shade700,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold));
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -104,13 +109,17 @@ class DriverInfo {
                                 border:
                                     Border.all(width: 2.5, color: Colors.grey)),
                             child: Center(
-                              child: Text(
-                                timeTrip == "" ? "...." : timeTrip,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              child: Consumer<TimeTripStatusRide>(
+                                builder: (BuildContext context, _value, Widget? child) {
+                                  return    Text(
+                                    _value.timeTrip == "" ? "...." :_value.timeTrip,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  );
+                                },
                               ),
                             ),
                           ))
@@ -222,7 +231,7 @@ class DriverInfo {
               ),
               CustomWidget().customDivider(),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 1 / 100,
+                height:MediaQuery.of(context).size.height * 1.5 / 100,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -250,23 +259,27 @@ class DriverInfo {
                       icon:
                           Icon(Icons.close, color: Colors.redAccent.shade700),
                       onPressed: () async {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                CircularInductorCostem().circularInductorCostem(context));
                         Provider.of<PositionDriverInfoProvider>(context,
                             listen: false)
                             .updateState(-400.0);
                         Provider.of<PositionChang>(context, listen: false)
                             .changValue(0.0);
-                        deleteRideRequesr(context);
+                       await  deleteRideRequesr(context);
                         voidCallback();
                       }),
-                  IconButton(
-                      iconSize: 40.0,
-                      icon: Icon(Icons.star, color: Colors.yellow.shade700),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) => const RatingWidget());
-                      }),
+                  // IconButton(
+                  //     iconSize: 40.0,
+                  //     icon: Icon(Icons.star, color: Colors.yellow.shade700),
+                  //     onPressed: () {
+                  //       showDialog(
+                  //           context: context,
+                  //           barrierDismissible: false,
+                  //           builder: (_) => const RatingWidget());
+                  //     }),
                 ],
               ),
             ],

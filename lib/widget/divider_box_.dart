@@ -67,7 +67,7 @@ class CustomWidget {
   Widget carTypeBox(
       Image image, String text,String text1,BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 12.5 / 100,
+      // height: MediaQuery.of(context).size.height * 12.5 / 100,
       // width: MediaQuery.of(context).size.height * 20 / 100,
       decoration: const BoxDecoration(color: Colors.white),
       child: Column(
@@ -78,11 +78,11 @@ class CustomWidget {
           Expanded(
             child: Text(
           text,
-          maxLines: 1,
+          textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
             ),

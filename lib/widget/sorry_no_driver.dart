@@ -42,7 +42,7 @@ Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
                 // Provider.of<PositionChang>(context, listen: false)
                 //     .changValue(0.0);
                await DataBaseSrv().cancelRiderRequest(userProvider, context);
-                Navigator.pop(context);
+                Navigator.pop(context,0);
               },
               child: Center(
                 child: Container(

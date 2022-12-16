@@ -8,9 +8,8 @@ import 'divider_box_.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RatingWidget extends StatefulWidget {
-  // final String id;
-  // required this.id
-  const RatingWidget({Key? key}) : super(key: key);
+  final String id;
+  const RatingWidget({Key? key, required this.id}) : super(key: key);
 
   @override
   State<RatingWidget> createState() => _RatingWidgetState();
@@ -19,7 +18,7 @@ class RatingWidget extends StatefulWidget {
 class _RatingWidgetState extends State<RatingWidget> {
   @override
   Widget build(BuildContext context) {
-    final id = Provider.of<RiderId>(context).id;
+    // final id = Provider.of<RiderId>(context).id;
     return Dialog(
       elevation: 1.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -76,8 +75,7 @@ class _RatingWidgetState extends State<RatingWidget> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
-                  rateTODateBase(id);
-                  Navigator.pop(context);
+                  rateTODateBase(widget.id);
                 },
                 child: Center(
                   child: Container(
@@ -103,7 +101,6 @@ class _RatingWidgetState extends State<RatingWidget> {
 
 // this method for set rate to data base
   Future<void> rateTODateBase(String id) async {
-    print("xxxxxx$id");
     DatabaseReference reference =
         FirebaseDatabase.instance.ref().child("driver").child(id);
 
@@ -117,5 +114,6 @@ class _RatingWidgetState extends State<RatingWidget> {
         reference.child("rating").set(rating.toStringAsFixed(2));
       }
     });
+    Navigator.pop(context);
   }
 }
