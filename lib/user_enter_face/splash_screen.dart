@@ -9,6 +9,7 @@ import 'package:gd_passenger/user_enter_face/page_view.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../google_map_methods.dart';
 import '../my_provider/indector_netWeekPro.dart';
 import '../my_provider/info_user_database_provider.dart';
 import '../tools/tools.dart';
@@ -28,19 +29,17 @@ class _SplashScreenState extends State<SplashScreen>
   bool result = false;
   @override
   initState() {
-     TurnGps().turnGpsIfNot();
-    // if (AuthSev().auth.currentUser?.uid != null) {
-    //   DataBaseSrv().currentOnlineUserInfo(context);
-    // }
+      checkInternet();
+      TurnGps().turnGpsIfNot();
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 200),
-        lowerBound: 0.4,
-        upperBound: 0.5);
+        duration: const Duration(milliseconds:2000),
+        lowerBound: 0.3,
+        upperBound: 0.4);
     _animationController.forward();
     _animationController.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        await checkInternet();
+        // await checkInternet();
       }
     });
     super.initState();
