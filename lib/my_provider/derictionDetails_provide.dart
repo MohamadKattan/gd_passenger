@@ -8,8 +8,7 @@ class DirectionDetailsPro extends ChangeNotifier {
       durationText: "",
       distanceVale: 0,
       durationVale: 0,
-      enCodingPoints: ""
-  );
+      enCodingPoints: "");
 
   void updateDirectionDetails(DirectionDetails details) {
     directionDetails = details;

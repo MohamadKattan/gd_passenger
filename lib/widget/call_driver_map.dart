@@ -1,9 +1,8 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../tools/tools.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 Widget callDriverOnMap(BuildContext context, String phone) {
   print(phone);
   return Dialog(
@@ -14,7 +13,8 @@ Widget callDriverOnMap(BuildContext context, String phone) {
       height: 200,
       width: double.infinity,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0), color: const Color(0xFF00A3E0)),
+          borderRadius: BorderRadius.circular(12.0),
+          color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,10 +33,12 @@ Widget callDriverOnMap(BuildContext context, String phone) {
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold),
                 ),
-                IconButton(onPressed: (){
-                  // driverPhoneOnMap='';
-                  Navigator.pop(context);
-                } ,icon: const Icon(Icons.close,color: Colors.red))
+                IconButton(
+                    onPressed: () {
+                      // driverPhoneOnMap='';
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.close, color: Colors.red))
               ],
             ),
             GestureDetector(

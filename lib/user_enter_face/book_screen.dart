@@ -1,4 +1,3 @@
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class BookingScreen extends StatefulWidget {
   const BookingScreen({Key? key}) : super(key: key);
 
-
   @override
   State<BookingScreen> createState() => _BookingScreenState();
 }
@@ -19,78 +17,84 @@ class _BookingScreenState extends State<BookingScreen> {
   late DatabaseReference ref;
   @override
   void initState() {
-    ref = FirebaseDatabase.instance.ref().child("users")
+    ref = FirebaseDatabase.instance
+        .ref()
+        .child("users")
         .child(currentUser!.uid)
         .child("history");
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
-              actions: [IconButton(onPressed: ()=>clearHistory(), icon:const Icon(Icons.delete),)],
+              actions: [
+                IconButton(
+                  onPressed: () => clearHistory(),
+                  icon: const Icon(Icons.delete),
+                )
+              ],
               backgroundColor: const Color(0xFF00A3E0),
               automaticallyImplyLeading: true,
-              title:  Text(AppLocalizations.of(context)!.book,
-                  style:const TextStyle(color: Colors.white, fontSize: 16.0)),
+              title: Text(AppLocalizations.of(context)!.book,
+                  style: const TextStyle(color: Colors.white, fontSize: 16.0)),
             ),
-            body:StreamBuilder(
-              stream:ref.onValue,
+            body: StreamBuilder(
+              stream: ref.onValue,
               builder: (BuildContext context, snapshot) {
-                if(snapshot.hasError){
-                  return  Center(child: Text(AppLocalizations.of(context)!.wrong));
-                }
-                else if (snapshot.connectionState == ConnectionState.none){
+                if (snapshot.hasError) {
+                  return Center(
+                      child: Text(AppLocalizations.of(context)!.wrong));
+                } else if (snapshot.connectionState == ConnectionState.none) {
                   return noHistoryYet(context);
-                }
-                else if (snapshot.connectionState == ConnectionState.waiting ){
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
                   return noHistoryYet(context);
-                }
-                else if(snapshot.hasData && !snapshot.hasError){
+                } else if (snapshot.hasData && !snapshot.hasError) {
                   final event = snapshot.data as DatabaseEvent;
                   final snapShot1 = event.snapshot.value;
-                  if (snapShot1 == null){
+                  if (snapShot1 == null) {
                     return noHistoryYet(context);
                   }
-                  Map<String,dynamic>map = Map<String,dynamic>.from(snapShot1 as Map);
+                  Map<String, dynamic> map =
+                      Map<String, dynamic>.from(snapShot1 as Map);
                   final tripList = <TripHistory>[];
-                  for(var taskMap in map.values){
-                    TripHistory tripHistory = TripHistory.fromMap(Map<String,dynamic>.from(taskMap));
+                  for (var taskMap in map.values) {
+                    TripHistory tripHistory =
+                        TripHistory.fromMap(Map<String, dynamic>.from(taskMap));
                     // Provider.of<TripHistoryProvider>(context,listen: false).updateState(tripHistory);
                     tripList.add(tripHistory);
                   }
                   return ListView.builder(
-                    itemBuilder:(context,index){
-                      return tripListItems(context,index,tripList);
+                    itemBuilder: (context, index) {
+                      return tripListItems(context, index, tripList);
                     },
-                    itemCount:tripList.length ,
+                    itemCount: tripList.length,
                   );
                 }
                 return const Center(child: Text("null"));
               },
-            )
-        ));
+            )));
   }
 
 //list of trip history from realTime
-  Widget tripListItems(BuildContext context, int index, List<TripHistory> tripList) {
+  Widget tripListItems(
+      BuildContext context, int index, List<TripHistory> tripList) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         margin: const EdgeInsets.all(5.0),
         height: MediaQuery.of(context).size.height * 15 / 100,
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            boxShadow:const [
-              BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 0.7,
-                  spreadRadius: 3.0,
-                  offset: Offset(0.7,0.7)
-              ),
-            ] ,
-            color: Colors.white, borderRadius: BorderRadius.circular(4.0)),
+        decoration: BoxDecoration(boxShadow: const [
+          BoxShadow(
+              color: Colors.black26,
+              blurRadius: 0.7,
+              spreadRadius: 3.0,
+              offset: Offset(0.7, 0.7)),
+        ], color: Colors.white, borderRadius: BorderRadius.circular(4.0)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +108,10 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(AppLocalizations.of(context)!.to,style: TextStyle(color: Colors.greenAccent.shade700),),
+                  child: Text(
+                    AppLocalizations.of(context)!.to,
+                    style: TextStyle(color: Colors.greenAccent.shade700),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(4.0),
@@ -117,7 +124,10 @@ class _BookingScreenState extends State<BookingScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Text(tripList[index].trip,style: TextStyle(color: Colors.greenAccent.shade700),),
+                  child: Text(
+                    tripList[index].trip,
+                    style: TextStyle(color: Colors.greenAccent.shade700),
+                  ),
                 ),
               ],
             ),
@@ -136,12 +146,15 @@ class _BookingScreenState extends State<BookingScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Lottie.asset('assets/lf30_editor_piexm8l1.json',fit: BoxFit.fill,
-              height: MediaQuery.of(context).size.height*60/100,
-              width: MediaQuery.of(context).size.width*60/100,),
-             Text(
+            Lottie.asset(
+              'assets/lf30_editor_piexm8l1.json',
+              fit: BoxFit.fill,
+              height: MediaQuery.of(context).size.height * 60 / 100,
+              width: MediaQuery.of(context).size.width * 60 / 100,
+            ),
+            Text(
               AppLocalizations.of(context)!.historyEmpty,
-              style:const TextStyle(
+              style: const TextStyle(
                   color: Colors.black87,
                   fontSize: 35.0,
                   fontWeight: FontWeight.bold),
@@ -151,9 +164,12 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
     );
   }
+
 // this method for clear history trip driver
   clearHistory() async {
-    ref = FirebaseDatabase.instance.ref().child("users")
+    ref = FirebaseDatabase.instance
+        .ref()
+        .child("users")
         .child(currentUser!.uid)
         .child("history");
     await ref.remove();

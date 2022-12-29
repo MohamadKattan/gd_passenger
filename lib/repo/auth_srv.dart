@@ -33,52 +33,54 @@ class AuthSev {
         currentUser = userCredential.user!;
         snapshot = await refuser.child(currentUser!.uid).get();
         if (snapshot.exists) {
-          Map<String, dynamic> map = Map<String, dynamic>.from(snapshot.value as Map);
+          Map<String, dynamic> map =
+              Map<String, dynamic>.from(snapshot.value as Map);
           Users _infoUser = Users.fromMap(map);
           Provider.of<UserAllInfoDatabase>(context, listen: false)
               .updateUser(_infoUser);
           Provider.of<TrueFalse>(context, listen: false)
               .changeStateBooling(false);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const SplashScreen()));
-        }
-        else if (!snapshot.exists){
+          Navigator.of(context)
+              .push(Tools().createRoute(context, const SplashScreen()));
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (_) => const SplashScreen()));
+        } else if (!snapshot.exists) {
           refuser.child(currentUser!.uid).set({
             "userId": currentUser!.uid,
             "imageProfile": "",
             "firstName": "",
             "lastName": "",
             "email": email,
-            "pass":pass,
+            "pass": pass,
             "phoneNumber": "",
             "country": "",
-            "country0":"",
+            "country0": "",
             "status": "info",
             "update": false
           }).whenComplete(() async {
             Provider.of<TrueFalse>(context, listen: false)
                 .changeStateBooling(false);
             await Future.delayed(const Duration(milliseconds: 100));
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const UserInfoScreen()));
+            Navigator.of(context)
+                .push(Tools().createRoute(context, const UserInfoScreen()));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => const UserInfoScreen()));
             Provider.of<TrueFalse>(context, listen: false)
                 .changeStateBooling(false);
           });
         }
       }
     } on FirebaseAuthException catch (e) {
-      if(e.code=="wrong-password"){
+      if (e.code == "wrong-password") {
         _tools.toastMsg(AppLocalizations.of(context)!.passWrong);
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
-      }
-     else if (e.code == 'user-not-found') {
+      } else if (e.code == 'user-not-found') {
         try {
           userCredential = await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(
-                  email: email, password: pass);
+              .createUserWithEmailAndPassword(email: email, password: pass);
           await getCurrentUserId();
           currentUser = userCredential.user!;
           if (currentUser!.uid.isNotEmpty) {
@@ -88,20 +90,22 @@ class AuthSev {
               "firstName": "",
               "lastName": "",
               "email": email,
-              "pass":pass,
+              "pass": pass,
               "phoneNumber": "",
               "country": "",
-              "country0":"",
+              "country0": "",
               "status": "info",
               "update": false
             }).whenComplete(() async {
               Provider.of<TrueFalse>(context, listen: false)
                   .changeStateBooling(false);
               await Future.delayed(const Duration(milliseconds: 100));
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UserInfoScreen()));
+              Navigator.of(context)
+                  .push(Tools().createRoute(context, const UserInfoScreen()));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => const UserInfoScreen()));
               Provider.of<TrueFalse>(context, listen: false)
                   .changeStateBooling(false);
             });
@@ -126,16 +130,19 @@ class AuthSev {
 
   Future<void> deleteAccount(BuildContext context) async {
     User _user = auth.currentUser!;
-   final delUser =  refuser.child(_user.uid);
+    final delUser = refuser.child(_user.uid);
     delUser.onDisconnect();
     await delUser.remove();
     _tools.toastMsg("deleted don");
     _tools.toastMsg("for finishing delete your account exit from app");
     // await _user.delete();
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(_)=>const AuthScreen()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const AuthScreen()),
+        (route) => false);
   }
 
-  Future<void> singOut()async{
-   await auth.signOut();
+  Future<void> singOut() async {
+    await auth.signOut();
   }
 }

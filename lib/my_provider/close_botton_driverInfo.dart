@@ -2,9 +2,9 @@
 
 import 'package:flutter/cupertino.dart';
 
-class CloseButtonProvider extends ChangeNotifier{
+class CloseButtonProvider extends ChangeNotifier {
   bool isClose = false;
-  void updateState(bool state){
+  void updateState(bool state) {
     isClose = state;
     notifyListeners();
   }

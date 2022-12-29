@@ -1,4 +1,3 @@
-
 // this class for changer stata line container + opacity under type car in main screen
 
 import 'package:flutter/cupertino.dart';

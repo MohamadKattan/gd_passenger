@@ -2,12 +2,11 @@
 
 import 'package:flutter/cupertino.dart';
 
-class CarTypeProvider extends ChangeNotifier{
-
+class CarTypeProvider extends ChangeNotifier {
   String? carType = "";
 
-  void updateCarType(String type){
-    carType=type;
+  void updateCarType(String type) {
+    carType = type;
     notifyListeners();
   }
 }

@@ -23,7 +23,7 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   // XFile imageFile = XFile("");
-   File? _imageFile;
+  File? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final CircularInductorCostem _inductorCostem = CircularInductorCostem();
   static String result = "";
@@ -227,7 +227,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             //   checkBeforeSet(context, userProvider.getUser.uid,
                             //       _imageFile!);
                             // }
-                              checkBeforeSet(context, userProvider.getUser.uid);
+                            checkBeforeSet(context, userProvider.getUser.uid);
                           },
                           child: Container(
                             child: Center(
@@ -401,9 +401,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ApiSrvGeo().getCountry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       result = "$resultCodeCon${phoneNumber.text.trim()}";
-      if(_imageFile==null){
-        srv.setUserinfoToDataBase('',uid, firstname, lastname, context, result, email);
-      }else{
+      if (_imageFile == null) {
+        srv.setUserinfoToDataBase(
+            '', uid, firstname, lastname, context, result, email);
+      } else {
         srv.setImageToStorage(
             firstname, lastname, uid, context, result, _imageFile!, email);
       }

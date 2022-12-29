@@ -11,8 +11,8 @@ import '../repo/data_base_srv.dart';
 import '../widget/custom_circuler.dart';
 
 class InterNetWeak extends StatefulWidget {
- final  int timeNet;
-   const InterNetWeak({Key? key,required this.timeNet}) : super(key: key);
+  final int timeNet;
+  const InterNetWeak({Key? key, required this.timeNet}) : super(key: key);
 
   @override
   State<InterNetWeak> createState() => _InterNetWeakState();
@@ -67,14 +67,13 @@ class _InterNetWeakState extends State<InterNetWeak> {
       (InternetConnectionStatus status) async {
         switch (status) {
           case InternetConnectionStatus.connected:
-           await Future.delayed(Duration(seconds: widget.timeNet));
+            await Future.delayed(Duration(seconds: widget.timeNet));
             if (AuthSev().auth.currentUser?.uid != null) {
               listener.cancel();
               await DataBaseSrv().currentOnlineUserInfoInNet(context);
               Provider.of<IndectorNetWeek>(context, listen: false)
                   .updateState(false);
-            }
-            else if (AuthSev().auth.currentUser?.uid == null) {
+            } else if (AuthSev().auth.currentUser?.uid == null) {
               listener.cancel();
               Provider.of<IndectorNetWeek>(context, listen: false)
                   .updateState(false);

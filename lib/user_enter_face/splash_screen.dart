@@ -9,7 +9,7 @@ import 'package:gd_passenger/user_enter_face/page_view.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../google_map_methods.dart';
+
 import '../my_provider/indector_netWeekPro.dart';
 import '../my_provider/info_user_database_provider.dart';
 import '../tools/tools.dart';
@@ -29,11 +29,11 @@ class _SplashScreenState extends State<SplashScreen>
   bool result = false;
   @override
   initState() {
-      checkInternet();
-      TurnGps().turnGpsIfNot();
+    checkInternet();
+    TurnGps().turnGpsIfNot();
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds:2000),
+        duration: const Duration(milliseconds: 2000),
         lowerBound: 0.3,
         upperBound: 0.4);
     _animationController.forward();
@@ -94,20 +94,24 @@ class _SplashScreenState extends State<SplashScreen>
     result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       Provider.of<IndectorNetWeek>(context, listen: false).updateState(true);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const InterNetWeak(timeNet:8)));
-    }
-    else{
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const InterNetWeak(timeNet: 8)));
+    } else {
       if (AuthSev().auth.currentUser?.uid == null) {
         Navigator.push(
             context, MaterialPageRoute(builder: (_) => const MyPageView()));
-      }
-      else{
+      } else {
         if (AuthSev().auth.currentUser?.uid != null) {
-          await DataBaseSrv().currentOnlineUserInfo(context).whenComplete(() async {
-            await Future.delayed(const Duration(seconds: 2)).whenComplete(() async {
+          await DataBaseSrv()
+              .currentOnlineUserInfo(context)
+              .whenComplete(() async {
+            await Future.delayed(const Duration(seconds: 2))
+                .whenComplete(() async {
               final infoUser =
-                  Provider.of<UserAllInfoDatabase>(context, listen: false).users;
+                  Provider.of<UserAllInfoDatabase>(context, listen: false)
+                      .users;
               if (infoUser.update == true) {
                 await goToPlayStore().whenComplete(() async {
                   DatabaseReference refuser = FirebaseDatabase.instance
@@ -122,11 +126,13 @@ class _SplashScreenState extends State<SplashScreen>
                         MaterialPageRoute(builder: (_) => const HomeScreen()));
                   }
                 });
+              } else {
+                await DataBaseSrv().checkStateUserInfo(context);
               }
-              else{await DataBaseSrv().checkStateUserInfo(context);}
             });
           });
-        }}
+        }
+      }
     }
   }
 }

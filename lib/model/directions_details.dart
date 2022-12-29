@@ -7,11 +7,11 @@ class DirectionDetails {
   late int distanceVale;
   late int durationVale;
 
-  DirectionDetails(
-      {required this.distanceText,
-      required this.durationText,
-      required this.distanceVale,
-      required this.durationVale,
-      required this.enCodingPoints,
-      });
+  DirectionDetails({
+    required this.distanceText,
+    required this.durationText,
+    required this.distanceVale,
+    required this.durationVale,
+    required this.enCodingPoints,
+  });
 }

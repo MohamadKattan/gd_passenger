@@ -14,7 +14,8 @@ Widget complainOnDriver(BuildContext context) {
       height: MediaQuery.of(context).size.height * 20 / 100,
       width: double.infinity,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0), color: const Color(0xFF00A3E0)),
+          borderRadius: BorderRadius.circular(12.0),
+          color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,10 +50,10 @@ Widget complainOnDriver(BuildContext context) {
                   child: Center(
                       child: Text(
                     AppLocalizations.of(context)!.callAs,
-                    style: const TextStyle(color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold
-                    ),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   )),
                 ),
               ),

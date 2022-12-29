@@ -44,6 +44,7 @@ class ApiSrvGeo {
       } else {
         ref.child(userId!).update({"country": st2, "country0": st3});
       }
+
       ///old code
       // if (st3 == 'Turkey') {
       //   ref.child(userId!).update({"country": st3});
@@ -89,6 +90,7 @@ class ApiSrvGeo {
             .update({"country": stContry0, "country0": stContry1});
         contry = stContry0;
       }
+
       ///old code
       // if(stContry=='Turkey'){
       //   contry = stContry;

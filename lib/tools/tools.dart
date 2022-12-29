@@ -17,17 +17,6 @@ class Tools {
         fontSize: 16.0);
   }
 
-  void tostRead(String msg,Color color) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: color,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
-
   Widget timerAuth(BuildContext context) {
     final CountDownController downController = CountDownController();
     return CircularCountDownTimer(
@@ -48,16 +37,31 @@ class Tools {
       isReverseAnimation: true,
       isTimerTextShown: true,
       autoStart: true,
-      onStart: () {
-
-      },
+      onStart: () {},
       onComplete: () {},
     );
   }
 
-  Future<void>lunchUrl(BuildContext context,String url)async{
+  Future<void> lunchUrl(BuildContext context, String url) async {
     await canLaunch(url)
         ? launch(url)
         : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
+  }
+
+  Route createRoute(BuildContext context, Widget screen) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => screen,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var curve = Curves.ease;
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
 }

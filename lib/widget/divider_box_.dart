@@ -65,7 +65,7 @@ class CustomWidget {
 
   // car type box taxi/van/veto
   Widget carTypeBox(
-      Image image, String text,String text1,BuildContext context) {
+      Image image, String text, String text1, BuildContext context) {
     return Container(
       // height: MediaQuery.of(context).size.height * 12.5 / 100,
       // width: MediaQuery.of(context).size.height * 20 / 100,
@@ -77,14 +77,14 @@ class CustomWidget {
           ),
           Expanded(
             child: Text(
-          text,
-          textAlign: TextAlign.center,
+              text,
+              textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Expanded(
@@ -92,9 +92,12 @@ class CustomWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(Icons.person,size: 18.0,color: Colors.black38),
+              const Icon(Icons.person, size: 18.0, color: Colors.black38),
               const SizedBox(width: 4.0),
-              Text(text1,style: const TextStyle(fontSize: 18.0,color: Colors.black38),),
+              Text(
+                text1,
+                style: const TextStyle(fontSize: 18.0, color: Colors.black38),
+              ),
             ],
           ))
         ],

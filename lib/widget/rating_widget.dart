@@ -1,9 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../config.dart';
-import '../my_provider/rider_id.dart';
+
 import 'divider_box_.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,8 +26,8 @@ class _RatingWidgetState extends State<RatingWidget> {
       child: Container(
         height: 225,
         width: double.infinity,
-        decoration:  BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
             color: const Color(0xFF00A3E0)),
         child: SingleChildScrollView(
           child: Column(
@@ -87,7 +87,10 @@ class _RatingWidgetState extends State<RatingWidget> {
                     child: Center(
                         child: Text(
                       AppLocalizations.of(context)!.ok,
-                      style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     )),
                   ),
                 ),

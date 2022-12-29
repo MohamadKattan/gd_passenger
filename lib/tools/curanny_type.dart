@@ -35,7 +35,7 @@ String currencyTypeCheck(BuildContext context) {
     _currencyType == "\$";
   } else if (userInfo.country0 == "United Arab Emirates") {
     _currencyType == "AED";
-  }else{
+  } else {
     _currencyType == "TL";
   }
   return _currencyType;

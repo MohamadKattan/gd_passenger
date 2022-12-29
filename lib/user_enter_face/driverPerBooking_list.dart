@@ -87,11 +87,10 @@ class DriverPreBooking extends StatelessWidget {
   Widget listOfDrivers(
       BuildContext context, int index, List<DriverPreBook> driverPreBookList) {
     return GestureDetector(
-      onTap: ()=>Navigator.push(
+      onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => DriverProfile(
-                  driverPreBookList, index))),
+              builder: (_) => DriverProfile(driverPreBookList, index))),
       child: Container(
           margin: const EdgeInsets.all(12.0),
           padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
@@ -156,8 +155,8 @@ class DriverPreBooking extends StatelessWidget {
                         driverPreBookList[index].firstName,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style:
-                            const TextStyle(color: Colors.black87, fontSize: 16),
+                        style: const TextStyle(
+                            color: Colors.black87, fontSize: 16),
                       ),
                     ),
                   ],

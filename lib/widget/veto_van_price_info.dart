@@ -6,7 +6,6 @@ import '../google_map_methods.dart';
 import 'divider_box_.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 // class VetoVanPriceTurkeyJust extends StatefulWidget {
 //   const VetoVanPriceTurkeyJust({Key? key}) : super(key: key);
 //
@@ -638,8 +637,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 //   }
 // }
 
-
-Widget vetoVanPriceTurkeyJust(BuildContext context){
+Widget vetoVanPriceTurkeyJust(BuildContext context) {
   return Dialog(
     elevation: 1.0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),

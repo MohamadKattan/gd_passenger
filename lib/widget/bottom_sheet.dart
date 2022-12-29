@@ -236,7 +236,7 @@ class CustomBottomSheet {
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
       height: 250,
-     child: Stack(
+      child: Stack(
         children: [
           Positioned(
             left: 0.0,

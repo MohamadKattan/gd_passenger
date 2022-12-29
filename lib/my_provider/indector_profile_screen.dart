@@ -2,10 +2,10 @@
 
 import 'package:flutter/cupertino.dart';
 
-class InductorProfileScreen extends ChangeNotifier{
+class InductorProfileScreen extends ChangeNotifier {
   bool isTrue = false;
-  updateState(bool state){
-    isTrue=state;
+  updateState(bool state) {
+    isTrue = state;
     notifyListeners();
   }
 }

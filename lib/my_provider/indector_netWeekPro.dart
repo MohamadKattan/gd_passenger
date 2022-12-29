@@ -2,9 +2,9 @@
 
 import 'package:flutter/cupertino.dart';
 
-class IndectorNetWeek extends ChangeNotifier{
+class IndectorNetWeek extends ChangeNotifier {
   bool val = false;
-  void updateState(bool state){
+  void updateState(bool state) {
     val = state;
     notifyListeners();
   }

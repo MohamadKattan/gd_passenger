@@ -15,11 +15,11 @@ class DropPlaceDetails {
   final GetUrl _getUrl = GetUrl();
   final CircularInductorCostem _costem = CircularInductorCostem();
 
- Future <void> getPlaceAddressDetails(String placeId,BuildContext context) async {
+  Future<void> getPlaceAddressDetails(
+      String placeId, BuildContext context) async {
     showDialog(
         context: context,
-        builder:(context)=> _costem.circularInductorCostem(context)
-    );
+        builder: (context) => _costem.circularInductorCostem(context));
     final placeDetailsUrl = Uri.parse(
         "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey");
 
@@ -29,7 +29,7 @@ class DropPlaceDetails {
       return;
     }
     if (res["status"] == "OK") {
-      Address address =  Address(
+      Address address = Address(
           placeFormattedAddress: "",
           placeName: "",
           placeId: "",
@@ -49,8 +49,9 @@ class DropPlaceDetails {
       Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
       Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
       Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
-      Provider.of<CarTypeProvider>(context,listen: false).updateCarType("Taxi-4 seats");
-      Navigator.pop(context,"dataDir");
+      Provider.of<CarTypeProvider>(context, listen: false)
+          .updateCarType("Taxi-4 seats");
+      Navigator.pop(context, "dataDir");
     }
   }
 }

@@ -25,11 +25,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 var uuid = const Uuid();
 
 class DriverInfo {
-  Widget driverInfoContainer(
-      {required BuildContext context,
-      required VoidCallback voidCallback,
-      required UserIdProvider userIdProvider,
-      }) {
+  Widget driverInfoContainer({
+    required BuildContext context,
+    required VoidCallback voidCallback,
+    required UserIdProvider userIdProvider,
+  }) {
     // final isCloseTrue =//     Provider.of<CloseButtonProvider>(context, listen: false).isClose;
     return Container(
         // height: MediaQuery.of(context).size.height * 42 / 100,
@@ -78,11 +78,14 @@ class DriverInfo {
                           Expanded(
                             flex: 0,
                             child: Consumer<TimeTripStatusRide>(
-                              builder: (BuildContext context, _value, Widget? child) {
-                                return  Text(_value.statusRude,
+                              builder: (BuildContext context, _value,
+                                  Widget? child) {
+                                return Text(_value.statusRude,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        color:statusRide =='0'? Colors.red.shade700:Colors.greenAccent.shade700,
+                                        color: statusRide == '0'
+                                            ? Colors.red.shade700
+                                            : Colors.greenAccent.shade700,
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.bold));
                               },
@@ -110,9 +113,12 @@ class DriverInfo {
                                     Border.all(width: 2.5, color: Colors.grey)),
                             child: Center(
                               child: Consumer<TimeTripStatusRide>(
-                                builder: (BuildContext context, _value, Widget? child) {
-                                  return    Text(
-                                    _value.timeTrip == "" ? "...." :_value.timeTrip,
+                                builder: (BuildContext context, _value,
+                                    Widget? child) {
+                                  return Text(
+                                    _value.timeTrip == ""
+                                        ? "...."
+                                        : _value.timeTrip,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 24.0,
@@ -128,7 +134,7 @@ class DriverInfo {
                 ),
               ),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 1 / 100,
+                height: MediaQuery.of(context).size.height * 1 / 100,
               ),
               CustomWidget().customDivider(),
               Padding(
@@ -142,29 +148,30 @@ class DriverInfo {
                         children: [
                           Expanded(
                             flex: 0,
-                            child: driverImage==""?const Text('')
-                                :CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.white,
-                              child: CachedNetworkImage(
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
+                            child: driverImage == ""
+                                ? const Text('')
+                                : CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: Colors.white,
+                                    child: CachedNetworkImage(
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        width: 50.0,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover),
+                                        ),
+                                      ),
+                                      imageUrl: driverImage,
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.person),
+                                    ),
                                   ),
-                                ),
-                                imageUrl: driverImage,
-                                placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.person),
-                              ),
-                            ),
                           ),
                           Expanded(
                             flex: 0,
@@ -227,11 +234,11 @@ class DriverInfo {
                 ),
               ),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 1 / 100,
+                height: MediaQuery.of(context).size.height * 1 / 100,
               ),
               CustomWidget().customDivider(),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 1.5 / 100,
+                height: MediaQuery.of(context).size.height * 1.5 / 100,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -239,8 +246,7 @@ class DriverInfo {
                 children: [
                   IconButton(
                     iconSize: 40.0,
-                    icon:
-                        Icon(Icons.call, color: Colors.greenAccent.shade700),
+                    icon: Icon(Icons.call, color: Colors.greenAccent.shade700),
                     onPressed: () async {
                       showDialog(
                           context: context,
@@ -251,24 +257,22 @@ class DriverInfo {
                   IconButton(
                       iconSize: 40.0,
                       color: Colors.black12,
-                      icon:
-                          Icon(Icons.map, color: Colors.blueAccent.shade700),
+                      icon: Icon(Icons.map, color: Colors.blueAccent.shade700),
                       onPressed: () => openGoogleMap(context)),
                   IconButton(
                       iconSize: 40.0,
-                      icon:
-                          Icon(Icons.close, color: Colors.redAccent.shade700),
+                      icon: Icon(Icons.close, color: Colors.redAccent.shade700),
                       onPressed: () async {
                         showDialog(
                             context: context,
-                            builder: (context) =>
-                                CircularInductorCostem().circularInductorCostem(context));
+                            builder: (context) => CircularInductorCostem()
+                                .circularInductorCostem(context));
                         Provider.of<PositionDriverInfoProvider>(context,
-                            listen: false)
+                                listen: false)
                             .updateState(-400.0);
                         Provider.of<PositionChang>(context, listen: false)
                             .changValue(0.0);
-                       await  deleteRideRequesr(context);
+                        await deleteRideRequesr(context);
                         voidCallback();
                       }),
                   // IconButton(

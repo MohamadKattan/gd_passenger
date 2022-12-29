@@ -45,6 +45,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
+
 void initialization(BuildContext context) async {
   await Future.delayed(const Duration(seconds: 1));
 }
@@ -72,7 +73,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserAllInfoDatabase()),
         ChangeNotifierProvider(create: (context) => InductorProfileScreen()),
         ChangeNotifierProvider(create: (context) => ChangeColor()),
-        ChangeNotifierProvider(create: (context) => PositionDriverInfoProvider()),
+        ChangeNotifierProvider(
+            create: (context) => PositionDriverInfoProvider()),
         ChangeNotifierProvider(create: (context) => NearestDriverProvider()),
         ChangeNotifierProvider(create: (context) => CloseButtonProvider()),
         ChangeNotifierProvider(create: (context) => RiderId()),

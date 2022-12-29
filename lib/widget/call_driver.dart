@@ -15,7 +15,8 @@ Widget callDriver(BuildContext context) {
       height: 200,
       width: double.infinity,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0), color: const Color(0xFF00A3E0)),
+          borderRadius: BorderRadius.circular(12.0),
+          color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +35,9 @@ Widget callDriver(BuildContext context) {
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold),
                 ),
-                IconButton(onPressed: ()=>Navigator.pop(context), icon: const Icon(Icons.close,color: Colors.red))
+                IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close, color: Colors.red))
               ],
             ),
             GestureDetector(
@@ -51,7 +54,7 @@ Widget callDriver(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.call, color: Colors.greenAccent.shade700),
-                   const SizedBox(width: 8.0),
+                    const SizedBox(width: 8.0),
                     Text(AppLocalizations.of(context)!.normalCall,
                         style: const TextStyle(
                           fontSize: 18.0,

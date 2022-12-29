@@ -2,11 +2,11 @@
 
 import 'package:flutter/cupertino.dart';
 
-class ChangeColor extends ChangeNotifier{
-  bool isTrue=false;
+class ChangeColor extends ChangeNotifier {
+  bool isTrue = false;
 
-  updateState(bool state){
-    isTrue=state;
+  updateState(bool state) {
+    isTrue = state;
     notifyListeners();
   }
 }

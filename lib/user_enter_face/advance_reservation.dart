@@ -10,7 +10,6 @@ import '../my_provider/city_provider.dart';
 import '../my_provider/country_provider.dart';
 import 'driverPerBooking_list.dart';
 
-
 class AdvanceReservation extends StatefulWidget {
   const AdvanceReservation({Key? key}) : super(key: key);
 
@@ -169,7 +168,6 @@ class _AdvanceReservationState extends State<AdvanceReservation>
 
 // this dropBottom for choose country
   Widget dropBottomCountry() {
-
     String val1 = AppLocalizations.of(context)!.choseCountry;
     List<String> newCountryList = [
       AppLocalizations.of(context)!.choseCountry,
@@ -663,5 +661,4 @@ class _AdvanceReservationState extends State<AdvanceReservation>
       ),
     );
   }
-
 }

@@ -3,6 +3,8 @@ import 'package:gd_passenger/user_enter_face/auth_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../tools/tools.dart';
+
 Widget pageViewContent(BuildContext context, String image, String title,
     PageController controller) {
   return Stack(
@@ -61,10 +63,8 @@ Widget pageViewContent(BuildContext context, String image, String title,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const AuthScreen()));
-                },
+                onPressed: () => Navigator.of(context)
+                    .push(Tools().createRoute(context, const AuthScreen())),
                 child: Text(AppLocalizations.of(context)!.skip,
                     style: const TextStyle(
                         color: Color(0xFF00A3E0),

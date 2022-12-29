@@ -15,7 +15,8 @@ Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
       height: 250,
       width: double.infinity,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0), color: const Color(0xFF00A3E0)),
+          borderRadius: BorderRadius.circular(16.0),
+          color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,17 +42,17 @@ Widget sorryNoDriverDialog(BuildContext context, UserIdProvider userProvider) {
                 //     .updateValue(-400.0);
                 // Provider.of<PositionChang>(context, listen: false)
                 //     .changValue(0.0);
-               await DataBaseSrv().cancelRiderRequest(userProvider, context);
-                Navigator.pop(context,0);
+                await DataBaseSrv().cancelRiderRequest(userProvider, context);
+                Navigator.pop(context, 0);
               },
               child: Center(
                 child: Container(
-                  margin:const  EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(8.0),
                   width: 160.0,
                   height: 50.0,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
-                      color:const Color(0xFFFBC408)),
+                      color: const Color(0xFFFBC408)),
                   child: Center(
                       child: Text(
                     AppLocalizations.of(context)!.ok,

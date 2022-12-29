@@ -11,10 +11,12 @@ class OpacityChang extends ChangeNotifier {
     isOpacityTaxi = chang;
     notifyListeners();
   }
+
   changOpacityVan(bool chang) {
     isOpacityVan = chang;
     notifyListeners();
   }
+
   changOpacityVeto(bool chang) {
     isOpacityVeto = chang;
     notifyListeners();

@@ -112,8 +112,10 @@ class ProfileScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(14.0),
                                 border: Border.all(
-                                    width: 2.0, color: const Color(0xFF00A3E0))),
-                            margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                    width: 2.0,
+                                    color: const Color(0xFF00A3E0))),
+                            margin:
+                                const EdgeInsets.only(left: 8.0, right: 8.0),
                             padding: const EdgeInsets.all(8.0),
                             child: CountryListPick(
                                 appBar: AppBar(
@@ -129,10 +131,9 @@ class ProfileScreen extends StatelessWidget {
                                   showEnglishName: false,
                                   labelColor: Colors.black54,
                                   alphabetSelectedBackgroundColor:
-                                  const Color(0xFFFFD54F),
+                                      const Color(0xFFFFD54F),
                                   alphabetTextColor: Colors.deepOrange,
-                                  alphabetSelectedTextColor:
-                                  Colors.deepPurple,
+                                  alphabetSelectedTextColor: Colors.deepPurple,
                                 ),
                                 initialSelection: resultCodeCon,
                                 onChanged: (CountryCode? code) {
@@ -147,15 +148,16 @@ class ProfileScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14.0),
                                   border: Border.all(
-                                      width: 2.0, color: const Color(0xFF00A3E0))),
-                              margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                      width: 2.0,
+                                      color: const Color(0xFF00A3E0))),
+                              margin:
+                                  const EdgeInsets.only(left: 8.0, right: 8.0),
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
                                 controller: _phone,
                                 showCursor: true,
                                 style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),
+                                    fontSize: 16, fontWeight: FontWeight.w600),
                                 cursorColor: const Color(0xFFFFD54F),
                                 decoration: InputDecoration(
                                     icon: const Padding(
@@ -166,7 +168,7 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                     fillColor: const Color(0xFFFFD54F),
-                                    hintText:userInfo.phoneNumber),
+                                    hintText: userInfo.phoneNumber),
                                 keyboardType: TextInputType.phone,
                               ),
                             ),
@@ -398,7 +400,7 @@ class ProfileScreen extends StatelessWidget {
                       size: 35, color: Colors.white)),
             ],
           )
-        :  CircleAvatar(
+        : CircleAvatar(
             radius: 30,
             backgroundColor: Colors.grey,
             child: Stack(
@@ -408,8 +410,7 @@ class ProfileScreen extends StatelessWidget {
                   color: Colors.white,
                   size: 35,
                 ),
-                Icon(Icons.add_a_photo_outlined,
-                    size: 15, color: Colors.red)
+                Icon(Icons.add_a_photo_outlined, size: 15, color: Colors.red)
               ],
             ),
           );
@@ -432,7 +433,7 @@ class ProfileScreen extends StatelessWidget {
     String url =
         await refStorage.child("users").child(userInfo.userId).getDownloadURL();
 
-    if(phoneNumber.text.isNotEmpty){
+    if (phoneNumber.text.isNotEmpty) {
       result = "$resultCodeCon${phoneNumber.text.trim()}";
     }
     DatabaseReference ref =

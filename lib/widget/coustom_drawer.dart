@@ -75,10 +75,8 @@ Widget customDrawer(BuildContext context) {
                           : 8.0,
                       left: 8.0),
                   child: GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const BookingScreen())),
+                    onTap: () => Navigator.of(context).push(
+                        Tools().createRoute(context, const BookingScreen())),
                     child: Row(children: [
                       const Padding(
                         padding: EdgeInsets.all(8.0),
@@ -102,9 +100,6 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              // const SizedBox(
-              //   height: 8.0,
-              // ),
               CustomWidget().customDivider(),
               Expanded(
                 flex: 0,
@@ -115,10 +110,8 @@ Widget customDrawer(BuildContext context) {
                           : 8.0,
                       left: 8.0),
                   child: GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AdvanceReservation())),
+                    onTap: () => Navigator.of(context).push(Tools()
+                        .createRoute(context, const AdvanceReservation())),
                     child: Row(children: [
                       const Padding(
                         padding: EdgeInsets.all(8.0),
@@ -142,9 +135,6 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              // const SizedBox(
-              //   height: 8.0,
-              // ),
               CustomWidget().customDivider(),
               Expanded(
                 flex: 0,
@@ -155,10 +145,8 @@ Widget customDrawer(BuildContext context) {
                           ? rightVal
                           : 8.0),
                   child: GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ProfileScreen())),
+                    onTap: () => Navigator.of(context).push(
+                        Tools().createRoute(context, const ProfileScreen())),
                     child: Row(
                       children: [
                         const Padding(
@@ -181,9 +169,6 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              // const SizedBox(
-              //   height: 8.0,
-              // ),
               CustomWidget().customDivider(),
               Expanded(
                 flex: 0,
@@ -194,12 +179,8 @@ Widget customDrawer(BuildContext context) {
                           ? rightVal
                           : 8.0),
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const SupportScreen()));
-                    },
+                    onTap: () => Navigator.of(context).push(
+                        Tools().createRoute(context, const SupportScreen())),
                     child: Row(
                       children: [
                         const Padding(

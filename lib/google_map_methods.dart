@@ -16,8 +16,8 @@ import 'model/place_predictions.dart';
 import 'my_provider/app_data.dart';
 import 'my_provider/placeDetails_drop_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-var uuid = const Uuid();
 
+var uuid = const Uuid();
 
 class LogicGoogleMap {
   final GetUrl _getUrl = GetUrl();
@@ -30,7 +30,6 @@ class LogicGoogleMap {
     target: LatLng(41.084253576036936, 28.89201922194848),
     zoom: 14.4746,
   );
-
 
   Future<dynamic> locationPosition(BuildContext context) async {
     bool serviceEnabled;
@@ -113,7 +112,7 @@ class LogicGoogleMap {
               Provider.of<PlaceDetailsDropProvider>(context, listen: false)
                   .updateDropOfLocation(address);
               Navigator.pop(context);
-              Navigator.pop(context,'data');
+              Navigator.pop(context, 'data');
             }
           });
         }
@@ -122,8 +121,13 @@ class LogicGoogleMap {
   }
 
   // this method for add polyLine after got pick and drop
-  addPloyLine(DirectionDetails details, LatLng pickUpLatLng,
-      LatLng dropOfLatLng, Color colors, double valPadding,BuildContext context) {
+  addPloyLine(
+      DirectionDetails details,
+      LatLng pickUpLatLng,
+      LatLng dropOfLatLng,
+      Color colors,
+      double valPadding,
+      BuildContext context) {
     /// current placeName
     final pickUpName =
         Provider.of<AppData>(context, listen: false).pickUpLocation.placeName;
@@ -137,7 +141,7 @@ class LogicGoogleMap {
     /// PolylinePoints method
     PolylinePoints polylinePoints = PolylinePoints();
     List<PointLatLng> decodedPolylineResult =
-    polylinePoints.decodePolyline(details.enCodingPoints);
+        polylinePoints.decodePolyline(details.enCodingPoints);
     polylineCoordinates.clear();
     if (decodedPolylineResult.isNotEmpty) {
       for (var pointLatLng in decodedPolylineResult) {

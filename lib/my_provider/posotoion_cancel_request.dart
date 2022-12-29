@@ -3,7 +3,7 @@
 import 'package:flutter/cupertino.dart';
 
 class PositionCancelReq extends ChangeNotifier {
-  double value = - 400.0;
+  double value = -400.0;
 
   void updateValue(double val) {
     value = val;

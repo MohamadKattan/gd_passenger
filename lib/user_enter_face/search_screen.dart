@@ -155,7 +155,7 @@ class PredictionsTitle extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: GestureDetector(
-        onTap: () async=> await dropPlaceDetails.getPlaceAddressDetails(
+        onTap: () async => await dropPlaceDetails.getPlaceAddressDetails(
             predictions.placeId, context),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

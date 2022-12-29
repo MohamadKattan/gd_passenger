@@ -17,8 +17,8 @@ Widget collectMoney(BuildContext context, int totalAmount) {
     child: Container(
       height: 275,
       width: double.infinity,
-      decoration:  BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
           color: const Color(0xFF00A3E0)),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -42,15 +42,13 @@ Widget collectMoney(BuildContext context, int totalAmount) {
                   AppLocalizations.of(context)!.paymentMethod +
                       "  " +
                       dropBottomProvider,
-                  style:
-                      const TextStyle(color: Colors.white, fontSize: 16.0)),
+                  style: const TextStyle(color: Colors.white, fontSize: 16.0)),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
                   AppLocalizations.of(context)!.total + "\$$totalAmount",
-                  style:
-                      const TextStyle(color: Colors.white, fontSize: 16.0)),
+                  style: const TextStyle(color: Colors.white, fontSize: 16.0)),
             ),
             CustomWidget().customDivider(),
             Padding(
@@ -69,7 +67,10 @@ Widget collectMoney(BuildContext context, int totalAmount) {
                     child: Center(
                         child: Text(
                       AppLocalizations.of(context)!.ok,
-                      style: const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     )),
                   ),
                 ),

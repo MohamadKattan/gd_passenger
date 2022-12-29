@@ -72,13 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final CustomWidget _customWidget = CustomWidget();
   final CustomBottomSheet _customBottomSheet = CustomBottomSheet();
   final LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
-  // final ApiSrvGeo _apiMethods = ApiSrvGeo();
   AudioPlayer audioPlayer = AudioPlayer();
   late AudioCache audioCache;
   StreamSubscription<DatabaseEvent>? _rideStreamSubscription;
   List<NearestDriverAvailable> _driverAvailable = [];
   List<String> _keyDriverAvailable = [];
-  // List<String> mainKeyDriverAvailable = [];
   String state = "normal";
   String waitDriver = "wait";
   String carOrderType = "Taxi-4 seats";
@@ -88,8 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool openCollectMoney = false;
   bool updateDriverOnMap = true;
   bool isTimeRequstTrip = false;
-  // bool nearDriverAvailableLoaded = false;
-  // late Timer closeTimerSearch;
   final aNmarkers = <MarkerId, Marker>{};
   final kMarkerId = const MarkerId('myDriver');
   late BitmapDescriptor driversNearIcon;
@@ -181,7 +177,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .locationPosition(context)
                                             .whenComplete(() async {
                                           await geoFireInitialize();
-                                          await DataBaseSrv().currentOnlineUserInfo(context);
+                                          await DataBaseSrv()
+                                              .currentOnlineUserInfo(context);
                                           await trickMyTripAfterKilled();
                                         });
                                       },
@@ -364,9 +361,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         _val,
                                                                         Widget?
                                                                             child) {
-                                                                      return Container(
-                                                                        height:
-                                                                            4,
+                                                                      return AnimatedContainer(
+                                                                        height: _val.islineTaxi ==
+                                                                                true
+                                                                            ? 4
+                                                                            : 0,
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           borderRadius:
@@ -375,6 +374,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               ? const Color(0xFF00A3E0)
                                                                               : Colors.transparent,
                                                                         ),
+                                                                        duration:
+                                                                            const Duration(seconds: 1),
+                                                                        curve: Curves
+                                                                            .fastOutSlowIn,
                                                                       );
                                                                     },
                                                                   ),
@@ -455,9 +458,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         _value,
                                                                         Widget?
                                                                             child) {
-                                                                      return Container(
-                                                                        height:
-                                                                            4,
+                                                                      return AnimatedContainer(
+                                                                        height: _value.islineVan ==
+                                                                                true
+                                                                            ? 4
+                                                                            : 0,
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           borderRadius:
@@ -466,6 +471,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               ? const Color(0xFF00A3E0)
                                                                               : Colors.transparent,
                                                                         ),
+                                                                        duration:
+                                                                            const Duration(seconds: 1),
+                                                                        curve: Curves
+                                                                            .fastOutSlowIn,
                                                                       );
                                                                     },
                                                                   ),
@@ -547,8 +556,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       _value,
                                                                       Widget?
                                                                           child) {
-                                                                    return Container(
-                                                                      height: 4,
+                                                                    return AnimatedContainer(
+                                                                      height: _value.islineVeto ==
+                                                                              true
+                                                                          ? 4
+                                                                          : 0,
                                                                       decoration:
                                                                           BoxDecoration(
                                                                         borderRadius:
@@ -558,6 +570,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             ? const Color(0xFF00A3E0)
                                                                             : Colors.transparent,
                                                                       ),
+                                                                      duration: const Duration(
+                                                                          seconds:
+                                                                              1),
+                                                                      curve: Curves
+                                                                          .fastOutSlowIn,
                                                                     );
                                                                   },
                                                                 ),
@@ -1003,13 +1020,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   .updateDropOfLocation(dropOfLocation);
               Provider.of<PositionDriverInfoProvider>(context, listen: false)
                   .updateState(0.0);
-              if(dropOfLocation.longitude!=0.0){
+              if (dropOfLocation.longitude != 0.0) {
                 showDialog(
                     context: context,
-                    builder: (context) =>
-                        CircularInductorCostem().circularInductorCostem(context));
-               await gotDriverInfo();
-                Future.delayed(const Duration(seconds: 1)).whenComplete(()=>Navigator.pop(context));
+                    builder: (context) => CircularInductorCostem()
+                        .circularInductorCostem(context));
+                await gotDriverInfo();
+                Future.delayed(const Duration(seconds: 1))
+                    .whenComplete(() => Navigator.pop(context));
               }
             } else {
               return;
@@ -1235,10 +1253,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> checkAnyListTurCityOpen(Users infoUserDataReal) async {
     switch (infoUserDataReal.country) {
       case 'İstanbul':
-        final _res = await showDialog(
+        final _res = await showGeneralDialog(
             context: context,
-            barrierDismissible: false,
-            builder: (_) => vetoVanPriceTurkeyJust(context));
+            pageBuilder: (
+              context,
+              anim1,
+              anim2,
+            ) {
+              return vetoVanPriceTurkeyJust(context);
+            },
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionBuilder: (context, anim1, anim2, child) {
+              return Transform.scale(
+                scale: anim1.value,
+                child: Opacity(
+                    opacity: anim1.value,
+                    child: vetoVanPriceTurkeyJust(context)),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300));
         if (_res == 'data') {
           getPlaceDirection(context);
         } else {
@@ -1246,10 +1280,25 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         break;
       case 'Antalya':
-        final _res = await showDialog(
+        final _res = await showGeneralDialog(
             context: context,
-            barrierDismissible: false,
-            builder: (_) => antalyVeto(context));
+            pageBuilder: (
+              context,
+              anim1,
+              anim2,
+            ) {
+              return antalyVeto(context);
+            },
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionBuilder: (context, anim1, anim2, child) {
+              return Transform.scale(
+                scale: anim1.value,
+                child:
+                    Opacity(opacity: anim1.value, child: antalyVeto(context)),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300));
         if (_res == 'data') {
           getPlaceDirection(context);
         } else {
@@ -1257,10 +1306,25 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         break;
       case 'Muğla':
-        final _res = await showDialog(
+        final _res = await showGeneralDialog(
             context: context,
-            barrierDismissible: false,
-            builder: (_) => bodrunVeto(context));
+            pageBuilder: (
+              context,
+              anim1,
+              anim2,
+            ) {
+              return bodrunVeto(context);
+            },
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionBuilder: (context, anim1, anim2, child) {
+              return Transform.scale(
+                scale: anim1.value,
+                child:
+                    Opacity(opacity: anim1.value, child: bodrunVeto(context)),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300));
         if (_res == 'data') {
           getPlaceDirection(context);
         } else {
@@ -1268,10 +1332,24 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         break;
       case 'Bursa':
-        final _res = await showDialog(
+        final _res = await showGeneralDialog(
             context: context,
-            barrierDismissible: false,
-            builder: (_) => bursaVeto(context));
+            pageBuilder: (
+              context,
+              anim1,
+              anim2,
+            ) {
+              return bursaVeto(context);
+            },
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionBuilder: (context, anim1, anim2, child) {
+              return Transform.scale(
+                scale: anim1.value,
+                child: Opacity(opacity: anim1.value, child: bursaVeto(context)),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300));
         if (_res == 'data') {
           getPlaceDirection(context);
         } else {
@@ -1279,10 +1357,25 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         break;
       case 'Sakarya':
-        final _res = await showDialog(
+        final _res = await showGeneralDialog(
             context: context,
-            barrierDismissible: false,
-            builder: (_) => sapancaVeto(context));
+            pageBuilder: (
+              context,
+              anim1,
+              anim2,
+            ) {
+              return sapancaVeto(context);
+            },
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionBuilder: (context, anim1, anim2, child) {
+              return Transform.scale(
+                scale: anim1.value,
+                child:
+                    Opacity(opacity: anim1.value, child: sapancaVeto(context)),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300));
         if (_res == 'data') {
           getPlaceDirection(context);
         } else {
@@ -1290,10 +1383,25 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         break;
       case 'Trabzon':
-        final _res = await showDialog(
+        final _res = await showGeneralDialog(
             context: context,
-            barrierDismissible: false,
-            builder: (_) => trabzonVeto(context));
+            pageBuilder: (
+              context,
+              anim1,
+              anim2,
+            ) {
+              return trabzonVeto(context);
+            },
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionBuilder: (context, anim1, anim2, child) {
+              return Transform.scale(
+                scale: anim1.value,
+                child:
+                    Opacity(opacity: anim1.value, child: trabzonVeto(context)),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300));
         if (_res == 'data') {
           getPlaceDirection(context);
         } else {
@@ -1301,10 +1409,25 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         break;
       case 'Çaykara':
-        final _res = await showDialog(
+        final _res = await showGeneralDialog(
             context: context,
-            barrierDismissible: false,
-            builder: (_) => uzungolVeto(context));
+            pageBuilder: (
+              context,
+              anim1,
+              anim2,
+            ) {
+              return uzungolVeto(context);
+            },
+            barrierDismissible: true,
+            barrierLabel: '',
+            transitionBuilder: (context, anim1, anim2, child) {
+              return Transform.scale(
+                scale: anim1.value,
+                child:
+                    Opacity(opacity: anim1.value, child: uzungolVeto(context)),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300));
         if (_res == 'data') {
           getPlaceDirection(context);
         } else {
@@ -1580,7 +1703,8 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) =>
                 CircularInductorCostem().circularInductorCostem(context));
         gotDriverInfo();
-        Future.delayed(const Duration(seconds: 1)).whenComplete(()=>Navigator.pop(context));
+        Future.delayed(const Duration(seconds: 1))
+            .whenComplete(() => Navigator.pop(context));
         if (kDebugMode) {
           print('Driver has Accepted');
         }
@@ -1601,16 +1725,17 @@ class _HomeScreenState extends State<HomeScreen> {
       print('GOT DRIVER INFO');
     }
     final id = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-    final carType = Provider.of<CarTypeProvider>(context, listen: false).carType;
-    DatabaseReference reference = FirebaseDatabase.instance.ref().child("Ride Request").child(id.userId);
+    final carType =
+        Provider.of<CarTypeProvider>(context, listen: false).carType;
+    DatabaseReference reference =
+        FirebaseDatabase.instance.ref().child("Ride Request").child(id.userId);
     _rideStreamSubscription = reference.onValue.listen((event) async {
       if (event.snapshot.value == null) {
         if (kDebugMode) {
           print('NO DRIVER INFO VAL NULL');
         }
         return;
-      }
-      else {
+      } else {
         if (kDebugMode) {
           print('HAS DRIVER INFO VAL != NULL');
         }

@@ -2,20 +2,22 @@
 
 import 'package:flutter/cupertino.dart';
 
-class SheetCarDesc extends ChangeNotifier{
+class SheetCarDesc extends ChangeNotifier {
   double sheetValTaxi = -400;
-  double sheetValMed= -400;
+  double sheetValMed = -400;
   double sheetValBig = -400;
-  updateStateTaxi(double state){
-    sheetValTaxi =state;
+  updateStateTaxi(double state) {
+    sheetValTaxi = state;
     notifyListeners();
   }
-  updateStateMed(double state){
-    sheetValMed =state;
+
+  updateStateMed(double state) {
+    sheetValMed = state;
     notifyListeners();
   }
-  updateStateBig(double state){
-    sheetValBig =state;
+
+  updateStateBig(double state) {
+    sheetValBig = state;
     notifyListeners();
   }
 }

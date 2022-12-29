@@ -7,7 +7,7 @@ class GeoFireMethods {
   static List<NearestDriverAvailable> listOfNearestDriverAvailable = [];
 
 // this method for removeDriverFromList if driver off line
-  static void removeDriverFromList(String  key) {
+  static void removeDriverFromList(String key) {
     int index = listOfNearestDriverAvailable
         .indexWhere((element) => element.key == key);
     listOfNearestDriverAvailable.removeAt(index);
