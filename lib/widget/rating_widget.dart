@@ -1,10 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../config.dart';
-
-import 'divider_box_.dart';
+import 'custom_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RatingWidget extends StatefulWidget {
@@ -71,7 +69,7 @@ class _RatingWidgetState extends State<RatingWidget> {
                         const TextStyle(color: Colors.white, fontSize: 20.0)),
               ),
               const SizedBox(height: 10),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {

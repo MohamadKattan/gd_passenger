@@ -1,5 +1,6 @@
 // this class for method get url by http
 
+import 'package:gd_passenger/tools/tools.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -14,6 +15,7 @@ class GetUrl {
         return itemCount;
       } else {
         // response.statusCode=="failed";
+        Tools().toastMsg("Error !! ${response.statusCode.toString()} ");
         return "failed";
       }
     } catch (ex) {

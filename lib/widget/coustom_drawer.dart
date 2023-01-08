@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
 import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/profile_screen.dart';
-import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../my_provider/buttom_color_pro.dart';
@@ -14,6 +13,7 @@ import '../user_enter_face/advance_reservation.dart';
 import '../user_enter_face/book_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../user_enter_face/support_screen.dart';
+import 'custom_widgets.dart';
 
 Widget customDrawer(BuildContext context) {
   double rightVal = MediaQuery.of(context).size.width * 25 / 100;
@@ -100,7 +100,7 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               Expanded(
                 flex: 0,
                 child: Padding(
@@ -135,7 +135,7 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               Expanded(
                 flex: 0,
                 child: Padding(
@@ -169,7 +169,7 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               Expanded(
                 flex: 0,
                 child: Padding(
@@ -206,7 +206,7 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               Expanded(
                 flex: 0,
                 child: Padding(
@@ -244,7 +244,7 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               Expanded(
                 flex: 0,
                 child: Padding(
@@ -282,7 +282,7 @@ Widget customDrawer(BuildContext context) {
                   ),
                 ),
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               Expanded(flex: 0, child: ImageSliderDemo()),
               Expanded(
                 flex: 0,
@@ -397,7 +397,7 @@ Widget showImage(BuildContext context) {
 Widget showUserName(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime.firstName != null
+  return userInfoRealTime.firstName.isNotEmpty
       ? Text(
           AppLocalizations.of(context)!.hi + " ${userInfoRealTime.firstName}")
       : Expanded(child: Text(AppLocalizations.of(context)!.welcomeBack));
@@ -407,7 +407,7 @@ Widget showUserName(BuildContext context) {
 Widget showUserPhone(BuildContext context) {
   final userInfoRealTime =
       Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-  return userInfoRealTime.phoneNumber != null
+  return userInfoRealTime.phoneNumber.isNotEmpty
       ? Text(userInfoRealTime.phoneNumber)
       : const Text("");
 }

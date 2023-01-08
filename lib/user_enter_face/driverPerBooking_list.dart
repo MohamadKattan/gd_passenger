@@ -6,7 +6,6 @@ import 'package:gd_passenger/model/driverPreBook.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../my_provider/buttom_color_pro.dart';
 import '../my_provider/double_value.dart';
 import '../tools/tools.dart';
@@ -272,9 +271,8 @@ class DriverPreBooking extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  await canLaunch("tel:${driverPreBookList[index].phoneNumber}")
-                      ? launch("tel:${driverPreBookList[index].phoneNumber}")
-                      : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
+                  String _url = "tel:${driverPreBookList[index].phoneNumber}";
+                  await Tools().lunchUrl(context, _url);
                   Navigator.pop(context);
                 },
                 child: Padding(
@@ -298,11 +296,9 @@ class DriverPreBooking extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  await canLaunch(
-                          "https://wa.me/${driverPreBookList[index].phoneNumber}")
-                      ? launch(
-                          "https://wa.me/${driverPreBookList[index].phoneNumber}")
-                      : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
+                  String _url =
+                      "https://wa.me/${driverPreBookList[index].phoneNumber}";
+                  await Tools().lunchUrl(context, _url);
                   Navigator.pop(context);
                 },
                 child: Padding(

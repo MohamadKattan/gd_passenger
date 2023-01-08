@@ -87,6 +87,7 @@
   "try1": "Tekrar deneyin",
   "interNetWeak": "İnternet ağı yok. Veya İnternet zayıf. İnternet ağınızı açın ve tekrar yüklemeyi deneyin !!!",
   "skip": "atlama",
+  "into0": "Garanti Taxi ile\n ilk 5 yolculuğunuz için\n %10 indirimden faydalanın",
   "into1": "Garanti Taxi de ihtiyacina göre istedigin araç türünü Seçebilirsin!",
   "into2": "Gidecegin yeri belirle ve en uygun fiyatlarla yolculugun tadini gikar.",
   "into3": "Garanti Taksi Uygulasini 3 ayri dil seçenekleriyle kullanabilirsin!",
@@ -186,5 +187,7 @@
   "emailCheck":"İşlem başarıyla tamamlandı.\n E-postanızı kontrol edin",
   "ready":"Kullanıma hazır",
   "beDriver":"sürücü ol!!",
-  "driverCancelTrip":"Sürücü yolculuğu iptal etti"
+  "driverCancelTrip":"Sürücü yolculuğu iptal etti",
+  "bookAHead":"Önceden ayırtın",
+  "tourismTrips":"turizm gezileri"
 }

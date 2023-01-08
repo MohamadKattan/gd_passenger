@@ -1,5 +1,4 @@
 // this class include tools will use many times in our app
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,34 +16,35 @@ class Tools {
         fontSize: 16.0);
   }
 
-  Widget timerAuth(BuildContext context) {
-    final CountDownController downController = CountDownController();
-    return CircularCountDownTimer(
-      duration: 120,
-      initialDuration: 0,
-      controller: downController,
-      width: MediaQuery.of(context).size.width / 9,
-      height: MediaQuery.of(context).size.height / 9,
-      ringColor: Colors.white,
-      fillColor: Colors.black12,
-      backgroundColor: const Color(0xFFFFD54F),
-      strokeWidth: 8.0,
-      strokeCap: StrokeCap.round,
-      textStyle: const TextStyle(
-          fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
-      textFormat: CountdownTextFormat.S,
-      isReverse: true,
-      isReverseAnimation: true,
-      isTimerTextShown: true,
-      autoStart: true,
-      onStart: () {},
-      onComplete: () {},
-    );
-  }
+  // Widget timerAuth (BuildContext context) {
+  //   final CountDownController downController = CountDownController();
+  //   return CircularCountDownTimer(
+  //     duration: 120,
+  //     initialDuration: 0,
+  //     controller: downController,
+  //     width: MediaQuery.of(context).size.width / 9,
+  //     height: MediaQuery.of(context).size.height / 9,
+  //     ringColor: Colors.white,
+  //     fillColor: Colors.black12,
+  //     backgroundColor: const Color(0xFFFFD54F),
+  //     strokeWidth: 8.0,
+  //     strokeCap: StrokeCap.round,
+  //     textStyle: const TextStyle(
+  //         fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
+  //     textFormat: CountdownTextFormat.S,
+  //     isReverse: true,
+  //     isReverseAnimation: true,
+  //     isTimerTextShown: true,
+  //     autoStart: true,
+  //     onStart: () {},
+  //     onComplete: () {},
+  //   );
+  // }
 
   Future<void> lunchUrl(BuildContext context, String url) async {
-    await canLaunch(url)
-        ? launch(url)
+    Uri _url = Uri.parse(url);
+    await canLaunchUrl(_url)
+        ? launchUrl(_url, mode: LaunchMode.externalApplication)
         : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
   }
 

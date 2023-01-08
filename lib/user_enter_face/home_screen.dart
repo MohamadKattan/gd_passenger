@@ -28,8 +28,6 @@ import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/user_enter_face/search_screen.dart';
 import 'package:gd_passenger/widget/bottom_sheet.dart';
 import 'package:gd_passenger/widget/coustom_drawer.dart';
-import 'package:gd_passenger/widget/custom_circuler.dart';
-import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
 import 'package:google_map_marker_animation/core/ripple_marker.dart';
 import 'package:google_map_marker_animation/widgets/animarker.dart';
@@ -43,24 +41,17 @@ import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/rider_id.dart';
 import '../my_provider/sheet_cardsc.dart';
 import '../my_provider/timeTrip_statusRide.dart';
+import '../repo/api_srv_geo.dart';
 import '../tools/curanny_type.dart';
 import '../tools/geoFire_methods_tools.dart';
 import '../tools/math_methods.dart';
-import '../widget/antalya_veto.dart';
-import '../widget/bodrun_veto.dart';
-import '../widget/bursa_veto.dart';
-import '../widget/call_driver_map.dart';
-import '../widget/collect_money_dialog.dart';
-import '../widget/complain_onDriver.dart';
+import '../widget/custom_widgets.dart';
 import '../widget/driver_info.dart';
 import '../widget/rating_widget.dart';
-import '../widget/sorry_no_driver.dart';
-import '../widget/spanca_veto.dart';
-import '../widget/trabzon_veto.dart';
-import '../widget/uzungol_veto.dart';
-import '../widget/veto_van_price_info.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import "dart:collection";
+
+import 'advance_reservation.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -69,9 +60,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CustomWidget _customWidget = CustomWidget();
-  final CustomBottomSheet _customBottomSheet = CustomBottomSheet();
-  final LogicGoogleMap _logicGoogleMap = LogicGoogleMap();
   AudioPlayer audioPlayer = AudioPlayer();
   late AudioCache audioCache;
   StreamSubscription<DatabaseEvent>? _rideStreamSubscription;
@@ -93,8 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
   double geoFireRader = 4;
   @override
   void initState() {
+    ApiSrvGeo().getCountry();
     Geofire.initialize("availableDrivers");
     audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
     super.initState();
   }
 
@@ -104,6 +96,19 @@ class _HomeScreenState extends State<HomeScreen> {
     audioPlayer.dispose();
     audioCache.clearAll();
     super.dispose();
+  }
+
+  void _asyncMethod() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => CustomWidgets().circularInductorCostem(context));
+    await LogicGoogleMap().locationPosition(context).whenComplete(() async {
+      await geoFireInitialize();
+      Navigator.pop(context);
+    });
+    await trickMyTripAfterKilled();
+    await DataBaseSrv().currentOnlineUserInfo(context);
   }
 
   @override
@@ -117,813 +122,868 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+          backgroundColor: Colors.white12,
           body: Builder(
-        builder: (context) => SafeArea(
-          child: Stack(
-            children: [
-              customDrawer(context),
-              Consumer<DoubleValue>(
-                builder: (BuildContext context, value, Widget? child) {
-                  return TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0.0, end: value.value),
-                      duration: const Duration(milliseconds: 500),
-                      builder: (_, double val, __) {
-                        return Transform(
-                          transform: Matrix4.identity()
-                            ..setEntry(3, 2, 0.001)
-                            ..setEntry(0, 3, 300 * val)
-                            ..rotateY((pi / 3) * val),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.white,
-                            child: Stack(
-                              children: [
-                                ///map
-                                SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      60 /
-                                      100,
-                                  child: Animarker(
-                                    curve: Curves.ease,
-                                    zoom: 14.0,
-                                    rippleRadius: 0.1,
-                                    rippleColor: Colors.white60,
-                                    useRotation: true,
-                                    duration:
-                                        const Duration(milliseconds: 2500),
-                                    markers: aNmarkers.values.toSet(),
-                                    shouldAnimateCamera: false,
-                                    mapId: _logicGoogleMap
-                                        .controllerGoogleMap.future
-                                        .then<int>((value) => value.mapId),
-                                    child: GoogleMap(
-                                      padding: EdgeInsets.only(
-                                          bottom: Platform.isIOS ? 50.0 : 15.0),
-                                      mapType: MapType.normal,
-                                      initialCameraPosition:
-                                          _logicGoogleMap.kGooglePlex,
-                                      myLocationButtonEnabled: true,
-                                      myLocationEnabled: true,
-                                      polylines: polylineSet,
-                                      markers: markersSet,
-                                      circles: circlesSet,
-                                      onMapCreated: (GoogleMapController
-                                          controller) async {
-                                        _logicGoogleMap.controllerGoogleMap
-                                            .complete(controller);
-                                        newGoogleMapController = controller;
-                                        await _logicGoogleMap
-                                            .locationPosition(context)
-                                            .whenComplete(() async {
-                                          await geoFireInitialize();
-                                          await DataBaseSrv()
-                                              .currentOnlineUserInfo(context);
-                                          await trickMyTripAfterKilled();
-                                        });
-                                      },
+            builder: (context) => SafeArea(
+              child: Stack(
+                children: [
+                  customDrawer(context),
+                  Consumer<DoubleValue>(
+                    builder: (BuildContext context, value, Widget? child) {
+                      return TweenAnimationBuilder(
+                          tween: Tween<double>(begin: 0.0, end: value.value),
+                          duration: const Duration(milliseconds: 500),
+                          builder: (_, double val, __) {
+                            return Transform(
+                              transform: Matrix4.identity()
+                                ..setEntry(3, 2, 0.001)
+                                ..setEntry(0, 3, 300 * val)
+                                ..rotateY((pi / 3) * val),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height,
+                                color: Colors.white,
+                                child: Stack(
+                                  children: [
+                                    Animarker(
+                                      curve: Curves.ease,
+                                      zoom: 14.0,
+                                      rippleRadius: 0.1,
+                                      rippleColor: Colors.white60,
+                                      useRotation: true,
+                                      duration:
+                                          const Duration(milliseconds: 2500),
+                                      markers: aNmarkers.values.toSet(),
+                                      shouldAnimateCamera: false,
+                                      mapId: LogicGoogleMap()
+                                          .controllerGoogleMap
+                                          .future
+                                          .then<int>((value) => value.mapId),
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                49 /
+                                                100,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: GoogleMap(
+                                          padding: EdgeInsets.only(
+                                              bottom:
+                                                  Platform.isIOS ? 25.0 : 12.0),
+                                          mapType: MapType.normal,
+                                          initialCameraPosition:
+                                              LogicGoogleMap().kGooglePlex,
+                                          myLocationButtonEnabled: true,
+                                          myLocationEnabled: true,
+                                          polylines: polylineSet,
+                                          markers: markersSet,
+                                          circles: circlesSet,
+                                          onMapCreated: (GoogleMapController
+                                              controller) async {
+                                            LogicGoogleMap()
+                                                .controllerGoogleMap
+                                                .complete(controller);
+                                            newGoogleMapController = controller;
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
 
-                                /// main container what include car types car drop button request button
-                                Consumer<PositionChang>(
-                                  builder: (BuildContext context, _value,
-                                      Widget? child) {
-                                    return AnimatedPositioned(
-                                        duration:
-                                            const Duration(milliseconds: 200),
-                                        right: 0.0,
-                                        left: 0.0,
-                                        bottom: _value.val,
-                                        curve: Curves.ease,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8.0),
-                                          decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft:
-                                                      Radius.circular(20.0),
-                                                  topRight:
-                                                      Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 6.0,
-                                                    spreadRadius: 0.5,
-                                                    color: Colors.black54,
-                                                    offset: Offset(0.7, 0.7))
-                                              ],
-                                              color: Colors.white),
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              children: [
-                                                /// where to
-                                                Expanded(
-                                                  flex: 0,
-                                                  child: GestureDetector(
-                                                    onTap: () async {
-                                                      final res = await Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  const SearchScreen()));
-                                                      if (res == "dataDir") {
-                                                        changeAllProClickTaxiBox();
-                                                        await getPlaceDirection(
-                                                            context);
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 4.0),
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              bottom: 4.0),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      14.0),
-                                                          border: Border.all(
-                                                              width: 2.0,
-                                                              color: const Color(
-                                                                  0xFFFBC408))),
-                                                      width:
-                                                          MediaQuery.of(context)
+                                    /// main container what include car types car drop button request button
+
+                                    Consumer<PositionChang>(
+                                      builder: (BuildContext context, _value,
+                                          Widget? child) {
+                                        return AnimatedPositioned(
+                                            duration: const Duration(
+                                                milliseconds: 200),
+                                            right: 0.0,
+                                            left: 0.0,
+                                            bottom: _value.val,
+                                            curve: Curves.ease,
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  50 /
+                                                  100,
+                                              // padding:
+                                              //     const EdgeInsets.all(8.0),
+                                              decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  20.0),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  20.0)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 6.0,
+                                                        spreadRadius: 0.5,
+                                                        color: Colors.black54,
+                                                        offset:
+                                                            Offset(0.7, 0.7))
+                                                  ],
+                                                  color: Colors.white),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        CustomWidgets().buttons(
+                                                            context: context,
+                                                            title: AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .bookAHead,
+                                                            color: const Color(
+                                                                0xFFFBC408),
+                                                            valBorderL: 0,
+                                                            valBorderR: 12,
+                                                            voidCallback: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(Tools()
+                                                                      .createRoute(
+                                                                          context,
+                                                                          const AdvanceReservation()));
+                                                            }),
+                                                        CustomWidgets().buttons(
+                                                            context: context,
+                                                            title: AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .tourismTrips,
+                                                            color: const Color(
+                                                                0xFF00A3E0),
+                                                            valBorderL: 12,
+                                                            valBorderR: 0,
+                                                            voidCallback: () {
+                                                              checkAnyListTurCityOpen(
+                                                                  infoUserDataReal);
+                                                            })
+                                                      ],
+                                                    ),
+
+                                                    ///whereTogo
+                                                    Expanded(
+                                                      flex: 0,
+                                                      child: GestureDetector(
+                                                        onTap: () async {
+                                                          final res = await Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                            return const SearchScreen();
+                                                          }));
+                                                          if (res ==
+                                                              "dataDir") {
+                                                            await getPlaceDirection(
+                                                                context);
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 4.0),
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 4.0,
+                                                                  left: 4.0,
+                                                                  right: 4.0),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          14.0),
+                                                              border: Border.all(
+                                                                  width: 1.0,
+                                                                  color: const Color(
+                                                                      0xFFFBC408))),
+                                                          width: MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width *
                                                               100,
-                                                      height:
-                                                          MediaQuery.of(context)
+                                                          height: MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width *
                                                               15.0 /
                                                               100,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: searchIconOrCancelBottom(
-                                                                tripDirectionDetails),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: searchIconOrCancelBottom(
+                                                                    tripDirectionDetails),
+                                                              ),
+                                                              changeTextWhereToOrTollpasses(
+                                                                  tripDirectionDetails),
+                                                            ],
                                                           ),
-                                                          changeTextWhereToOrTollpasses(
-                                                              tripDirectionDetails),
-                                                        ],
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ),
 
-                                                /// row of 3 car type
-                                                Container(
-                                                  margin:
-                                                      const EdgeInsets.all(4.0),
-                                                  height: 65.0,
-                                                  child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () =>
-                                                                changeAllProClickTaxiBox(),
-                                                            child: Stack(
-                                                              children: [
-                                                                Consumer<
-                                                                    OpacityChang>(
-                                                                  builder: (BuildContext
-                                                                          context,
-                                                                      _value,
-                                                                      Widget?
-                                                                          child) {
-                                                                    return Opacity(
-                                                                        opacity: _value.isOpacityTaxi ==
-                                                                                true
-                                                                            ? 1
-                                                                            : 0.3,
-                                                                        child: _customWidget.carTypeBox(
-                                                                            const Image(
-                                                                                image: AssetImage(
-                                                                                  "assets/yellow.png",
-                                                                                ),
-                                                                                fit: BoxFit.contain),
-                                                                            tripDirectionDetails != null && carTypePro != "" && carTypePro == "Taxi-4 seats" ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}" : AppLocalizations.of(context)!.taxi,
-                                                                            "4",
-                                                                            context));
-                                                                  },
-                                                                ),
-                                                                Positioned(
-                                                                    right:
-                                                                        -10.0,
-                                                                    top: -10.0,
-                                                                    child: Consumer<
-                                                                        OpacityChang>(
-                                                                      builder: (BuildContext
-                                                                              context,
-                                                                          _value,
-                                                                          Widget?
-                                                                              child) {
-                                                                        return IconButton(
-                                                                            onPressed: () =>
-                                                                                Provider.of<SheetCarDesc>(context, listen: false).updateStateTaxi(0),
-                                                                            icon: _value.isOpacityTaxi == true
-                                                                                ? const Icon(
-                                                                                    Icons.info_outline,
-                                                                                    color: Color(0xFFFBC408),
-                                                                                    size: 20,
-                                                                                  )
-                                                                                : const Text(""));
-                                                                      },
-                                                                    )),
-                                                                Positioned(
-                                                                  right: 0.0,
-                                                                  left: 0.0,
-                                                                  bottom: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height *
-                                                                      0.15 /
-                                                                      100,
-                                                                  child: Consumer<
-                                                                      LineTaxi>(
-                                                                    builder: (BuildContext
-                                                                            context,
-                                                                        _val,
-                                                                        Widget?
-                                                                            child) {
-                                                                      return AnimatedContainer(
-                                                                        height: _val.islineTaxi ==
-                                                                                true
-                                                                            ? 4
-                                                                            : 0,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(2),
-                                                                          color: _val.islineTaxi == true
-                                                                              ? const Color(0xFF00A3E0)
-                                                                              : Colors.transparent,
-                                                                        ),
-                                                                        duration:
-                                                                            const Duration(seconds: 1),
-                                                                        curve: Curves
-                                                                            .fastOutSlowIn,
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () async {
-                                                              changeAllProClickVanBox();
-                                                              checkAnyListTurCityOpen(
-                                                                  infoUserDataReal);
-                                                            },
-                                                            child: Stack(
-                                                              children: [
-                                                                Consumer<
-                                                                    OpacityChang>(
-                                                                  builder: (BuildContext
-                                                                          context,
-                                                                      _value,
-                                                                      Widget?
-                                                                          child) {
-                                                                    return Opacity(
-                                                                        opacity: _value.isOpacityVan ==
-                                                                                true
-                                                                            ? 1
-                                                                            : 0.3,
-                                                                        child: _customWidget.carTypeBox(
-                                                                            const Image(
-                                                                                image: AssetImage("assets/mers.png"),
-                                                                                fit: BoxFit.contain),
-                                                                            tripDirectionDetails != null && carTypePro != "" && carTypePro == "Medium commercial-6-10 seats" ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}" : AppLocalizations.of(context)!.mediumCommercial,
-                                                                            "6-10",
-                                                                            context));
-                                                                  },
-                                                                ),
-                                                                Positioned(
-                                                                    right:
-                                                                        -10.0,
-                                                                    top: -10.0,
-                                                                    child: Consumer<
-                                                                        OpacityChang>(
-                                                                      builder: (BuildContext
-                                                                              context,
-                                                                          _value,
-                                                                          Widget?
-                                                                              child) {
-                                                                        return IconButton(
-                                                                            onPressed:
-                                                                                () {
-                                                                              Provider.of<SheetCarDesc>(context, listen: false).updateStateMed(0);
-                                                                            },
-                                                                            icon: _value.isOpacityVan == true
-                                                                                ? const Icon(
-                                                                                    Icons.info_outline,
-                                                                                    color: Color(0xFFFBC408),
-                                                                                    size: 20,
-                                                                                  )
-                                                                                : const Text(""));
-                                                                      },
-                                                                    )),
-                                                                Positioned(
-                                                                  right: 0.0,
-                                                                  left: 0.0,
-                                                                  bottom: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height *
-                                                                      0.15 /
-                                                                      100,
-                                                                  child: Consumer<
-                                                                      LineTaxi>(
-                                                                    builder: (BuildContext
-                                                                            context,
-                                                                        _value,
-                                                                        Widget?
-                                                                            child) {
-                                                                      return AnimatedContainer(
-                                                                        height: _value.islineVan ==
-                                                                                true
-                                                                            ? 4
-                                                                            : 0,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(2),
-                                                                          color: _value.islineVan == true
-                                                                              ? const Color(0xFF00A3E0)
-                                                                              : Colors.transparent,
-                                                                        ),
-                                                                        duration:
-                                                                            const Duration(seconds: 1),
-                                                                        curve: Curves
-                                                                            .fastOutSlowIn,
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                            child:
-                                                                GestureDetector(
-                                                          onTap: () {
-                                                            changeAllProClickVetoBox();
-                                                            checkAnyListTurCityOpen(
-                                                                infoUserDataReal);
-                                                          },
-                                                          child: Stack(
-                                                            children: [
-                                                              Consumer<
-                                                                  OpacityChang>(
-                                                                builder: (BuildContext
-                                                                        context,
-                                                                    _value,
-                                                                    Widget?
-                                                                        child) {
-                                                                  return Opacity(
-                                                                      opacity: _value.isOpacityVeto ==
-                                                                              true
-                                                                          ? 1.0
-                                                                          : 0.3,
-                                                                      child: _customWidget.carTypeBox(
-                                                                          const Image(
-                                                                              image: AssetImage(
-                                                                                  "assets/van.png"),
-                                                                              fit: BoxFit
-                                                                                  .contain),
-                                                                          tripDirectionDetails != null && carTypePro != "" && carTypePro == "Big commercial-11-19 seats"
-                                                                              ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}"
-                                                                              : AppLocalizations.of(context)!.bigCommercial,
-                                                                          "11-19",
-                                                                          context));
+                                                    /// row of 3 car type
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      height: 65.0,
+                                                      child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Expanded(
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  changeAllProClickTaxiBox();
                                                                 },
+                                                                child: Stack(
+                                                                  children: [
+                                                                    Consumer<
+                                                                        OpacityChang>(
+                                                                      builder: (BuildContext
+                                                                              context,
+                                                                          _value,
+                                                                          Widget?
+                                                                              child) {
+                                                                        return Opacity(
+                                                                            opacity: _value.isOpacityTaxi == true
+                                                                                ? 1
+                                                                                : 0.3,
+                                                                            child: CustomWidgets().carTypeBox(
+                                                                                const Image(
+                                                                                    image: AssetImage(
+                                                                                      "assets/yellow.png",
+                                                                                    ),
+                                                                                    fit: BoxFit.contain),
+                                                                                tripDirectionDetails != null && carTypePro != "" && carTypePro == "Taxi-4 seats" ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}" : AppLocalizations.of(context)!.taxi,
+                                                                                "4",
+                                                                                context));
+                                                                      },
+                                                                    ),
+                                                                    Positioned(
+                                                                        right:
+                                                                            -10.0,
+                                                                        top:
+                                                                            -10.0,
+                                                                        child: Consumer<
+                                                                            OpacityChang>(
+                                                                          builder: (BuildContext context,
+                                                                              _value,
+                                                                              Widget? child) {
+                                                                            return IconButton(
+                                                                                onPressed: () {
+                                                                                  Provider.of<SheetCarDesc>(context, listen: false).updateStateTaxi(0);
+                                                                                },
+                                                                                icon: _value.isOpacityTaxi == true
+                                                                                    ? const Icon(
+                                                                                        Icons.info_outline,
+                                                                                        color: Color(0xFFFBC408),
+                                                                                        size: 20,
+                                                                                      )
+                                                                                    : const Text(""));
+                                                                          },
+                                                                        )),
+                                                                    Positioned(
+                                                                      right:
+                                                                          0.0,
+                                                                      left: 0.0,
+                                                                      bottom: MediaQuery.of(context)
+                                                                              .size
+                                                                              .height *
+                                                                          0.15 /
+                                                                          100,
+                                                                      child: Consumer<
+                                                                          LineTaxi>(
+                                                                        builder: (BuildContext
+                                                                                context,
+                                                                            _val,
+                                                                            Widget?
+                                                                                child) {
+                                                                          return AnimatedContainer(
+                                                                            height: _val.islineTaxi == true
+                                                                                ? 4
+                                                                                : 0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(2),
+                                                                              color: _val.islineTaxi == true ? const Color(0xFF00A3E0) : Colors.transparent,
+                                                                            ),
+                                                                            duration:
+                                                                                const Duration(seconds: 1),
+                                                                            curve:
+                                                                                Curves.fastOutSlowIn,
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
-                                                              Positioned(
-                                                                  right: -10.0,
-                                                                  top: -10.0,
-                                                                  child: Consumer<
+                                                            ),
+                                                            Expanded(
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  changeAllProClickVanBox();
+                                                                  // checkAnyListTurCityOpen(
+                                                                  //     infoUserDataReal);
+                                                                },
+                                                                child: Stack(
+                                                                  children: [
+                                                                    Consumer<
+                                                                        OpacityChang>(
+                                                                      builder: (BuildContext
+                                                                              context,
+                                                                          _value,
+                                                                          Widget?
+                                                                              child) {
+                                                                        return Opacity(
+                                                                            opacity: _value.isOpacityVan == true
+                                                                                ? 1
+                                                                                : 0.3,
+                                                                            child: CustomWidgets().carTypeBox(
+                                                                                const Image(image: AssetImage("assets/mers.png"), fit: BoxFit.contain),
+                                                                                tripDirectionDetails != null && carTypePro != "" && carTypePro == "Medium commercial-6-10 seats" ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}" : AppLocalizations.of(context)!.mediumCommercial,
+                                                                                "6-10",
+                                                                                context));
+                                                                      },
+                                                                    ),
+                                                                    Positioned(
+                                                                        right:
+                                                                            -10.0,
+                                                                        top:
+                                                                            -10.0,
+                                                                        child: Consumer<
+                                                                            OpacityChang>(
+                                                                          builder: (BuildContext context,
+                                                                              _value,
+                                                                              Widget? child) {
+                                                                            return IconButton(
+                                                                                onPressed: () {
+                                                                                  Provider.of<SheetCarDesc>(context, listen: false).updateStateMed(0);
+                                                                                },
+                                                                                icon: _value.isOpacityVan == true
+                                                                                    ? const Icon(
+                                                                                        Icons.info_outline,
+                                                                                        color: Color(0xFFFBC408),
+                                                                                        size: 20,
+                                                                                      )
+                                                                                    : const Text(""));
+                                                                          },
+                                                                        )),
+                                                                    Positioned(
+                                                                      right:
+                                                                          0.0,
+                                                                      left: 0.0,
+                                                                      bottom: MediaQuery.of(context)
+                                                                              .size
+                                                                              .height *
+                                                                          0.15 /
+                                                                          100,
+                                                                      child: Consumer<
+                                                                          LineTaxi>(
+                                                                        builder: (BuildContext
+                                                                                context,
+                                                                            _value,
+                                                                            Widget?
+                                                                                child) {
+                                                                          return AnimatedContainer(
+                                                                            height: _value.islineVan == true
+                                                                                ? 4
+                                                                                : 0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(2),
+                                                                              color: _value.islineVan == true ? const Color(0xFF00A3E0) : Colors.transparent,
+                                                                            ),
+                                                                            duration:
+                                                                                const Duration(seconds: 1),
+                                                                            curve:
+                                                                                Curves.fastOutSlowIn,
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                                child:
+                                                                    GestureDetector(
+                                                              onTap: () {
+                                                                changeAllProClickVetoBox();
+                                                                // checkAnyListTurCityOpen(
+                                                                //     infoUserDataReal);
+                                                              },
+                                                              child: Stack(
+                                                                children: [
+                                                                  Consumer<
                                                                       OpacityChang>(
                                                                     builder: (BuildContext
                                                                             context,
                                                                         _value,
                                                                         Widget?
                                                                             child) {
-                                                                      return IconButton(
-                                                                          onPressed: () =>
-                                                                              Provider.of<SheetCarDesc>(context, listen: false).updateStateBig(0),
-                                                                          icon: _value.isOpacityVeto == true
-                                                                              ? const Icon(
-                                                                                  Icons.info_outline,
-                                                                                  color: Color(0xFFFBC408),
-                                                                                  size: 20,
-                                                                                )
-                                                                              : const Text(""));
+                                                                      return Opacity(
+                                                                          opacity: _value.isOpacityVeto == true
+                                                                              ? 1.0
+                                                                              : 0.3,
+                                                                          child: CustomWidgets().carTypeBox(
+                                                                              const Image(image: AssetImage("assets/van.png"), fit: BoxFit.contain),
+                                                                              tripDirectionDetails != null && carTypePro != "" && carTypePro == "Big commercial-11-19 seats" ? "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}" : AppLocalizations.of(context)!.bigCommercial,
+                                                                              "11-19",
+                                                                              context));
                                                                     },
-                                                                  )),
-                                                              Positioned(
-                                                                right: 0.0,
-                                                                left: 0.0,
-                                                                bottom: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.15 /
-                                                                    100,
-                                                                child: Consumer<
-                                                                    LineTaxi>(
-                                                                  builder: (BuildContext
-                                                                          context,
-                                                                      _value,
-                                                                      Widget?
-                                                                          child) {
-                                                                    return AnimatedContainer(
-                                                                      height: _value.islineVeto ==
-                                                                              true
-                                                                          ? 4
-                                                                          : 0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(2),
-                                                                        color: _value.islineVeto ==
-                                                                                true
-                                                                            ? const Color(0xFF00A3E0)
-                                                                            : Colors.transparent,
-                                                                      ),
-                                                                      duration: const Duration(
-                                                                          seconds:
-                                                                              1),
-                                                                      curve: Curves
-                                                                          .fastOutSlowIn,
-                                                                    );
-                                                                  },
-                                                                ),
+                                                                  ),
+                                                                  Positioned(
+                                                                      right:
+                                                                          -10.0,
+                                                                      top:
+                                                                          -10.0,
+                                                                      child: Consumer<
+                                                                          OpacityChang>(
+                                                                        builder: (BuildContext
+                                                                                context,
+                                                                            _value,
+                                                                            Widget?
+                                                                                child) {
+                                                                          return IconButton(
+                                                                              onPressed: () => Provider.of<SheetCarDesc>(context, listen: false).updateStateBig(0),
+                                                                              icon: _value.isOpacityVeto == true
+                                                                                  ? const Icon(
+                                                                                      Icons.info_outline,
+                                                                                      color: Color(0xFFFBC408),
+                                                                                      size: 20,
+                                                                                    )
+                                                                                  : const Text(""));
+                                                                        },
+                                                                      )),
+                                                                  Positioned(
+                                                                    right: 0.0,
+                                                                    left: 0.0,
+                                                                    bottom: MediaQuery.of(context)
+                                                                            .size
+                                                                            .height *
+                                                                        0.15 /
+                                                                        100,
+                                                                    child: Consumer<
+                                                                        LineTaxi>(
+                                                                      builder: (BuildContext
+                                                                              context,
+                                                                          _value,
+                                                                          Widget?
+                                                                              child) {
+                                                                        return AnimatedContainer(
+                                                                          height: _value.islineVeto == true
+                                                                              ? 4
+                                                                              : 0,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(2),
+                                                                            color: _value.islineVeto == true
+                                                                                ? const Color(0xFF00A3E0)
+                                                                                : Colors.transparent,
+                                                                          ),
+                                                                          duration:
+                                                                              const Duration(seconds: 1),
+                                                                          curve:
+                                                                              Curves.fastOutSlowIn,
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                        )),
-                                                      ]),
-                                                ),
+                                                            )),
+                                                          ]),
+                                                    ),
 
-                                                /// drop of botton
-                                                Consumer<DropBottomValue>(
-                                                  builder:
-                                                      (BuildContext context,
-                                                          _value,
-                                                          Widget? child) {
-                                                    return dropBottomCustom(
-                                                        context,
-                                                        _value.valueDropBottom);
-                                                  },
-                                                ),
+                                                    /// drop of botton
+                                                    Consumer<DropBottomValue>(
+                                                      builder:
+                                                          (BuildContext context,
+                                                              _value,
+                                                              Widget? child) {
+                                                        return dropBottomCustom(
+                                                            context,
+                                                            _value
+                                                                .valueDropBottom);
+                                                      },
+                                                    ),
 
-                                                /// request button
-                                                GestureDetector(
-                                                    onTap: () async {
-                                                      if (tripDirectionDetails !=
-                                                          null) {
-                                                        gotKeyOfDriver(
-                                                            userProvider);
-                                                        // countFullTimeRequest(userProvider);
-                                                        Provider.of<PositionCancelReq>(
-                                                                context,
-                                                                listen: false)
-                                                            .updateValue(0.0);
-                                                        Provider.of<PositionChang>(
-                                                                context,
-                                                                listen: false)
-                                                            .changValue(-500.0);
-                                                        final int amount =
-                                                            checkAnyAmount(
-                                                                carTypePro!,
-                                                                tripDirectionDetails!);
-                                                        DataBaseSrv()
-                                                            .saveRiderRequest(
-                                                                context,
-                                                                amount);
-                                                        state = "requesting";
-                                                      } else {
-                                                        Tools().toastMsg(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .chooseBefore);
-                                                      }
-                                                    },
-                                                    child: AnimatedContainer(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      duration: const Duration(
-                                                          milliseconds: 1000),
-                                                      height:
-                                                          MediaQuery.of(context)
+                                                    /// request button
+                                                    GestureDetector(
+                                                        onTap: () async {
+                                                          if (tripDirectionDetails !=
+                                                              null) {
+                                                            gotKeyOfDriver(
+                                                                userProvider);
+                                                            // countFullTimeRequest(userProvider);
+                                                            Provider.of<PositionCancelReq>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .updateValue(
+                                                                    0.0);
+                                                            Provider.of<PositionChang>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .changValue(
+                                                                    -500.0);
+                                                            final int amount =
+                                                                checkAnyAmount(
+                                                                    carTypePro!,
+                                                                    tripDirectionDetails!);
+                                                            DataBaseSrv()
+                                                                .saveRiderRequest(
+                                                                    context,
+                                                                    amount);
+                                                            state =
+                                                                "requesting";
+                                                          } else {
+                                                            Tools().toastMsg(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .chooseBefore);
+                                                          }
+                                                        },
+                                                        child:
+                                                            AnimatedContainer(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      1000),
+                                                          height: MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .height *
                                                               6.5 /
                                                               100,
-                                                      width:
-                                                          MediaQuery.of(context)
+                                                          width: MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width *
                                                               70 /
                                                               100,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            tripDirectionDetails !=
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: tripDirectionDetails !=
                                                                     null
                                                                 ? const Color(
                                                                     0xFFFBC408)
                                                                 : const Color(
                                                                     0xFF00A3E0),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15.0),
-                                                      ),
-                                                      child: Center(
-                                                          child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .requestTaxi,
-                                                        style: const TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.white),
-                                                      )),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        ));
-                                  },
-                                ),
-
-                                /// sheet Car desc
-                                Consumer<SheetCarDesc>(
-                                  builder: (BuildContext context, _value,
-                                      Widget? child) {
-                                    return AnimatedPositioned(
-                                      child: _customBottomSheet
-                                          .showSheetCarInfoTaxi(
-                                              context: context,
-                                              image: const Image(
-                                                image: AssetImage(
-                                                    "assets/yellow.png"),
-                                                fit: BoxFit.contain,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0),
+                                                          ),
+                                                          child: Center(
+                                                              child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .requestTaxi,
+                                                            style: const TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white),
+                                                          )),
+                                                        )),
+                                                  ],
+                                                ),
                                               ),
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .regularTaxi,
-                                              des: AppLocalizations.of(context)!
-                                                  .sedanCar,
-                                              iconM: Icons.money,
-                                              price: "",
-                                              iconP: Icons.person,
-                                              person: "4"),
-                                      duration:
-                                          const Duration(microseconds: 200),
-                                      left: 0.0,
-                                      right: 0.0,
-                                      bottom: _value.sheetValTaxi,
-                                    );
-                                  },
-                                ),
-                                Consumer<SheetCarDesc>(
-                                  builder: (BuildContext context, _value,
-                                      Widget? child) {
-                                    return AnimatedPositioned(
-                                      child: _customBottomSheet
-                                          .showSheetCarInfoMedeum(
-                                              context: context,
-                                              image: const Image(
-                                                  image: AssetImage(
-                                                      "assets/mers.png")),
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .medium,
-                                              des: AppLocalizations.of(context)!
-                                                  .mediumCar,
-                                              iconM: Icons.money,
-                                              price: "....",
-                                              iconP: Icons.person,
-                                              person: "6-10"),
-                                      duration:
-                                          const Duration(microseconds: 200),
-                                      left: 0.0,
-                                      right: 0.0,
-                                      bottom: _value.sheetValMed,
-                                    );
-                                  },
-                                ),
-                                Consumer<SheetCarDesc>(
-                                  builder: (BuildContext context, _value,
-                                      Widget? child) {
-                                    return AnimatedPositioned(
-                                      child: _customBottomSheet
-                                          .showSheetCarInfoBig(
-                                              context: context,
-                                              image: const Image(
-                                                  image:
-                                                      AssetImage(
-                                                          "assets/van.png")),
-                                              title:
-                                                  AppLocalizations.of(
+                                            ));
+                                      },
+                                    ),
+
+                                    /// sheet Car desc
+                                    Consumer<SheetCarDesc>(
+                                      builder: (BuildContext context, _value,
+                                          Widget? child) {
+                                        return AnimatedPositioned(
+                                          child: CustomBottomSheet()
+                                              .showSheetCarInfoTaxi(
+                                                  context: context,
+                                                  image: const Image(
+                                                    image: AssetImage(
+                                                        "assets/yellow.png"),
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  title: AppLocalizations.of(
                                                           context)!
+                                                      .regularTaxi,
+                                                  des: AppLocalizations.of(
+                                                          context)!
+                                                      .sedanCar,
+                                                  iconM: Icons.money,
+                                                  price: "",
+                                                  iconP: Icons.person,
+                                                  person: "4"),
+                                          duration:
+                                              const Duration(microseconds: 200),
+                                          left: 0.0,
+                                          right: 0.0,
+                                          bottom: _value.sheetValTaxi,
+                                        );
+                                      },
+                                    ),
+                                    Consumer<SheetCarDesc>(
+                                      builder: (BuildContext context, _value,
+                                          Widget? child) {
+                                        return AnimatedPositioned(
+                                          child: CustomBottomSheet()
+                                              .showSheetCarInfoMedeum(
+                                                  context: context,
+                                                  image: const Image(
+                                                      image: AssetImage(
+                                                          "assets/mers.png")),
+                                                  title: AppLocalizations.of(
+                                                          context)!
+                                                      .medium,
+                                                  des: AppLocalizations.of(
+                                                          context)!
+                                                      .mediumCar,
+                                                  iconM: Icons.money,
+                                                  price: "....",
+                                                  iconP: Icons.person,
+                                                  person: "6-10"),
+                                          duration:
+                                              const Duration(microseconds: 200),
+                                          left: 0.0,
+                                          right: 0.0,
+                                          bottom: _value.sheetValMed,
+                                        );
+                                      },
+                                    ),
+                                    Consumer<SheetCarDesc>(
+                                      builder: (BuildContext context, _value,
+                                          Widget? child) {
+                                        return AnimatedPositioned(
+                                          child: CustomBottomSheet()
+                                              .showSheetCarInfoBig(
+                                                  context: context,
+                                                  image: const Image(
+                                                      image: AssetImage(
+                                                          "assets/van.png")),
+                                                  title: AppLocalizations
+                                                          .of(context)!
                                                       .bigCommercial,
-                                              des: AppLocalizations.of(context)!
-                                                  .bigCar,
-                                              iconM: Icons.money,
-                                              price: "....",
-                                              iconP: Icons.person,
-                                              person: "11-19"),
-                                      duration:
-                                          const Duration(microseconds: 200),
-                                      left: 0.0,
-                                      right: 0.0,
-                                      bottom: _value.sheetValBig,
-                                    );
-                                  },
-                                ),
+                                                  des: AppLocalizations.of(
+                                                          context)!
+                                                      .bigCar,
+                                                  iconM: Icons.money,
+                                                  price: "....",
+                                                  iconP: Icons.person,
+                                                  person: "11-19"),
+                                          duration:
+                                              const Duration(microseconds: 200),
+                                          left: 0.0,
+                                          right: 0.0,
+                                          bottom: _value.sheetValBig,
+                                        );
+                                      },
+                                    ),
 
-                                ///cancel container
-                                Consumer<PositionCancelReq>(
-                                  builder: (BuildContext context, _value,
-                                      Widget? child) {
-                                    return AnimatedPositioned(
-                                        duration:
-                                            const Duration(milliseconds: 200),
-                                        right: 0.0,
-                                        left: 0.0,
-                                        curve: Curves.ease,
-                                        bottom: _value.value,
-                                        child: CancelTaxi().cancelTaxiRequest(
-                                            context: context,
-                                            userIdProvider: userProvider,
-                                            voidCallback: () async {
-                                              // closeTimerSearch.cancel();
-                                              state = "normal";
-                                              _logicGoogleMap
-                                                  .locationPosition(context);
-                                              restApp();
-                                              Navigator.pop(context);
-                                            }));
-                                  },
-                                ),
+                                    ///cancel container
+                                    Consumer<PositionCancelReq>(
+                                      builder: (BuildContext context, _value,
+                                          Widget? child) {
+                                        return AnimatedPositioned(
+                                            duration: const Duration(
+                                                milliseconds: 200),
+                                            right: 0.0,
+                                            left: 0.0,
+                                            curve: Curves.ease,
+                                            bottom: _value.value,
+                                            child: CancelTaxi()
+                                                .cancelTaxiRequest(
+                                                    context: context,
+                                                    userIdProvider:
+                                                        userProvider,
+                                                    voidCallback: () async {
+                                                      // closeTimerSearch.cancel();
+                                                      state = "normal";
+                                                      LogicGoogleMap()
+                                                          .locationPosition(
+                                                              context);
+                                                      restApp();
+                                                      Navigator.pop(context);
+                                                    }));
+                                      },
+                                    ),
 
-                                ///driver info
-                                Consumer<PositionDriverInfoProvider>(
-                                  builder: (BuildContext context, _value,
-                                      Widget? child) {
-                                    return AnimatedPositioned(
-                                        duration:
-                                            const Duration(milliseconds: 200),
-                                        right: 0.0,
-                                        left: 0.0,
-                                        bottom: _value.positionDriverInfo,
-                                        curve: Curves.ease,
-                                        child: DriverInfo().driverInfoContainer(
-                                            context: context,
-                                            userIdProvider: userProvider,
-                                            voidCallback: () async {
-                                              var marker = RippleMarker(
-                                                markerId: kMarkerId,
-                                                position:
-                                                    const LatLng(0.0, 0.0),
-                                                icon: BitmapDescriptor
-                                                    .defaultMarkerWithHue(
-                                                        BitmapDescriptor
-                                                            .hueBlue),
-                                                ripple: false,
-                                              );
-                                              aNmarkers[kMarkerId] = marker;
-                                              state = "normal";
-                                              _driverAvailable.clear();
-                                              GeoFireMethods
-                                                  .listOfNearestDriverAvailable
-                                                  .clear();
-                                              _keyDriverAvailable.clear();
-                                              restApp();
-                                              _logicGoogleMap
-                                                  .locationPosition(context);
-                                              geoFireInitialize();
-                                              Navigator.pop(context);
-                                            }));
-                                  },
+                                    ///driver info
+                                    Consumer<PositionDriverInfoProvider>(
+                                      builder: (BuildContext context, _value,
+                                          Widget? child) {
+                                        return AnimatedPositioned(
+                                            duration: const Duration(
+                                                milliseconds: 200),
+                                            right: 0.0,
+                                            left: 0.0,
+                                            bottom: _value.positionDriverInfo,
+                                            curve: Curves.ease,
+                                            child: DriverInfo()
+                                                .driverInfoContainer(
+                                                    context: context,
+                                                    userIdProvider:
+                                                        userProvider,
+                                                    voidCallback: () async {
+                                                      var marker = RippleMarker(
+                                                        markerId: kMarkerId,
+                                                        position: const LatLng(
+                                                            0.0, 0.0),
+                                                        icon: BitmapDescriptor
+                                                            .defaultMarkerWithHue(
+                                                                BitmapDescriptor
+                                                                    .hueBlue),
+                                                        ripple: false,
+                                                      );
+                                                      aNmarkers[kMarkerId] =
+                                                          marker;
+                                                      state = "normal";
+                                                      _driverAvailable.clear();
+                                                      GeoFireMethods
+                                                          .listOfNearestDriverAvailable
+                                                          .clear();
+                                                      _keyDriverAvailable
+                                                          .clear();
+                                                      LogicGoogleMap()
+                                                          .locationPosition(
+                                                              context);
+                                                      restApp();
+                                                      Navigator.pop(context);
+                                                    }));
+                                      },
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      });
-                },
-              ),
-              Positioned(
-                left: AppLocalizations.of(context)!.whereTo == "إلى أين ؟"
-                    ? 0.0
-                    : null,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Consumer<ChangeColor>(
-                    builder: (BuildContext context, value, Widget? child) {
-                      return CircleAvatar(
-                          radius: 30,
-                          backgroundColor: value.isTrue == false
-                              ? const Color(0xFF00A3E0)
-                              : Colors.white,
-                          child: IconButton(
-                              onPressed: () {
-                                if (value.isTrue == false) {
-                                  Provider.of<DoubleValue>(context,
-                                          listen: false)
-                                      .value0Or1(1);
-                                  Provider.of<ChangeColor>(context,
-                                          listen: false)
-                                      .updateState(true);
-                                } else {
-                                  Provider.of<DoubleValue>(context,
-                                          listen: false)
-                                      .value0Or1(0);
-                                  Provider.of<ChangeColor>(context,
-                                          listen: false)
-                                      .updateState(false);
-                                }
-                              },
-                              icon: value.isTrue == false
-                                  ? const Icon(
-                                      Icons.format_list_numbered_rtl_rounded,
-                                      color: Colors.white,
-                                      size: 25,
-                                    )
-                                  : const Icon(
-                                      Icons.close,
-                                      color: Color(0xFFFBC408),
-                                      size: 25,
-                                    )));
+                              ),
+                            );
+                          });
                     },
                   ),
-                ),
-              ),
-
-              /// complain button
-              statusRide == "accepted" || statusRide == "Driver arrived"
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 80.0, left: 10.0),
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.white,
-                        child: IconButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (_) => complainOnDriver(context));
-                            },
-                            icon: Icon(
-                              Icons.call,
-                              color: Colors.greenAccent.shade700,
-                              size: 25,
-                            )),
+                  Positioned(
+                    left: AppLocalizations.of(context)!.whereTo == "إلى أين ؟"
+                        ? 0.0
+                        : null,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Consumer<ChangeColor>(
+                        builder: (BuildContext context, value, Widget? child) {
+                          return CircleAvatar(
+                              radius: 30,
+                              backgroundColor: value.isTrue == false
+                                  ? const Color(0xFF00A3E0)
+                                  : Colors.white,
+                              child: IconButton(
+                                  onPressed: () {
+                                    if (value.isTrue == false) {
+                                      Provider.of<DoubleValue>(context,
+                                              listen: false)
+                                          .value0Or1(1);
+                                      Provider.of<ChangeColor>(context,
+                                              listen: false)
+                                          .updateState(true);
+                                    } else {
+                                      Provider.of<DoubleValue>(context,
+                                              listen: false)
+                                          .value0Or1(0);
+                                      Provider.of<ChangeColor>(context,
+                                              listen: false)
+                                          .updateState(false);
+                                    }
+                                  },
+                                  icon: value.isTrue == false
+                                      ? const Icon(
+                                          Icons
+                                              .format_list_numbered_rtl_rounded,
+                                          color: Colors.white,
+                                          size: 25,
+                                        )
+                                      : const Icon(
+                                          Icons.close,
+                                          color: Color(0xFFFBC408),
+                                          size: 25,
+                                        )));
+                        },
                       ),
-                    )
-                  : const SizedBox()
-            ],
-          ),
-        ),
-      )),
+                    ),
+                  ),
+
+                  /// complain button
+                  statusRide == "accepted" || statusRide == "Driver arrived"
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 80.0, left: 10.0),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (_) => CustomWidgets()
+                                          .complainOnDriver(context));
+                                },
+                                icon: Icon(
+                                  Icons.call,
+                                  color: Colors.greenAccent.shade700,
+                                  size: 25,
+                                )),
+                          ),
+                        )
+                      : const SizedBox()
+                ],
+              ),
+            ),
+          )),
     );
   }
 
   ///======Start got current loction + geoFire for add all drivers on map who are close to rider=========
-  //this method for got current location after that run geofire method for got the drivers nearest
 
   // this method for display nearest driver available from rider in list by using geoFire
   Future<void> geoFireInitialize() async {
     final currentPosition =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     try {
-      Geofire.queryAtLocation(
-              currentPosition.latitude, currentPosition.longitude, geoFireRader)
+      Geofire.queryAtLocation(currentPosition.latitude ?? 0.0,
+              currentPosition.longitude ?? 0.0, geoFireRader)
           ?.listen((map) async {
         if (map != null) {
           var callBack = map['callBack'];
@@ -942,12 +1002,6 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               break;
             case Geofire.onKeyExited:
-              // NearestDriverAvailable nearestDriverAvailable =
-              //     NearestDriverAvailable("", 0.0, 0.0);
-              // nearestDriverAvailable.key = map['key'];
-              // nearestDriverAvailable.latitude = map['latitude'];
-              // nearestDriverAvailable.longitude = map['longitude'];
-              // GeoFireMethods.removeDriverFromList(nearestDriverAvailable);
               GeoFireMethods.removeDriverFromList(map["key"]);
               break;
 
@@ -994,9 +1048,9 @@ class _HomeScreenState extends State<HomeScreen> {
           if (map['driverId'] != null) {
             final _checkIdDriver = map['driverId'].toString();
             if (_checkIdDriver != 'waiting') {
-              String _checkCarType = '';
-              double _dropOffLat = 0.0;
-              double _dropOfflon = 0.0;
+              var _checkCarType = '';
+              var _dropOffLat = 0.0;
+              var _dropOfflon = 0.0;
               if (map['vehicleType_id'] != null) {
                 _checkCarType = map['vehicleType_id'].toString();
               }
@@ -1008,26 +1062,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 _dropOfflon =
                     double.parse(map['dropoff']['longitude'].toString());
               }
-              Address dropOfLocation = Address(
-                  placeFormattedAddress: "",
-                  placeName: "",
-                  placeId: "",
-                  latitude: _dropOffLat,
-                  longitude: _dropOfflon);
+              Address dropOfLocation = Address();
+              dropOfLocation.placeFormattedAddress = "";
+              dropOfLocation.placeName = "";
+              dropOfLocation.placeId = "";
+              dropOfLocation.latitude = _dropOffLat;
+              dropOfLocation.longitude = _dropOfflon;
               Provider.of<CarTypeProvider>(context, listen: false)
                   .updateCarType(_checkCarType);
               Provider.of<PlaceDetailsDropProvider>(context, listen: false)
                   .updateDropOfLocation(dropOfLocation);
-              Provider.of<PositionDriverInfoProvider>(context, listen: false)
-                  .updateState(0.0);
               if (dropOfLocation.longitude != 0.0) {
-                showDialog(
-                    context: context,
-                    builder: (context) => CircularInductorCostem()
-                        .circularInductorCostem(context));
                 await gotDriverInfo();
-                Future.delayed(const Duration(seconds: 1))
-                    .whenComplete(() => Navigator.pop(context));
+                Provider.of<PositionDriverInfoProvider>(context, listen: false)
+                    .updateState(0.0);
+                // showDialog(
+                //     context: context,
+                //     builder: (context) => CircularInductorCostem()
+                //         .circularInductorCostem(context));
+                // await Future.delayed(const Duration(seconds: 3));
+                // Navigator.pop(context);
               }
             } else {
               return;
@@ -1097,7 +1151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (_) => callDriverOnMap(context, phone));
+                    builder: (_) =>
+                        CustomWidgets().callDriverOnMap(context, phone));
               },
               title: " $fNameIcon $lNameIcon",
               snippet:
@@ -1175,10 +1230,11 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () async {
             showDialog(
                 context: context,
+                barrierDismissible: false,
                 builder: (context) =>
-                    CircularInductorCostem().circularInductorCostem(context));
+                    CustomWidgets().circularInductorCostem(context));
             restApp();
-            _logicGoogleMap.locationPosition(context);
+            LogicGoogleMap().locationPosition(context);
             Navigator.pop(context);
           },
           icon: const Align(
@@ -1200,7 +1256,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method for change all provider state when click taxiBox
   Future<void> changeAllProClickTaxiBox() async {
-    geoFireRader = 4;
     markersSet.clear();
     GeoFireMethods.listOfNearestDriverAvailable.clear();
     geoFireInitialize();
@@ -1217,7 +1272,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method will change all provider state when click on van box
   Future<void> changeAllProClickVanBox() async {
-    geoFireRader = 15;
     markersSet.clear();
     GeoFireMethods.listOfNearestDriverAvailable.clear();
     geoFireInitialize();
@@ -1234,7 +1288,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method will change all provider state when click on Veto box
   Future<void> changeAllProClickVetoBox() async {
-    geoFireRader = 15;
     markersSet.clear();
     GeoFireMethods.listOfNearestDriverAvailable.clear();
     geoFireInitialize();
@@ -1260,7 +1313,7 @@ class _HomeScreenState extends State<HomeScreen> {
               anim1,
               anim2,
             ) {
-              return vetoVanPriceTurkeyJust(context);
+              return CustomWidgets().istanbulVeto(context);
             },
             barrierDismissible: true,
             barrierLabel: '',
@@ -1269,7 +1322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 scale: anim1.value,
                 child: Opacity(
                     opacity: anim1.value,
-                    child: vetoVanPriceTurkeyJust(context)),
+                    child: CustomWidgets().istanbulVeto(context)),
               );
             },
             transitionDuration: const Duration(milliseconds: 300));
@@ -1287,15 +1340,16 @@ class _HomeScreenState extends State<HomeScreen> {
               anim1,
               anim2,
             ) {
-              return antalyVeto(context);
+              return CustomWidgets().antalyVeto(context);
             },
             barrierDismissible: true,
             barrierLabel: '',
             transitionBuilder: (context, anim1, anim2, child) {
               return Transform.scale(
                 scale: anim1.value,
-                child:
-                    Opacity(opacity: anim1.value, child: antalyVeto(context)),
+                child: Opacity(
+                    opacity: anim1.value,
+                    child: CustomWidgets().antalyVeto(context)),
               );
             },
             transitionDuration: const Duration(milliseconds: 300));
@@ -1313,15 +1367,16 @@ class _HomeScreenState extends State<HomeScreen> {
               anim1,
               anim2,
             ) {
-              return bodrunVeto(context);
+              return CustomWidgets().bodrunVeto(context);
             },
             barrierDismissible: true,
             barrierLabel: '',
             transitionBuilder: (context, anim1, anim2, child) {
               return Transform.scale(
                 scale: anim1.value,
-                child:
-                    Opacity(opacity: anim1.value, child: bodrunVeto(context)),
+                child: Opacity(
+                    opacity: anim1.value,
+                    child: CustomWidgets().bodrunVeto(context)),
               );
             },
             transitionDuration: const Duration(milliseconds: 300));
@@ -1339,14 +1394,16 @@ class _HomeScreenState extends State<HomeScreen> {
               anim1,
               anim2,
             ) {
-              return bursaVeto(context);
+              return CustomWidgets().bursaVeto(context);
             },
             barrierDismissible: true,
             barrierLabel: '',
             transitionBuilder: (context, anim1, anim2, child) {
               return Transform.scale(
                 scale: anim1.value,
-                child: Opacity(opacity: anim1.value, child: bursaVeto(context)),
+                child: Opacity(
+                    opacity: anim1.value,
+                    child: CustomWidgets().bursaVeto(context)),
               );
             },
             transitionDuration: const Duration(milliseconds: 300));
@@ -1364,15 +1421,16 @@ class _HomeScreenState extends State<HomeScreen> {
               anim1,
               anim2,
             ) {
-              return sapancaVeto(context);
+              return CustomWidgets().sapancaVeto(context);
             },
             barrierDismissible: true,
             barrierLabel: '',
             transitionBuilder: (context, anim1, anim2, child) {
               return Transform.scale(
                 scale: anim1.value,
-                child:
-                    Opacity(opacity: anim1.value, child: sapancaVeto(context)),
+                child: Opacity(
+                    opacity: anim1.value,
+                    child: CustomWidgets().sapancaVeto(context)),
               );
             },
             transitionDuration: const Duration(milliseconds: 300));
@@ -1390,15 +1448,16 @@ class _HomeScreenState extends State<HomeScreen> {
               anim1,
               anim2,
             ) {
-              return trabzonVeto(context);
+              return CustomWidgets().trabzonVeto(context);
             },
             barrierDismissible: true,
             barrierLabel: '',
             transitionBuilder: (context, anim1, anim2, child) {
               return Transform.scale(
                 scale: anim1.value,
-                child:
-                    Opacity(opacity: anim1.value, child: trabzonVeto(context)),
+                child: Opacity(
+                    opacity: anim1.value,
+                    child: CustomWidgets().trabzonVeto(context)),
               );
             },
             transitionDuration: const Duration(milliseconds: 300));
@@ -1416,15 +1475,16 @@ class _HomeScreenState extends State<HomeScreen> {
               anim1,
               anim2,
             ) {
-              return uzungolVeto(context);
+              return CustomWidgets().uzungolVeto(context);
             },
             barrierDismissible: true,
             barrierLabel: '',
             transitionBuilder: (context, anim1, anim2, child) {
               return Transform.scale(
                 scale: anim1.value,
-                child:
-                    Opacity(opacity: anim1.value, child: uzungolVeto(context)),
+                child: Opacity(
+                    opacity: anim1.value,
+                    child: CustomWidgets().uzungolVeto(context)),
               );
             },
             transitionDuration: const Duration(milliseconds: 300));
@@ -1462,13 +1522,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: Container(
-        margin: const EdgeInsets.only(left: 4.0, right: 4.0),
+        margin: const EdgeInsets.only(left: 6.0, right: 6.0),
         padding: const EdgeInsets.all(8.0),
         height: MediaQuery.of(context).size.height * 6 / 100,
         width: MediaQuery.of(context).size.width * 100,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4.0),
-            border: Border.all(color: const Color(0xFFFBC408), width: 2)),
+            border: Border.all(color: const Color(0xFFFBC408), width: 1)),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
               value: newValueDrop == "" ? value1 : newValueDrop,
@@ -1544,14 +1604,15 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
 
-    final pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
-    final dropOfLatLng = LatLng(finalPos.latitude, finalPos.longitude);
+    final pickUpLatLng =
+        LatLng(initialPos.latitude ?? 0.0, initialPos.longitude ?? 00);
+    final dropOfLatLng =
+        LatLng(finalPos.latitude ?? 0.0, finalPos.longitude ?? 0.0);
 
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) =>
-            CircularInductorCostem().circularInductorCostem(context));
+        builder: (context) => CustomWidgets().circularInductorCostem(context));
 
     ///from api dir
     final details = await ApiSrvDir.obtainPlaceDirectionDetails(
@@ -1563,7 +1624,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pop(context);
     const double valPadding = 50;
     // addPloyLine(details!, pickUpLatLng, dropOfLatLng, color, valPadding);
-    _logicGoogleMap.addPloyLine(
+    LogicGoogleMap().addPloyLine(
         details!, pickUpLatLng, dropOfLatLng, color, valPadding, context);
   }
 
@@ -1588,21 +1649,22 @@ class _HomeScreenState extends State<HomeScreen> {
       if (kDebugMode) {
         print('No driver for notify');
       }
-      // closeTimerSearch.cancel();
       final res = await showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (_) => sorryNoDriverDialog(context, userProvider));
+          builder: (_) =>
+              CustomWidgets().sorryNoDriverDialog(context, userProvider));
       if (res == 0) {
         showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (context) =>
-                CircularInductorCostem().circularInductorCostem(context));
+                CustomWidgets().circularInductorCostem(context));
         Provider.of<PositionCancelReq>(context, listen: false)
             .updateValue(-400.0);
         Provider.of<PositionChang>(context, listen: false).changValue(0.0);
-        restApp();
-        await _logicGoogleMap.locationPosition(context);
+        // restApp();
+        LogicGoogleMap().locationPosition(context);
         Navigator.pop(context);
       }
     } else if (_keyDriverAvailable.isNotEmpty) {
@@ -1681,7 +1743,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
-    ///todo delete send token
+    /// delete send token
     // await _driverRef.child("token").once().then((value) async {
     //   final snapshot = value.snapshot.value;
     //   String token = snapshot.toString();
@@ -1701,7 +1763,7 @@ class _HomeScreenState extends State<HomeScreen> {
         showDialog(
             context: context,
             builder: (context) =>
-                CircularInductorCostem().circularInductorCostem(context));
+                CustomWidgets().circularInductorCostem(context));
         gotDriverInfo();
         Future.delayed(const Duration(seconds: 1))
             .whenComplete(() => Navigator.pop(context));
@@ -1806,7 +1868,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // rotation: MathMethods.createRandomNumber(360),
               );
 
-              ///todo old code
+              /// old code
               // Marker marker = Marker(
               //   markerId: MarkerId("myDriver$driverId"),
               //   position: driverNewLocation,
@@ -1854,7 +1916,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     context: context,
                     barrierDismissible: false,
                     builder: (BuildContext context) {
-                      return collectMoney(context, fare);
+                      return CustomWidgets().collectMoney(context, fare);
                     });
                 if (res == "close") {
                   if (map["driverId"] != null) {
@@ -1910,7 +1972,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // rotation: MathMethods.createRandomNumber(360),
             );
 
-            ///todo
+            ///oldCode
             // Marker marker = Marker(
             //   markerId: MarkerId("myDriver$driverId"),
             //   position: driverNewLocation,
@@ -1968,7 +2030,8 @@ class _HomeScreenState extends State<HomeScreen> {
       LatLng driverCurrentLocation, BuildContext context) async {
     final pickUpLoc =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
-    LatLng riderLoc = LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
+    LatLng riderLoc =
+        LatLng(pickUpLoc.latitude ?? 0.0, pickUpLoc.longitude ?? 0.0);
     if (isTimeRequstTrip == false) {
       isTimeRequstTrip = true;
       final details = await ApiSrvDir.obtainPlaceDirectionDetails(
@@ -1976,7 +2039,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final color = Colors.blueAccent.shade700;
       const double valPadding = 100.0;
       // addPloyLine(details!, riderLoc, driverCurrentLocation, color, valPadding);
-      _logicGoogleMap.addPloyLine(details!, riderLoc, driverCurrentLocation,
+      LogicGoogleMap().addPloyLine(details!, riderLoc, driverCurrentLocation,
           color, valPadding, context);
       markersSet.removeWhere((ele) => ele.markerId.value.contains("dropOfId"));
       timeTrip = details.durationText.toString();
@@ -1997,23 +2060,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final dropOffLoc =
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
-    LatLng riderLocPickUp = LatLng(pickUpLoc.latitude, pickUpLoc.longitude);
-    LatLng riderLocDropOff = LatLng(dropOffLoc.latitude, dropOffLoc.longitude);
+    LatLng riderLocPickUp =
+        LatLng(pickUpLoc.latitude ?? 0.0, pickUpLoc.longitude ?? 0.0);
+    LatLng riderLocDropOff =
+        LatLng(dropOffLoc.latitude ?? 0.0, dropOffLoc.longitude ?? 0.0);
     if (isTimeRequstTrip == false) {
       isTimeRequstTrip = true;
       final details = await ApiSrvDir.obtainPlaceDirectionDetails(
           riderLocPickUp, riderLocDropOff, context);
       final color = Colors.greenAccent.shade700;
       const double valPadding = 50;
-      _logicGoogleMap.addPloyLine(details!, riderLocPickUp, riderLocDropOff,
+      LogicGoogleMap().addPloyLine(details!, riderLocPickUp, riderLocDropOff,
           color, valPadding, context);
       timeTrip = details.durationText.toString();
       Provider.of<TimeTripStatusRide>(context, listen: false)
           .updateTimeTrip(timeTrip);
       setState(() {});
-      // setState(() {
-      //   timeTrip = details.durationText.toString();
-      // });
       isTimeRequstTrip = false;
     }
   }

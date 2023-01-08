@@ -2,12 +2,12 @@
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/user_enter_face/how_use.dart';
-import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../config.dart';
+import '../widget/custom_widgets.dart';
 import 'forgot_pass.dart';
 
 GlobalKey globalKey = GlobalKey();
@@ -17,8 +17,6 @@ class AuthScreen extends StatelessWidget {
   // static String result = "";
   // static String? resultCodeCon = "+90";
   static AuthSev authSev = AuthSev();
-  static final CircularInductorCostem _inductorCostem =
-      CircularInductorCostem();
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +271,7 @@ class AuthScreen extends StatelessWidget {
                             color: Colors.black,
                           )),
                           child:
-                              _inductorCostem.circularInductorCostem(context),
+                          CustomWidgets().circularInductorCostem(context),
                         ),
                       )
                     : const Text("")

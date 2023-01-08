@@ -351,6 +351,10 @@
   "@skip": {
     "description": "Skip"
   },
+  "into0": "Benefit from 10% discount\n for your first 5 journeys\n with Garanti Taxi",
+  "@into0": {
+    "description": "into0"
+  },
   "into1": "In Garanti Taxi, you can choose the type of vehicle you want according to your needs!",
   "@into1": {
     "description": "into1"
@@ -764,5 +768,13 @@
   "driverCancelTrip":"The driver canceled the trip",
   "@driverCancelTrip": {
     "description": "driver cancel"
+  },
+  "bookAHead":"Book ahead",
+  "@bookAHead": {
+    "description": "Book ahead"
+  },
+  "tourismTrips":"Tourism trips",
+  "@tourismTrips": {
+    "description": "Tourism trips"
   }
 }

@@ -7,8 +7,7 @@ import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'custom_circuler.dart';
+import 'custom_widgets.dart';
 
 class CancelTaxi {
   Widget cancelTaxiRequest(
@@ -34,8 +33,9 @@ class CancelTaxi {
               onTap: () async {
                 showDialog(
                     context: context,
-                    builder: (context) => CircularInductorCostem()
-                        .circularInductorCostem(context));
+                    barrierDismissible: false,
+                    builder: (context) =>
+                        CustomWidgets().circularInductorCostem(context));
                 Provider.of<PositionCancelReq>(context, listen: false)
                     .updateValue(-400.0);
                 Provider.of<PositionChang>(context, listen: false)

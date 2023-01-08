@@ -8,6 +8,7 @@ import 'package:gd_passenger/tools/get_url.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../my_provider/info_user_database_provider.dart';
+import '../my_provider/timeTrip_statusRide.dart';
 
 class ApiSrvDir {
 // got time/km/point
@@ -193,24 +194,42 @@ class ApiSrvDir {
     double fareAmont = timeTravleFare + distanceTravleFare;
     if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Turkey") {
       culculFinal = fareAmont * 10 + 0.70 * 10.00;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('TL');
     } else if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Morocco") {
       culculFinal = fareAmont * 10 + 0.70 * 10.00;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('MAD');
     } else if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Sudan") {
       culculFinal = fareAmont * 450 + 0.70 * 450;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('SUP');
     } else if (carTypePro == "Taxi-4 seats" &&
         userInfo.country0 == "Saudi Arabia") {
       culculFinal = fareAmont + 1.85 * 3.75 + 2.70 * 3.75;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('SAR');
     } else if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Qatar") {
       culculFinal = fareAmont - 0.25 * 3.64 + 2.75 * 3.75;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('QAR');
     } else if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Libya") {
       culculFinal = fareAmont - 0.30 * 4.80 + 1 * 4.80;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('LYD');
     } else if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Kuwait") {
       culculFinal = fareAmont + 1.65 * 0.32 + 4.88 * 0.32;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('KWD');
     } else if (carTypePro == "Taxi-4 seats" && userInfo.country0 == "Iraq") {
       culculFinal = fareAmont + 1.20 + 2.73;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('\$');
     } else if (carTypePro == "Taxi-4 seats" &&
         userInfo.country0 == "United Arab Emirates") {
       culculFinal = fareAmont - 0.30 * 3.67 + 3.30 * 3.67;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('AED');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Turkey") {
       switch (userInfo.country) {
@@ -218,27 +237,43 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'istanbul':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'bursa':
               culculFinal = 220;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'izmit':
               culculFinal = 150;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'sapanca':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bolu abant':
               culculFinal = 300;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'şile':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'yalova':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -246,24 +281,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Antalya':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Manavgat':
               culculFinal = 130;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Marmaris':
               culculFinal = 250;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bodrum':
               culculFinal = 400;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Izmir':
               culculFinal = 500;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Alanya':
               culculFinal = 160;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -271,18 +320,28 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Bodrum':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Izmir':
               culculFinal = 300;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Marmaris':
               culculFinal = 250;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'sapanca':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -290,24 +349,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Bursa':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Yalova':
               culculFinal = 140;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'istanbul':
               culculFinal = 240;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'sapanca':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bolu abant':
               culculFinal = 300;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'izmite':
               culculFinal = 190;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -315,24 +388,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'spanca':
               culculFinal = 90;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'bursa':
               culculFinal = 200;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'izmit':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'istanbul':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bolu abant':
               culculFinal = 200;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'yalova':
               culculFinal = 150;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -340,24 +427,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Trabzon':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Uzun gol':
               culculFinal = 130;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Ayder':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Rize':
               culculFinal = 160;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Giresun':
               culculFinal = 160;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'ondu':
               culculFinal = 200;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -365,52 +466,82 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Uzungöl':
               culculFinal = 80;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Trabzon':
               culculFinal = 190;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Ayder':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Rize':
               culculFinal = 140;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'ondu':
               culculFinal = 220;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
         default:
           culculFinal = fareAmont * 13 + 0.70 * 14.00;
+          Provider.of<TimeTripStatusRide>(context, listen: false)
+              .updateCurrencyType('TL');
           break;
       }
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Morocco") {
       culculFinal = fareAmont + 0.20 * 10 + 1.50 * 10.00;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('MAD');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Sudan") {
       culculFinal = fareAmont * 450 + 1.50 * 450;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('SUP');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Saudi Arabia") {
       culculFinal = fareAmont + 1.85 + 0.20 * 3.75 + 3.70 * 3.75;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('SAR');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Qatar") {
       culculFinal = fareAmont * 3.64 + 4.75 * 3.75;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('QAR');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Libya") {
       culculFinal = fareAmont * 4.80 + 3 * 4.80;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('LYD');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Kuwait") {
       culculFinal = fareAmont + 0.10 + 1.65 * 0.32 + 5.88 * 0.32;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('KWD');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "Iraq") {
       culculFinal = fareAmont + 0.20 + 1.20 + 4.73;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('\$');
     } else if (carTypePro == "Medium commercial-6-10 seats" &&
         userInfo.country0 == "United Arab Emirates") {
       culculFinal = fareAmont * 3.67 + 5.30 * 3.67;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('AED');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Turkey") {
       switch (userInfo.country) {
@@ -418,27 +549,43 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'istanbul':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'bursa':
               culculFinal = 220;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'izmit':
               culculFinal = 150;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'sapanca':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bolu abant':
               culculFinal = 300;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'şile':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'yalova':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 19 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -446,24 +593,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Antalya':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Manavgat':
               culculFinal = 130;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Marmaris':
               culculFinal = 250;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bodrum':
               culculFinal = 400;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Izmir':
               culculFinal = 500;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Alanya':
               culculFinal = 160;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -471,18 +632,28 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Bodrum':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Izmir':
               culculFinal = 300;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Marmaris':
               culculFinal = 250;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'sapanca':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -490,24 +661,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Bursa':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Yalova':
               culculFinal = 140;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'istanbul':
               culculFinal = 240;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'sapanca':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bolu abant':
               culculFinal = 300;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'izmite':
               culculFinal = 190;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -515,24 +700,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'spanca':
               culculFinal = 90;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'bursa':
               culculFinal = 200;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'izmit':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'istanbul':
               culculFinal = 180;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Bolu abant':
               culculFinal = 200;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'yalova':
               culculFinal = 150;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -540,24 +739,38 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Trabzon':
               culculFinal = 100;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Uzun gol':
               culculFinal = 130;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Ayder':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Rize':
               culculFinal = 160;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Giresun':
               culculFinal = 160;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'ondu':
               culculFinal = 200;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
@@ -565,54 +778,86 @@ class ApiSrvDir {
           switch (tourismCityName) {
             case 'Uzungöl':
               culculFinal = 80;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Trabzon':
               culculFinal = 190;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Ayder':
               culculFinal = 170;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'Rize':
               culculFinal = 140;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             case 'ondu':
               culculFinal = 220;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('\$');
               break;
             default:
-              100;
+              culculFinal = fareAmont * 15 + 0.70 * 10.00;
+              Provider.of<TimeTripStatusRide>(context, listen: false)
+                  .updateCurrencyType('TL');
               break;
           }
           break;
         default:
-          culculFinal = fareAmont * 13 + 0.70 * 14.00;
+          culculFinal = fareAmont * 15 + 0.70 * 10.00;
+          Provider.of<TimeTripStatusRide>(context, listen: false)
+              .updateCurrencyType('TL');
           break;
       }
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Morocco") {
       culculFinal = fareAmont + 0.20 * 10 + 2 * 10.00;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('MAD');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Sudan") {
       culculFinal = fareAmont * 450 + 2 * 450;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('SUP');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Saudi Arabia") {
       culculFinal = fareAmont + 1.85 + 0.20 * 3.75 + 4.70 * 3.75;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('SAR');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Qatar") {
       culculFinal = fareAmont * 3.64 + 5.75 * 3.64;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('QAR');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Libya") {
       culculFinal = fareAmont * 4.80 + 4 * 4.80;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('LYD');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Kuwait") {
       culculFinal = fareAmont + 0.10 + 1.65 * 0.32 + 6.88 * 0.32;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('KWD');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "Iraq") {
       culculFinal = fareAmont + 0.20 + 1.20 + 5.73;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('\$');
     } else if (carTypePro == "Big commercial-11-19 seats" &&
         userInfo.country0 == "United Arab Emirates") {
       culculFinal = fareAmont * 3.67 + 6.30 * 3.67;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('AED');
     } else {
-      culculFinal = 200.0;
+      culculFinal = fareAmont * 10 + 0.70 * 10.00;
+      Provider.of<TimeTripStatusRide>(context, listen: false)
+          .updateCurrencyType('');
     }
     return culculFinal.truncate();
   }

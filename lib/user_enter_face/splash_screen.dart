@@ -2,14 +2,12 @@ import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gd_passenger/google_map_methods.dart';
 import 'package:gd_passenger/repo/auth_srv.dart';
 import 'package:gd_passenger/repo/data_base_srv.dart';
-import 'package:gd_passenger/tools/turn_Gps.dart';
 import 'package:gd_passenger/user_enter_face/page_view.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../my_provider/indector_netWeekPro.dart';
 import '../my_provider/info_user_database_provider.dart';
 import '../tools/tools.dart';
@@ -30,7 +28,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   initState() {
     checkInternet();
-    TurnGps().turnGpsIfNot();
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 2000),
@@ -75,17 +72,13 @@ class _SplashScreenState extends State<SplashScreen>
   // this method for go to play Store
   Future<void> goToPlayStore() async {
     if (Platform.isAndroid) {
-      await canLaunch(
-              "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
-          ? launch(
-              "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi")
-          : Tools().toastMsg('Could not launch');
+      String _url =
+          "https://play.google.com/store/apps/details?id=com.garantidriver.garantitaxi";
+      await Tools().lunchUrl(context, _url);
     } else {
-      await canLaunch(
-              "https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
-          ? launch(
-              "https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr")
-          : Tools().toastMsg('Could not launch');
+      String _url =
+          "https://apps.apple.com/tr/app/garanti-taxi/id1633389274?l=tr";
+      await Tools().lunchUrl(context, _url);
     }
   }
 

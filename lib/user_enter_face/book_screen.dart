@@ -104,7 +104,7 @@ class _BookingScreenState extends State<BookingScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Text(tripList[index].pickAddress),
+                  child: Text(tripList[index].pickAddress.substring(0,10)),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -119,17 +119,12 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    tripList[index].trip,
-                    style: TextStyle(color: Colors.greenAccent.shade700),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                tripList[index].trip,
+                style: TextStyle(color: Colors.greenAccent.shade700),
+              ),
             ),
           ],
         ),

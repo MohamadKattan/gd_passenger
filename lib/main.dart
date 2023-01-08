@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/buttom_color_pro.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
@@ -35,20 +34,26 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'my_provider/sheet_cardsc.dart';
 import 'my_provider/timeTrip_statusRide.dart';
 import 'my_provider/userinfo_sheet_provider.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 void main() async {
+  final GoogleMapsFlutterPlatform mapsImplementation =
+      GoogleMapsFlutterPlatform.instance;
+  if (mapsImplementation is GoogleMapsFlutterAndroid) {
+    mapsImplementation.useAndroidViewSurface = true;
+  }
   WidgetsFlutterBinding.ensureInitialized();
   Wakelock.enable();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-  FlutterNativeSplash.removeAfter(initialization);
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
-void initialization(BuildContext context) async {
-  await Future.delayed(const Duration(seconds: 1));
-}
+// void initialization(BuildContext context) async {
+//   await Future.delayed(const Duration(seconds: 1));
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

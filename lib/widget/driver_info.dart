@@ -6,7 +6,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../config.dart';
 import '../my_provider/app_data.dart';
 import '../my_provider/placeDetails_drop_provider.dart';
@@ -18,6 +17,7 @@ import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
 import 'call_driver.dart';
 import 'custom_circuler.dart';
+import 'custom_widgets.dart';
 import 'divider_box_.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -136,7 +136,7 @@ class DriverInfo {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 1 / 100,
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
                 child: Row(
@@ -236,7 +236,7 @@ class DriverInfo {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 1 / 100,
               ),
-              CustomWidget().customDivider(),
+              CustomWidgets().customDivider(),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 1.5 / 100,
               ),
@@ -251,7 +251,7 @@ class DriverInfo {
                       showDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (_) => callDriver(context));
+                          builder: (_) => CustomWidgets().callDriver(context));
                     },
                   ),
                   IconButton(
@@ -265,7 +265,8 @@ class DriverInfo {
                       onPressed: () async {
                         showDialog(
                             context: context,
-                            builder: (context) => CircularInductorCostem()
+                            barrierDismissible: false,
+                            builder: (context) => CustomWidgets()
                                 .circularInductorCostem(context));
                         Provider.of<PositionDriverInfoProvider>(context,
                                 listen: false)
@@ -319,10 +320,8 @@ class DriverInfo {
     final dropOff =
         Provider.of<PlaceDetailsDropProvider>(context, listen: false)
             .dropOfLocation;
-    String url =
-        "https://www.google.com/maps/search/?api=1&query=${dropOff.latitude},${dropOff.longitude}";
-    await canLaunch(url)
-        ? launch(url)
-        : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
+    String _url =
+        'https://www.google.com/maps/search/?api=1&query=${dropOff.latitude},${dropOff.longitude}';
+    await Tools().lunchUrl(context, _url);
   }
 }

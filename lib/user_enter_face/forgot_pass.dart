@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../my_provider/true_false.dart';
-import '../widget/custom_circuler.dart';
-import '../widget/sent_passdon.dart';
+import '../widget/custom_widgets.dart';
 
 class ForgotPass extends StatefulWidget {
   const ForgotPass({Key? key}) : super(key: key);
-  static final CircularInductorCostem _inductorCostem =
-      CircularInductorCostem();
 
   @override
   State<ForgotPass> createState() => _ForgotPassState();
@@ -145,7 +142,8 @@ class _ForgotPassState extends State<ForgotPass> {
                               showDialog(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (_) => sendPassDon(context));
+                                  builder: (_) =>
+                                      CustomWidgets().sendPassDon(context));
                               _email.clear();
                             });
                           });
@@ -191,8 +189,7 @@ class _ForgotPassState extends State<ForgotPass> {
                     decoration: (const BoxDecoration(
                       color: Colors.black,
                     )),
-                    child: ForgotPass._inductorCostem
-                        .circularInductorCostem(context),
+                    child: CustomWidgets().circularInductorCostem(context),
                   ),
                 )
               : const Text("")

@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
-import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../my_provider/userinfo_sheet_provider.dart';
-import '../repo/api_srv_geo.dart';
+import '../widget/custom_widgets.dart';
 
 GlobalKey globalKey = GlobalKey();
 
@@ -22,10 +21,8 @@ class UserInfoScreen extends StatefulWidget {
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
-  // XFile imageFile = XFile("");
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
-  final CircularInductorCostem _inductorCostem = CircularInductorCostem();
   static String result = "";
   static String? resultCodeCon = "+90";
 
@@ -361,10 +358,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             color: Colors.black,
                           )),
                           child:
-                              _inductorCostem.circularInductorCostem(context),
+                              CustomWidgets().circularInductorCostem(context),
                         ),
                       )
-                    : const Text(""),
+                    : const SizedBox(),
               ],
             ),
           ),
@@ -398,7 +395,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     } else if (phoneNumber.text.isEmpty) {
       tools.toastMsg(AppLocalizations.of(context)!.numberEmpty);
     } else {
-      ApiSrvGeo().getCountry();
+      // ApiSrvGeo().getCountry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       result = "$resultCodeCon${phoneNumber.text.trim()}";
       if (_imageFile == null) {
