@@ -87,7 +87,7 @@
   "@start15": {
     "description": "Start:15.00"
   },
-  "mediumCommercial": "MediumCommercial",
+  "mediumCommercial": "Vip lux",
   "@mediumCommercial": {
     "description": "MediumCommercial"
   },
@@ -99,7 +99,7 @@
   "@mediumCar": {
     "description": "Medium commercial"
   },
-  "bigCommercial": "Big Commercial",
+    "bigCommercial": " Vip lux big",
   "@bigCommercial": {
     "description": "Big Commercial"
   },
@@ -776,5 +776,9 @@
   "tourismTrips":"Tourism trips",
   "@tourismTrips": {
     "description": "Tourism trips"
+  },
+  "tourismTripsDes":"Tourist trips are only available in Turkey. For the average tourist car, the number of passengers ranges from (6-10) or the large tourist car, the number of passengers ranges from (10 to 19), the duration of the trip is 12 hours. All car models are modern business class. All our drivers speak 3 languages (Arabic-English-Turkish). Choose the car category by clicking on one of the buttons below, then choose the trip you want. We wish you a pleasant experience with us.",
+  "@tourismTripsDes": {
+    "description": "Tourism trips des"
   }
 }

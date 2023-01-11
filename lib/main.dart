@@ -51,13 +51,8 @@ void main() async {
   runApp(const MyApp());
 }
 
-// void initialization(BuildContext context) async {
-//   await Future.delayed(const Duration(seconds: 1));
-// }
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

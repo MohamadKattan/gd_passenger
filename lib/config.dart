@@ -1,11 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:gd_passenger/repo/data_base_srv.dart';
-import 'package:gd_passenger/tools/tools.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'model/directions_details.dart';
 import 'model/driverPreBook.dart';
 
@@ -19,16 +13,14 @@ String mapKey = "AIzaSyDh5NNwfDJFU27Y_yMpVcWeeepBQBbewmM";
 String serverToken =
     "key=AAAADxQpVvI:APA91bH34mheWrclzBAQyPxkT7LEKrmnFbhEXROlAH8blsBi3iqya6fQ7Soq1GEzaAZ77vPIF2tKp2cTPQ1NUkWoj1cqI_PSOLxaaPABc0d5jFxfCFAvbnbbGo8wFCENKN6E9ywT_4-k";
 
-Tools tools = Tools();
-DataBaseSrv srv = DataBaseSrv();
 DirectionDetails? tripDirectionDetails;
 List<LatLng> polylineCoordinates = [];
 Set<Polyline> polylineSet = {};
 Set<Marker> markersSet = {};
-Set<Marker> tMarker = {};
 Set<Circle> circlesSet = {};
 GoogleMapController? newGoogleMapController;
-StreamSubscription<Position>? tripScreenStreamSubscription;
+// StreamSubscription<Position>? tripScreenStreamSubscription;
+String carOrderType = "Taxi-4 seats";
 String fNameIcon = "";
 String lNameIcon = "";
 String driverImage = "";
@@ -41,7 +33,7 @@ LatLng driverNewLocation = const LatLng(0.0, 0.0);
 String driverName = "";
 String carPlack = "";
 String driverPhone = "";
-List<String> listDriverPhoneOnMap = [];
+// List<String> listDriverPhoneOnMap = [];
 String carTypeOnUpdateGeo = "";
 String timeTrip = "";
 String driverId = "";
@@ -52,5 +44,6 @@ String carRideType = "";
 String tourismCityName = "";
 String tourismCityPrice = "";
 String newValueDrop = "";
-String contry = "";
 List<DriverPreBook> driverPreBookList = [];
+bool showRiderCancelRequest = false;
+bool showDriverInfoContainer = false;

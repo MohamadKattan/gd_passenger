@@ -1,8 +1,13 @@
 // this class include tools will use many times in our app
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../config.dart';
+import '../my_provider/car_tupy_provider.dart';
+import '../my_provider/lineTaxiProvider.dart';
+import '../my_provider/opictyProvider.dart';
 
 class Tools {
   void toastMsg(String msg) {
@@ -15,31 +20,6 @@ class Tools {
         textColor: Colors.white,
         fontSize: 16.0);
   }
-
-  // Widget timerAuth (BuildContext context) {
-  //   final CountDownController downController = CountDownController();
-  //   return CircularCountDownTimer(
-  //     duration: 120,
-  //     initialDuration: 0,
-  //     controller: downController,
-  //     width: MediaQuery.of(context).size.width / 9,
-  //     height: MediaQuery.of(context).size.height / 9,
-  //     ringColor: Colors.white,
-  //     fillColor: Colors.black12,
-  //     backgroundColor: const Color(0xFFFFD54F),
-  //     strokeWidth: 8.0,
-  //     strokeCap: StrokeCap.round,
-  //     textStyle: const TextStyle(
-  //         fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
-  //     textFormat: CountdownTextFormat.S,
-  //     isReverse: true,
-  //     isReverseAnimation: true,
-  //     isTimerTextShown: true,
-  //     autoStart: true,
-  //     onStart: () {},
-  //     onComplete: () {},
-  //   );
-  // }
 
   Future<void> lunchUrl(BuildContext context, String url) async {
     Uri _url = Uri.parse(url);
@@ -63,5 +43,47 @@ class Tools {
         );
       },
     );
+  }
+
+  // this method for change all provider state when click taxiBox
+  void changeAllProClickTaxiBox(BuildContext context) async {
+    // markersSet.clear();
+    // GeoFireMethods.listOfNearestDriverAvailable.clear();
+    // geoFireInitialize();
+    carOrderType = "Taxi-4 seats";
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Taxi-4 seats");
+  }
+
+  // this method will change all provider state when click on van box
+  void changeAllProClickVanBox(BuildContext context) async {
+    carOrderType = "Medium commercial-6-10 seats";
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Medium commercial-6-10 seats");
+  }
+
+  // this method will change all provider state when click on Veto box
+  void changeAllProClickVetoBox(BuildContext context) async {
+    carOrderType = "Big commercial-11-19 seats";
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Big commercial-11-19 seats");
   }
 }

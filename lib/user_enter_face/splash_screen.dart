@@ -27,20 +27,23 @@ class _SplashScreenState extends State<SplashScreen>
   bool result = false;
   @override
   initState() {
-    checkInternet();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkInternet();
+    });
     _animationController = AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 2000),
         lowerBound: 0.3,
         upperBound: 0.4);
     _animationController.forward();
-    _animationController.addStatusListener((status) async {
-      if (status == AnimationStatus.completed) {
-        // await checkInternet();
-      }
-    });
+    // _animationController.addStatusListener((status) async {
+    //   if (status == AnimationStatus.completed) {
+    //     // await checkInternet();
+    //   }
+    // });
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {

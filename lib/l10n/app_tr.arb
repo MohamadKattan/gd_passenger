@@ -21,7 +21,7 @@
   "regularTaxi": "Normal Taksi",
   "sedanCar": "sedan araba: Hyundai, Renault, Fiat, Toyota vb...",
   "start15": "Başlangıç:15.00",
-  "mediumCommercial": "OrtaTicari",
+  "mediumCommercial": "Lüks",
   "medium": "Orta",
   "mediumCar": "Günübirlik Turizim VİP Araç",
   "bigCommercial": "Büyük Ticari",
@@ -189,5 +189,6 @@
   "beDriver":"sürücü ol!!",
   "driverCancelTrip":"Sürücü yolculuğu iptal etti",
   "bookAHead":"Önceden ayırtın",
-  "tourismTrips":"turizm gezileri"
+  "tourismTrips":"turizm gezileri",
+  "tourismTripsDes":"Turistik geziler sadece Türkiye'de mevcuttur. Ortalama bir turist arabası için yolcu sayısı (6-10) arasında değişir veya büyük turist arabası, yolcu sayısı (10 ile 19) arasında değişir, yolculuk süresi 12 saattir. Tüm araba modelleri modern işletme sınıfıdır. Tüm şoförlerimiz 3 dil (Arapça-İngilizce-Türkçe) konuşmaktadır. Aşağıdaki düğmelerden birine tıklayarak araba kategorisini seçin, ardından istediğiniz seyahati seçin. Bizimle keyifli bir deneyim geçirmenizi dileriz."
 }

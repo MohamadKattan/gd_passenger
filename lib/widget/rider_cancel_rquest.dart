@@ -7,6 +7,7 @@ import 'package:gd_passenger/repo/data_base_srv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../config.dart';
 import 'custom_widgets.dart';
 
 class CancelTaxi {
@@ -14,7 +15,7 @@ class CancelTaxi {
       {required BuildContext context,
       required UserIdProvider userIdProvider,
       required VoidCallback voidCallback}) {
-    return Container(
+    return showRiderCancelRequest? Container(
       padding: const EdgeInsets.all(15.0),
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -31,11 +32,6 @@ class CancelTaxi {
           ),
           GestureDetector(
               onTap: () async {
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) =>
-                        CustomWidgets().circularInductorCostem(context));
                 Provider.of<PositionCancelReq>(context, listen: false)
                     .updateValue(-400.0);
                 Provider.of<PositionChang>(context, listen: false)
@@ -62,6 +58,6 @@ class CancelTaxi {
               ))
         ],
       ),
-    );
+    ):const SizedBox();
   }
 }

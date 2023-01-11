@@ -57,7 +57,7 @@ dependencies:
   geolocator: ^9.0.2
   flutter_polyline_points: ^1.0.0
 #  location: ^4.4.0
-  google_map_marker_animation: ^0.0.1
+#  google_map_marker_animation: ^0.0.1
   maps_toolkit: ^2.0.1
   image_picker: ^0.8.6
   cached_network_image: ^3.2.3

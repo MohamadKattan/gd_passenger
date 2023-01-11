@@ -14,7 +14,6 @@ class GetUrl {
         var itemCount = jsonResponse;
         return itemCount;
       } else {
-        // response.statusCode=="failed";
         Tools().toastMsg("Error !! ${response.statusCode.toString()} ");
         return "failed";
       }

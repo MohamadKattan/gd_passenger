@@ -357,13 +357,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
-  google_map_marker_animation:
-    dependency: "direct main"
-    description:
-      name: google_map_marker_animation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
   google_maps_flutter:
     dependency: "direct main"
     description:

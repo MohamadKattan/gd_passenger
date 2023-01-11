@@ -255,3 +255,19 @@ class LogicGoogleMap {
     markersSet.add(markerDropOfLocation);
   }
 }
+
+
+// Animarker(
+// curve: Curves.ease,
+// zoom: 14.0,
+// rippleRadius: 0.1,
+// rippleColor: Colors.white60,
+// useRotation: true,
+// duration:
+// const Duration(milliseconds: 2500),
+// markers: aNmarkers.values.toSet(),
+// shouldAnimateCamera: false,
+// mapId: LogicGoogleMap()
+//     .controllerGoogleMap
+//     .future
+//     .then<int>((value) => value.mapId),

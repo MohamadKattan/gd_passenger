@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../my_provider/userinfo_sheet_provider.dart';
+import '../repo/data_base_srv.dart';
+import '../tools/tools.dart';
 import '../widget/custom_widgets.dart';
 
 GlobalKey globalKey = GlobalKey();
@@ -382,27 +384,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       // Provider.of<PickImageProvide>(context, listen: false)
       //     .listingToPickImage(_imageFile!);
     } catch (e) {
-      tools.toastMsg(AppLocalizations.of(context)!.imageRequired);
-      tools.toastMsg(e.toString());
+      Tools().toastMsg(AppLocalizations.of(context)!.imageRequired);
+      Tools().toastMsg(e.toString());
     }
   }
 
   checkBeforeSet(BuildContext context, String uid) {
     if (firstname.text.isEmpty) {
-      tools.toastMsg(AppLocalizations.of(context)!.nameRequired);
+      Tools().toastMsg(AppLocalizations.of(context)!.nameRequired);
     } else if (lastname.text.isEmpty) {
-      tools.toastMsg(AppLocalizations.of(context)!.lastRequired);
+      Tools().toastMsg(AppLocalizations.of(context)!.lastRequired);
     } else if (phoneNumber.text.isEmpty) {
-      tools.toastMsg(AppLocalizations.of(context)!.numberEmpty);
+      Tools().toastMsg(AppLocalizations.of(context)!.numberEmpty);
     } else {
       // ApiSrvGeo().getCountry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       result = "$resultCodeCon${phoneNumber.text.trim()}";
       if (_imageFile == null) {
-        srv.setUserinfoToDataBase(
+        DataBaseSrv().setUserinfoToDataBase(
             '', uid, firstname, lastname, context, result, email);
       } else {
-        srv.setImageToStorage(
+        DataBaseSrv().setImageToStorage(
             firstname, lastname, uid, context, result, _imageFile!, email);
       }
     }

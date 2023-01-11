@@ -2465,6 +2465,7 @@ class CustomWidgets {
     );
   }
 
+  // if rider want  call  driver who accepted his request
   Widget callDriver(BuildContext context) {
     return Dialog(
       elevation: 1.0,
@@ -2556,6 +2557,7 @@ class CustomWidgets {
     );
   }
 
+// if rider click on car icon on map to call any driver
   Widget callDriverOnMap(BuildContext context, String phone) {
     return Dialog(
       elevation: 1.0,
@@ -2650,6 +2652,7 @@ class CustomWidgets {
     );
   }
 
+// if rider want to complain on driver while trip started
   Widget complainOnDriver(BuildContext context) {
     return Dialog(
       elevation: 1.0,
@@ -2708,6 +2711,7 @@ class CustomWidgets {
     );
   }
 
+// collectMoney dialog when trip fished
   Widget collectMoney(BuildContext context, int totalAmount) {
     final dropBottomProvider =
         Provider.of<DropBottomValue>(context).valueDropBottom;
@@ -2785,6 +2789,7 @@ class CustomWidgets {
     );
   }
 
+// circularInductor when loading prose
   Widget circularInductorCostem(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -2819,50 +2824,50 @@ class CustomWidgets {
   }
 
 // Home and work box in home screen
-  Widget containerBox(Icon icon, String text, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 5.0 / 100,
-        width: MediaQuery.of(context).size.width * 40 / 100,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(4.0),
-            boxShadow: const [
-              BoxShadow(
-                  blurRadius: 4.0,
-                  spreadRadius: 0.3,
-                  color: Colors.black54,
-                  offset: Offset(0.4, 0.4))
-            ]),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Icon(
-                  icon.icon,
-                  color: const Color(0xFFFFD54F),
-                  size: 20,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Center(
-                child: Text(
-                  text,
-                  style: const TextStyle(fontSize: 16, color: Colors.black54),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+//   Widget containerBox (Icon icon, String text, BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 8.0),
+//       child: Container(
+//         height: MediaQuery.of(context).size.height * 5.0 / 100,
+//         width: MediaQuery.of(context).size.width * 40 / 100,
+//         decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(4.0),
+//             boxShadow: const [
+//               BoxShadow(
+//                   blurRadius: 4.0,
+//                   spreadRadius: 0.3,
+//                   color: Colors.black54,
+//                   offset: Offset(0.4, 0.4))
+//             ]),
+//         child: Row(
+//           children: [
+//             Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: Center(
+//                 child: Icon(
+//                   icon.icon,
+//                   color: const Color(0xFFFFD54F),
+//                   size: 20,
+//                 ),
+//               ),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.all(2.0),
+//               child: Center(
+//                 child: Text(
+//                   text,
+//                   style: const TextStyle(fontSize: 16, color: Colors.black54),
+//                 ),
+//               ),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 
-  // car type box taxi/van/veto
+  /// car type box taxi/van/veto
   Widget carTypeBox(
       Image image, String text, String text1, BuildContext context) {
     return Container(
@@ -2904,6 +2909,7 @@ class CustomWidgets {
     );
   }
 
+// to notify user we send to his email rest pass word
   Widget sendPassDon(BuildContext context) {
     return Dialog(
       elevation: 1.0,
@@ -2974,6 +2980,7 @@ class CustomWidgets {
     );
   }
 
+// no Driver available
   Widget sorryNoDriverDialog(
       BuildContext context, UserIdProvider userProvider) {
     return Dialog(
@@ -3040,6 +3047,7 @@ class CustomWidgets {
     );
   }
 
+// this buttons for book ahead or tourism trip
   Widget buttons({
     required BuildContext context,
     required String title,
@@ -3064,9 +3072,9 @@ class CustomWidgets {
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 50 / 100,
-        height: MediaQuery.of(context).size.height * 10 / 100,
-        padding: const EdgeInsets.all(8),
+        height: MediaQuery.of(context).size.width * 12 / 100,
         margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
               color.withOpacity(0.6),
@@ -3119,6 +3127,103 @@ class CustomWidgets {
                 textStyle: _colorizeTextStyle,
                 colors: _colorizeColors,
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget choseCarTypeBeforOrderTourismTrip(
+      BuildContext context, VoidCallback voidCallback) {
+    return Dialog(
+      elevation: 1.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        width: double.infinity,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.0),
+            color: const Color(0xFF00A3E0)),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedTextKit(repeatForever: true, animatedTexts: [
+                ColorizeAnimatedText(AppLocalizations.of(context)!.tourismTrips,
+                    textAlign: TextAlign.center,
+                    speed: const Duration(milliseconds: 300),
+                    textStyle: const TextStyle(
+                        fontSize: 20.0, fontWeight: FontWeight.bold),
+                    colors: [Colors.white60, Colors.black, Colors.white])
+              ]),
+              const SizedBox(height: 8),
+              Text(
+                AppLocalizations.of(context)!.tourismTripsDes,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: Colors.white60,
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      voidCallback();
+                      Tools().changeAllProClickVanBox(context);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 120,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFFBC408),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Text(
+                        '${AppLocalizations.of(context)!.mediumCommercial}\n 6-10',
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      voidCallback();
+                      Tools().changeAllProClickVetoBox(context);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 120,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFFBC408),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Center(
+                        child: Text(
+                          '${AppLocalizations.of(context)!.bigCommercial}\n 10-19',
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
             ],
           ),
         ),
