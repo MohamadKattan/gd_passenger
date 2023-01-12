@@ -24,8 +24,6 @@ var uuid = const Uuid();
 class LogicGoogleMap {
   final GetUrl _getUrl = GetUrl();
   final ApiSrvGeo _apiMethods = ApiSrvGeo();
-  //instant current location on map before any request on map
-  // Completer<GoogleMapController> controllerGoogleMap = Completer();
 
   final Completer<GoogleMapController> controllerGoogleMap =
       Completer<GoogleMapController>();
@@ -57,8 +55,8 @@ class LogicGoogleMap {
     }
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    LatLng latLngPosition = LatLng(position.latitude, position.longitude);
 
+    LatLng latLngPosition = LatLng(position.latitude, position.longitude);
     CameraPosition cameraPosition = CameraPosition(
       target: latLngPosition,
       zoom: 14.151926040649414,
@@ -81,7 +79,7 @@ class LogicGoogleMap {
     if (tourismCityName.length > 1) {
       //apiFindPlace
       final autocompleteUrl = Uri.parse(
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$tourismCityName&key=$mapKey&sessiontoken=${uuid.v4()}&location=${addressModle.latitude},${addressModle.longitude}&radius=${50.000}");
+          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$tourismCityName&key=$mapKey&sessiontoken=${uuid.v4()}&location=${addressModle.latitude??0.0},${addressModle.longitude??0.0}&radius=${50.000}");
       final response = await _getUrl.getUrlMethod(autocompleteUrl);
       if (response == "failed") {
         return;

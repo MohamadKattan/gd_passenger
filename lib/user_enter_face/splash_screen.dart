@@ -27,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen>
   bool result = false;
   @override
   initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkInternet();
     });
@@ -36,14 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
         lowerBound: 0.3,
         upperBound: 0.4);
     _animationController.forward();
-    // _animationController.addStatusListener((status) async {
-    //   if (status == AnimationStatus.completed) {
-    //     // await checkInternet();
-    //   }
-    // });
-    super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +66,6 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.dispose();
   }
 
-  // this method for go to play Store
   Future<void> goToPlayStore() async {
     if (Platform.isAndroid) {
       String _url =

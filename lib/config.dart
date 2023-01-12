@@ -45,5 +45,5 @@ String tourismCityName = "";
 String tourismCityPrice = "";
 String newValueDrop = "";
 List<DriverPreBook> driverPreBookList = [];
-bool showRiderCancelRequest = false;
-bool showDriverInfoContainer = false;
+
+

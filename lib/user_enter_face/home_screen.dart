@@ -38,8 +38,8 @@ import '../my_provider/positon_driver_info_provide.dart';
 import '../my_provider/rider_id.dart';
 import '../my_provider/sheet_cardsc.dart';
 import '../my_provider/timeTrip_statusRide.dart';
+import '../my_provider/true_false.dart';
 import '../repo/api_srv_geo.dart';
-import '../tools/curanny_type.dart';
 import '../tools/geoFire_methods_tools.dart';
 import '../tools/math_methods.dart';
 import '../widget/custom_widgets.dart';
@@ -47,7 +47,6 @@ import '../widget/driver_info.dart';
 import '../widget/rating_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import "dart:collection";
-
 import 'advance_reservation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -75,23 +74,23 @@ class _HomeScreenState extends State<HomeScreen> {
   // final kMarkerId = const MarkerId('myDriver');
   late BitmapDescriptor driversNearIcon;
   late BitmapDescriptor driversNearIcon1;
-  double geoFireRader = 4;
+  double geoFireRadios = 4;
   @override
   void initState() {
+    super.initState();
     ApiSrvGeo().getCountry();
-    audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _asyncMethod();
     });
-    super.initState();
+    audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
   }
 
   @override
   void dispose() {
+    super.dispose();
     audioPlayer.release();
     audioPlayer.dispose();
     audioCache.clearAll();
-    super.dispose();
   }
 
   void _asyncMethod() async {
@@ -100,22 +99,25 @@ class _HomeScreenState extends State<HomeScreen> {
         barrierDismissible: false,
         builder: (context) => CustomWidgets().circularInductorCostem(context));
     await LogicGoogleMap().locationPosition(context).whenComplete(() async {
-      await Future.delayed(const Duration(seconds: 2));
       await geoFireInitialize();
       Navigator.pop(context);
     });
     await trickMyTripAfterKilled();
     await DataBaseSrv().currentOnlineUserInfo(context);
-    setState(() {});
+    Future.delayed(const Duration(seconds: 5)).whenComplete(() {
+      geoFireRadios = 4;
+      markersSet.clear();
+      // GeoFireMethods.listOfNearestDriverAvailable.clear();
+      geoFireInitialize();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserIdProvider>(context, listen: false);
-    userProvider.getUserIdProvider();
-    final carTypePro = Provider.of<CarTypeProvider>(context).carType;
     createDriverNearIcon();
     createDriverNearIcon1();
+    userProvider.getUserIdProvider();
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -142,176 +144,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: Colors.white,
                                 child: Stack(
                                   children: [
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              60 /
-                                              100,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: GoogleMap(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 95.0),
-                                        mapType: MapType.normal,
-                                        initialCameraPosition:
-                                            LogicGoogleMap().kGooglePlex,
-                                        myLocationButtonEnabled: true,
-                                        myLocationEnabled: true,
-                                        polylines: polylineSet,
-                                        markers: markersSet,
-                                        circles: circlesSet,
-                                        onMapCreated: (GoogleMapController
-                                            controller) async {
-                                          LogicGoogleMap()
-                                              .controllerGoogleMap
-                                              .complete(controller);
-                                          newGoogleMapController = controller;
-                                        },
-                                      ),
-                                    ),
+                                    googleMap(),
 
                                     /// main container what include car types car drop button request button
                                     Consumer<PositionChang>(
                                       builder: (BuildContext context, _value,
                                           Widget? child) {
-                                        return AnimatedPositioned(
-                                            duration: const Duration(
-                                                milliseconds: 200),
-                                            right: 0.0,
-                                            left: 0.0,
-                                            bottom: _value.val,
-                                            curve: Curves.ease,
-                                            child: Container(
-                                              // // padding:
-                                              //     const EdgeInsets.all(8.0),
-                                              decoration: const BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  20.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  20.0)),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 6.0,
-                                                        spreadRadius: 0.5,
-                                                        color: Colors.black54,
-                                                        offset:
-                                                            Offset(0.7, 0.7))
-                                                  ],
-                                                  color: Colors.white),
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  children: [
-                                                    btnTripAdvanceReservation(),
-                                                    whereToGo(),
-                                                    rowOfCarTypeBox(),
-
-                                                    /// drop of botton
-                                                    Consumer<DropBottomValue>(
-                                                      builder:
-                                                          (BuildContext context,
-                                                              _value,
-                                                              Widget? child) {
-                                                        return dropBottomCustom(
-                                                            context,
-                                                            _value
-                                                                .valueDropBottom);
-                                                      },
-                                                    ),
-
-                                                    /// request button
-                                                    GestureDetector(
-                                                        onTap: () async {
-                                                          if (tripDirectionDetails !=
-                                                              null) {
-                                                            gotKeyOfDriver(
-                                                                userProvider);
-                                                            // countFullTimeRequest(userProvider);
-                                                            Provider.of<PositionCancelReq>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .updateValue(
-                                                                    0.0);
-                                                            Provider.of<PositionChang>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .changValue(
-                                                                    -500.0);
-                                                            final int amount =
-                                                                checkAnyAmount(
-                                                                    carTypePro!,
-                                                                    tripDirectionDetails!);
-                                                            DataBaseSrv()
-                                                                .saveRiderRequest(
-                                                                    context,
-                                                                    amount);
-                                                            state =
-                                                                "requesting";
-                                                          } else {
-                                                            Tools().toastMsg(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .chooseBefore);
-                                                          }
-                                                        },
-                                                        child:
-                                                            AnimatedContainer(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 12.0,
-                                                                  bottom: 30),
-                                                          duration:
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      1000),
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              6.5 /
-                                                              100,
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              70 /
-                                                              100,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: tripDirectionDetails !=
-                                                                    null
-                                                                ? const Color(
-                                                                    0xFFFBC408)
-                                                                : const Color(
-                                                                    0xFF00A3E0),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15.0),
-                                                          ),
-                                                          child: Center(
-                                                              child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .requestTaxi,
-                                                            style: const TextStyle(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white),
-                                                          )),
-                                                        )),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
+                                        return mainBord(
+                                            context, _value, userProvider);
                                       },
                                     ),
 
@@ -319,87 +159,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Consumer<SheetCarDesc>(
                                       builder: (BuildContext context, _value,
                                           Widget? child) {
-                                        return AnimatedPositioned(
-                                          child: CustomBottomSheet()
-                                              .showSheetCarInfoTaxi(
-                                                  context: context,
-                                                  image: const Image(
-                                                    image: AssetImage(
-                                                        "assets/yellow.png"),
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .regularTaxi,
-                                                  des: AppLocalizations.of(
-                                                          context)!
-                                                      .sedanCar,
-                                                  iconM: Icons.money,
-                                                  price: "",
-                                                  iconP: Icons.person,
-                                                  person: "4"),
-                                          duration:
-                                              const Duration(microseconds: 200),
-                                          left: 0.0,
-                                          right: 0.0,
-                                          bottom: _value.sheetValTaxi,
-                                        );
+                                        return sheetTaxi(context, _value);
                                       },
                                     ),
                                     Consumer<SheetCarDesc>(
                                       builder: (BuildContext context, _value,
                                           Widget? child) {
-                                        return AnimatedPositioned(
-                                          child: CustomBottomSheet()
-                                              .showSheetCarInfoMedeum(
-                                                  context: context,
-                                                  image: const Image(
-                                                      image: AssetImage(
-                                                          "assets/mers.png")),
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .medium,
-                                                  des: AppLocalizations.of(
-                                                          context)!
-                                                      .mediumCar,
-                                                  iconM: Icons.money,
-                                                  price: "....",
-                                                  iconP: Icons.person,
-                                                  person: "6-10"),
-                                          duration:
-                                              const Duration(microseconds: 200),
-                                          left: 0.0,
-                                          right: 0.0,
-                                          bottom: _value.sheetValMed,
-                                        );
+                                        return sheetVeto(context, _value);
                                       },
                                     ),
                                     Consumer<SheetCarDesc>(
                                       builder: (BuildContext context, _value,
                                           Widget? child) {
-                                        return AnimatedPositioned(
-                                          child: CustomBottomSheet()
-                                              .showSheetCarInfoBig(
-                                                  context: context,
-                                                  image: const Image(
-                                                      image: AssetImage(
-                                                          "assets/van.png")),
-                                                  title: AppLocalizations
-                                                          .of(context)!
-                                                      .bigCommercial,
-                                                  des: AppLocalizations.of(
-                                                          context)!
-                                                      .bigCar,
-                                                  iconM: Icons.money,
-                                                  price: "....",
-                                                  iconP: Icons.person,
-                                                  person: "11-19"),
-                                          duration:
-                                              const Duration(microseconds: 200),
-                                          left: 0.0,
-                                          right: 0.0,
-                                          bottom: _value.sheetValBig,
-                                        );
+                                        return sheetVan(context, _value);
                                       },
                                     ),
 
@@ -407,21 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Consumer<PositionCancelReq>(
                                       builder: (BuildContext context, _value,
                                           Widget? child) {
-                                        return AnimatedPositioned(
-                                            duration: const Duration(
-                                                milliseconds: 200),
-                                            right: 0.0,
-                                            left: 0.0,
-                                            curve: Curves.ease,
-                                            bottom: _value.value,
-                                            child: CancelTaxi()
-                                                .cancelTaxiRequest(
-                                                    context: context,
-                                                    userIdProvider:
-                                                        userProvider,
-                                                    voidCallback: () async {
-                                                      restApp();
-                                                    }));
+                                        return cancelBord(
+                                            context, _value, userProvider);
                                       },
                                     ),
 
@@ -429,35 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Consumer<PositionDriverInfoProvider>(
                                       builder: (BuildContext context, _value,
                                           Widget? child) {
-                                        return AnimatedPositioned(
-                                            duration: const Duration(
-                                                milliseconds: 200),
-                                            right: 0.0,
-                                            left: 0.0,
-                                            bottom: _value.positionDriverInfo,
-                                            curve: Curves.ease,
-                                            child: DriverInfo()
-                                                .driverInfoContainer(
-                                                    context: context,
-                                                    userIdProvider:
-                                                        userProvider,
-                                                    voidCallback: () async {
-                                                      // var marker = RippleMarker(
-                                                      //   markerId: kMarkerId,
-                                                      //   position: const LatLng(
-                                                      //       0.0, 0.0),
-                                                      //   icon: BitmapDescriptor
-                                                      //       .defaultMarkerWithHue(
-                                                      //           BitmapDescriptor
-                                                      //               .hueBlue),
-                                                      //   ripple: false,
-                                                      // );
-                                                      // aNmarkers[kMarkerId] =
-                                                      //     marker;
-                                                      _keyDriverAvailable
-                                                          .clear();
-                                                      restApp();
-                                                    }));
+                                        return driverInfoBord(
+                                            context, _value, userProvider);
                                       },
                                     ),
                                   ],
@@ -467,77 +199,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           });
                     },
                   ),
-                  Positioned(
-                    left: AppLocalizations.of(context)!.whereTo == "إلى أين ؟"
-                        ? 0.0
-                        : null,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Consumer<ChangeColor>(
-                        builder: (BuildContext context, value, Widget? child) {
-                          return CircleAvatar(
-                              radius: 30,
-                              backgroundColor: value.isTrue == false
-                                  ? const Color(0xFF00A3E0)
-                                  : Colors.white,
-                              child: IconButton(
-                                  onPressed: () {
-                                    if (value.isTrue == false) {
-                                      Provider.of<DoubleValue>(context,
-                                              listen: false)
-                                          .value0Or1(1);
-                                      Provider.of<ChangeColor>(context,
-                                              listen: false)
-                                          .updateState(true);
-                                    } else {
-                                      Provider.of<DoubleValue>(context,
-                                              listen: false)
-                                          .value0Or1(0);
-                                      Provider.of<ChangeColor>(context,
-                                              listen: false)
-                                          .updateState(false);
-                                    }
-                                  },
-                                  icon: value.isTrue == false
-                                      ? const Icon(
-                                          Icons
-                                              .format_list_numbered_rtl_rounded,
-                                          color: Colors.white,
-                                          size: 25,
-                                        )
-                                      : const Icon(
-                                          Icons.close,
-                                          color: Color(0xFFFBC408),
-                                          size: 25,
-                                        )));
-                        },
-                      ),
-                    ),
-                  ),
+                  btnDrawer(),
 
                   /// complain button
-                  statusRide == "accepted" || statusRide == "Driver arrived"
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 80.0, left: 10.0),
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.white,
-                            child: IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (_) => CustomWidgets()
-                                          .complainOnDriver(context));
-                                },
-                                icon: Icon(
-                                  Icons.call,
-                                  color: Colors.greenAccent.shade700,
-                                  size: 25,
-                                )),
-                          ),
-                        )
-                      : const SizedBox()
+                  btnComplainOnDriver(),
                 ],
               ),
             ),
@@ -545,7 +210,114 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-// this widget include buttons tourism Trip and AdvanceReservation
+  // this widget for googleMap
+  Widget googleMap() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 60 / 100,
+      width: MediaQuery.of(context).size.width,
+      child: GoogleMap(
+        padding: const EdgeInsets.only(bottom: 95.0),
+        mapType: MapType.normal,
+        initialCameraPosition: LogicGoogleMap().kGooglePlex,
+        myLocationButtonEnabled: true,
+        myLocationEnabled: true,
+        polylines: polylineSet,
+        markers: markersSet,
+        circles: circlesSet,
+        onMapCreated: (GoogleMapController controller) async {
+          LogicGoogleMap().controllerGoogleMap.complete(controller);
+          newGoogleMapController = controller;
+        },
+      ),
+    );
+  }
+
+// this widget main user bord
+  Widget mainBord(
+      BuildContext context, PositionChang _value, UserIdProvider userProvider) {
+    var carTypePro =
+        Provider.of<CarTypeProvider>(context, listen: false).carType;
+    return AnimatedPositioned(
+        duration: const Duration(milliseconds: 200),
+        right: 0.0,
+        left: 0.0,
+        bottom: _value.val,
+        curve: Curves.ease,
+        child: Container(
+          // // padding:
+          //     const EdgeInsets.all(8.0),
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0)),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 6.0,
+                    spreadRadius: 0.5,
+                    color: Colors.black54,
+                    offset: Offset(0.7, 0.7))
+              ],
+              color: Colors.white),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                btnTripAdvanceReservation(),
+                whereToGo(),
+                rowOfCarTypeBox(),
+
+                /// drop of botton
+                Consumer<DropBottomValue>(
+                  builder: (BuildContext context, _value, Widget? child) {
+                    return dropBottomCustom(context, _value.valueDropBottom);
+                  },
+                ),
+
+                /// request button
+                GestureDetector(
+                    onTap: () async {
+                      if (tripDirectionDetails != null) {
+                        gotKeyOfDriver(userProvider);
+                        // countFullTimeRequest(userProvider);
+                        Provider.of<PositionCancelReq>(context, listen: false)
+                            .updateValue(0.0);
+                        Provider.of<PositionChang>(context, listen: false)
+                            .changValue(-500.0);
+                        final int amount =
+                            checkAnyAmount(carTypePro!, tripDirectionDetails!);
+                        DataBaseSrv().saveRiderRequest(context, amount);
+                        state = "requesting";
+                      } else {
+                        Tools().toastMsg(
+                            AppLocalizations.of(context)!.chooseBefore);
+                      }
+                    },
+                    child: AnimatedContainer(
+                      margin: const EdgeInsets.only(top: 12.0, bottom: 30),
+                      duration: const Duration(milliseconds: 1000),
+                      height: MediaQuery.of(context).size.height * 6.5 / 100,
+                      width: MediaQuery.of(context).size.width * 70 / 100,
+                      decoration: BoxDecoration(
+                        color: tripDirectionDetails != null
+                            ? const Color(0xFFFBC408)
+                            : const Color(0xFF00A3E0),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Center(
+                          child: Text(
+                        AppLocalizations.of(context)!.requestTaxi,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      )),
+                    )),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  // this widget include buttons tourism Trip and AdvanceReservation in mainBord
   Widget btnTripAdvanceReservation() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -581,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-// this widget in cloud whereToGo search failed
+// this widget in cloud whereToGo search failed mainBord
   Widget whereToGo() {
     return Expanded(
       flex: 0,
@@ -593,6 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }));
           if (res == "dataDir") {
             await getPlaceDirection(context);
+            Tools().changeAllProClickTaxiBox(context);
           }
         },
         child: Container(
@@ -618,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-// this widget in cloud car box type taxi/van/veto
+// this widget in cloud car box type taxi/van/veto mainBord
   Widget rowOfCarTypeBox() {
     return Container(
       margin:
@@ -633,10 +406,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   if (!noChangeToTaxi) {
                     Tools().changeAllProClickTaxiBox(context);
-                    markersSet.clear();
-                    GeoFireMethods.listOfNearestDriverAvailable.clear();
-                    geoFireRader = 4;
-                    geoFireInitialize();
                   }
                 },
                 child: Stack(
@@ -645,15 +414,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (BuildContext context, _value, Widget? child) {
                         return Opacity(
                             opacity: _value.isOpacityTaxi == true ? 1 : 0.3,
-                            child: CustomWidgets().carTypeBox(
-                                const Image(
-                                    image: AssetImage(
-                                      "assets/yellow.png",
-                                    ),
-                                    fit: BoxFit.contain),
-                                amountOrCarTypeTaxi(),
-                                "4",
-                                context));
+                            child: Consumer<TrueFalse>(
+                              builder: (BuildContext context, valueColor,
+                                  Widget? child) {
+                                return CustomWidgets().carTypeBox(
+                                  image: const Image(
+                                      image: AssetImage(
+                                        "assets/yellow.png",
+                                      ),
+                                      fit: BoxFit.contain),
+                                  text: Tools().amountOrCarTypeTaxi(context),
+                                  mainColor: valueColor.colorTaxiInRow
+                                      ? Colors.greenAccent.shade700
+                                      : Colors.black38,
+                                  text1: Tools()
+                                      .amountOrCarTypeTaxiDiscount(context),
+                                  subColor: valueColor.colorTaxiInRow
+                                      ? Colors.redAccent.shade700
+                                      : Colors.black38,
+                                  context: context,
+                                );
+                              },
+                            ));
                       },
                     ),
                     Positioned(
@@ -677,6 +459,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     : const Text(""));
                           },
                         )),
+                    Consumer<TrueFalse>(
+                      builder: (BuildContext context, value, Widget? child) {
+                        return value.showLineDiscountTaxi
+                            ? Positioned(
+                                right: 20.0,
+                                left: 20.0,
+                                bottom: MediaQuery.of(context).size.height *
+                                    2.5 /
+                                    100,
+                                child: AnimatedContainer(
+                                  height: tripDirectionDetails != null ? 2 : 0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(2),
+                                    color: Colors.grey,
+                                  ),
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.fastOutSlowIn,
+                                ),
+                              )
+                            : const SizedBox();
+                      },
+                    ),
                     Positioned(
                       right: 0.0,
                       left: 0.0,
@@ -704,21 +508,33 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: GestureDetector(
                 onTap: () async {
-                  Tools().changeAllProClickVanBox(context);
+                  Tools().changeAllProClickVetoBox(context);
                 },
                 child: Stack(
                   children: [
                     Consumer<OpacityChang>(
                       builder: (BuildContext context, _value, Widget? child) {
                         return Opacity(
-                            opacity: _value.isOpacityVan == true ? 1 : 0.3,
-                            child: CustomWidgets().carTypeBox(
-                                const Image(
-                                    image: AssetImage("assets/mers.png"),
-                                    fit: BoxFit.contain),
-                                amountOrCarTypeVeto(),
-                                "6-10",
-                                context));
+                            opacity: _value.isOpacityVan ? 1 : 0.3,
+                            child: Consumer<TrueFalse>(
+                              builder: (BuildContext context, valueColor,
+                                  Widget? child) {
+                                return CustomWidgets().carTypeBox(
+                                    image: const Image(
+                                        image: AssetImage("assets/mers.png"),
+                                        fit: BoxFit.contain),
+                                    text: Tools().amountOrCarTypeVeto(context),
+                                    mainColor: valueColor.colorVetoInRow
+                                        ? Colors.greenAccent.shade700
+                                        : Colors.black38,
+                                    text1: Tools()
+                                        .amountOrCarTypeVetoDiscount(context),
+                                    subColor: valueColor.colorVetoInRow
+                                        ? Colors.red.shade700
+                                        : Colors.black38,
+                                    context: context);
+                              },
+                            ));
                       },
                     ),
                     Positioned(
@@ -742,6 +558,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     : const Text(""));
                           },
                         )),
+                    Consumer<TrueFalse>(
+                      builder: (BuildContext context, value, Widget? child) {
+                        return value.showLineDiscountVeto
+                            ? Positioned(
+                                right: 20.0,
+                                left: 20.0,
+                                bottom: MediaQuery.of(context).size.height *
+                                    2.5 /
+                                    100,
+                                child: AnimatedContainer(
+                                  height: tripDirectionDetails != null ? 2 : 0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(2),
+                                    color: Colors.grey,
+                                  ),
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.fastOutSlowIn,
+                                ),
+                              )
+                            : const SizedBox();
+                      },
+                    ),
                     Positioned(
                       right: 0.0,
                       left: 0.0,
@@ -769,21 +607,34 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
                 child: GestureDetector(
               onTap: () {
-                Tools().changeAllProClickVetoBox(context);
+                Tools().changeAllProClickVanBox(context);
               },
               child: Stack(
                 children: [
                   Consumer<OpacityChang>(
                     builder: (BuildContext context, _value, Widget? child) {
                       return Opacity(
-                          opacity: _value.isOpacityVeto == true ? 1.0 : 0.3,
-                          child: CustomWidgets().carTypeBox(
-                              const Image(
-                                  image: AssetImage("assets/van.png"),
-                                  fit: BoxFit.contain),
-                              amountOrCarTypeVan(),
-                              "11-19",
-                              context));
+                          opacity: _value.isOpacityVeto ? 1.0 : 0.3,
+                          child: Consumer<TrueFalse>(
+                            builder: (BuildContext context, valueColor,
+                                Widget? child) {
+                              return CustomWidgets().carTypeBox(
+                                image: const Image(
+                                    image: AssetImage("assets/van.png"),
+                                    fit: BoxFit.contain),
+                                text: Tools().amountOrCarTypeVan(context),
+                                mainColor: valueColor.colorVanInRow
+                                    ? Colors.greenAccent.shade700
+                                    : Colors.black38,
+                                text1:
+                                    Tools().amountOrCarTypeVanDiscount(context),
+                                subColor: valueColor.colorVanInRow
+                                    ? Colors.redAccent.shade700
+                                    : Colors.black38,
+                                context: context,
+                              );
+                            },
+                          ));
                     },
                   ),
                   Positioned(
@@ -805,6 +656,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                   : const Text(""));
                         },
                       )),
+                  Consumer<TrueFalse>(
+                    builder: (BuildContext context, value, Widget? child) {
+                      return value.showLineDiscountVan
+                          ? Positioned(
+                              right: 20.0,
+                              left: 20.0,
+                              bottom: MediaQuery.of(context).size.height *
+                                  2.5 /
+                                  100,
+                              child: AnimatedContainer(
+                                height: tripDirectionDetails != null ? 2 : 0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2),
+                                  color: Colors.grey,
+                                ),
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.fastOutSlowIn,
+                              ),
+                            )
+                          : const SizedBox();
+                    },
+                  ),
                   Positioned(
                     right: 0.0,
                     left: 0.0,
@@ -832,16 +705,191 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // this taxi description sheet
+  Widget sheetTaxi(BuildContext context, SheetCarDesc _value) {
+    return AnimatedPositioned(
+      child: CustomBottomSheet().showSheetCarInfoTaxi(
+          context: context,
+          image: const Image(
+            image: AssetImage("assets/yellow.png"),
+            fit: BoxFit.contain,
+          ),
+          title: AppLocalizations.of(context)!.regularTaxi,
+          des: AppLocalizations.of(context)!.sedanCar,
+          iconM: Icons.money,
+          price: "",
+          iconP: Icons.person,
+          person: "4"),
+      duration: const Duration(microseconds: 200),
+      left: 0.0,
+      right: 0.0,
+      bottom: _value.sheetValTaxi,
+    );
+  }
+
+  // this veto description sheet
+  Widget sheetVeto(BuildContext context, SheetCarDesc _value) {
+    return AnimatedPositioned(
+      child: CustomBottomSheet().showSheetCarInfoMedeum(
+          context: context,
+          image: const Image(image: AssetImage("assets/mers.png")),
+          title: AppLocalizations.of(context)!.medium,
+          des: AppLocalizations.of(context)!.mediumCar,
+          iconM: Icons.money,
+          price: "....",
+          iconP: Icons.person,
+          person: "6-10"),
+      duration: const Duration(microseconds: 200),
+      left: 0.0,
+      right: 0.0,
+      bottom: _value.sheetValMed,
+    );
+  }
+
+  // this van description sheet
+  Widget sheetVan(BuildContext context, SheetCarDesc _value) {
+    return AnimatedPositioned(
+      child: CustomBottomSheet().showSheetCarInfoBig(
+          context: context,
+          image: const Image(image: AssetImage("assets/van.png")),
+          title: AppLocalizations.of(context)!.bigCommercial,
+          des: AppLocalizations.of(context)!.bigCar,
+          iconM: Icons.money,
+          price: "....",
+          iconP: Icons.person,
+          person: "11-19"),
+      duration: const Duration(microseconds: 200),
+      left: 0.0,
+      right: 0.0,
+      bottom: _value.sheetValBig,
+    );
+  }
+
+// this widget cancelBord when user start his request
+  Widget cancelBord(BuildContext context, PositionCancelReq _value,
+      UserIdProvider userProvider) {
+    return AnimatedPositioned(
+        duration: const Duration(milliseconds: 200),
+        right: 0.0,
+        left: 0.0,
+        curve: Curves.ease,
+        bottom: _value.value,
+        child: CancelTaxi().cancelTaxiRequest(
+            context: context,
+            userIdProvider: userProvider,
+            voidCallback: () async {
+              restApp();
+            }));
+  }
+
+// this widget for driverInfoBord to display driver info after he accepted
+  Widget driverInfoBord(BuildContext context, PositionDriverInfoProvider _value,
+      UserIdProvider userProvider) {
+    return AnimatedPositioned(
+        duration: const Duration(milliseconds: 200),
+        right: 0.0,
+        left: 0.0,
+        bottom: _value.positionDriverInfo,
+        curve: Curves.ease,
+        child: DriverInfo().driverInfoContainer(
+            context: context,
+            userIdProvider: userProvider,
+            voidCallback: () async {
+              // var marker = RippleMarker(
+              //   markerId: kMarkerId,
+              //   position: const LatLng(
+              //       0.0, 0.0),
+              //   icon: BitmapDescriptor
+              //       .defaultMarkerWithHue(
+              //           BitmapDescriptor
+              //               .hueBlue),
+              //   ripple: false,
+              // );
+              // aNmarkers[kMarkerId] =
+              //     marker;
+              _keyDriverAvailable.clear();
+              restApp();
+            }));
+  }
+
+  Widget btnDrawer() {
+    return Positioned(
+      left: AppLocalizations.of(context)!.whereTo == "إلى أين ؟" ? 0.0 : null,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<ChangeColor>(
+          builder: (BuildContext context, value, Widget? child) {
+            return CircleAvatar(
+                radius: 30,
+                backgroundColor: value.isTrue == false
+                    ? const Color(0xFF00A3E0)
+                    : Colors.white,
+                child: IconButton(
+                    onPressed: () {
+                      if (value.isTrue == false) {
+                        Provider.of<DoubleValue>(context, listen: false)
+                            .value0Or1(1);
+                        Provider.of<ChangeColor>(context, listen: false)
+                            .updateState(true);
+                      } else {
+                        Provider.of<DoubleValue>(context, listen: false)
+                            .value0Or1(0);
+                        Provider.of<ChangeColor>(context, listen: false)
+                            .updateState(false);
+                      }
+                    },
+                    icon: value.isTrue == false
+                        ? const Icon(
+                            Icons.format_list_numbered_rtl_rounded,
+                            color: Colors.white,
+                            size: 25,
+                          )
+                        : const Icon(
+                            Icons.close,
+                            color: Color(0xFFFBC408),
+                            size: 25,
+                          )));
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget btnComplainOnDriver() {
+    return statusRide == "accepted" || statusRide == "Driver arrived"
+        ? Padding(
+            padding: const EdgeInsets.only(top: 80.0, left: 10.0),
+            child: CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) =>
+                            CustomWidgets().complainOnDriver(context));
+                  },
+                  icon: Icon(
+                    Icons.call,
+                    color: Colors.greenAccent.shade700,
+                    size: 25,
+                  )),
+            ),
+          )
+        : const SizedBox();
+  }
+
   ///======Start got current loction + geoFire for add all drivers on map who are close to rider=========
 
   // this method for display nearest driver available from rider in list by using geoFire
   Future<void> geoFireInitialize() async {
     await Geofire.initialize("availableDrivers");
-    final currentPosition =
+    final currentPositionPro =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     try {
-      Geofire.queryAtLocation(currentPosition.latitude ?? 0.0,
-              currentPosition.longitude ?? 0.0, geoFireRader)
+      Geofire.queryAtLocation(currentPositionPro.latitude ?? 0.0,
+              currentPositionPro.longitude ?? 0.0, geoFireRadios)
           ?.listen((map) async {
         if (map != null) {
           var callBack = map['callBack'];
@@ -1013,8 +1061,8 @@ class _HomeScreenState extends State<HomeScreen> {
               title: " $fNameIcon $lNameIcon",
               snippet:
                   ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
-          rotation: MathMethods.createRandomNumber(90),
-          anchor: const Offset(0.1, 0.5),
+          rotation: MathMethods.createRandomNumber(180),
+          anchor: const Offset(1.0, 0.50),
         );
         setState(() {
           markersSet.add(marker);
@@ -1058,7 +1106,7 @@ class _HomeScreenState extends State<HomeScreen> {
     noChangeToTaxi = true;
     GeoFireMethods.listOfNearestDriverAvailable.clear();
     markersSet.clear();
-    geoFireRader = 30;
+    geoFireRadios = 30;
     await geoFireInitialize();
     checkAnyListTurCityOpen();
   }
@@ -1145,7 +1193,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Tools().toastMsg('No trip available now ');
           GeoFireMethods.listOfNearestDriverAvailable.clear();
           markersSet.clear();
-          geoFireRader = 4;
+          geoFireRadios = 4;
           geoFireInitialize();
           Tools().changeAllProClickTaxiBox(context);
         }
@@ -1177,7 +1225,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Tools().toastMsg('No trip available now ');
           GeoFireMethods.listOfNearestDriverAvailable.clear();
           markersSet.clear();
-          geoFireRader = 4;
+          geoFireRadios = 4;
           geoFireInitialize();
           Tools().changeAllProClickTaxiBox(context);
         }
@@ -1209,7 +1257,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Tools().toastMsg('No trip available now ');
           GeoFireMethods.listOfNearestDriverAvailable.clear();
           markersSet.clear();
-          geoFireRader = 4;
+          geoFireRadios = 4;
           geoFireInitialize();
           Tools().changeAllProClickTaxiBox(context);
         }
@@ -1241,7 +1289,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Tools().toastMsg('No trip available now ');
           GeoFireMethods.listOfNearestDriverAvailable.clear();
           markersSet.clear();
-          geoFireRader = 4;
+          geoFireRadios = 4;
           geoFireInitialize();
           Tools().changeAllProClickTaxiBox(context);
         }
@@ -1273,7 +1321,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Tools().toastMsg('No trip available now ');
           GeoFireMethods.listOfNearestDriverAvailable.clear();
           markersSet.clear();
-          geoFireRader = 4;
+          geoFireRadios = 4;
           geoFireInitialize();
           Tools().changeAllProClickTaxiBox(context);
         }
@@ -1305,7 +1353,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Tools().toastMsg('No trip available now ');
           GeoFireMethods.listOfNearestDriverAvailable.clear();
           markersSet.clear();
-          geoFireRader = 4;
+          geoFireRadios = 4;
           geoFireInitialize();
           Tools().changeAllProClickTaxiBox(context);
         }
@@ -1337,7 +1385,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Tools().toastMsg('No trip available now ');
           GeoFireMethods.listOfNearestDriverAvailable.clear();
           markersSet.clear();
-          geoFireRader = 4;
+          geoFireRadios = 4;
           geoFireInitialize();
           Tools().changeAllProClickTaxiBox(context);
         }
@@ -1345,65 +1393,11 @@ class _HomeScreenState extends State<HomeScreen> {
       default:
         GeoFireMethods.listOfNearestDriverAvailable.clear();
         markersSet.clear();
-        geoFireRader = 4;
+        geoFireRadios = 4;
         geoFireInitialize();
         Tools().changeAllProClickTaxiBox(context);
         break;
     }
-  }
-
-  // this method if dir Details != null amount : carType
-  String amountOrCarTypeTaxi() {
-    var carTypePro = Provider.of<CarTypeProvider>(context).carType;
-    String? result;
-
-    if (tripDirectionDetails != null) {
-      switch (carTypePro) {
-        case "Taxi-4 seats":
-          result =
-              "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}";
-          break;
-        default:
-          result = AppLocalizations.of(context)!.taxi;
-          break;
-      }
-    }
-
-    return result ?? AppLocalizations.of(context)!.taxi;
-  }
-
-  String amountOrCarTypeVeto() {
-    var carTypePro = Provider.of<CarTypeProvider>(context).carType;
-    String? result;
-    if (tripDirectionDetails != null) {
-      switch (carTypePro) {
-        case "Medium commercial-6-10 seats":
-          result =
-              "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}";
-          break;
-        default:
-          result = AppLocalizations.of(context)!.mediumCommercial;
-          break;
-      }
-    }
-    return result ?? AppLocalizations.of(context)!.mediumCommercial;
-  }
-
-  String amountOrCarTypeVan() {
-    var carTypePro = Provider.of<CarTypeProvider>(context).carType;
-    String? result;
-    if (tripDirectionDetails != null) {
-      switch (carTypePro) {
-        case "Big commercial-11-19 seats":
-          result =
-              "${ApiSrvDir.calculateFares1(tripDirectionDetails!, carTypePro!, context)} ${currencyTypeCheck(context)}";
-          break;
-        default:
-          result = AppLocalizations.of(context)!.bigCommercial;
-          break;
-      }
-    }
-    return result ?? AppLocalizations.of(context)!.bigCommercial;
   }
 
 // this method for check any amount will set to   Ride Request collection
@@ -1536,7 +1530,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method for add all key driver in list for pushing to searchMethod
   void gotKeyOfDriver(UserIdProvider userProvider) {
-    showRiderCancelRequest = true;
+    Provider.of<TrueFalse>(context, listen: false).updateShowCancelBord(true);
     List<String> keyList = [];
     _driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
     for (var i in _driverAvailable) {
@@ -1704,7 +1698,8 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         return;
       } else {
-        showDriverInfoContainer = true;
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateShowDriverIfo(true);
         if (kDebugMode) {
           print('HAS DRIVER INFO VAL != NULL');
         }
@@ -2038,8 +2033,27 @@ class _HomeScreenState extends State<HomeScreen> {
     sound2 = false;
     sound3 = false;
     noChangeToTaxi = false;
-    showRiderCancelRequest = false;
-    showDriverInfoContainer = false;
+    Provider.of<TrueFalse>(context, listen: false).taxiDiscount(false);
+    Provider.of<TrueFalse>(context, listen: false).vetoDiscount(false);
+    Provider.of<TrueFalse>(context, listen: false).vanDiscount(false);
+    Provider.of<TrueFalse>(context, listen: false).updateShowCancelBord(false);
+    Provider.of<TrueFalse>(context, listen: false).updateShowDriverIfo(false);
+    Provider.of<TrueFalse>(context, listen: false)
+        .updateColorTextInRowTaxi(false);
+    Provider.of<TrueFalse>(context, listen: false)
+        .updateColorTextInRowVeto(false);
+    Provider.of<TrueFalse>(context, listen: false)
+        .updateColorTextInRowVan(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Taxi-4 seats");
+    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
+    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
+    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
+    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
+    Provider.of<CarTypeProvider>(context, listen: false)
+        .updateCarType("Taxi-4 seats");
     // markersSet.removeWhere((ele) => ele.markerId.value.contains("pickUpId"));
     // markersSet.removeWhere((ele) => ele.markerId.value.contains("dropOfId"));
     polylineSet.clear();
@@ -2053,7 +2067,7 @@ class _HomeScreenState extends State<HomeScreen> {
     lNameIcon = "";
     waitDriver = "wait";
     state = "normal";
-    geoFireRader = 4;
+    geoFireRadios = 4;
     statusRide = "";
     newstatusRide = "";
     carDriverInfo = "";
@@ -2069,7 +2083,6 @@ class _HomeScreenState extends State<HomeScreen> {
     tourismCityName = "";
     tourismCityPrice = "";
     driverNewLocation = const LatLng(0.0, 0.0);
-    Tools().changeAllProClickTaxiBox(context);
     await LogicGoogleMap().locationPosition(context);
     await geoFireInitialize();
     setState(() {});

@@ -2869,11 +2869,10 @@ class CustomWidgets {
 
   /// car type box taxi/van/veto
   Widget carTypeBox(
-      Image image, String text, String text1, BuildContext context) {
+  {required Image image, required String text,required Color mainColor ,required String text1,required Color subColor ,required BuildContext context}) {
     return Container(
-      // height: MediaQuery.of(context).size.height * 12.5 / 100,
-      // width: MediaQuery.of(context).size.height * 20 / 100,
       decoration: const BoxDecoration(color: Colors.white),
+      margin: const EdgeInsets.only(bottom: 8),
       child: Column(
         children: [
           Expanded(
@@ -2884,8 +2883,8 @@ class CustomWidgets {
               text,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.black,
+              style:  TextStyle(
+                color: mainColor,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
@@ -2900,7 +2899,7 @@ class CustomWidgets {
               const SizedBox(width: 4.0),
               Text(
                 text1,
-                style: const TextStyle(fontSize: 18.0, color: Colors.black38),
+                style:  TextStyle(fontSize: 18.0, color: subColor),
               ),
             ],
           ))
@@ -3176,7 +3175,7 @@ class CustomWidgets {
                   GestureDetector(
                     onTap: () {
                       voidCallback();
-                      Tools().changeAllProClickVanBox(context);
+                      Tools().changeAllProClickVetoBox(context);
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -3199,7 +3198,7 @@ class CustomWidgets {
                   GestureDetector(
                     onTap: () {
                       voidCallback();
-                      Tools().changeAllProClickVetoBox(context);
+                      Tools().changeAllProClickVanBox(context);
                       Navigator.pop(context);
                     },
                     child: Container(
