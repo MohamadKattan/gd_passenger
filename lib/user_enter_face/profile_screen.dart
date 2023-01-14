@@ -7,7 +7,6 @@ import 'package:gd_passenger/model/user.dart';
 import 'package:gd_passenger/my_provider/indector_profile_screen.dart';
 import 'package:gd_passenger/my_provider/info_user_database_provider.dart';
 import 'package:gd_passenger/user_enter_face/splash_screen.dart';
-import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../my_provider/profile_sheet.dart';
@@ -15,6 +14,8 @@ import '../repo/auth_srv.dart';
 import '../tools/tools.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../widget/custom_widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -185,7 +186,8 @@ class ProfileScreen extends StatelessWidget {
                               onTap: () {
                                 if (_imageFile == null) {
                                   Tools().toastMsg(
-                                      AppLocalizations.of(context)!.upImage);
+                                      AppLocalizations.of(context)!.upImage,
+                                      Colors.red);
                                 } else {
                                   Provider.of<InductorProfileScreen>(context,
                                           listen: false)
@@ -347,8 +349,8 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   )),
               isTrue == true
-                  ? CircularInductorCostem().circularInductorCostem(context)
-                  : const Text(""),
+                  ? CustomWidgets().circularInductorCostem(context)
+                  : const SizedBox(),
             ],
           ),
         ),
@@ -366,7 +368,7 @@ class ProfileScreen extends StatelessWidget {
       //     .listingToPickImage(imageFile);
       Provider.of<ProfileSheet>(context, listen: false).updateState(-400);
     } catch (e) {
-      Tools().toastMsg(AppLocalizations.of(context)!.imageRequired);
+      Tools().toastMsg(AppLocalizations.of(context)!.imageRequired, Colors.red);
     }
   }
 

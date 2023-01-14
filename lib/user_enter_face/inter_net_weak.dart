@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../my_provider/indector_netWeekPro.dart';
 import '../repo/auth_srv.dart';
 import '../repo/data_base_srv.dart';
-import '../widget/custom_circuler.dart';
+import '../widget/custom_widgets.dart';
 
 class InterNetWeak extends StatefulWidget {
   final int timeNet;
@@ -55,8 +55,8 @@ class _InterNetWeakState extends State<InterNetWeak> {
             ],
           ),
           valIndector == true
-              ? CircularInductorCostem().circularInductorCostem(context)
-              : const Text(''),
+              ? CustomWidgets().circularInductorCostem(context)
+              : const SizedBox(),
         ],
       ),
     ));

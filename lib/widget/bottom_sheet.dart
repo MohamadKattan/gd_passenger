@@ -1,14 +1,10 @@
 // this class for bottom sheet in home screen
 
 import 'package:flutter/material.dart';
-import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:provider/provider.dart';
 import '../my_provider/sheet_cardsc.dart';
 
 class CustomBottomSheet {
-  TextEditingController whereEdit = TextEditingController();
-  CustomWidget customWidget = CustomWidget();
-
   Widget showSheetCarInfoTaxi(
       {required BuildContext context,
       required Image image,

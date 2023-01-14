@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/buttom_color_pro.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
@@ -41,18 +40,13 @@ void main() async {
   Wakelock.enable();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-  FlutterNativeSplash.removeAfter(initialization);
+  // FlutterNativeSplash.removeAfter(initialization);
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
-void initialization(BuildContext context) async {
-  await Future.delayed(const Duration(seconds: 1));
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

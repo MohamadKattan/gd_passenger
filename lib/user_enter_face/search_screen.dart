@@ -5,11 +5,12 @@ import 'package:gd_passenger/model/place_predictions.dart';
 import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/repo/api_srv_place.dart';
 import 'package:gd_passenger/tools/get_url.dart';
-import 'package:gd_passenger/widget/divider_box_.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../widget/custom_widgets.dart';
 
 var uuid = const Uuid();
 
@@ -22,7 +23,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController whereEdit = TextEditingController();
-  CustomWidget customWidget = CustomWidget();
+
   List<PlacePredictions> placePredictionsList = [];
   final GetUrl _getUrl = GetUrl();
   @override
@@ -98,7 +99,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   predictions: placePredictionsList[index]);
                             },
                             separatorBuilder: (context, index) =>
-                                customWidget.customDivider(),
+                                CustomWidgets().customDivider(),
                             itemCount: placePredictionsList.length,
                             shrinkWrap: true,
                             physics: const ClampingScrollPhysics(),

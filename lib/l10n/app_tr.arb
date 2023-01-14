@@ -21,7 +21,7 @@
   "regularTaxi": "Normal Taksi",
   "sedanCar": "sedan araba: Hyundai, Renault, Fiat, Toyota vb...",
   "start15": "Başlangıç:15.00",
-  "mediumCommercial": "OrtaTicari",
+  "mediumCommercial": "Lüks",
   "medium": "Orta",
   "mediumCar": "Günübirlik Turizim VİP Araç",
   "bigCommercial": "Büyük Ticari",
@@ -87,6 +87,7 @@
   "try1": "Tekrar deneyin",
   "interNetWeak": "İnternet ağı yok. Veya İnternet zayıf. İnternet ağınızı açın ve tekrar yüklemeyi deneyin !!!",
   "skip": "atlama",
+  "into0": "Garanti Taxi ile\n ilk 5 yolculuğunuz için\n %10 indirimden faydalanın",
   "into1": "Garanti Taxi de ihtiyacina göre istedigin araç türünü Seçebilirsin!",
   "into2": "Gidecegin yeri belirle ve en uygun fiyatlarla yolculugun tadini gikar.",
   "into3": "Garanti Taksi Uygulasini 3 ayri dil seçenekleriyle kullanabilirsin!",
@@ -186,5 +187,12 @@
   "emailCheck":"İşlem başarıyla tamamlandı.\n E-postanızı kontrol edin",
   "ready":"Kullanıma hazır",
   "beDriver":"sürücü ol!!",
-  "driverCancelTrip":"Sürücü yolculuğu iptal etti"
+  "driverCancelTrip":"Sürücü yolculuğu iptal etti",
+  "bookAHead":"Önceden ayırtın",
+  "tourismTrips":"turizm gezileri",
+  "tourismTripsDes":"Turistik geziler sadece Türkiye'de mevcuttur. Ortalama bir turist arabası için yolcu sayısı (6-10) arasında değişir veya büyük turist arabası, yolcu sayısı (10 ile 19) arasında değişir, yolculuk süresi 12 saattir. Tüm araba modelleri modern işletme sınıfıdır. Tüm şoförlerimiz 3 dil (Arapça-İngilizce-Türkçe) konuşmaktadır. Aşağıdaki düğmelerden birine tıklayarak araba kategorisini seçin, ardından istediğiniz seyahati seçin. Bizimle keyifli bir deneyim geçirmenizi dileriz.",
+  "followUs":"Tekliflerden\n ve indirimlerden yararlanın",
+  "wow":"şok",
+  "dis10":"Her yolculukta %10'a varan indirim",
+  "discount":"İndirim!!"
 }

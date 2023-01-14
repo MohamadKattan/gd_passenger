@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/my_provider/true_false.dart';
 import 'package:gd_passenger/my_provider/user_id_provider.dart';
-import 'package:gd_passenger/widget/custom_circuler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../my_provider/userinfo_sheet_provider.dart';
-import '../repo/api_srv_geo.dart';
+import '../repo/data_base_srv.dart';
+import '../tools/tools.dart';
+import '../widget/custom_widgets.dart';
 
 GlobalKey globalKey = GlobalKey();
 
@@ -22,10 +23,8 @@ class UserInfoScreen extends StatefulWidget {
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
-  // XFile imageFile = XFile("");
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
-  final CircularInductorCostem _inductorCostem = CircularInductorCostem();
   static String result = "";
   static String? resultCodeCon = "+90";
 
@@ -361,10 +360,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             color: Colors.black,
                           )),
                           child:
-                              _inductorCostem.circularInductorCostem(context),
+                              CustomWidgets().circularInductorCostem(context),
                         ),
                       )
-                    : const Text(""),
+                    : const SizedBox(),
               ],
             ),
           ),
@@ -385,27 +384,27 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       // Provider.of<PickImageProvide>(context, listen: false)
       //     .listingToPickImage(_imageFile!);
     } catch (e) {
-      tools.toastMsg(AppLocalizations.of(context)!.imageRequired);
-      tools.toastMsg(e.toString());
+      Tools().toastMsg(AppLocalizations.of(context)!.imageRequired, Colors.red);
+      Tools().toastMsg(e.toString(), Colors.red);
     }
   }
 
   checkBeforeSet(BuildContext context, String uid) {
     if (firstname.text.isEmpty) {
-      tools.toastMsg(AppLocalizations.of(context)!.nameRequired);
+      Tools().toastMsg(AppLocalizations.of(context)!.nameRequired, Colors.red);
     } else if (lastname.text.isEmpty) {
-      tools.toastMsg(AppLocalizations.of(context)!.lastRequired);
+      Tools().toastMsg(AppLocalizations.of(context)!.lastRequired, Colors.red);
     } else if (phoneNumber.text.isEmpty) {
-      tools.toastMsg(AppLocalizations.of(context)!.numberEmpty);
+      Tools().toastMsg(AppLocalizations.of(context)!.numberEmpty, Colors.red);
     } else {
-      ApiSrvGeo().getCountry();
+      // ApiSrvGeo().getCountry();
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(true);
       result = "$resultCodeCon${phoneNumber.text.trim()}";
       if (_imageFile == null) {
-        srv.setUserinfoToDataBase(
+        DataBaseSrv().setUserinfoToDataBase(
             '', uid, firstname, lastname, context, result, email);
       } else {
-        srv.setImageToStorage(
+        DataBaseSrv().setImageToStorage(
             firstname, lastname, uid, context, result, _imageFile!, email);
       }
     }

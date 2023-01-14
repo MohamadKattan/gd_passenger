@@ -74,7 +74,7 @@ class AuthSev {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == "wrong-password") {
-        _tools.toastMsg(AppLocalizations.of(context)!.passWrong);
+        _tools.toastMsg(AppLocalizations.of(context)!.passWrong,Colors.red);
         Provider.of<TrueFalse>(context, listen: false)
             .changeStateBooling(false);
       } else if (e.code == 'user-not-found') {
@@ -112,9 +112,9 @@ class AuthSev {
           }
         } on FirebaseAuthException catch (e) {
           e.toString();
-          _tools.toastMsg(AppLocalizations.of(context)!.wrong);
+          _tools.toastMsg(AppLocalizations.of(context)!.wrong,Colors.red);
         } catch (e) {
-          _tools.toastMsg(AppLocalizations.of(context)!.wrong);
+          _tools.toastMsg(AppLocalizations.of(context)!.wrong,Colors.red);
           Provider.of<TrueFalse>(context, listen: false)
               .changeStateBooling(false);
           e.toString();
@@ -133,8 +133,8 @@ class AuthSev {
     final delUser = refuser.child(_user.uid);
     delUser.onDisconnect();
     await delUser.remove();
-    _tools.toastMsg("deleted don");
-    _tools.toastMsg("for finishing delete your account exit from app");
+    _tools.toastMsg("deleted don",Colors.red);
+    _tools.toastMsg("for finishing delete your account exit from app",Colors.red);
     // await _user.delete();
     Navigator.pushAndRemoveUntil(
         context,

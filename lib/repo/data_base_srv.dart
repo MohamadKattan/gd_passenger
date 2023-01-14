@@ -90,7 +90,7 @@ class DataBaseSrv {
       });
     } catch (ex) {
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);
-      _tools.toastMsg(ex.toString());
+      _tools.toastMsg(ex.toString(),Colors.red);
     }
   }
 
@@ -111,7 +111,7 @@ class DataBaseSrv {
         return;
       }
     } catch (ex) {
-      Tools().toastMsg(AppLocalizations.of(context)!.noNet);
+      Tools().toastMsg(AppLocalizations.of(context)!.noNet,Colors.red);
     }
   }
 
@@ -136,8 +136,8 @@ class DataBaseSrv {
             context, MaterialPageRoute(builder: (_) => const AuthScreen()));
       }
     } catch (ex) {
-      Tools().toastMsg(AppLocalizations.of(context)!.noNet);
-      Tools().toastMsg('!!!');
+      Tools().toastMsg(AppLocalizations.of(context)!.noNet,Colors.red);
+      Tools().toastMsg('!!!',Colors.red);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const SplashScreen()),
@@ -202,7 +202,7 @@ class DataBaseSrv {
           .child(currentUserInfoOnline.userId);
       await refRideRequest.set(rideInfoMap);
     } catch (ex) {
-      _tools.toastMsg(ex.toString());
+      _tools.toastMsg(ex.toString(),Colors.red);
     }
   }
 

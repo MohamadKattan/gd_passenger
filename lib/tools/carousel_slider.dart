@@ -32,8 +32,7 @@ class ImageSliderDemo extends StatelessWidget {
               aspectRatio: 1.0,
               enlargeCenterPage: true,
             ),
-            items: imgList
-                .map((item) => Center(
+            items: imgList.map((item) => Center(
                     child: Image.asset(item, fit: BoxFit.cover, width: 300)))
                 .toList(),
           ),

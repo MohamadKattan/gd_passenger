@@ -87,7 +87,7 @@
   "@start15": {
     "description": "Start:15.00"
   },
-  "mediumCommercial": "MediumCommercial",
+  "mediumCommercial": "Vip lux",
   "@mediumCommercial": {
     "description": "MediumCommercial"
   },
@@ -99,7 +99,7 @@
   "@mediumCar": {
     "description": "Medium commercial"
   },
-  "bigCommercial": "Big Commercial",
+    "bigCommercial": " Vip lux big",
   "@bigCommercial": {
     "description": "Big Commercial"
   },
@@ -350,6 +350,10 @@
   "skip": "Skip",
   "@skip": {
     "description": "Skip"
+  },
+  "into0": "Benefit from 10% discount\n for your first 5 journeys\n with Garanti Taxi",
+  "@into0": {
+    "description": "into0"
   },
   "into1": "In Garanti Taxi, you can choose the type of vehicle you want according to your needs!",
   "@into1": {
@@ -764,5 +768,33 @@
   "driverCancelTrip":"The driver canceled the trip",
   "@driverCancelTrip": {
     "description": "driver cancel"
+  },
+  "bookAHead":"Book ahead",
+  "@bookAHead": {
+    "description": "Book ahead"
+  },
+  "tourismTrips":"Tourism trips",
+  "@tourismTrips": {
+    "description": "Tourism trips"
+  },
+  "tourismTripsDes":"Tourist trips are only available in Turkey. For the average tourist car, the number of passengers ranges from (6-10) or the large tourist car, the number of passengers ranges from (10 to 19), the duration of the trip is 12 hours. All car models are modern business class. All our drivers speak 3 languages (Arabic-English-Turkish). Choose the car category by clicking on one of the buttons below, then choose the trip you want. We wish you a pleasant experience with us.",
+  "@tourismTripsDes": {
+    "description": "Tourism trips des"
+  },
+  "followUs":" Take advantage\n of offers and discounts",
+  "@followUs": {
+    "description": "follow us"
+  },
+  "wow":"Wow",
+  "@wow": {
+    "description": "follow us"
+  },
+  "dis10":"Discount on\n Each trip up to 10%",
+  "@dis10": {
+    "description": "follow us"
+  },
+  "discount":"Discount!!",
+  "@discount": {
+    "description": "dis "
   }
 }

@@ -228,7 +228,7 @@ class _AdvanceReservationState extends State<AdvanceReservation>
       showCountryDrop = false;
       showCityDrop = true;
       Provider.of<CountryProvider>(context, listen: false)
-          .updateState('Turkey');
+          .updateState('Türkiye');
     } else if (val == AppLocalizations.of(context)!.sak) {
       showCountryDrop = false;
       showCityDrop = true;
@@ -266,7 +266,7 @@ class _AdvanceReservationState extends State<AdvanceReservation>
     List<String> resultLest = [];
     String countryValPro =
         Provider.of<CountryProvider>(context, listen: false).country;
-    if (countryValPro == 'Turkey') {
+    if (countryValPro == 'Türkiye') {
       setState(() {
         showCountryDrop = false;
         showCityDrop = false;
@@ -503,7 +503,7 @@ class _AdvanceReservationState extends State<AdvanceReservation>
     }
   }
 
-  // this dropBottom for choose country
+  // this dropBottom for choose cartype;
   Widget dropBottomCarType() {
     String val1 = AppLocalizations.of(context)!.chooseCarType;
     List<String> newCarTypeList = [

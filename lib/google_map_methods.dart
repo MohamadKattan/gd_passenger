@@ -1,9 +1,11 @@
 //this class for google map methods
+
 import 'dart:async';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/repo/api_srv_geo.dart';
 import 'package:gd_passenger/tools/get_url.dart';
-import 'package:gd_passenger/widget/custom_circuler.dart';
+import 'package:gd_passenger/tools/tools.dart';
+import 'package:gd_passenger/widget/custom_widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +24,9 @@ var uuid = const Uuid();
 class LogicGoogleMap {
   final GetUrl _getUrl = GetUrl();
   final ApiSrvGeo _apiMethods = ApiSrvGeo();
-  //instant current location on map before any request on map
-  Completer<GoogleMapController> controllerGoogleMap = Completer();
+
+  final Completer<GoogleMapController> controllerGoogleMap =
+      Completer<GoogleMapController>();
 
 // set location
   final CameraPosition kGooglePlex = const CameraPosition(
@@ -31,34 +34,58 @@ class LogicGoogleMap {
     zoom: 14.4746,
   );
 
-  Future<dynamic> locationPosition(BuildContext context) async {
+  Future<void> requestLocationPermission () async {
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      await Geolocator.requestPermission();
+      Tools().toastMsg('Location services are disabled.',Colors.red);
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        permission = await Geolocator.requestPermission();
+        Tools().toastMsg('Location permissions are denied',Colors.red);
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      Tools().toastMsg('Location permissions are denied for ever',Colors.red);
+    }
+  }
+
+  Future<void> locationPosition(BuildContext context) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await Geolocator.requestPermission();
+      Tools().toastMsg('Location services are disabled.',Colors.red);
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        Tools().toastMsg('Location permissions are denied',Colors.red);
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Tools().toastMsg('Location permissions are denied for ever',Colors.red);
     }
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+
     LatLng latLngPosition = LatLng(position.latitude, position.longitude);
-
     CameraPosition cameraPosition = CameraPosition(
-        target: latLngPosition, zoom: 14.0, tilt: 0.0, bearing: 0.0);
-
+      target: latLngPosition,
+      zoom: 14.151926040649414,
+      tilt: 59.440717697143555,
+      bearing: 192.8334901395799,
+    );
     newGoogleMapController
         ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-
     await _apiMethods.searchCoordinatesAddress(position, context);
   }
 
@@ -66,14 +93,13 @@ class LogicGoogleMap {
       String tourismCityName, BuildContext context) async {
     showDialog(
         context: context,
-        builder: (context) =>
-            CircularInductorCostem().circularInductorCostem(context));
+        builder: (context) => CustomWidgets().circularInductorCostem(context));
     final addressModle =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     if (tourismCityName.length > 1) {
       //apiFindPlace
       final autocompleteUrl = Uri.parse(
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$tourismCityName&key=$mapKey&sessiontoken=${uuid.v4()}&location=${addressModle.latitude},${addressModle.longitude}&radius=${50.000}");
+          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$tourismCityName&key=$mapKey&sessiontoken=${uuid.v4()}&location=${addressModle.latitude ?? 0.0},${addressModle.longitude ?? 0.0}&radius=${50.000}");
       final response = await _getUrl.getUrlMethod(autocompleteUrl);
       if (response == "failed") {
         return;
@@ -99,12 +125,8 @@ class LogicGoogleMap {
               return;
             }
             if (res["status"] == "OK") {
-              Address address = Address(
-                  placeFormattedAddress: "",
-                  placeName: "",
-                  placeId: "",
-                  latitude: 0.0,
-                  longitude: 0.0);
+              Address address = Address();
+              address.placeFormattedAddress = "";
               address.placeId = pre.placeId;
               address.placeName = res["result"]["name"];
               address.latitude = res["result"]["geometry"]["location"]["lat"];
@@ -251,3 +273,18 @@ class LogicGoogleMap {
     markersSet.add(markerDropOfLocation);
   }
 }
+
+// Animarker(
+// curve: Curves.ease,
+// zoom: 14.0,
+// rippleRadius: 0.1,
+// rippleColor: Colors.white60,
+// useRotation: true,
+// duration:
+// const Duration(milliseconds: 2500),
+// markers: aNmarkers.values.toSet(),
+// shouldAnimateCamera: false,
+// mapId: LogicGoogleMap()
+//     .controllerGoogleMap
+//     .future
+//     .then<int>((value) => value.mapId),

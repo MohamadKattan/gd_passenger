@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../tools/tools.dart';
 
@@ -37,9 +36,8 @@ class SupportScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              await canLaunch("mailto:vba@garantitaxi.com")
-                  ? launch("mailto:vba@garantitaxi.com")
-                  : Tools().toastMsg('Could not launch gmail now ');
+              String _url = 'mailto:vba@garantitaxi.com';
+              await Tools().lunchUrl(context, _url);
             },
             child: Container(
               height: 60,
@@ -70,9 +68,8 @@ class SupportScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              await canLaunch("https://wa.me/+905057743644")
-                  ? launch("https://wa.me/+905057743644")
-                  : Tools().toastMsg(AppLocalizations.of(context)!.wrong);
+              String _url = "https://wa.me/+905057743644";
+              await Tools().lunchUrl(context, _url);
             },
             child: Container(
               height: 60,
