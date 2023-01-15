@@ -34,17 +34,24 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'my_provider/sheet_cardsc.dart';
 import 'my_provider/timeTrip_statusRide.dart';
 import 'my_provider/userinfo_sheet_provider.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   Wakelock.enable();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-  // FlutterNativeSplash.removeAfter(initialization);
-  await Firebase.initializeApp();
+  final GoogleMapsFlutterPlatform mapsImplementation =
+      GoogleMapsFlutterPlatform.instance;
+  if (mapsImplementation is GoogleMapsFlutterAndroid) {
+    mapsImplementation.useAndroidViewSurface = true;
+  }
+
   runApp(const MyApp());
 }
-
+// last update 15-1-2023
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override

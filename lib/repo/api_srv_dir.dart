@@ -409,7 +409,7 @@ class ApiSrvDir {
         Provider.of<TimeTripStatusRide>(context, listen: false)
             .updateCurrencyType('');
       }
-    }
+    } 
     else if (carTypePro.contains("Big commercial-11-19 seats")) {
       if (userInfo.country0.contains("T")) {
         switch (userInfo.country) {
