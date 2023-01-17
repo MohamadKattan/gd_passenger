@@ -148,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     googleMap(),
 
+                                    /// disCount pop countainer 10%
                                     disCountContainer(),
 
                                     /// main container what include car types car drop button request button
@@ -446,7 +447,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }));
           if (res == "dataDir") {
             await getPlaceDirection(context);
-            Tools().changeAllProClickTaxiBox(context);
           }
         },
         child: Container(
@@ -1232,232 +1232,78 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method for check any city in turkey and open list of city tur
   Future<void> checkAnyListTurCityOpen() async {
+    var list = [];
+    var _map = <String, dynamic>{};
     var infoUserDataReal =
         Provider.of<UserAllInfoDatabase>(context, listen: false).users;
     switch (infoUserDataReal.country) {
       case 'İstanbul':
-        final _res = await showGeneralDialog(
-            context: context,
-            pageBuilder: (
-              context,
-              anim1,
-              anim2,
-            ) {
-              return CustomWidgets().istanbulVeto(context);
-            },
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, anim1, anim2, child) {
-              return Transform.scale(
-                scale: anim1.value,
-                child: Opacity(
-                    opacity: anim1.value,
-                    child: CustomWidgets().istanbulVeto(context)),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 300));
-        if (_res == 'data') {
-          getPlaceDirection(context);
-        } else {
-          Tools().toastMsg('No trip available now ', Colors.red);
-          GeoFireMethods.listOfNearestDriverAvailable.clear();
-          markersSet.clear();
-          geoFireRadios = 4;
-          geoFireInitialize();
-          Tools().changeAllProClickTaxiBox(context);
-        }
+        _map = {
+          "istan": ["istanbul", "100", AppLocalizations.of(context)!.istanbul],
+          "bursa": ["bursa", "220", AppLocalizations.of(context)!.bursa],
+          "izmit": ["izmit", "150", AppLocalizations.of(context)!.izmit],
+          "sapanca": ["sapanca", "180", AppLocalizations.of(context)!.sabanjah],
+          "Bolu": ["Bolu abant", "300", AppLocalizations.of(context)!.polo],
+          "şile": ["şile", "170", AppLocalizations.of(context)!.sala],
+          "yalova": ["yalova", "170", AppLocalizations.of(context)!.yalua],
+        };
         break;
       case 'Antalya':
-        final _res = await showGeneralDialog(
-            context: context,
-            pageBuilder: (
-              context,
-              anim1,
-              anim2,
-            ) {
-              return CustomWidgets().antalyVeto(context);
-            },
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, anim1, anim2, child) {
-              return Transform.scale(
-                scale: anim1.value,
-                child: Opacity(
-                    opacity: anim1.value,
-                    child: CustomWidgets().antalyVeto(context)),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 300));
-        if (_res == 'data') {
-          getPlaceDirection(context);
-        } else {
-          Tools().toastMsg('No trip available now ', Colors.red);
-          GeoFireMethods.listOfNearestDriverAvailable.clear();
-          markersSet.clear();
-          geoFireRadios = 4;
-          geoFireInitialize();
-          Tools().changeAllProClickTaxiBox(context);
-        }
+        _map = {
+          "Antaly": ["Antalya", "100", AppLocalizations.of(context)!.antalMain],
+          "Mana": ["Manavgat", "130", AppLocalizations.of(context)!.antalManar],
+          "Marar": ["Marmaris", "250", AppLocalizations.of(context)!.antalMarr],
+          "Bodrum": ["Bodrum", "400", AppLocalizations.of(context)!.antalBoder],
+          "Izmir": ["Izmir", "500", AppLocalizations.of(context)!.antalIzmir],
+          "Alanya": ["Alanya", "160", AppLocalizations.of(context)!.antalAlan],
+        };
         break;
       case 'Muğla':
-        final _res = await showGeneralDialog(
-            context: context,
-            pageBuilder: (
-              context,
-              anim1,
-              anim2,
-            ) {
-              return CustomWidgets().bodrunVeto(context);
-            },
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, anim1, anim2, child) {
-              return Transform.scale(
-                scale: anim1.value,
-                child: Opacity(
-                    opacity: anim1.value,
-                    child: CustomWidgets().bodrunVeto(context)),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 300));
-        if (_res == 'data') {
-          getPlaceDirection(context);
-        } else {
-          Tools().toastMsg('No trip available now ', Colors.red);
-          GeoFireMethods.listOfNearestDriverAvailable.clear();
-          markersSet.clear();
-          geoFireRadios = 4;
-          geoFireInitialize();
-          Tools().changeAllProClickTaxiBox(context);
-        }
+        _map = {
+          "Bodrum": ["Bodrum", "100", AppLocalizations.of(context)!.bodMain],
+          "Izmir": ["Izmir", "300", AppLocalizations.of(context)!.bodIzmir],
+          "Mar": ["Marmaris", "250", AppLocalizations.of(context)!.bodMarmar],
+          "sapca": ["Bodrum", "180", AppLocalizations.of(context)!.sabanjah],
+        };
         break;
       case 'Bursa':
-        final _res = await showGeneralDialog(
-            context: context,
-            pageBuilder: (
-              context,
-              anim1,
-              anim2,
-            ) {
-              return CustomWidgets().bursaVeto(context);
-            },
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, anim1, anim2, child) {
-              return Transform.scale(
-                scale: anim1.value,
-                child: Opacity(
-                    opacity: anim1.value,
-                    child: CustomWidgets().bursaVeto(context)),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 300));
-        if (_res == 'data') {
-          getPlaceDirection(context);
-        } else {
-          Tools().toastMsg('No trip available now ', Colors.red);
-          GeoFireMethods.listOfNearestDriverAvailable.clear();
-          markersSet.clear();
-          geoFireRadios = 4;
-          geoFireInitialize();
-          Tools().changeAllProClickTaxiBox(context);
-        }
+        _map = {
+          "Bursa": ["Bursa", "100", AppLocalizations.of(context)!.bursaMain],
+          "Yalova": ["Yalova", "140", AppLocalizations.of(context)!.bursaYal],
+          "ist": ["istanbul", "250", AppLocalizations.of(context)!.bursaIst],
+          "sap": ["sapanca", "180", AppLocalizations.of(context)!.bursaSpan],
+          "Bolu": ["Bolu abant", "500", AppLocalizations.of(context)!.bursaPol],
+          "izm": ["izmite", "190", AppLocalizations.of(context)!.bursaIzn],
+        };
         break;
       case 'Sakarya':
-        final _res = await showGeneralDialog(
-            context: context,
-            pageBuilder: (
-              context,
-              anim1,
-              anim2,
-            ) {
-              return CustomWidgets().sapancaVeto(context);
-            },
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, anim1, anim2, child) {
-              return Transform.scale(
-                scale: anim1.value,
-                child: Opacity(
-                    opacity: anim1.value,
-                    child: CustomWidgets().sapancaVeto(context)),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 300));
-        if (_res == 'data') {
-          getPlaceDirection(context);
-        } else {
-          Tools().toastMsg('No trip available now ', Colors.red);
-          GeoFireMethods.listOfNearestDriverAvailable.clear();
-          markersSet.clear();
-          geoFireRadios = 4;
-          geoFireInitialize();
-          Tools().changeAllProClickTaxiBox(context);
-        }
+        _map = {
+          "spanca": ["spanca", "90", AppLocalizations.of(context)!.spanMain],
+          "bursa": ["bursa", "200", AppLocalizations.of(context)!.spanBursa],
+          "izmit": ["istanbul", "100", AppLocalizations.of(context)!.spanIzn],
+          "ista": ["istanbul", "180", AppLocalizations.of(context)!.spanIst],
+          "Bolu": ["Bolu abant", "200", AppLocalizations.of(context)!.spanPol],
+          "yalova": ["yalova", "150", AppLocalizations.of(context)!.spanYal],
+        };
         break;
       case 'Trabzon':
-        final _res = await showGeneralDialog(
-            context: context,
-            pageBuilder: (
-              context,
-              anim1,
-              anim2,
-            ) {
-              return CustomWidgets().trabzonVeto(context);
-            },
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, anim1, anim2, child) {
-              return Transform.scale(
-                scale: anim1.value,
-                child: Opacity(
-                    opacity: anim1.value,
-                    child: CustomWidgets().trabzonVeto(context)),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 300));
-        if (_res == 'data') {
-          getPlaceDirection(context);
-        } else {
-          Tools().toastMsg('No trip available now ', Colors.red);
-          GeoFireMethods.listOfNearestDriverAvailable.clear();
-          markersSet.clear();
-          geoFireRadios = 4;
-          geoFireInitialize();
-          Tools().changeAllProClickTaxiBox(context);
-        }
+        _map = {
+          "Tra": ["Trabzon", "100", AppLocalizations.of(context)!.trapzonMain],
+          "Uzun": ["Uzun gol", "130", AppLocalizations.of(context)!.trapzonUzu],
+          "Ayder": ["Ayder", "170", AppLocalizations.of(context)!.trapzonAyd],
+          "Rize": ["Rize", "160", AppLocalizations.of(context)!.trapzonRiz],
+          "Gir": ["Giresun", "160", AppLocalizations.of(context)!.trapzonGir],
+          "ondu": ["ondu", "200", AppLocalizations.of(context)!.trapzonOndu],
+        };
         break;
       case 'Çaykara':
-        final _res = await showGeneralDialog(
-            context: context,
-            pageBuilder: (
-              context,
-              anim1,
-              anim2,
-            ) {
-              return CustomWidgets().uzungolVeto(context);
-            },
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, anim1, anim2, child) {
-              return Transform.scale(
-                scale: anim1.value,
-                child: Opacity(
-                    opacity: anim1.value,
-                    child: CustomWidgets().uzungolVeto(context)),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 300));
-        if (_res == 'data') {
-          getPlaceDirection(context);
-        } else {
-          Tools().toastMsg('No trip available now ', Colors.red);
-          GeoFireMethods.listOfNearestDriverAvailable.clear();
-          markersSet.clear();
-          geoFireRadios = 4;
-          geoFireInitialize();
-          Tools().changeAllProClickTaxiBox(context);
-        }
+        _map = {
+          "Uzu": ["Uzungöl", "80", AppLocalizations.of(context)!.uzunMain],
+          "Trn": ["Trabzon", "190", AppLocalizations.of(context)!.uzuTrapzon],
+          "Ayder": ["Ayder", "170", AppLocalizations.of(context)!.uzuAyd],
+          "Rize": ["Rize", "140", AppLocalizations.of(context)!.uzuRiz],
+          "onda": ["onda", "220", AppLocalizations.of(context)!.uzuOndu],
+        };
         break;
       default:
         GeoFireMethods.listOfNearestDriverAvailable.clear();
@@ -1466,6 +1312,27 @@ class _HomeScreenState extends State<HomeScreen> {
         geoFireInitialize();
         Tools().changeAllProClickTaxiBox(context);
         break;
+    }
+    if (_map.isNotEmpty) {
+      _map.forEach((key, value) {
+        list.add(value);
+      });
+      final _res = await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) {
+            return CustomWidgets().listOfTurCity(context, list);
+          });
+      if (_res == 'data') {
+        getPlaceDirection(context);
+      } else {
+        Tools().toastMsg('No trip available now ', Colors.red);
+        GeoFireMethods.listOfNearestDriverAvailable.clear();
+        markersSet.clear();
+        geoFireRadios = 4;
+        geoFireInitialize();
+        Tools().changeAllProClickTaxiBox(context);
+      }
     }
   }
 
@@ -1596,9 +1463,9 @@ class _HomeScreenState extends State<HomeScreen> {
         details!, pickUpLatLng, dropOfLatLng, color, valPadding, context);
     await Future.delayed(const Duration(seconds: 2));
     audioCache.play("gift.mp3");
-    // assetsAudioPlayer.open(Audio("assets/gift.mp3"));
     Provider.of<PositionChang>(context, listen: false)
         .updateDisCountBoxPosition(80.0);
+    Tools().changeAutoPriceColor(context);
     await Future.delayed(const Duration(seconds: 5));
     Provider.of<PositionChang>(context, listen: false)
         .updateDisCountBoxPosition(-600.0);
@@ -1641,6 +1508,7 @@ class _HomeScreenState extends State<HomeScreen> {
             .updateValue(-400.0);
         Provider.of<PositionChang>(context, listen: false).changValue(0.0);
         LogicGoogleMap().locationPosition(context);
+        await geoFireInitialize();
         Navigator.pop(context);
         await audioPlayer.stop();
         // assetsAudioPlayer.stop();
@@ -1888,7 +1756,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         barrierDismissible: false,
                         builder: (BuildContext context) {
-                          return RatingWidget(id: driverId);
+                          return RatingWidget(
+                              id: driverId,
+                              voidCallback: ()=> restApp());
                         });
                     Provider.of<RiderId>(context, listen: false)
                         .updateStatus(driverId);

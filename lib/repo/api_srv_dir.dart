@@ -99,8 +99,7 @@ class ApiSrvDir {
         Provider.of<TimeTripStatusRide>(context, listen: false)
             .updateCurrencyType('');
       }
-    }
-    else if (carTypePro.contains("Medium commercial-6-10 seats")) {
+    } else if (carTypePro.contains("Medium commercial-6-10 seats")) {
       if (userInfo.country0.contains('T')) {
         switch (userInfo.country) {
           case 'İstanbul':
@@ -141,7 +140,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 13.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -180,7 +179,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 13.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -209,7 +208,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 13.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -248,7 +247,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 13.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -287,7 +286,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 13.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -326,7 +325,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 13.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -360,7 +359,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 13.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -409,8 +408,7 @@ class ApiSrvDir {
         Provider.of<TimeTripStatusRide>(context, listen: false)
             .updateCurrencyType('');
       }
-    } 
-    else if (carTypePro.contains("Big commercial-11-19 seats")) {
+    } else if (carTypePro.contains("Big commercial-11-19 seats")) {
       if (userInfo.country0.contains("T")) {
         switch (userInfo.country) {
           case 'İstanbul':
@@ -451,7 +449,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 19 + 0.70 * 10.00;
+                culculFinal = fareAmont * 19 + 0.70 * 16.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -490,7 +488,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 16.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -519,7 +517,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 16.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -558,7 +556,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 16.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -597,7 +595,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 16.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -636,7 +634,7 @@ class ApiSrvDir {
                     .updateCurrencyType('\$');
                 break;
               default:
-                culculFinal = fareAmont * 15 + 0.70 * 10.00;
+                culculFinal = fareAmont * 15 + 0.70 * 16.00;
                 Provider.of<TimeTripStatusRide>(context, listen: false)
                     .updateCurrencyType('TL');
                 break;
@@ -677,7 +675,7 @@ class ApiSrvDir {
             }
             break;
           default:
-            culculFinal = fareAmont * 15 + 0.70 * 10.00;
+            culculFinal = fareAmont * 15 + 0.70 * 16.00;
             Provider.of<TimeTripStatusRide>(context, listen: false)
                 .updateCurrencyType('TL');
             break;
@@ -715,13 +713,12 @@ class ApiSrvDir {
         Provider.of<TimeTripStatusRide>(context, listen: false)
             .updateCurrencyType('AED');
       } else {
-        culculFinal = fareAmont * 10 + 0.70 * 10.00;
+        culculFinal = fareAmont * 10 + 0.70 * 16.00;
         Provider.of<TimeTripStatusRide>(context, listen: false)
             .updateCurrencyType('');
       }
-    }
-    else {
-      culculFinal = fareAmont * 10 + 0.70 * 10.00;
+    } else {
+      culculFinal = fareAmont * 10 + 0.70 * 16.00;
       Provider.of<TimeTripStatusRide>(context, listen: false)
           .updateCurrencyType('');
     }

@@ -283,7 +283,7 @@ Widget customDrawer(BuildContext context) {
                 ),
               ),
               CustomWidgets().customDivider(),
-              Expanded(flex: 0, child: ImageSliderDemo()),
+              Expanded(flex: 0, child: ImageSliderDemo(context)),
               Expanded(
                 flex: 0,
                 child: Padding(

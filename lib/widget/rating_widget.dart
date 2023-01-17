@@ -1,13 +1,18 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../config.dart';
+import '../my_provider/position_v_chnge.dart';
+import '../my_provider/positon_driver_info_provide.dart';
+import '../repo/data_base_srv.dart';
 import 'custom_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RatingWidget extends StatefulWidget {
   final String id;
-  const RatingWidget({Key? key, required this.id}) : super(key: key);
+  final VoidCallback voidCallback;
+  const RatingWidget({Key? key, required this.id, required this.voidCallback})
+      : super(key: key);
 
   @override
   State<RatingWidget> createState() => _RatingWidgetState();
@@ -72,8 +77,15 @@ class _RatingWidgetState extends State<RatingWidget> {
               CustomWidgets().customDivider(),
               const SizedBox(height: 20),
               GestureDetector(
-                onTap: () {
-                  rateTODateBase(widget.id);
+                onTap: () async {
+                 await DataBaseSrv().rateTODateBase(widget.id, context);
+                 await DataBaseSrv().deleteRideRequest(context);
+                  widget.voidCallback();
+                  Provider.of<PositionDriverInfoProvider>(context,
+                          listen: false)
+                      .updateState(-400.0);
+                  Provider.of<PositionChang>(context, listen: false)
+                      .changValue(0.0);
                 },
                 child: Center(
                   child: Container(
@@ -98,23 +110,5 @@ class _RatingWidgetState extends State<RatingWidget> {
         ),
       ),
     );
-  }
-
-// this method for set rate to data base
-  Future<void> rateTODateBase(String id) async {
-    DatabaseReference reference =
-        FirebaseDatabase.instance.ref().child("driver").child(id);
-
-    await reference.child("rating").once().then((value) {
-      if (value.snapshot.value != null) {
-        double oldRating = double.parse(value.snapshot.value.toString());
-        double newRating = oldRating + rating;
-        double result = newRating / 2;
-        reference.child('rating').set(result.toStringAsFixed(2));
-      } else {
-        reference.child("rating").set(rating.toStringAsFixed(2));
-      }
-    });
-    Navigator.pop(context);
   }
 }

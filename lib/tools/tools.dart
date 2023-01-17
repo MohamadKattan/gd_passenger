@@ -166,6 +166,7 @@ class Tools {
   // this method for change all provider state when click taxiBox
   void changeAllProClickTaxiBox(BuildContext context) async {
     carOrderType = "Taxi-4 seats";
+    autoChangeColor = 0;
     Provider.of<TrueFalse>(context, listen: false).taxiDiscount(true);
     Provider.of<TrueFalse>(context, listen: false).vetoDiscount(false);
     Provider.of<TrueFalse>(context, listen: false).vanDiscount(false);
@@ -190,6 +191,7 @@ class Tools {
   // this method will change all provider state when click on van box
   void changeAllProClickVetoBox(BuildContext context) async {
     carOrderType = "Medium commercial-6-10 seats";
+    autoChangeColor = 1;
     Provider.of<TrueFalse>(context, listen: false).taxiDiscount(false);
     Provider.of<TrueFalse>(context, listen: false).vetoDiscount(true);
     Provider.of<TrueFalse>(context, listen: false).vanDiscount(false);
@@ -214,6 +216,7 @@ class Tools {
   // this method will change all provider state when click on Veto box
   void changeAllProClickVanBox(BuildContext context) async {
     carOrderType = "Big commercial-11-19 seats";
+    autoChangeColor = 2;
     Provider.of<TrueFalse>(context, listen: false).taxiDiscount(false);
     Provider.of<TrueFalse>(context, listen: false).vetoDiscount(false);
     Provider.of<TrueFalse>(context, listen: false).vanDiscount(true);
@@ -232,6 +235,48 @@ class Tools {
           .updateColorTextInRowVeto(false);
       Provider.of<TrueFalse>(context, listen: false)
           .updateColorTextInRowVan(true);
+    }
+  }
+
+  // this method for change color price auto if user didn't click an type of color and dirDetails not null
+  void changeAutoPriceColor(BuildContext context) {
+    switch (autoChangeColor) {
+      case 0:
+        Provider.of<TrueFalse>(context, listen: false).taxiDiscount(true);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowTaxi(true);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVeto(false);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVan(false);
+        break;
+      case 1:
+        Provider.of<TrueFalse>(context, listen: false).vetoDiscount(true);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowTaxi(false);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVeto(true);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVan(false);
+        break;
+      case 2:
+        Provider.of<TrueFalse>(context, listen: false).vanDiscount(true);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowTaxi(false);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVeto(false);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVan(true);
+        break;
+      default:
+        Provider.of<TrueFalse>(context, listen: false).taxiDiscount(true);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowTaxi(true);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVeto(false);
+        Provider.of<TrueFalse>(context, listen: false)
+            .updateColorTextInRowVan(false);
+        break;
     }
   }
 }

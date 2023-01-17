@@ -2,8 +2,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class ImageSliderDemo extends StatelessWidget {
-  ImageSliderDemo({Key? key}) : super(key: key);
+// class ImageSliderDemo extends StatelessWidget {
+//   ImageSliderDemo({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//   }
+// }
+
+Widget ImageSliderDemo(BuildContext context) {
   final List<String> imgList = [
     "assets/01.jpg",
     "assets/02.jpg",
@@ -12,32 +20,31 @@ class ImageSliderDemo extends StatelessWidget {
     "assets/05.jpg",
     "assets/06.jpg",
   ];
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: 25.0,
-          right: AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 50.0,
-          left: 8.0),
-      child: Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 12 / 100,
-          width: MediaQuery.of(context).size.width * 40 / 100,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
+
+  return Padding(
+    padding: EdgeInsets.only(
+        top: 25.0,
+        right: AppLocalizations.of(context)!.hi == "مرحبا" ? 120.0 : 50.0,
+        left: 8.0),
+    child: Center(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 12 / 100,
+        width: MediaQuery.of(context).size.width * 40 / 100,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: CarouselSlider(
+          options: CarouselOptions(
+            autoPlay: false,
+            aspectRatio: 1.0,
+            enlargeCenterPage: true,
           ),
-          child: CarouselSlider(
-            options: CarouselOptions(
-              autoPlay: false,
-              aspectRatio: 1.0,
-              enlargeCenterPage: true,
-            ),
-            items: imgList.map((item) => Center(
-                    child: Image.asset(item, fit: BoxFit.cover, width: 300)))
-                .toList(),
-          ),
+          items: imgList
+              .map((item) => Center(
+                  child: Image.asset(item, fit: BoxFit.cover, width: 300)))
+              .toList(),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

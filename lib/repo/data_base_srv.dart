@@ -17,6 +17,7 @@ import 'package:gd_passenger/user_enter_face/auth_screen.dart';
 import 'package:gd_passenger/user_enter_face/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:uuid/uuid.dart';
 import '../config.dart';
 import '../my_provider/derictionDetails_provide.dart';
 import '../my_provider/indector_netWeekPro.dart';
@@ -25,6 +26,8 @@ import '../user_enter_face/inter_net_weak.dart';
 import '../user_enter_face/user_info_screen.dart';
 import 'auth_srv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+var uuid = const Uuid();
 
 class DataBaseSrv {
   final Tools _tools = Tools();
@@ -90,7 +93,7 @@ class DataBaseSrv {
       });
     } catch (ex) {
       Provider.of<TrueFalse>(context, listen: false).changeStateBooling(false);
-      _tools.toastMsg(ex.toString(),Colors.red);
+      _tools.toastMsg(ex.toString(), Colors.red);
     }
   }
 
@@ -111,7 +114,7 @@ class DataBaseSrv {
         return;
       }
     } catch (ex) {
-      Tools().toastMsg(AppLocalizations.of(context)!.noNet,Colors.red);
+      Tools().toastMsg(AppLocalizations.of(context)!.noNet, Colors.red);
     }
   }
 
@@ -136,8 +139,8 @@ class DataBaseSrv {
             context, MaterialPageRoute(builder: (_) => const AuthScreen()));
       }
     } catch (ex) {
-      Tools().toastMsg(AppLocalizations.of(context)!.noNet,Colors.red);
-      Tools().toastMsg('!!!',Colors.red);
+      Tools().toastMsg(AppLocalizations.of(context)!.noNet, Colors.red);
+      Tools().toastMsg('!!!', Colors.red);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const SplashScreen()),
@@ -202,18 +205,8 @@ class DataBaseSrv {
           .child(currentUserInfoOnline.userId);
       await refRideRequest.set(rideInfoMap);
     } catch (ex) {
-      _tools.toastMsg(ex.toString(),Colors.red);
+      _tools.toastMsg(ex.toString(), Colors.red);
     }
-  }
-
-  // this method for cancel rider Request
-  Future<void> cancelRiderRequest(
-      UserIdProvider userIdProvider, BuildContext context) async {
-    DatabaseReference refRideRequest = FirebaseDatabase.instance
-        .ref()
-        .child("Ride Request")
-        .child(userIdProvider.getUser.uid);
-    await refRideRequest.remove();
   }
 
   // this method for send ride Request Id to driver collection in newride child for notification
@@ -264,5 +257,58 @@ class DataBaseSrv {
             (route) => false);
         break;
     }
+  }
+
+  // this method for set rate to data base
+  Future<void> rateTODateBase(String id,BuildContext context) async {
+    DatabaseReference reference =
+    FirebaseDatabase.instance.ref().child("driver").child(id);
+
+    await reference.child("rating").once().then((value) {
+      if (value.snapshot.value != null) {
+        double oldRating = double.parse(value.snapshot.value.toString());
+        double newRating = oldRating + rating;
+        double result = newRating / 2;
+        reference.child('rating').set(result.toStringAsFixed(2));
+      } else {
+        reference.child("rating").set(rating.toStringAsFixed(2));
+      }
+    });
+    Navigator.pop(context);
+  }
+
+  // this method for cancel rider Request
+  Future<void> cancelRiderRequest(
+      UserIdProvider userIdProvider, BuildContext context) async {
+    DatabaseReference refRideRequest = FirebaseDatabase.instance
+        .ref()
+        .child("Ride Request")
+        .child(userIdProvider.getUser.uid);
+    await refRideRequest.remove();
+  }
+
+// this method for delete rideRequest trip and set to history after finish his trip using in driverInfo + rating dialog
+  Future<void> deleteRideRequest(BuildContext context) async {
+    final pickUpLoc =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    final dropOffLoc =
+        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+            .dropOfLocation;
+    final userID = AuthSev().auth.currentUser?.uid;
+    DatabaseReference ref = FirebaseDatabase.instance
+        .ref()
+        .child("users")
+        .child(userID!)
+        .child("history")
+        .child(uuid.v4());
+    ref.set({
+      "pickAddress": pickUpLoc.placeName,
+      "dropAddress": dropOffLoc.placeName,
+      "trip": "don",
+    }).whenComplete(() async {
+      DatabaseReference refRideRequest =
+          FirebaseDatabase.instance.ref().child("Ride Request").child(userID);
+      await refRideRequest.remove();
+    });
   }
 }

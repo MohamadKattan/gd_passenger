@@ -28,7 +28,7 @@ Widget pageViewContent(
           child: Column(
             children:const  [
               Text(
-                "!! Wow",
+                "Wow !!",
                 textAlign: TextAlign.right,
                 style: TextStyle(
                     color:Color(0xFFFBC408),

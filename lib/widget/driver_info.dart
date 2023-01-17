@@ -16,6 +16,7 @@ import '../my_provider/timeTrip_statusRide.dart';
 import '../my_provider/true_false.dart';
 import '../my_provider/user_id_provider.dart';
 import '../repo/auth_srv.dart';
+import '../repo/data_base_srv.dart';
 import '../tools/tools.dart';
 import 'custom_widgets.dart';
 import 'package:uuid/uuid.dart';
@@ -309,7 +310,7 @@ class DriverInfo {
                                 Provider.of<PositionChang>(context,
                                         listen: false)
                                     .changValue(0.0);
-                                deleteRideRequesr(context);
+                                DataBaseSrv().deleteRideRequest(context);
                                 voidCallback();
                               }),
                         ],
@@ -322,29 +323,7 @@ class DriverInfo {
     );
   }
 
-  Future<void> deleteRideRequesr(BuildContext context) async {
-    final pickUpLoc =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
-    final dropOffLoc =
-        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
-            .dropOfLocation;
-    final userID = AuthSev().auth.currentUser?.uid;
-    DatabaseReference ref = FirebaseDatabase.instance
-        .ref()
-        .child("users")
-        .child(userID!)
-        .child("history")
-        .child(uuid.v4());
-    ref.set({
-      "pickAddress": pickUpLoc.placeName,
-      "dropAddress": dropOffLoc.placeName,
-      "trip": "don",
-    }).whenComplete(() async {
-      DatabaseReference refRideRequest =
-          FirebaseDatabase.instance.ref().child("Ride Request").child(userID);
-      await refRideRequest.remove();
-    });
-  }
+
 
   Future<void> openGoogleMap(BuildContext context) async {
     final dropOff =

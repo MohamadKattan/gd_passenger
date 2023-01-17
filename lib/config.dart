@@ -45,5 +45,13 @@ String tourismCityName = "";
 String tourismCityPrice = "";
 String newValueDrop = "";
 List<DriverPreBook> driverPreBookList = [];
-// ext.kotlin_version = '1.6.10'
+int autoChangeColor = 0;
 
+// rm -rf Pods
+// rm -rf Podfile.lock
+// rm -rf ~/.pub-cache/hosted/pub.dartlang.org
+// pod cache clean --all
+// flutter clean
+// flutter pub get
+// pod repo update
+// pod install

@@ -14,30 +14,25 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomWidgets {
   var uuid = const Uuid();
-// list of trip cities based on location
-  Widget antalyVeto(BuildContext context) {
+// this widget for show list of tur cities
+  Widget listOfTurCity(BuildContext context, List<dynamic> list) {
     return Dialog(
-      elevation: 1.0,
+      elevation: 0.9,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       backgroundColor: Colors.transparent,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 60 / 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(14.0),
-                        topLeft: Radius.circular(14.0))),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+                color: Color(0xFF00A3E0),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(14.0),
+                    topLeft: Radius.circular(14.0))),
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(
                   AppLocalizations.of(context)!.torzimTrip,
                   style: const TextStyle(
                     color: Colors.white,
@@ -45,2422 +40,520 @@ class CustomWidgets {
                   ),
                   textAlign: TextAlign.center,
                 ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.pricesList,
-                      style: const TextStyle(
-                        color: Color(0xFF00A3E0),
-                        fontSize: 20.0,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.redAccent,
-                      )),
-                ],
-              ),
-              customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Antalya";
-                    tourismCityPrice = "100";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0, color: const Color(0xFFFBC408)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        AppLocalizations.of(context)!.pricesList,
+                        style: const TextStyle(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.antalMain,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$100",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Manavgat";
-                    tourismCityPrice = "130";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
+                          fontSize: 20.0,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.antalManar,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$130",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
+                    ),
+                    IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.redAccent,
+                        )),
+                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Marmaris";
-                    tourismCityPrice = "250";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.antalMarr,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
+              ],
+            ),
+          ),
+          Container(
+              height: MediaQuery.of(context).size.height * 55 / 100,
+              width: double.infinity,
+              color: Colors.white,
+              child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (_, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          tourismCityName = list[index][0].toString();
+                          tourismCityPrice = list[index][1].toString();
+                          LogicGoogleMap()
+                              .tourismCities(tourismCityName, context);
+                        },
+                        child: Container(
+                            width: double.infinity,
+                            height: 55.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4.0),
+                              border: Border.all(
+                                  width: 1.0, color: const Color(0xFFFBC408)),
                             ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$250",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Bodrum";
-                    tourismCityPrice = "400";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.antalBoder,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$400",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Izmir";
-                    tourismCityPrice = "500";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.antalIzmir,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$500",
-                              style: TextStyle(
-                                  color: Color(0xFF00A3E0), fontSize: 20.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Alanya";
-                    tourismCityPrice = "160";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.antalAlan,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$160",
-                                style: TextStyle(
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 20,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    list[index][2].toString(),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF00A3E0),
+                                        fontSize: 16.0),
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.clip,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget bodrunVeto(BuildContext context) {
-    return Dialog(
-      elevation: 1.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 60 / 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(14.0),
-                        topLeft: Radius.circular(14.0))),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AppLocalizations.of(context)!.torzimTrip,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.pricesList,
-                      style: const TextStyle(
-                        color: Color(0xFF00A3E0),
-                        fontSize: 20.0,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.redAccent,
-                      )),
-                ],
-              ),
-              customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Bodrum";
-                    tourismCityPrice = "100";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0, color: const Color(0xFFFBC408)),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bodMain,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$100",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Izmir";
-                    tourismCityPrice = "300";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bodIzmir,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$300",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Marmaris";
-                    tourismCityPrice = "250";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bodMarmar,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$250",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "sapanca";
-                    tourismCityPrice = "180";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.sabanjah,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$180",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget bursaVeto(BuildContext context) {
-    return Dialog(
-      elevation: 1.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 60 / 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(14.0),
-                        topLeft: Radius.circular(14.0))),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AppLocalizations.of(context)!.torzimTrip,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.pricesList,
-                      style: const TextStyle(
-                        color: Color(0xFF00A3E0),
-                        fontSize: 20.0,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.redAccent,
-                      )),
-                ],
-              ),
-              customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Bursa";
-                    tourismCityPrice = "100";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0, color: const Color(0xFFFBC408)),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bursaMain,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$100",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Yalova";
-                    tourismCityPrice = "140";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bursaYal,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$140",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "istanbul";
-                    tourismCityPrice = "240";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bursaIst,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$240",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "sapanca";
-                    tourismCityPrice = "180";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bursaSpan,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$180",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Bolu abant";
-                    tourismCityPrice = "300";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bursaPol,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$300",
-                              style: TextStyle(
-                                  color: Color(0xFF00A3E0), fontSize: 20.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "izmite";
-                    tourismCityPrice = "190";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bursaIzn,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$190",
-                                style: TextStyle(
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 20,
+                                Expanded(
+                                  flex: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "\$${list[index][1].toString()}",
+                                      style: const TextStyle(
+                                          color: Color(0xFF00A3E0),
+                                          fontSize: 20.0),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+                              ],
+                            )),
+                      ),
+                    );
+                  })),
 
-  Widget sapancaVeto(BuildContext context) {
-    return Dialog(
-      elevation: 1.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 60 / 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(14.0),
-                        topLeft: Radius.circular(14.0))),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AppLocalizations.of(context)!.torzimTrip,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.pricesList,
-                      style: const TextStyle(
-                        color: Color(0xFF00A3E0),
-                        fontSize: 20.0,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.redAccent,
-                      )),
-                ],
-              ),
-              customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "spanca";
-                    tourismCityPrice = "90";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0, color: const Color(0xFFFBC408)),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.spanMain,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$90",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "bursa";
-                    tourismCityPrice = "200";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.spanBursa,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$200",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "izmit";
-                    tourismCityPrice = "100";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.spanIzn,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$100",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "istanbul";
-                    tourismCityPrice = "180";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.spanIst,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$180",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Bolu abant";
-                    tourismCityPrice = "200";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.spanPol,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$200",
-                              style: TextStyle(
-                                  color: Color(0xFF00A3E0), fontSize: 20.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "yalova";
-                    tourismCityPrice = "150";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.spanYal,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$150",
-                              style: TextStyle(
-                                color: Color(0xFF00A3E0),
-                                fontSize: 20.0,
-                              ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget trabzonVeto(BuildContext context) {
-    return Dialog(
-      elevation: 1.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 60 / 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(14.0),
-                        topLeft: Radius.circular(14.0))),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AppLocalizations.of(context)!.torzimTrip,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.pricesList,
-                      style: const TextStyle(
-                        color: Color(0xFF00A3E0),
-                        fontSize: 20.0,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.redAccent,
-                      )),
-                ],
-              ),
-              customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Trabzon";
-                    tourismCityPrice = "100";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0, color: const Color(0xFFFBC408)),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.trapzonMain,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$100",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Uzun gol";
-                    tourismCityPrice = "130";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.trapzonUzu,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$130",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Ayder";
-                    tourismCityPrice = "170";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.trapzonAyd,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$170",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Rize";
-                    tourismCityPrice = "160";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.trapzonRiz,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$160",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Giresun";
-                    tourismCityPrice = "160";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.trapzonGir,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$160",
-                              style: TextStyle(
-                                  color: Color(0xFF00A3E0), fontSize: 20.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "ondu";
-                    tourismCityPrice = "200";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.trapzonOndu,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$200",
-                                style: TextStyle(
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 20,
-                                ),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget uzungolVeto(BuildContext context) {
-    return Dialog(
-      elevation: 1.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 60 / 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(14.0),
-                        topLeft: Radius.circular(14.0))),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AppLocalizations.of(context)!.torzimTrip,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.pricesList,
-                      style: const TextStyle(
-                        color: Color(0xFF00A3E0),
-                        fontSize: 20.0,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.redAccent,
-                      )),
-                ],
-              ),
-              customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Uzungöl";
-                    tourismCityPrice = "80";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0, color: const Color(0xFFFBC408)),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.uzunMain,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$80",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Trabzon";
-                    tourismCityPrice = "190";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.uzuTrapzon,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$190",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Ayder";
-                    tourismCityPrice = "170";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.uzuAyd,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$170",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "Rize";
-                    tourismCityPrice = "140";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.uzuRiz,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$140",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    tourismCityName = "onda";
-                    tourismCityPrice = "220";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.uzuOndu,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$220",
-                              style: TextStyle(
-                                  color: Color(0xFF00A3E0), fontSize: 20.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget istanbulVeto(BuildContext context) {
-    return Dialog(
-      elevation: 1.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 60 / 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.0), color: Colors.white),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xFF00A3E0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(14.0),
-                        topLeft: Radius.circular(14.0))),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  AppLocalizations.of(context)!.torzimTrip,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.pricesList,
-                      style: const TextStyle(
-                        color: Color(0xFF00A3E0),
-                        fontSize: 20.0,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.redAccent,
-                      )),
-                ],
-              ),
-              customDivider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   tourismCityName = "istanbul";
-                    //   tourismCityPrice = "100";
-                    // });
-                    tourismCityName = "istanbul";
-                    tourismCityPrice = "100";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0, color: const Color(0xFFFBC408)),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.istanbul,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$100",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   tourismCityName = "bursa";
-                    //   tourismCityPrice = "220";
-                    // });
-                    tourismCityName = "bursa";
-                    tourismCityPrice = "220";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.bursa,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$220",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   tourismCityName = "izmit";
-                    //   tourismCityPrice = "150";
-                    // });
-                    tourismCityName = "izmit";
-                    tourismCityPrice = "150";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.izmit,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$150",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   tourismCityName = "sapanca";
-                    //   tourismCityPrice = "180";
-                    // });
-                    tourismCityName = "sapanca";
-                    tourismCityPrice = "180";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.sabanjah,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$180",
-                                style: TextStyle(
-                                    color: Color(0xFF00A3E0), fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   tourismCityName = "Bolu abant";
-                    //   tourismCityPrice = "300";
-                    // });
-                    tourismCityName = "Bolu abant";
-                    tourismCityPrice = "300";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.polo,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$300",
-                              style: TextStyle(
-                                  color: Color(0xFF00A3E0), fontSize: 20.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   tourismCityName = "şile";
-                    //   tourismCityPrice = "170";
-                    // });
-                    tourismCityName = "şile";
-                    tourismCityPrice = "170";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.sala,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "\$170",
-                                style: TextStyle(
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 20,
-                                ),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // setState(() {
-                    //   tourismCityName = "yalova";
-                    //   tourismCityPrice = "170";
-                    // });
-                    tourismCityName = "yalova";
-                    tourismCityPrice = "170";
-                    LogicGoogleMap().tourismCities(tourismCityName, context);
-                  },
-                  child: Container(
-                      width: double.infinity,
-                      height: 55.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(
-                            width: 2.0, color: const Color(0xFFFBC408)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              AppLocalizations.of(context)!.yalua,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF00A3E0),
-                                  fontSize: 16.0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "\$170",
-                              style: TextStyle(
-                                color: Color(0xFF00A3E0),
-                                fontSize: 20.0,
-                              ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
+          ///oldCode
+          // SingleChildScrollView(
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       Container(
+          //         decoration: const BoxDecoration(
+          //             color: Color(0xFF00A3E0),
+          //             borderRadius: BorderRadius.only(
+          //                 topRight: Radius.circular(14.0),
+          //                 topLeft: Radius.circular(14.0))),
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: Text(
+          //           AppLocalizations.of(context)!.torzimTrip,
+          //           style: const TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 12.0,
+          //           ),
+          //           textAlign: TextAlign.center,
+          //         ),
+          //       ),
+          //       Row(
+          //         crossAxisAlignment: CrossAxisAlignment.center,
+          //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //         children: [
+          //           Padding(
+          //             padding: const EdgeInsets.all(8.0),
+          //             child: Text(
+          //               AppLocalizations.of(context)!.pricesList,
+          //               style: const TextStyle(
+          //                 color: Color(0xFF00A3E0),
+          //                 fontSize: 20.0,
+          //               ),
+          //               textAlign: TextAlign.center,
+          //               overflow: TextOverflow.ellipsis,
+          //             ),
+          //           ),
+          //           IconButton(
+          //               onPressed: () => Navigator.pop(context),
+          //               icon: const Icon(
+          //                 Icons.close,
+          //                 color: Colors.redAccent,
+          //               )),
+          //         ],
+          //       ),
+          //       customDivider(),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             // setState(() {
+          //             //   tourismCityName = "istanbul";
+          //             //   tourismCityPrice = "100";
+          //             // });
+          //             tourismCityName = "istanbul";
+          //             tourismCityPrice = "100";
+          //             LogicGoogleMap().tourismCities(tourismCityName, context);
+          //           },
+          //           child: Container(
+          //               width: double.infinity,
+          //               height: 55.0,
+          //               decoration: BoxDecoration(
+          //                   border: Border.all(
+          //                       width: 2.0, color: const Color(0xFFFBC408)),
+          //                   color: Colors.white,
+          //                   borderRadius: BorderRadius.circular(4.0)),
+          //               child: Row(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //                 children: [
+          //                   Expanded(
+          //                     flex: 1,
+          //                     child: Text(
+          //                       AppLocalizations.of(context)!.istanbul,
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 16.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const Expanded(
+          //                     flex: 0,
+          //                     child: Padding(
+          //                       padding: EdgeInsets.all(8.0),
+          //                       child: Text(
+          //                         "\$100",
+          //                         style: TextStyle(
+          //                             color: Color(0xFF00A3E0), fontSize: 20.0),
+          //                         textAlign: TextAlign.center,
+          //                         overflow: TextOverflow.ellipsis,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               )),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             // setState(() {
+          //             //   tourismCityName = "bursa";
+          //             //   tourismCityPrice = "220";
+          //             // });
+          //             tourismCityName = "bursa";
+          //             tourismCityPrice = "220";
+          //             LogicGoogleMap().tourismCities(tourismCityName, context);
+          //           },
+          //           child: Container(
+          //               width: double.infinity,
+          //               height: 55.0,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(4.0),
+          //                 border: Border.all(
+          //                     width: 2.0, color: const Color(0xFFFBC408)),
+          //               ),
+          //               child: Row(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //                 children: [
+          //                   Expanded(
+          //                     flex: 1,
+          //                     child: Text(
+          //                       AppLocalizations.of(context)!.bursa,
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 16.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const Expanded(
+          //                     flex: 0,
+          //                     child: Padding(
+          //                       padding: EdgeInsets.all(8.0),
+          //                       child: Text(
+          //                         "\$220",
+          //                         style: TextStyle(
+          //                             color: Color(0xFF00A3E0), fontSize: 20.0),
+          //                         textAlign: TextAlign.center,
+          //                         overflow: TextOverflow.ellipsis,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               )),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             // setState(() {
+          //             //   tourismCityName = "izmit";
+          //             //   tourismCityPrice = "150";
+          //             // });
+          //             tourismCityName = "izmit";
+          //             tourismCityPrice = "150";
+          //             LogicGoogleMap().tourismCities(tourismCityName, context);
+          //           },
+          //           child: Container(
+          //               width: double.infinity,
+          //               height: 55.0,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(4.0),
+          //                 border: Border.all(
+          //                     width: 2.0, color: const Color(0xFFFBC408)),
+          //               ),
+          //               child: Row(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //                 children: [
+          //                   Expanded(
+          //                     flex: 1,
+          //                     child: Text(
+          //                       AppLocalizations.of(context)!.izmit,
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 16.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const Expanded(
+          //                     flex: 0,
+          //                     child: Padding(
+          //                       padding: EdgeInsets.all(8.0),
+          //                       child: Text(
+          //                         "\$150",
+          //                         style: TextStyle(
+          //                             color: Color(0xFF00A3E0), fontSize: 20.0),
+          //                         textAlign: TextAlign.center,
+          //                         overflow: TextOverflow.ellipsis,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               )),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             // setState(() {
+          //             //   tourismCityName = "sapanca";
+          //             //   tourismCityPrice = "180";
+          //             // });
+          //             tourismCityName = "sapanca";
+          //             tourismCityPrice = "180";
+          //             LogicGoogleMap().tourismCities(tourismCityName, context);
+          //           },
+          //           child: Container(
+          //               width: double.infinity,
+          //               height: 55.0,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(4.0),
+          //                 border: Border.all(
+          //                     width: 2.0, color: const Color(0xFFFBC408)),
+          //               ),
+          //               child: Row(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //                 children: [
+          //                   Expanded(
+          //                     flex: 1,
+          //                     child: Text(
+          //                       AppLocalizations.of(context)!.sabanjah,
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 16.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const Expanded(
+          //                     flex: 0,
+          //                     child: Padding(
+          //                       padding: EdgeInsets.all(8.0),
+          //                       child: Text(
+          //                         "\$180",
+          //                         style: TextStyle(
+          //                             color: Color(0xFF00A3E0), fontSize: 20.0),
+          //                         textAlign: TextAlign.center,
+          //                         overflow: TextOverflow.ellipsis,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               )),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             // setState(() {
+          //             //   tourismCityName = "Bolu abant";
+          //             //   tourismCityPrice = "300";
+          //             // });
+          //             tourismCityName = "Bolu abant";
+          //             tourismCityPrice = "300";
+          //             LogicGoogleMap().tourismCities(tourismCityName, context);
+          //           },
+          //           child: Container(
+          //               width: double.infinity,
+          //               height: 55.0,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(4.0),
+          //                 border: Border.all(
+          //                     width: 2.0, color: const Color(0xFFFBC408)),
+          //               ),
+          //               child: Row(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //                 children: [
+          //                   Expanded(
+          //                     flex: 1,
+          //                     child: Text(
+          //                       AppLocalizations.of(context)!.polo,
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 16.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const Padding(
+          //                     padding: EdgeInsets.all(8.0),
+          //                     child: Text(
+          //                       "\$300",
+          //                       style: TextStyle(
+          //                           color: Color(0xFF00A3E0), fontSize: 20.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                 ],
+          //               )),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             // setState(() {
+          //             //   tourismCityName = "şile";
+          //             //   tourismCityPrice = "170";
+          //             // });
+          //             tourismCityName = "şile";
+          //             tourismCityPrice = "170";
+          //             LogicGoogleMap().tourismCities(tourismCityName, context);
+          //           },
+          //           child: Container(
+          //               width: double.infinity,
+          //               height: 55.0,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(4.0),
+          //                 border: Border.all(
+          //                     width: 2.0, color: const Color(0xFFFBC408)),
+          //               ),
+          //               child: Row(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //                 children: [
+          //                   Expanded(
+          //                     flex: 1,
+          //                     child: Text(
+          //                       AppLocalizations.of(context)!.sala,
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 16.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const Expanded(
+          //                     flex: 0,
+          //                     child: Padding(
+          //                       padding: EdgeInsets.all(8.0),
+          //                       child: Text(
+          //                         "\$170",
+          //                         style: TextStyle(
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 20,
+          //                         ),
+          //                         textAlign: TextAlign.center,
+          //                         overflow: TextOverflow.ellipsis,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               )),
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             // setState(() {
+          //             //   tourismCityName = "yalova";
+          //             //   tourismCityPrice = "170";
+          //             // });
+          //             tourismCityName = "yalova";
+          //             tourismCityPrice = "170";
+          //             LogicGoogleMap().tourismCities(tourismCityName, context);
+          //           },
+          //           child: Container(
+          //               width: double.infinity,
+          //               height: 55.0,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(4.0),
+          //                 border: Border.all(
+          //                     width: 2.0, color: const Color(0xFFFBC408)),
+          //               ),
+          //               child: Row(
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //                 children: [
+          //                   Expanded(
+          //                     flex: 1,
+          //                     child: Text(
+          //                       AppLocalizations.of(context)!.yalua,
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.bold,
+          //                           color: Color(0xFF00A3E0),
+          //                           fontSize: 16.0),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const Padding(
+          //                     padding: EdgeInsets.all(8.0),
+          //                     child: Text(
+          //                       "\$170",
+          //                       style: TextStyle(
+          //                         color: Color(0xFF00A3E0),
+          //                         fontSize: 20.0,
+          //                       ),
+          //                       textAlign: TextAlign.center,
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                 ],
+          //               )),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+        ],
       ),
     );
   }
@@ -2869,7 +962,12 @@ class CustomWidgets {
 
   /// car type box taxi/van/veto
   Widget carTypeBox(
-  {required Image image, required String text,required Color mainColor ,required String text1,required Color subColor ,required BuildContext context}) {
+      {required Image image,
+      required String text,
+      required Color mainColor,
+      required String text1,
+      required Color subColor,
+      required BuildContext context}) {
     return Container(
       decoration: const BoxDecoration(color: Colors.white),
       margin: const EdgeInsets.only(bottom: 8),
@@ -2883,7 +981,7 @@ class CustomWidgets {
               text,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style:  TextStyle(
+              style: TextStyle(
                 color: mainColor,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -2899,7 +997,7 @@ class CustomWidgets {
               const SizedBox(width: 4.0),
               Text(
                 text1,
-                style:  TextStyle(fontSize: 18.0, color: subColor),
+                style: TextStyle(fontSize: 18.0, color: subColor),
               ),
             ],
           ))
@@ -3046,7 +1144,7 @@ class CustomWidgets {
     );
   }
 
-// this buttons for book ahead or tourism trip
+// this buttons for book ahead or tourism trip in main container
   Widget buttons({
     required BuildContext context,
     required String title,
@@ -3132,6 +1230,7 @@ class CustomWidgets {
       ),
     );
   }
+
 // this Dialog when user click on tourism btn to choose car type before show list of city's
   Widget choseCarTypeBeforOrderTourismTrip(
       BuildContext context, VoidCallback voidCallback) {
