@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
   initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      LogicGoogleMap().requestLocationPermission();
+      LogicGoogleMap().requestLocationPermission(context);
       checkInternet();
     });
     _animationController = AnimationController(

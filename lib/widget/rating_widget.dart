@@ -5,14 +5,13 @@ import '../config.dart';
 import '../my_provider/position_v_chnge.dart';
 import '../my_provider/positon_driver_info_provide.dart';
 import '../repo/data_base_srv.dart';
+import '../tools/tools.dart';
 import 'custom_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RatingWidget extends StatefulWidget {
   final String id;
-  final VoidCallback voidCallback;
-  const RatingWidget({Key? key, required this.id, required this.voidCallback})
-      : super(key: key);
+  const RatingWidget({Key? key, required this.id}) : super(key: key);
 
   @override
   State<RatingWidget> createState() => _RatingWidgetState();
@@ -78,14 +77,19 @@ class _RatingWidgetState extends State<RatingWidget> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () async {
-                 await DataBaseSrv().rateTODateBase(widget.id, context);
-                 await DataBaseSrv().deleteRideRequest(context);
-                  widget.voidCallback();
-                  Provider.of<PositionDriverInfoProvider>(context,
-                          listen: false)
-                      .updateState(-400.0);
-                  Provider.of<PositionChang>(context, listen: false)
-                      .changValue(0.0);
+                  bool isClicked = true;
+                  if(isClicked){
+                    isClicked=false;
+                    await DataBaseSrv().rateTODateBase(widget.id, context);
+                    await DataBaseSrv().deleteRideRequest(context);
+                    await Tools().restApp(context);
+                    Provider.of<PositionDriverInfoProvider>(context,
+                        listen: false)
+                        .updateState(-400.0);
+                    Provider.of<PositionChang>(context, listen: false)
+                        .changValue(0.0);
+                    Navigator.pop(context);
+                  }
                 },
                 child: Center(
                   child: Container(

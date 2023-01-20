@@ -23,6 +23,7 @@ import 'my_provider/carTypeBook_provider.dart';
 import 'my_provider/city_provider.dart';
 import 'my_provider/close_botton_driverInfo.dart';
 import 'my_provider/country_provider.dart';
+import 'my_provider/google_set_provider.dart';
 import 'my_provider/indector_netWeekPro.dart';
 import 'my_provider/indector_profile_screen.dart';
 import 'my_provider/nearsert_driver_provider.dart';
@@ -88,6 +89,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CarTypeBook()),
         ChangeNotifierProvider(create: (context) => IndectorNetWeek()),
         ChangeNotifierProvider(create: (context) => TimeTripStatusRide()),
+        ChangeNotifierProvider(create: (context) => GoogleMapSet()),
       ],
       builder: (context, _) {
         return const MaterialApp(

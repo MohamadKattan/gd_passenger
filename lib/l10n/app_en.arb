@@ -796,5 +796,17 @@
   "discount":"Discount!!",
   "@discount": {
     "description": "dis "
+  },
+  "noGps":"Location services are disabled.!!",
+  "@noGps": {
+    "description": "no gps "
+  },
+  "sendReq":"New ride request",
+  "@sendReq": {
+    "description": "req"
+  },
+  "from":"From",
+  "@from": {
+    "description": "from"
   }
 }

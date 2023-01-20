@@ -13,10 +13,12 @@ class TimeTripStatusRide extends ChangeNotifier {
 // update time trip
   void updateTimeTrip(String status) {
     timeTrip = status;
+    notifyListeners();
   }
 
   // this method for display CurrencyType after calc fare and check country
   void updateCurrencyType(String status) {
     currencyType = status;
+    // notifyListeners();
   }
 }

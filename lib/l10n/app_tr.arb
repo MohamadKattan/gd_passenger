@@ -194,5 +194,8 @@
   "followUs":"Tekliflerden\n ve indirimlerden yararlanın",
   "wow":"şok",
   "dis10":"Her yolculukta %10'a varan indirim",
-  "discount":"İndirim!!"
+  "discount":"İndirim!!",
+  "noGps":"Konum servisleri devre dışı.!!",
+  "sendReq":"Yeni yolculuk isteği",
+  "from":"dan"
 }

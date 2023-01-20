@@ -6,14 +6,17 @@ import 'package:uuid/uuid.dart';
 import '../config.dart';
 import '../google_map_methods.dart';
 import '../my_provider/dropBottom_value.dart';
+import '../my_provider/google_set_provider.dart';
 import '../my_provider/timeTrip_statusRide.dart';
 import '../my_provider/user_id_provider.dart';
 import '../repo/data_base_srv.dart';
+import '../tools/geoFire_methods_tools.dart';
 import '../tools/tools.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomWidgets {
   var uuid = const Uuid();
+
 // this widget for show list of tur cities
   Widget listOfTurCity(BuildContext context, List<dynamic> list) {
     return Dialog(
@@ -57,7 +60,16 @@ class CustomWidgets {
                       ),
                     ),
                     IconButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () async {
+                          var googleMapState =
+                              Provider.of<GoogleMapSet>(context, listen: false);
+                          noChangeToTaxi = false;
+                          GeoFireMethods.listOfNearestDriverAvailable.clear();
+                          googleMapState.markersSet.clear();
+                          geoFireRadios = 2;
+                          await LogicGoogleMap().geoFireInitialize(context);
+                          Navigator.pop(context);
+                        },
                         icon: const Icon(
                           Icons.close,
                           color: Colors.redAccent,
@@ -1249,14 +1261,26 @@ class CustomWidgets {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedTextKit(repeatForever: true, animatedTexts: [
-                ColorizeAnimatedText(AppLocalizations.of(context)!.tourismTrips,
-                    textAlign: TextAlign.center,
-                    speed: const Duration(milliseconds: 300),
-                    textStyle: const TextStyle(
-                        fontSize: 20.0, fontWeight: FontWeight.bold),
-                    colors: [Colors.white60, Colors.black, Colors.white])
-              ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedTextKit(repeatForever: true, animatedTexts: [
+                    ColorizeAnimatedText(
+                        AppLocalizations.of(context)!.tourismTrips,
+                        textAlign: TextAlign.center,
+                        speed: const Duration(milliseconds: 300),
+                        textStyle: const TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold),
+                        colors: [Colors.white60, Colors.black, Colors.white])
+                  ]),
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ))
+                ],
+              ),
               const SizedBox(height: 8),
               Text(
                 AppLocalizations.of(context)!.tourismTripsDes,

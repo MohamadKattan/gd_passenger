@@ -274,7 +274,6 @@ class DataBaseSrv {
         reference.child("rating").set(rating.toStringAsFixed(2));
       }
     });
-    Navigator.pop(context);
   }
 
   // this method for cancel rider Request

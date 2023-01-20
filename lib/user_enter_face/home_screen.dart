@@ -6,12 +6,9 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/google_map_methods.dart';
 import 'package:gd_passenger/model/directions_details.dart';
-import 'package:gd_passenger/model/nearest%20_driver_%20available.dart';
-import 'package:gd_passenger/my_provider/app_data.dart';
 import 'package:gd_passenger/my_provider/car_tupy_provider.dart';
 import 'package:gd_passenger/my_provider/double_value.dart';
 import 'package:gd_passenger/my_provider/dropBottom_value.dart';
@@ -31,23 +28,18 @@ import 'package:gd_passenger/widget/coustom_drawer.dart';
 import 'package:gd_passenger/widget/rider_cancel_rquest.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_geofire/flutter_geofire.dart';
 import '../model/address.dart';
 import '../my_provider/buttom_color_pro.dart';
-import '../my_provider/close_botton_driverInfo.dart';
+import '../my_provider/google_set_provider.dart';
 import '../my_provider/positon_driver_info_provide.dart';
-import '../my_provider/rider_id.dart';
 import '../my_provider/sheet_cardsc.dart';
-import '../my_provider/timeTrip_statusRide.dart';
 import '../my_provider/true_false.dart';
 import '../repo/api_srv_geo.dart';
 import '../tools/geoFire_methods_tools.dart';
-import '../tools/math_methods.dart';
+import '../tools/notify_driver_method.dart';
 import '../widget/custom_widgets.dart';
 import '../widget/driver_info.dart';
-import '../widget/rating_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import "dart:collection";
 import 'advance_reservation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -57,26 +49,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  AudioPlayer audioPlayer = AudioPlayer();
-  late AudioCache audioCache;
-  // final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
-  StreamSubscription<DatabaseEvent>? _rideStreamSubscription;
-  List<NearestDriverAvailable> _driverAvailable = [];
-  List<String> _keyDriverAvailable = [];
-  String state = "normal";
-  String waitDriver = "wait";
-  bool sound1 = false;
-  bool sound2 = false;
-  bool sound3 = false;
-  bool openCollectMoney = false;
-  bool updateDriverOnMap = true;
-  bool isTimeRequstTrip = false;
-  bool noChangeToTaxi = false;
-  // final aNmarkers = <MarkerId, Marker>{};
-  // final kMarkerId = const MarkerId('myDriver');
-  late BitmapDescriptor driversNearIcon;
-  late BitmapDescriptor driversNearIcon1;
-  double geoFireRadios = 4;
+  // // final aNmarkers = <MarkerId, Marker>{};
+  // // final kMarkerId = const MarkerId('myDriver');
+  // late BitmapDescriptor driversNearIcon;
+  // late BitmapDescriptor driversNearIcon1;
+
   @override
   void initState() {
     super.initState();
@@ -84,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _asyncMethod();
     });
-    audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
   }
 
   @override
@@ -96,21 +72,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _asyncMethod() async {
+    var googleMapState = Provider.of<GoogleMapSet>(context, listen: false);
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => CustomWidgets().circularInductorCostem(context));
     await LogicGoogleMap().locationPosition(context).whenComplete(() async {
-      await geoFireInitialize();
+      await LogicGoogleMap().geoFireInitialize(context);
+      audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
       Navigator.pop(context);
+      await trickMyTripAfterKilled();
+      await DataBaseSrv().currentOnlineUserInfo(context);
     });
-    await trickMyTripAfterKilled();
-    await DataBaseSrv().currentOnlineUserInfo(context);
-    Future.delayed(const Duration(seconds: 5)).whenComplete(() {
-      geoFireRadios = 4;
-      markersSet.clear();
-      // GeoFireMethods.listOfNearestDriverAvailable.clear();
-      geoFireInitialize();
+    Future.delayed(const Duration(seconds: 3)).whenComplete(() async {
+      geoFireRadios = 2;
+      googleMapState.markersSet.clear();
+      GeoFireMethods.listOfNearestDriverAvailable.clear();
+      await LogicGoogleMap().geoFireInitialize(context);
     });
   }
 
@@ -215,23 +193,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  ///=========================main widgets ======================================
   // this widget for googleMap
   Widget googleMap() {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 60 / 100,
       width: MediaQuery.of(context).size.width,
-      child: GoogleMap(
-        padding: const EdgeInsets.only(bottom: 95.0),
-        mapType: MapType.normal,
-        initialCameraPosition: LogicGoogleMap().kGooglePlex,
-        myLocationButtonEnabled: true,
-        myLocationEnabled: true,
-        polylines: polylineSet,
-        markers: markersSet,
-        circles: circlesSet,
-        onMapCreated: (GoogleMapController controller) async {
-          LogicGoogleMap().controllerGoogleMap.complete(controller);
-          newGoogleMapController = controller;
+      child: Consumer<GoogleMapSet>(
+        builder: (BuildContext context, value, Widget? child) {
+          return GoogleMap(
+            padding: const EdgeInsets.only(bottom: 95.0),
+            mapType: MapType.normal,
+            initialCameraPosition: LogicGoogleMap().kGooglePlex,
+            myLocationButtonEnabled: true,
+            myLocationEnabled: true,
+            polylines: value.polylineSet,
+            markers: value.markersSet,
+            circles: value.circlesSet,
+            onMapCreated: (GoogleMapController controller) async {
+              LogicGoogleMap().controllerGoogleMap.complete(controller);
+              newGoogleMapController = controller;
+            },
+          );
         },
       ),
     );
@@ -354,45 +337,52 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 /// request button
-                GestureDetector(
-                    onTap: () async {
-                      if (tripDirectionDetails != null) {
-                        gotKeyOfDriver(userProvider);
-                        // countFullTimeRequest(userProvider);
-                        Provider.of<PositionCancelReq>(context, listen: false)
-                            .updateValue(0.0);
-                        Provider.of<PositionChang>(context, listen: false)
-                            .changValue(-500.0);
-                        final int amount =
-                            checkAnyAmount(carTypePro!, tripDirectionDetails!);
-                        DataBaseSrv().saveRiderRequest(context, amount);
-                        state = "requesting";
-                      } else {
-                        Tools().toastMsg(
-                            AppLocalizations.of(context)!.chooseBefore,
-                            Colors.red);
-                      }
-                    },
-                    child: AnimatedContainer(
-                      margin: const EdgeInsets.only(top: 12.0, bottom: 30),
-                      duration: const Duration(milliseconds: 1000),
-                      height: MediaQuery.of(context).size.height * 6.5 / 100,
-                      width: MediaQuery.of(context).size.width * 70 / 100,
-                      decoration: BoxDecoration(
-                        color: tripDirectionDetails != null
-                            ? const Color(0xFFFBC408)
-                            : const Color(0xFF00A3E0),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Center(
-                          child: Text(
-                        AppLocalizations.of(context)!.requestTaxi,
-                        style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      )),
-                    )),
+                Consumer<GoogleMapSet>(
+                  builder: (BuildContext context, val, Widget? child) {
+                    return GestureDetector(
+                        onTap: () async {
+                          if (val.tripDirectionDetail != null) {
+                            NotifyDriver()
+                                .gotKeyOfDriver(userProvider, context);
+                            // countFullTimeRequest(userProvider);
+                            Provider.of<PositionCancelReq>(context,
+                                    listen: false)
+                                .updateValue(0.0);
+                            Provider.of<PositionChang>(context, listen: false)
+                                .changValue(-500.0);
+                            final int amount = checkAnyAmount(
+                                carTypePro!, val.tripDirectionDetail!);
+                            DataBaseSrv().saveRiderRequest(context, amount);
+                            state = "requesting";
+                          } else {
+                            Tools().toastMsg(
+                                AppLocalizations.of(context)!.chooseBefore,
+                                Colors.red);
+                          }
+                        },
+                        child: AnimatedContainer(
+                          margin: const EdgeInsets.only(top: 12.0, bottom: 30),
+                          duration: const Duration(milliseconds: 1000),
+                          height:
+                              MediaQuery.of(context).size.height * 6.5 / 100,
+                          width: MediaQuery.of(context).size.width * 70 / 100,
+                          decoration: BoxDecoration(
+                            color: val.tripDirectionDetail != null
+                                ? const Color(0xFFFBC408)
+                                : const Color(0xFF00A3E0),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Center(
+                              child: Text(
+                            AppLocalizations.of(context)!.requestTaxi,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          )),
+                        ));
+                  },
+                ),
               ],
             ),
           ),
@@ -437,38 +427,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
 // this widget in cloud whereToGo search failed mainBord
   Widget whereToGo() {
-    return Expanded(
-      flex: 0,
-      child: GestureDetector(
-        onTap: () async {
-          final res = await Navigator.push(context,
-              MaterialPageRoute(builder: (context) {
-            return const SearchScreen();
-          }));
-          if (res == "dataDir") {
-            await getPlaceDirection(context);
-          }
-        },
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 4.0),
-          margin: const EdgeInsets.only(bottom: 4.0, left: 4.0, right: 4.0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14.0),
-              border: Border.all(width: 1.0, color: const Color(0xFFFBC408))),
-          width: MediaQuery.of(context).size.width * 100,
-          height: MediaQuery.of(context).size.width * 15.0 / 100,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: searchIconOrCancelBottom(tripDirectionDetails),
+    return Consumer<GoogleMapSet>(
+      builder: (BuildContext context, value, Widget? child) {
+        return Expanded(
+          flex: 0,
+          child: GestureDetector(
+            onTap: () async {
+              final res = await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                return const SearchScreen();
+              }));
+              if (res == "dataDir") {
+                await LogicGoogleMap().getPlaceDirection(context);
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              margin: const EdgeInsets.only(bottom: 4.0, left: 4.0, right: 4.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14.0),
+                  border:
+                      Border.all(width: 1.0, color: const Color(0xFFFBC408))),
+              width: MediaQuery.of(context).size.width * 100,
+              height: MediaQuery.of(context).size.width * 15.0 / 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: searchIconOrCancelBottom(value.tripDirectionDetail),
+                  ),
+                  changeTextWhereToOrTollpasses(value.tripDirectionDetail),
+                ],
               ),
-              changeTextWhereToOrTollpasses(tripDirectionDetails),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -550,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     2.3 /
                                     100,
                                 child: AnimatedContainer(
-                                  height: tripDirectionDetails != null ? 2 : 0,
+                                  height: 2.0,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(2),
                                     color: Colors.grey,
@@ -649,7 +644,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     2.5 /
                                     100,
                                 child: AnimatedContainer(
-                                  height: tripDirectionDetails != null ? 2 : 0,
+                                  height: 2,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(2),
                                     color: Colors.grey,
@@ -747,7 +742,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   2.3 /
                                   100,
                               child: AnimatedContainer(
-                                height: tripDirectionDetails != null ? 2 : 0,
+                                height: 2,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(2),
                                   color: Colors.grey,
@@ -859,7 +854,7 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             userIdProvider: userProvider,
             voidCallback: () async {
-              restApp();
+              Tools().restApp(context);
             }));
   }
 
@@ -876,8 +871,8 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             userIdProvider: userProvider,
             voidCallback: () async {
-              _keyDriverAvailable.clear();
-              restApp();
+              keyDriverAvailable.clear();
+              Tools().restApp(context);
             }));
   }
 
@@ -894,7 +889,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? const Color(0xFF00A3E0)
                     : Colors.white,
                 child: IconButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (value.isTrue == false) {
                         Provider.of<DoubleValue>(context, listen: false)
                             .value0Or1(1);
@@ -949,64 +944,7 @@ class _HomeScreenState extends State<HomeScreen> {
         : const SizedBox();
   }
 
-  ///======Start got current loction + geoFire for add all drivers on map who are close to rider=========
-
-  // this method for display nearest driver available from rider in list by using geoFire
-  Future<void> geoFireInitialize() async {
-    await Geofire.initialize("availableDrivers");
-    final currentPositionPro =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
-    try {
-      Geofire.queryAtLocation(currentPositionPro.latitude ?? 0.0,
-              currentPositionPro.longitude ?? 0.0, geoFireRadios)
-          ?.listen((map) async {
-        if (map != null) {
-          var callBack = map['callBack'];
-          switch (callBack) {
-            case Geofire.onKeyEntered:
-              NearestDriverAvailable nearestDriverAvailable =
-                  NearestDriverAvailable("", 0.0, 0.0);
-              nearestDriverAvailable.key = map['key'];
-              nearestDriverAvailable.latitude = map['latitude'];
-              nearestDriverAvailable.longitude = map['longitude'];
-              GeoFireMethods.listOfNearestDriverAvailable
-                  .add(nearestDriverAvailable);
-              if (kDebugMode) {
-                print(
-                    "hhh${GeoFireMethods.listOfNearestDriverAvailable.length}");
-              }
-              break;
-            case Geofire.onKeyExited:
-              GeoFireMethods.removeDriverFromList(map["key"]);
-              break;
-
-            case Geofire.onKeyMoved:
-              NearestDriverAvailable nearestDriverAvailable =
-                  NearestDriverAvailable("", 0.0, 0.0);
-              nearestDriverAvailable.key = map['key'];
-              nearestDriverAvailable.latitude = map['latitude'];
-              nearestDriverAvailable.longitude = map['longitude'];
-              GeoFireMethods.updateDriverNearLocation(nearestDriverAvailable);
-              updateAvailableDriverOnMap();
-              break;
-            case Geofire.onGeoQueryReady:
-              updateAvailableDriverOnMap();
-              break;
-          }
-        }
-        setState(() {});
-      }).onError((er) {
-        if (kDebugMode) {
-          print(er.toString());
-        }
-      });
-    } on PlatformException {
-      if (kDebugMode) {
-        print('PlatformException geo fire');
-      }
-    }
-    if (!mounted) return;
-  }
+  ///===================start main methods==============================
 
   // this method for rider trick has trip if killed app and reOpen
   Future<void> trickMyTripAfterKilled() async {
@@ -1048,7 +986,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Provider.of<PlaceDetailsDropProvider>(context, listen: false)
                   .updateDropOfLocation(dropOfLocation);
               if (dropOfLocation.longitude != 0.0) {
-                await gotDriverInfo().whenComplete(() {
+                await NotifyDriver().gotDriverInfo(context).whenComplete(() {
                   Provider.of<PositionChang>(context, listen: false)
                       .changValue(-500.0);
                   Provider.of<PositionDriverInfoProvider>(context,
@@ -1072,79 +1010,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void updateAvailableDriverOnMap() async {
-    if (updateDriverOnMap == true) {
-      if (kDebugMode) {
-        print('update drivers on Map');
-      }
-      late String driverPhoneOneOnMap;
-      late String phone;
-      for (NearestDriverAvailable driver
-          in GeoFireMethods.listOfNearestDriverAvailable) {
-        DatabaseReference ref =
-            FirebaseDatabase.instance.ref().child("driver").child(driver.key);
-        await ref.once().then((value) {
-          final snap = value.snapshot.value;
-          if (snap == null) {
-            return;
-          }
-          Map<String, dynamic> map = Map<String, dynamic>.from(snap as Map);
-          if (map["firstName"] != null) {
-            fNameIcon = map["firstName"].toString();
-          }
-          if (map["lastName"] != null) {
-            lNameIcon = map["lastName"].toString();
-          }
-          if (map["rating"] != null) {
-            ratDriverRead = double.parse(map["rating"].toString());
-          }
-          if (map["carInfo"]["carType"] != null) {
-            carTypeOnUpdateGeo = map["carInfo"]["carType"].toString();
-          }
-          if (map["phoneNumber"] != null) {
-            driverPhoneOneOnMap = map["phoneNumber"].toString();
-          }
-        });
-        LatLng driverAvailablePosititon =
-            LatLng(driver.latitude, driver.longitude);
-
-        Marker marker = Marker(
-          markerId: MarkerId("driver${driver.key}"),
-          position: driverAvailablePosititon,
-          icon: carTypeOnUpdateGeo == "Taxi-4 seats"
-              ? driversNearIcon
-              : driversNearIcon1,
-          infoWindow: InfoWindow(
-              onTap: () async {
-                await ref.child('phoneNumber').once().then((value) {
-                  if (value.snapshot.value != null) {
-                    phone = value.snapshot.value.toString();
-                  }
-                });
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) =>
-                        CustomWidgets().callDriverOnMap(context, phone));
-              },
-              title: " $fNameIcon $lNameIcon",
-              snippet:
-                  ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
-          rotation: MathMethods.createRandomNumber(180),
-          anchor: const Offset(1.0, 0.50),
-        );
-        setState(() {
-          markersSet.add(marker);
-        });
-      }
-    } else {
-      if (kDebugMode) {
-        print('No update drivers on Map');
-      }
-      return;
-    }
-  }
-
   //this Method for custom icon driver near taxi
   void createDriverNearIcon() {
     ImageConfiguration imageConfiguration =
@@ -1155,7 +1020,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? "assets/yellowcar1.png"
                 : "assets/yellowcar.png")
         .then((value) {
-      driversNearIcon = value;
+      Provider.of<GoogleMapSet>(context, listen: false)
+          .updateBitmapIconShapeTaxi(value);
+      // driversNearIcon = value;
     });
   }
 
@@ -1166,17 +1033,20 @@ class _HomeScreenState extends State<HomeScreen> {
     BitmapDescriptor.fromAssetImage(imageConfiguration,
             Platform.isAndroid ? "assets/blackcar1.png" : "assets/blackcar.png")
         .then((value) {
-      driversNearIcon1 = value;
+      Provider.of<GoogleMapSet>(context, listen: false)
+          .updateBitmapIconShapeVeto(value);
+      // driversNearIcon1 = value;
     });
   }
 
   // this method for open tourism cites
   Future<void> startOpenTripCity() async {
+    var googleMapState = Provider.of<GoogleMapSet>(context, listen: false);
     noChangeToTaxi = true;
     GeoFireMethods.listOfNearestDriverAvailable.clear();
-    markersSet.clear();
+    googleMapState.markersSet.clear();
     geoFireRadios = 30;
-    await geoFireInitialize();
+    await LogicGoogleMap().geoFireInitialize(context);
     checkAnyListTurCityOpen();
   }
 
@@ -1211,7 +1081,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (tripDirectionDetails != null) {
       return IconButton(
           onPressed: () async {
-            restApp();
+            Tools().restApp(context);
           },
           icon: const Align(
             alignment: Alignment.center,
@@ -1232,6 +1102,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // this method for check any city in turkey and open list of city tur
   Future<void> checkAnyListTurCityOpen() async {
+    var googleMapState = Provider.of<GoogleMapSet>(context, listen: false);
     var list = [];
     var _map = <String, dynamic>{};
     var infoUserDataReal =
@@ -1307,9 +1178,9 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       default:
         GeoFireMethods.listOfNearestDriverAvailable.clear();
-        markersSet.clear();
-        geoFireRadios = 4;
-        geoFireInitialize();
+        googleMapState.markersSet.clear();
+        geoFireRadios = 2;
+        LogicGoogleMap().geoFireInitialize(context);
         Tools().changeAllProClickTaxiBox(context);
         break;
     }
@@ -1324,31 +1195,34 @@ class _HomeScreenState extends State<HomeScreen> {
             return CustomWidgets().listOfTurCity(context, list);
           });
       if (_res == 'data') {
-        getPlaceDirection(context);
+        await LogicGoogleMap().getPlaceDirection(context);
       } else {
         Tools().toastMsg('No trip available now ', Colors.red);
         GeoFireMethods.listOfNearestDriverAvailable.clear();
-        markersSet.clear();
-        geoFireRadios = 4;
-        geoFireInitialize();
+        googleMapState.markersSet.clear();
+        geoFireRadios = 2;
+        LogicGoogleMap().geoFireInitialize(context);
         Tools().changeAllProClickTaxiBox(context);
       }
     }
   }
 
-// this method for check any amount will set to   Ride Request collection
+// this method for check any amount will set to  Ride Request collection
   int checkAnyAmount(String carTypePro, DirectionDetails details) {
+    var tripDirection =
+        Provider.of<GoogleMapSet>(context, listen: false).tripDirectionDetail;
     var amount = 0;
-    if (tripDirectionDetails == null) {
-      return 0;
+    if (tripDirection == null) {
+      amount = 0;
     }
-    amount = carTypePro == "Taxi-4 seats"
-        ? ApiSrvDir.calculateFares1(details, carTypePro, context)
-        : carTypePro == "Medium commercial-6-10 seats"
-            ? ApiSrvDir.calculateFares1(details, carTypePro, context)
-            : carTypePro == "Big commercial-11-19 seats"
-                ? ApiSrvDir.calculateFares1(details, carTypePro, context)
-                : 0;
+    amount = ApiSrvDir.calculateFares1(details, carTypePro, context);
+    // amount = carTypePro == "Taxi-4 seats"
+    //     ? ApiSrvDir.calculateFares1(details, carTypePro, context)
+    //     : carTypePro == "Medium commercial-6-10 seats"
+    //         ? ApiSrvDir.calculateFares1(details, carTypePro, context)
+    //         : carTypePro == "Big commercial-11-19 seats"
+    //             ? ApiSrvDir.calculateFares1(details, carTypePro, context)
+    //             : 0;
     return amount;
   }
 
@@ -1404,22 +1278,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   newValueDrop = AppLocalizations.of(context)!.cash;
                   Provider.of<DropBottomValue>(context, listen: false)
                       .updateValue("Cash");
-                  // setState(() {
-                  //   newValueDrop = AppLocalizations.of(context)!.cash;
-                  //   Provider.of<DropBottomValue>(context, listen: false)
-                  //       .updateValue("Cash");
-                  // });
                 } else if (val == "Pay in taxi by Credit Card" ||
                     val == "الدفع في سيارة الأجرة بواسطة بطاقة الائتمان" ||
                     val == "Kredi Kartı ile takside ödeme") {
                   newValueDrop = AppLocalizations.of(context)!.creditCard;
                   Provider.of<DropBottomValue>(context, listen: false)
                       .updateValue("Pay in taxi by Credit Card");
-                  // setState(() {
-                  //   newValueDrop = AppLocalizations.of(context)!.creditCard;
-                  //   Provider.of<DropBottomValue>(context, listen: false)
-                  //       .updateValue("Pay in taxi by Credit Card");
-                  // });
                 }
               }),
         ),
@@ -1427,626 +1291,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ///================================Start Trip methods=========================
-
-  //this them main logic for diretion + marker+ polline conect with class api
-  Future<void> getPlaceDirection(BuildContext context) async {
-    /// current position
-    final initialPos =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
-
-    ///from api srv place drop of position
-    final finalPos =
-        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
-            .dropOfLocation;
-
-    final pickUpLatLng =
-        LatLng(initialPos.latitude ?? 0.0, initialPos.longitude ?? 00);
-    final dropOfLatLng =
-        LatLng(finalPos.latitude ?? 0.0, finalPos.longitude ?? 0.0);
-
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => CustomWidgets().circularInductorCostem(context));
-
-    ///from api dir
-    final details = await ApiSrvDir.obtainPlaceDirectionDetails(
-        pickUpLatLng, dropOfLatLng, context);
-    setState(() {
-      tripDirectionDetails = details;
-    });
-    final color = Colors.greenAccent.shade700;
-    Navigator.pop(context);
-    const double valPadding = 50;
-    LogicGoogleMap().addPloyLine(
-        details!, pickUpLatLng, dropOfLatLng, color, valPadding, context);
-    await Future.delayed(const Duration(seconds: 2));
-    audioCache.play("gift.mp3");
-    Provider.of<PositionChang>(context, listen: false)
-        .updateDisCountBoxPosition(80.0);
-    Tools().changeAutoPriceColor(context);
-    await Future.delayed(const Duration(seconds: 5));
-    Provider.of<PositionChang>(context, listen: false)
-        .updateDisCountBoxPosition(-600.0);
-  }
-
-  // this method for add all key driver in list for pushing to searchMethod
-  Future<void> gotKeyOfDriver(UserIdProvider userProvider) async {
-    Provider.of<TrueFalse>(context, listen: false).updateShowCancelBord(true);
-    List<String> keyList = [];
-    _driverAvailable = GeoFireMethods.listOfNearestDriverAvailable;
-    for (var i in _driverAvailable) {
-      keyList.add(i.key);
-    }
-    _keyDriverAvailable = LinkedHashSet<String>.from(keyList).toSet().toList();
-    if (kDebugMode) {
-      print('keynewList${_keyDriverAvailable.length}');
-    }
-    searchNearestDriver(userProvider);
-  }
-
-// this method when rider will do order
-  Future<void> searchNearestDriver(UserIdProvider userProvider) async {
-    DatabaseReference _ref = FirebaseDatabase.instance.ref().child("driver");
-    if (_keyDriverAvailable.isEmpty) {
-      if (kDebugMode) {
-        print('No driver for notify');
-      }
-      final res = await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) =>
-              CustomWidgets().sorryNoDriverDialog(context, userProvider));
-      if (res == 0) {
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) =>
-                CustomWidgets().circularInductorCostem(context));
-        Provider.of<PositionCancelReq>(context, listen: false)
-            .updateValue(-400.0);
-        Provider.of<PositionChang>(context, listen: false).changValue(0.0);
-        LogicGoogleMap().locationPosition(context);
-        await geoFireInitialize();
-        Navigator.pop(context);
-        await audioPlayer.stop();
-        // assetsAudioPlayer.stop();
-      }
-    } else if (_keyDriverAvailable.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      audioCache.play("Qara-07.mp3");
-      // assetsAudioPlayer.open(Audio("assets/Qara-07.mp3"));
-      if (kDebugMode) {
-        print('Notify driver No : ${_keyDriverAvailable.length}');
-      }
-      String idDriver = _keyDriverAvailable[0];
-      await _ref
-          .child(idDriver)
-          .child("carInfo")
-          .child("carType")
-          .once()
-          .then((value) async {
-        final snap = value.snapshot.value;
-        if (snap != null) {
-          carRideType = snap.toString();
-          if (carRideType == carOrderType) {
-            await _ref
-                .child(idDriver)
-                .child("newRide")
-                .once()
-                .then((value) async {
-              if (value.snapshot.value != null) {
-                final newRideStatus = value.snapshot.value;
-                if (newRideStatus == "searching") {
-                  notifyDriver(idDriver, context, userProvider);
-                  if (kDebugMode) {
-                    print('notify Driver start');
-                  }
-                  _keyDriverAvailable.removeAt(0);
-                } else {
-                  _keyDriverAvailable.removeAt(0);
-                  searchNearestDriver(userProvider);
-                }
-              }
-            });
-          } else {
-            _keyDriverAvailable.removeAt(0);
-            searchNearestDriver(userProvider);
-          }
-        }
-      });
-    }
-  }
-
-// this method if driver in list of driver for sent notify after take his token
-  Future<void> notifyDriver(String driverId, BuildContext context,
-      UserIdProvider userProvider) async {
-    DatabaseReference _driverRef =
-        FirebaseDatabase.instance.ref().child("driver").child(driverId);
-    rideRequestTimeOut = 25;
-    late Timer _timer;
-    await DataBaseSrv().sendRideRequestId(driverId, context);
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      rideRequestTimeOut = rideRequestTimeOut - 1;
-      if (state != "requesting") {
-        rideRequestTimeOut = 25;
-        after2MinTimeOut = 200;
-        _driverRef.child("newRide").set("canceled");
-        _driverRef.child("newRide").onDisconnect();
-        _timer.cancel();
-        timer.cancel();
-        if (kDebugMode) {
-          print('rider has canceled');
-        }
-      } else if (rideRequestTimeOut <= 0) {
-        _timer.cancel();
-        timer.cancel();
-        rideRequestTimeOut = 25;
-        _driverRef.child("newRide").set("timeOut");
-        _driverRef.child("newRide").onDisconnect();
-        if (kDebugMode) {
-          print('timeOut  Research another Driver');
-        }
-        searchNearestDriver(userProvider);
-      }
-    });
-
-    /// delete send token
-    // await _driverRef.child("token").once().then((value) async {
-    //   final snapshot = value.snapshot.value;
-    //   String token = snapshot.toString();
-    //   SendNotification().sendNotificationToDriver(context, token);
-    //1
-    _driverRef.child("newRide").onValue.listen((event) async {
-      if (event.snapshot.value.toString() == "accepted") {
-        _driverRef.child("newRide").onDisconnect();
-        _timer.cancel();
-        // closeTimerSearch.cancel();
-        waitDriver = "";
-        rideRequestTimeOut = 25;
-        after2MinTimeOut = 200;
-        sound1 = true;
-        sound2 = true;
-        sound3 = true;
-        showDialog(
-            context: context,
-            builder: (context) =>
-                CustomWidgets().circularInductorCostem(context));
-        gotDriverInfo();
-        Future.delayed(const Duration(seconds: 1))
-            .whenComplete(() => Navigator.pop(context));
-        if (kDebugMode) {
-          print('Driver has Accepted');
-        }
-      }
-      if (event.snapshot.value.toString() == "canceled") {
-        _driverRef.child("newRide").onDisconnect();
-        if (kDebugMode) {
-          print('driver has canceled');
-        }
-        rideRequestTimeOut = 1;
-      }
-    });
-  }
-
-  // this method for got driver info from Ride request collection
-  Future<void> gotDriverInfo() async {
-    Provider.of<TrueFalse>(context, listen: false).updateShowDriverIfo(true);
-    if (kDebugMode) {
-      print('GOT DRIVER INFO');
-    }
-    final id = Provider.of<UserAllInfoDatabase>(context, listen: false).users;
-    final carType =
-        Provider.of<CarTypeProvider>(context, listen: false).carType;
-    DatabaseReference reference =
-        FirebaseDatabase.instance.ref().child("Ride Request").child(id.userId);
-    _rideStreamSubscription = reference.onValue.listen((event) async {
-      if (event.snapshot.value == null) {
-        if (kDebugMode) {
-          print('NO DRIVER INFO VAL NULL');
-        }
-        return;
-      } else {
-        if (kDebugMode) {
-          print('HAS DRIVER INFO VAL != NULL');
-        }
-        Map<String, dynamic> map =
-            Map<String, dynamic>.from(event.snapshot.value as Map);
-        if (map["carInfo"] != null) {
-          carDriverInfo = map["carInfo"].toString();
-        }
-        if (map["driverImage"] != null) {
-          final newdriverImage = map["driverImage"].toString();
-          driverImage = newdriverImage;
-        }
-        if (map["carPlack"] != null) {
-          carPlack = map["carPlack"].toString();
-        }
-        if (map["driverName"] != null) {
-          driverName = map["driverName"].toString();
-        }
-        if (map["driverPhone"] != null) {
-          driverPhone = map["driverPhone"].toString();
-        }
-        if (map["status"] != null) {
-          statusRide = map["status"].toString();
-        }
-        if (map["driverLocation"] != null) {
-          final driverLatitude =
-              double.parse(map["driverLocation"]["latitude"].toString());
-          final driverLongitude =
-              double.parse(map["driverLocation"]["longitude"].toString());
-          LatLng driverCurrentLocation =
-              LatLng(driverLatitude, driverLongitude);
-          driverNewLocation = driverCurrentLocation;
-          if (statusRide == "accepted") {
-            Provider.of<PositionDriverInfoProvider>(context, listen: false)
-                .updateState(0.0);
-            Provider.of<PositionCancelReq>(context, listen: false)
-                .updateValue(-400.0);
-            newstatusRide = AppLocalizations.of(context)!.accepted;
-            Provider.of<TimeTripStatusRide>(context, listen: false)
-                .updateStatusRide(newstatusRide);
-          } else if (statusRide == "arrived") {
-            statusRide = "Driver arrived";
-            timeTrip = "";
-            newstatusRide = AppLocalizations.of(context)!.arrived;
-            Provider.of<TimeTripStatusRide>(context, listen: false)
-                .updateStatusRide(newstatusRide);
-            Provider.of<TimeTripStatusRide>(context, listen: false)
-                .updateTimeTrip(timeTrip);
-            Provider.of<TrueFalse>(context, listen: false)
-                .updateShowCancelBord(false);
-            await audioPlayer.stop();
-            // await assetsAudioPlayer.stop();
-            soundArrived();
-          } else if (statusRide == "onride") {
-            if (driverNewLocation.latitude != 0.0) {
-              Marker marker = Marker(
-                markerId: MarkerId("myDriver$driverId"),
-                position: driverNewLocation,
-                icon: carType == "Taxi-4 seats"
-                    ? driversNearIcon
-                    : driversNearIcon1,
-                infoWindow: InfoWindow(
-                    title: driverName,
-                    snippet: AppLocalizations.of(context)!.onWay),
-                rotation: MathMethods.createRandomNumber(360),
-              );
-              statusRide = "Trip Started";
-              newstatusRide = AppLocalizations.of(context)!.started;
-              Provider.of<TimeTripStatusRide>(context, listen: false)
-                  .updateStatusRide(newstatusRide);
-              updateTorRidePickToDropOff(context);
-              setState(() => markersSet.add(marker));
-              // trickDriverCaronTrpe(driverNewLocation, marker);
-            }
-            await audioPlayer.stop();
-            // await assetsAudioPlayer.stop();
-            soundTripStart();
-          } else if (statusRide == "ended") {
-            updateDriverOnMap = true;
-            openCollectMoney = true;
-            statusRide = "Trip finished";
-            timeTrip = "";
-            newstatusRide = AppLocalizations.of(context)!.finished;
-            Provider.of<TimeTripStatusRide>(context, listen: false)
-                .updateStatusRide(newstatusRide);
-            Provider.of<TimeTripStatusRide>(context, listen: false)
-                .updateTimeTrip(timeTrip);
-            markersSet.removeWhere(
-                (ele) => ele.markerId.value.contains("myDriver$driverId"));
-            await audioPlayer.stop();
-            // await assetsAudioPlayer.stop();
-            if (map["total"] != null) {
-              int fare = int.parse(map["total"].toString());
-              if (openCollectMoney == true) {
-                openCollectMoney = false;
-                var res = await showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return CustomWidgets().collectMoney(context, fare);
-                    });
-                if (res == "close") {
-                  if (map["driverId"] != null) {
-                    driverId = map["driverId"].toString();
-                    showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return RatingWidget(
-                              id: driverId,
-                              voidCallback: ()=> restApp());
-                        });
-                    Provider.of<RiderId>(context, listen: false)
-                        .updateStatus(driverId);
-                  }
-                  if (_rideStreamSubscription != null) {
-                    _rideStreamSubscription?.cancel();
-                    _rideStreamSubscription = null;
-                  }
-                }
-              }
-            }
-          } else if (statusRide == "0") {
-            statusRide = "0";
-            timeTrip = "";
-            newstatusRide = AppLocalizations.of(context)!.driverCancelTrip;
-            Provider.of<TimeTripStatusRide>(context, listen: false)
-                .updateStatusRide(newstatusRide);
-            Provider.of<TimeTripStatusRide>(context, listen: false)
-                .updateTimeTrip(timeTrip);
-            var isRanging = true;
-            if (isRanging) {
-              Tools().toastMsg(
-                  'Driver : $driverName ${AppLocalizations.of(context)!.driverCancelTrip}',
-                  Colors.red.shade400);
-              await audioCache.play("Alarm-Windows-10.mp3");
-              // assetsAudioPlayer.open(Audio("assets/Alarm-Windows-10.mp3"));
-              // await assetsAudioPlayer.stop();
-              isRanging = false;
-            }
-          }
-        }
-        if (statusRide == "accepted") {
-          Provider.of<CloseButtonProvider>(context, listen: false)
-              .updateState(false);
-          updateDriverOnMap = false;
-          await Geofire.stopListener();
-          await deleteGeoFireMarker();
-          markersSet
-              .removeWhere((ele) => ele.markerId.value.contains("driver"));
-          if (driverNewLocation.latitude != 0.0) {
-            Marker marker = Marker(
-              markerId: MarkerId("myDriver$driverId"),
-              position: driverNewLocation,
-              icon: carType == "Taxi-4 seats"
-                  ? driversNearIcon
-                  : driversNearIcon1,
-              infoWindow: InfoWindow(
-                  title: " $driverName",
-                  snippet: AppLocalizations.of(context)!.onWay),
-              rotation: MathMethods.createRandomNumber(360),
-            );
-            setState(() {
-              markersSet.add(marker);
-            });
-            updateDriverToRidePickUp(driverNewLocation, context);
-            setState(() => markersSet.add(marker));
-          }
-          await audioPlayer.stop();
-          // assetsAudioPlayer.stop();
-          soundAccepted();
-        }
-      }
-    });
-  }
-
-  Future<void> updateDriverToRidePickUp(
-      LatLng driverCurrentLocation, BuildContext context) async {
-    final pickUpLoc =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
-    LatLng riderLoc =
-        LatLng(pickUpLoc.latitude ?? 0.0, pickUpLoc.longitude ?? 0.0);
-    if (isTimeRequstTrip == false) {
-      isTimeRequstTrip = true;
-      final details = await ApiSrvDir.obtainPlaceDirectionDetails(
-          driverCurrentLocation, riderLoc, context);
-      final color = Colors.blueAccent.shade700;
-      const double valPadding = 100.0;
-      LogicGoogleMap().addPloyLine(details!, riderLoc, driverCurrentLocation,
-          color, valPadding, context);
-      markersSet.removeWhere((ele) => ele.markerId.value.contains("dropOfId"));
-      setState(() {
-        timeTrip = details.durationText.toString();
-      });
-      Provider.of<TimeTripStatusRide>(context, listen: false)
-          .updateTimeTrip(timeTrip);
-      isTimeRequstTrip = false;
-    }
-  }
-
-// this method for update time from pickUp to dropOff
-  Future<void> updateTorRidePickToDropOff(BuildContext context) async {
-    final pickUpLoc =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
-    final dropOffLoc =
-        Provider.of<PlaceDetailsDropProvider>(context, listen: false)
-            .dropOfLocation;
-    LatLng riderLocPickUp =
-        LatLng(pickUpLoc.latitude ?? 0.0, pickUpLoc.longitude ?? 0.0);
-    LatLng riderLocDropOff =
-        LatLng(dropOffLoc.latitude ?? 0.0, dropOffLoc.longitude ?? 0.0);
-    if (isTimeRequstTrip == false) {
-      isTimeRequstTrip = true;
-      final details = await ApiSrvDir.obtainPlaceDirectionDetails(
-          riderLocPickUp, riderLocDropOff, context);
-      final color = Colors.greenAccent.shade700;
-      const double valPadding = 50;
-      LogicGoogleMap().addPloyLine(details!, riderLocPickUp, riderLocDropOff,
-          color, valPadding, context);
-      timeTrip = details.durationText.toString();
-      Provider.of<TimeTripStatusRide>(context, listen: false)
-          .updateTimeTrip(timeTrip);
-      setState(() {});
-      isTimeRequstTrip = false;
-    }
-  }
-
-  // this method for trick driver on trip step by step
-  void trickDriverCaronTrpe(LatLng driverNewLocation, Marker marker) {
-    CameraPosition cameraPosition = CameraPosition(
-        target: driverNewLocation, zoom: 14.0, tilt: 0.0, bearing: 0.0);
-    newGoogleMapController
-        ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-    // markersSet.removeWhere((ele) => ele.markerId.value == "myDriver");
-    // markersSet.add(marker);
-  }
-
-  Future<void> deleteGeoFireMarker() async {
-    setState(() {
-      markersSet.removeWhere((ele) => ele.markerId.value.contains("driver"));
-    });
-  }
-
-  // this method for change voice connect to language
-  Future<void> soundAccepted() async {
-    String val = AppLocalizations.of(context)!.taxi;
-    if (sound1 == true) {
-      await audioCache.play("Alarm-Windows-10.mp3");
-      // assetsAudioPlayer.open(Audio("assets/Alarm-Windows-10.mp3"));
-      Tools().toastMsg(
-          '${AppLocalizations.of(context)!.st3} $driverName ${AppLocalizations.of(context)!.accepted}',
-          Colors.greenAccent.shade400);
-      switch (val) {
-        case 'Taksi':
-          await audioCache.play("commingtr.mp3");
-          // assetsAudioPlayer.open(Audio("assets/commingtr.mp3"));
-          break;
-        case 'تاكسي':
-          await audioCache.play("Alarm-Windows-10.mp3");
-          // assetsAudioPlayer.open(Audio("assets/dcomingtoyouar.wav"));
-          // await audioCache.play("dcomingtoyouar.wav");
-          break;
-        default:
-          await audioCache.play("Alarm-Windows-10.mp3");
-          // await audioCache.play("onway.wav");
-          // assetsAudioPlayer.open(Audio("assets/onway.wav"));
-          break;
-      }
-    }
-    await Future.delayed(const Duration(seconds: 5));
-    sound1 = false;
-    await audioPlayer.stop();
-    // await assetsAudioPlayer.stop();
-  }
-
-  Future<void> soundArrived() async {
-    String val = AppLocalizations.of(context)!.taxi;
-    if (sound2 == true) {
-      switch (val) {
-        case 'Taksi':
-          await audioCache.play("arrivedtr.mp3");
-          // assetsAudioPlayer.open(Audio("assets/arrivedtr.mp3"));
-          break;
-        case 'تاكسي':
-          await audioCache.play("Alarm-Windows-10.mp3");
-          // assetsAudioPlayer.open(Audio("assets/darrivedtoyouar.wav"));
-          // await audioCache.play("darrivedtoyouar.wav");
-          break;
-        default:
-          await audioCache.play("Alarm-Windows-10.mp3");
-          // assetsAudioPlayer.open(Audio("assets/waiten.wav"));
-          // await audioCache.play("waiten.wav");
-          break;
-      }
-    }
-    await Future.delayed(const Duration(seconds: 5));
-    sound2 = false;
-    // await assetsAudioPlayer.stop();
-  }
-
-  Future<void> soundTripStart() async {
-    String val = AppLocalizations.of(context)!.taxi;
-    if (sound3 == true) {
-      switch (val) {
-        case 'Taksi':
-          // assetsAudioPlayer.open(Audio("assets/starttr.mp3"));
-          await audioCache.play("starttr.mp3");
-          break;
-        case 'تاكسي':
-          await audioCache.play("Alarm-Windows-10.mp3");
-          // assetsAudioPlayer.open(Audio("assets/youintripar.wav"));
-          // await audioCache.play("youintripar.wav");
-          break;
-        default:
-          await audioCache.play("Alarm-Windows-10.mp3");
-          // await audioCache.play("intripen.wav");
-          // assetsAudioPlayer.open(Audio("assets/intripen.wav"));
-          break;
-      }
-    }
-    await Future.delayed(const Duration(seconds: 5));
-    sound3 = false;
-    // await assetsAudioPlayer.stop();
-  }
-
-  // this method for clean req after cancel
-  Future<void> restApp() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => CustomWidgets().circularInductorCostem(context));
-    if (_rideStreamSubscription != null) {
-      _rideStreamSubscription?.cancel();
-      _rideStreamSubscription = null;
-    }
-    _driverAvailable.clear();
-    GeoFireMethods.listOfNearestDriverAvailable.clear();
-    updateDriverOnMap = true;
-    openCollectMoney = false;
-    sound1 = false;
-    sound2 = false;
-    sound3 = false;
-    noChangeToTaxi = false;
-    audioPlayer.stop();
-    Provider.of<TrueFalse>(context, listen: false).taxiDiscount(false);
-    Provider.of<TrueFalse>(context, listen: false).vetoDiscount(false);
-    Provider.of<TrueFalse>(context, listen: false).vanDiscount(false);
-    Provider.of<TrueFalse>(context, listen: false).updateShowCancelBord(false);
-    Provider.of<TrueFalse>(context, listen: false).updateShowDriverIfo(false);
-    Provider.of<TrueFalse>(context, listen: false)
-        .updateColorTextInRowTaxi(false);
-    Provider.of<TrueFalse>(context, listen: false)
-        .updateColorTextInRowVeto(false);
-    Provider.of<TrueFalse>(context, listen: false)
-        .updateColorTextInRowVan(false);
-    Provider.of<CarTypeProvider>(context, listen: false)
-        .updateCarType("Taxi-4 seats");
-    Provider.of<LineTaxi>(context, listen: false).changelineTaxi(true);
-    Provider.of<LineTaxi>(context, listen: false).changelineVan(false);
-    Provider.of<LineTaxi>(context, listen: false).changelineVeto(false);
-    Provider.of<OpacityChang>(context, listen: false).changOpacityTaxi(true);
-    Provider.of<OpacityChang>(context, listen: false).changOpacityVan(false);
-    Provider.of<OpacityChang>(context, listen: false).changOpacityVeto(false);
-    Provider.of<CarTypeProvider>(context, listen: false)
-        .updateCarType("Taxi-4 seats");
-    // markersSet.removeWhere((ele) => ele.markerId.value.contains("pickUpId"));
-    // markersSet.removeWhere((ele) => ele.markerId.value.contains("dropOfId"));
-    polylineSet.clear();
-    markersSet.clear();
-    after2MinTimeOut = 200;
-    rideRequestTimeOut = 25;
-    circlesSet.clear();
-    polylineCoordinates.clear();
-    tripDirectionDetails = null;
-    fNameIcon = "";
-    lNameIcon = "";
-    waitDriver = "wait";
-    state = "normal";
-    geoFireRadios = 4;
-    statusRide = "";
-    newstatusRide = "";
-    carDriverInfo = "";
-    driverName = "";
-    driverImage = "";
-    driverPhone = "";
-    timeTrip = "";
-    driverId = "";
-    titleRate = "";
-    rating = 0.0;
-    carRideType = "";
-    carOrderType = "Taxi-4 seats";
-    tourismCityName = "";
-    tourismCityPrice = "";
-    driverNewLocation = const LatLng(0.0, 0.0);
-    await LogicGoogleMap().locationPosition(context);
-    await geoFireInitialize();
-    setState(() {});
-    Navigator.pop(context);
-  }
-
-  ///================================End=======================================
+  ///================================End==================================
 }
