@@ -24,7 +24,6 @@ var uuid = const Uuid();
 class DriverInfo {
   Widget driverInfoContainer({
     required BuildContext context,
-    required VoidCallback voidCallback,
     required UserIdProvider userIdProvider,
   }) {
     var _colorGreenColors = [
@@ -307,8 +306,9 @@ class DriverInfo {
                                 Provider.of<PositionChang>(context,
                                         listen: false)
                                     .changValue(0.0);
-                                DataBaseSrv().deleteRideRequest(context);
-                                voidCallback();
+                               await DataBaseSrv().deleteRideRequest(context);
+                                keyDriverAvailable.clear();
+                                Tools().restApp(context);
                               }),
                         ],
                       ),

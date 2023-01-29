@@ -49,7 +49,6 @@ void main() async {
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     mapsImplementation.useAndroidViewSurface = true;
   }
-
   runApp(const MyApp());
 }
 
@@ -76,8 +75,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserAllInfoDatabase()),
         ChangeNotifierProvider(create: (context) => InductorProfileScreen()),
         ChangeNotifierProvider(create: (context) => ChangeColor()),
-        ChangeNotifierProvider(
-            create: (context) => PositionDriverInfoProvider()),
+        ChangeNotifierProvider(create: (context) => PositionDriverInfoProvider()),
         ChangeNotifierProvider(create: (context) => NearestDriverProvider()),
         ChangeNotifierProvider(create: (context) => CloseButtonProvider()),
         ChangeNotifierProvider(create: (context) => RiderId()),
@@ -93,7 +91,7 @@ class MyApp extends StatelessWidget {
       ],
       builder: (context, _) {
         return const MaterialApp(
-            debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
             title: 'GD Passenger',
             localizationsDelegates: [
               AppLocalizations.delegate,

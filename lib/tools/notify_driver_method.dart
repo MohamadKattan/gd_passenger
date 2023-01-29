@@ -35,8 +35,7 @@ import 'math_methods.dart';
 
 class NotifyDriver {
   // this method for add all key driver in list for pushing to searchMethod
-  Future<void> gotKeyOfDriver(
-      UserIdProvider userProvider, BuildContext context) async {
+  Future<void> gotKeyOfDriver(UserIdProvider userProvider, BuildContext context) async {
     Provider.of<TrueFalse>(context, listen: false).updateShowCancelBord(true);
     // audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
     List<String> keyList = [];
@@ -52,8 +51,8 @@ class NotifyDriver {
   }
 
   // this method when rider will do order
-  Future<void> searchNearestDriver(
-      UserIdProvider userProvider, BuildContext context) async {
+  Future<void> searchNearestDriver(UserIdProvider userProvider,
+      BuildContext context) async {
     DatabaseReference _ref = FirebaseDatabase.instance.ref().child("driver");
     if (keyDriverAvailable.isEmpty) {
       if (kDebugMode) {
@@ -76,12 +75,10 @@ class NotifyDriver {
         LogicGoogleMap().locationPosition(context);
         await LogicGoogleMap().geoFireInitialize(context);
         Navigator.pop(context);
-        await audioPlayer.stop();
-        // assetsAudioPlayer.stop();
       }
     } else if (keyDriverAvailable.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      audioCache.play("Qara-07.mp3");
+      // await Future.delayed(const Duration(milliseconds: 300));
+      // audioCache.play("Qara-07.mp3");
       if (kDebugMode) {
         print('Notify driver No : ${keyDriverAvailable.length}');
       }
@@ -104,7 +101,8 @@ class NotifyDriver {
               if (value.snapshot.value != null) {
                 final newRideStatus = value.snapshot.value;
                 if (newRideStatus == "searching") {
-                  notifyDriver(idDriver, context, userProvider);
+                  notifyDriver(
+                      idDriver, context, userProvider);
                   if (kDebugMode) {
                     print('notify Driver start');
                   }
@@ -137,19 +135,22 @@ class NotifyDriver {
         FirebaseDatabase.instance.ref().child("driver").child(driverId);
     rideRequestTimeOut = 30;
     late Timer _timer;
-     await DataBaseSrv().sendRideRequestId(driverId, context);
+    await DataBaseSrv().sendRideRequestId(driverId, context);
     _driverRef.child("token").once().then((value) async {
-      final snapshot = value.snapshot.value;
-      String token = snapshot.toString();
-      SendNotification().sendNotificationToDriver(context, token);
+      if(value.snapshot.value!=null){
+        final snapshot = value.snapshot.value;
+        String token = snapshot.toString();
+        SendNotification().sendNotificationToDriver(context, token);
+      }
     });
+    await Future.delayed(const Duration(seconds: 2));
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       rideRequestTimeOut = rideRequestTimeOut - 1;
       // if rider cancel his order
       if (state != "requesting") {
         rideRequestTimeOut = 30;
         after2MinTimeOut = 200;
-        _driverRef.child("newRide").set("searching");
+        _driverRef.child("newRide").set("canceled");
         _driverRef.child("newRide").onDisconnect();
         _timer.cancel();
         timer.cancel();
@@ -161,7 +162,7 @@ class NotifyDriver {
         _timer.cancel();
         timer.cancel();
         rideRequestTimeOut = 30;
-        _driverRef.child("newRide").set("searching");
+        _driverRef.child("newRide").set("timeOut");
         _driverRef.child("newRide").onDisconnect();
         if (kDebugMode) {
           print('timeOut  Research another Driver');
@@ -169,7 +170,6 @@ class NotifyDriver {
         searchNearestDriver(userProvider, context);
       }
     });
-
     _driverRef.child("newRide").onValue.listen((event) async {
       if (event.snapshot.value.toString() == "accepted") {
         _driverRef.child("newRide").onDisconnect();
@@ -180,13 +180,17 @@ class NotifyDriver {
         sound1 = true;
         sound2 = true;
         sound3 = true;
+        openCollectMoney = true;
+        driverCanceledAfterAccepted=true;
         showDialog(
             context: context,
             builder: (context) =>
                 CustomWidgets().circularInductorCostem(context));
         gotDriverInfo(context);
         Future.delayed(const Duration(seconds: 1))
-            .whenComplete(() => Navigator.pop(context));
+            .whenComplete((){
+          Navigator.pop(context);
+        });
         if (kDebugMode) {
           print('Driver has Accepted');
         }
@@ -203,7 +207,8 @@ class NotifyDriver {
   }
 
   // this method for got driver info from Ride request collection
-  Future<void> gotDriverInfo(BuildContext context) async {
+  Future<void> gotDriverInfo(
+      BuildContext context) async {
     Provider.of<TrueFalse>(context, listen: false).updateShowDriverIfo(true);
     if (kDebugMode) {
       print('GOT DRIVER INFO');
@@ -249,8 +254,7 @@ class NotifyDriver {
               double.parse(map["driverLocation"]["latitude"].toString());
           final driverLongitude =
               double.parse(map["driverLocation"]["longitude"].toString());
-          LatLng driverCurrentLocation =
-              LatLng(driverLatitude, driverLongitude);
+          LatLng driverCurrentLocation = LatLng(driverLatitude, driverLongitude);
           driverNewLocation = driverCurrentLocation;
           if (statusRide == "accepted") {
             Provider.of<PositionDriverInfoProvider>(context, listen: false)
@@ -260,7 +264,8 @@ class NotifyDriver {
             newstatusRide = AppLocalizations.of(context)!.accepted;
             Provider.of<TimeTripStatusRide>(context, listen: false)
                 .updateStatusRide(newstatusRide);
-          } else if (statusRide == "arrived") {
+          }
+          else if (statusRide == "arrived") {
             statusRide = "Driver arrived";
             timeTrip = "";
             newstatusRide = AppLocalizations.of(context)!.arrived;
@@ -270,9 +275,9 @@ class NotifyDriver {
                 .updateTimeTrip(timeTrip);
             Provider.of<TrueFalse>(context, listen: false)
                 .updateShowCancelBord(false);
-            await audioPlayer.stop();
             soundArrived(context);
-          } else if (statusRide == "onride") {
+          }
+          else if (statusRide == "onride") {
             if (driverNewLocation.latitude != 0.0) {
               Marker marker = Marker(
                 markerId: MarkerId("myDriver$driverId"),
@@ -283,7 +288,7 @@ class NotifyDriver {
                 infoWindow: InfoWindow(
                     title: driverName,
                     snippet: AppLocalizations.of(context)!.onWay),
-                rotation: MathMethods.createRandomNumber(360),
+                rotation: MathMethods.createRandomNumber(180),
               );
               statusRide = "Trip Started";
               newstatusRide = AppLocalizations.of(context)!.started;
@@ -294,11 +299,10 @@ class NotifyDriver {
               // setState(() => markersSet.add(marker));
               // trickDriverCaronTrpe(driverNewLocation, marker);
             }
-            await audioPlayer.stop();
             soundTripStart(context);
-          } else if (statusRide == "ended") {
-            updateDriverOnMap = true;
-            openCollectMoney = true;
+          }
+          else if (statusRide == "ended") {
+            // updateDriverOnMap = true;
             statusRide = "Trip finished";
             timeTrip = "";
             newstatusRide = AppLocalizations.of(context)!.finished;
@@ -309,10 +313,9 @@ class NotifyDriver {
             googleMapState.deleteDriverOnMap("myDriver$driverId");
             // markersSet.removeWhere(
             //     (ele) => ele.markerId.value.contains("myDriver$driverId"));
-            await audioPlayer.stop();
             if (map["total"] != null) {
               int fare = int.parse(map["total"].toString());
-              if (openCollectMoney == true) {
+              if (openCollectMoney) {
                 openCollectMoney = false;
                 var res = await showDialog(
                     context: context,
@@ -339,7 +342,8 @@ class NotifyDriver {
                 }
               }
             }
-          } else if (statusRide == "0") {
+          }
+          else if (statusRide == "0") {
             statusRide = "0";
             timeTrip = "";
             newstatusRide = AppLocalizations.of(context)!.driverCancelTrip;
@@ -347,13 +351,12 @@ class NotifyDriver {
                 .updateStatusRide(newstatusRide);
             Provider.of<TimeTripStatusRide>(context, listen: false)
                 .updateTimeTrip(timeTrip);
-            var isRanging = true;
-            if (isRanging) {
+            if (driverCanceledAfterAccepted) {
+              driverCanceledAfterAccepted = false;
               Tools().toastMsg(
                   'Driver : $driverName ${AppLocalizations.of(context)!.driverCancelTrip}',
                   Colors.red.shade400);
               await audioCache.play("Alarm-Windows-10.mp3");
-              isRanging = false;
             }
           }
         }
@@ -363,26 +366,22 @@ class NotifyDriver {
           updateDriverOnMap = false;
           await Geofire.stopListener();
           googleMapState.deleteDriverOnMap("driver");
-          // await deleteGeoFireMarker();
-          // markersSet
-          //     .removeWhere((ele) => ele.markerId.value.contains("driver"));
           if (driverNewLocation.latitude != 0.0) {
             Marker marker = Marker(
-              markerId: MarkerId("myDriver$driverId"),
-              position: driverNewLocation,
-              icon: carType == "Taxi-4 seats"
-                  ? googleMapState.driversNearIcon
-                  : googleMapState.driversNearIcon1,
-              infoWindow: InfoWindow(
-                  title: " $driverName",
-                  snippet: AppLocalizations.of(context)!.onWay),
-              rotation: MathMethods.createRandomNumber(360),
-            );
+                markerId: MarkerId("myDriver$driverId"),
+                position: driverNewLocation,
+                icon: carType == "Taxi-4 seats"
+                    ? googleMapState.driversNearIcon
+                    : googleMapState.driversNearIcon1,
+                infoWindow: InfoWindow(
+                    title: " $driverName",
+                    snippet: AppLocalizations.of(context)!.onWay),
+                flat: true,
+                rotation:MathMethods.createRandomNumber(180)
+               );
             updateDriverToRidePickUp(driverNewLocation, context);
             googleMapState.updateMarkerOnMap(marker);
-            // setState(() => markersSet.add(marker));
           }
-          await audioPlayer.stop();
           soundAccepted(context);
         }
       }
@@ -447,9 +446,6 @@ class NotifyDriver {
     String val = AppLocalizations.of(context)!.taxi;
     if (sound1 == true) {
       await audioCache.play("Alarm-Windows-10.mp3");
-      // Tools().toastMsg(
-      //     '${AppLocalizations.of(context)!.st3} $driverName ${AppLocalizations.of(context)!.accepted}',
-      //     Colors.greenAccent.shade400);
       switch (val) {
         case 'Taksi':
           await audioCache.play("commingtr.mp3");
@@ -466,7 +462,7 @@ class NotifyDriver {
     }
     await Future.delayed(const Duration(seconds: 5));
     sound1 = false;
-    await audioPlayer.stop();
+    audioPlayer.stop();
   }
 
   Future<void> soundArrived(BuildContext context) async {
@@ -488,6 +484,7 @@ class NotifyDriver {
     }
     await Future.delayed(const Duration(seconds: 5));
     sound2 = false;
+    audioPlayer.stop();
   }
 
   Future<void> soundTripStart(BuildContext context) async {
@@ -509,6 +506,7 @@ class NotifyDriver {
     }
     await Future.delayed(const Duration(seconds: 5));
     sound3 = false;
+    audioPlayer.stop();
   }
 
 // this method for trick driver on trip step by step

@@ -82,12 +82,12 @@ class _RatingWidgetState extends State<RatingWidget> {
                     isClicked=false;
                     await DataBaseSrv().rateTODateBase(widget.id, context);
                     await DataBaseSrv().deleteRideRequest(context);
-                    await Tools().restApp(context);
                     Provider.of<PositionDriverInfoProvider>(context,
                         listen: false)
                         .updateState(-400.0);
                     Provider.of<PositionChang>(context, listen: false)
                         .changValue(0.0);
+                    await Tools().restApp(context);
                     Navigator.pop(context);
                   }
                 },

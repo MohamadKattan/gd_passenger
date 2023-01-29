@@ -6,6 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:gd_passenger/config.dart';
 import 'package:gd_passenger/google_map_methods.dart';
 import 'package:gd_passenger/model/directions_details.dart';
@@ -48,11 +49,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  // // final aNmarkers = <MarkerId, Marker>{};
-  // // final kMarkerId = const MarkerId('myDriver');
-  // late BitmapDescriptor driversNearIcon;
-  // late BitmapDescriptor driversNearIcon1;
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+
 
   @override
   void initState() {
@@ -72,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _asyncMethod() async {
+    await Geofire.initialize("availableDrivers");
     var googleMapState = Provider.of<GoogleMapSet>(context, listen: false);
     showDialog(
         context: context,
@@ -869,11 +868,7 @@ class _HomeScreenState extends State<HomeScreen> {
         curve: Curves.ease,
         child: DriverInfo().driverInfoContainer(
             context: context,
-            userIdProvider: userProvider,
-            voidCallback: () async {
-              keyDriverAvailable.clear();
-              Tools().restApp(context);
-            }));
+            userIdProvider: userProvider));
   }
 
   Widget btnDrawer() {
@@ -1022,7 +1017,6 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((value) {
       Provider.of<GoogleMapSet>(context, listen: false)
           .updateBitmapIconShapeTaxi(value);
-      // driversNearIcon = value;
     });
   }
 
@@ -1035,7 +1029,6 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((value) {
       Provider.of<GoogleMapSet>(context, listen: false)
           .updateBitmapIconShapeVeto(value);
-      // driversNearIcon1 = value;
     });
   }
 
@@ -1216,13 +1209,6 @@ class _HomeScreenState extends State<HomeScreen> {
       amount = 0;
     }
     amount = ApiSrvDir.calculateFares1(details, carTypePro, context);
-    // amount = carTypePro == "Taxi-4 seats"
-    //     ? ApiSrvDir.calculateFares1(details, carTypePro, context)
-    //     : carTypePro == "Medium commercial-6-10 seats"
-    //         ? ApiSrvDir.calculateFares1(details, carTypePro, context)
-    //         : carTypePro == "Big commercial-11-19 seats"
-    //             ? ApiSrvDir.calculateFares1(details, carTypePro, context)
-    //             : 0;
     return amount;
   }
 

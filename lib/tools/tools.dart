@@ -305,6 +305,7 @@ class Tools {
         break;
     }
   }
+
   // this method for clean req after cancel
   Future<void> restApp(BuildContext context) async {
     var trueFalseState = Provider.of<TrueFalse>(context, listen: false);
@@ -315,6 +316,7 @@ class Tools {
         context: context,
         barrierDismissible: false,
         builder: (context) => CustomWidgets().circularInductorCostem(context));
+
     if (rideStreamSubscription != null) {
       rideStreamSubscription?.cancel();
       rideStreamSubscription = null;
@@ -326,8 +328,8 @@ class Tools {
     sound1 = false;
     sound2 = false;
     sound3 = false;
+    driverCanceledAfterAccepted = false;
     noChangeToTaxi = false;
-    audioPlayer.stop();
     trueFalseState.taxiDiscount(false);
     trueFalseState.vetoDiscount(false);
     trueFalseState.vanDiscount(false);
@@ -373,14 +375,8 @@ class Tools {
     driverNewLocation = const LatLng(0.0, 0.0);
     await LogicGoogleMap().locationPosition(context);
     await LogicGoogleMap().geoFireInitialize(context);
-    Navigator.pop(context);
-    // markersSet.removeWhere((ele) => ele.markerId.value.contains("pickUpId"));
-    // markersSet.removeWhere((ele) => ele.markerId.value.contains("dropOfId"));
-    // tripDirectionDetails = null;
-    // polylineSet.clear();
-    // markersSet.clear();
-    // circlesSet.clear();
-    // polylineCoordinates.clear();
-    // setState(() {});
+   Future.delayed(const Duration(seconds: 1)).whenComplete((){
+     Navigator.pop(context);
+   });
   }
 }

@@ -36,6 +36,7 @@ class LogicGoogleMap {
   final GetUrl _getUrl = GetUrl();
   final ApiSrvGeo _apiMethods = ApiSrvGeo();
 
+
   final Completer<GoogleMapController> controllerGoogleMap =
       Completer<GoogleMapController>();
 
@@ -88,7 +89,6 @@ class LogicGoogleMap {
     }
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-
     LatLng latLngPosition = LatLng(position.latitude, position.longitude);
     CameraPosition cameraPosition = CameraPosition(
       target: latLngPosition,
@@ -102,8 +102,8 @@ class LogicGoogleMap {
   }
 
   // this method for display nearest driver available from rider in list by using geoFire
-  Future<void> geoFireInitialize(BuildContext context) async {
-    await Geofire.initialize("availableDrivers");
+  Future<void> geoFireInitialize(
+      BuildContext context) async {
     final currentPositionPro =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     try {
@@ -158,8 +158,8 @@ class LogicGoogleMap {
     // if (!mounted) return;
   }
 
-  void updateAvailableDriverOnMap(BuildContext context) async {
-    var icon = Provider.of<GoogleMapSet>(context, listen: false);
+  void updateAvailableDriverOnMap(
+      BuildContext context) async {
     if (updateDriverOnMap == true) {
       if (kDebugMode) {
         print('update drivers on Map');
@@ -192,40 +192,39 @@ class LogicGoogleMap {
             driverPhoneOneOnMap = map["phoneNumber"].toString();
           }
         });
-        LatLng driverAvailablePosititon =
-            LatLng(driver.latitude, driver.longitude);
+
+        LatLng driverPosititon = LatLng(driver.latitude, driver.longitude);
+        final double bearing = MathMethods().getBearing(
+            LatLng(driverPosititon.latitude, driverPosititon.longitude),
+            LatLng(driver.latitude +1, driver.longitude +1));
         Marker marker = Marker(
-          markerId: MarkerId("driver${driver.key}"),
-          position: driverAvailablePosititon,
-          icon: carTypeOnUpdateGeo == "Taxi-4 seats"
-              ? icon.driversNearIcon
-              : icon.driversNearIcon1,
-          // ? driversNearIcon
-          // : driversNearIcon1,
-          infoWindow: InfoWindow(
-              onTap: () async {
-                await ref.child('phoneNumber').once().then((value) {
-                  if (value.snapshot.value != null) {
-                    phone = value.snapshot.value.toString();
-                  }
-                });
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) =>
-                        CustomWidgets().callDriverOnMap(context, phone));
-              },
-              title: " $fNameIcon $lNameIcon",
-              snippet:
-                  ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
-          rotation: MathMethods.createRandomNumber(180),
-          anchor: const Offset(1.0, 0.50),
-        );
+            markerId: MarkerId("driver${driver.key}"),
+            position: driverPosititon,
+            icon: carTypeOnUpdateGeo == "Taxi-4 seats"
+                ? Provider.of<GoogleMapSet>(context, listen: false).driversNearIcon
+                : Provider.of<GoogleMapSet>(context, listen: false).driversNearIcon1,
+            infoWindow: InfoWindow(
+                onTap: () async {
+                  await ref.child('phoneNumber').once().then((value) {
+                    if (value.snapshot.value != null) {
+                      phone = value.snapshot.value.toString();
+                    }
+                  });
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) =>
+                          CustomWidgets().callDriverOnMap(context, phone));
+                },
+                title: " $fNameIcon $lNameIcon",
+                snippet:
+                    ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
+            anchor: const Offset(0.5, 0.5),
+            flat: true,
+            rotation: (bearing+MathMethods.createRandomNumber(180)),
+            draggable: false);
         Provider.of<GoogleMapSet>(context, listen: false)
             .updateMarkerOnMap(marker);
-        // setState(() {
-        //   markersSet.add(marker);
-        // });
       }
     } else {
       if (kDebugMode) {
@@ -327,12 +326,11 @@ class LogicGoogleMap {
     LogicGoogleMap().addPloyLine(
         details!, pickUpLatLng, dropOfLatLng, color, valPadding, context);
     Tools().changeAutoPriceColor(context);
-    // audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
     await Future.delayed(const Duration(seconds: 2));
     audioCache.play("gift.mp3");
     Provider.of<PositionChang>(context, listen: false)
         .updateDisCountBoxPosition(80.0);
-    await audioPlayer.stop();
+     audioPlayer.stop();
     await Future.delayed(const Duration(seconds: 3));
     Provider.of<PositionChang>(context, listen: false)
         .updateDisCountBoxPosition(-600.0);
@@ -449,10 +447,5 @@ class LogicGoogleMap {
     googleSets.updateCirclesOnMap(pickUpLocCircle);
     googleSets.updateCirclesOnMap(dropOffLocCircle);
     googleSets.updatePolylineOnMap(polyline);
-    // polylineSet.add(polyline);
-    // circlesSet.add(pickUpLocCircle);
-    // circlesSet.add(dropOffLocCircle);
-    // markersSet.add(markerPickUpLocation);
-    // markersSet.add(markerDropOfLocation);
   }
 }

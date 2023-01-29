@@ -17,13 +17,6 @@ String mapKey = "AIzaSyDh5NNwfDJFU27Y_yMpVcWeeepBQBbewmM";
 String serverToken =
     "key=AAAADxQpVvI:APA91bH34mheWrclzBAQyPxkT7LEKrmnFbhEXROlAH8blsBi3iqya6fQ7Soq1GEzaAZ77vPIF2tKp2cTPQ1NUkWoj1cqI_PSOLxaaPABc0d5jFxfCFAvbnbbGo8wFCENKN6E9ywT_4-k";
 
-// DirectionDetails? tripDirectionDetails;
-// List<LatLng> polylineCoordinates = [];
-// Set<Polyline> polylineSet = {};
-// Set<Marker> markersSet = {};
-// Set<Circle> circlesSet = {};
-// StreamSubscription<Position>? tripScreenStreamSubscription;
-// List<String> listDriverPhoneOnMap = [];
 AudioPlayer audioPlayer = AudioPlayer();
 late AudioCache audioCache;
 StreamSubscription<DatabaseEvent>? rideStreamSubscription;
@@ -61,6 +54,7 @@ int after2MinTimeOut = 200;
 bool sound1 = false;
 bool sound2 = false;
 bool sound3 = false;
+bool driverCanceledAfterAccepted  = false;
 bool openCollectMoney = false;
 bool noChangeToTaxi = false;
 bool updateDriverOnMap = true;
