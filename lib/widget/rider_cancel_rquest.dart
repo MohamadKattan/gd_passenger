@@ -10,6 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../my_provider/true_false.dart';
+import '../tools/tools.dart';
 
 class CancelTaxi {
   var imageList = <String>[
@@ -17,10 +18,10 @@ class CancelTaxi {
     'assets/birthday.json',
     'assets/bluetaxi.json'
   ];
-  Widget cancelTaxiRequest(
-      {required BuildContext context,
-      required UserIdProvider userIdProvider,
-      required VoidCallback voidCallback}) {
+  Widget cancelTaxiRequest({
+    required BuildContext context,
+    required UserIdProvider userIdProvider,
+  }) {
     return Consumer<TrueFalse>(
       builder: (BuildContext context, value, Widget? child) {
         return value.showRiderCancelRequest
@@ -121,7 +122,7 @@ class CancelTaxi {
                               .changValue(0.0);
                           await DataBaseSrv()
                               .cancelRiderRequest(userIdProvider, context);
-                          voidCallback();
+                          Tools().restApp(context);
                         },
                         child: Container(
                           padding: const EdgeInsets.only(

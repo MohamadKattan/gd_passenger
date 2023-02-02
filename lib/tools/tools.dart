@@ -14,7 +14,6 @@ import '../my_provider/opictyProvider.dart';
 import '../my_provider/timeTrip_statusRide.dart';
 import '../my_provider/true_false.dart';
 import '../repo/api_srv_dir.dart';
-import '../widget/custom_widgets.dart';
 import 'geoFire_methods_tools.dart';
 
 class Tools {
@@ -312,10 +311,6 @@ class Tools {
     var lineTaxiState = Provider.of<LineTaxi>(context, listen: false);
     var opacityChangState = Provider.of<OpacityChang>(context, listen: false);
     var googleMapState = Provider.of<GoogleMapSet>(context, listen: false);
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => CustomWidgets().circularInductorCostem(context));
 
     if (rideStreamSubscription != null) {
       rideStreamSubscription?.cancel();
@@ -368,6 +363,7 @@ class Tools {
     driverId = "";
     titleRate = "";
     rating = 0.0;
+    headDriverInTrip=0.0;
     carRideType = "";
     carOrderType = "Taxi-4 seats";
     tourismCityName = "";
@@ -375,8 +371,5 @@ class Tools {
     driverNewLocation = const LatLng(0.0, 0.0);
     await LogicGoogleMap().locationPosition(context);
     await LogicGoogleMap().geoFireInitialize(context);
-   Future.delayed(const Duration(seconds: 1)).whenComplete((){
-     Navigator.pop(context);
-   });
   }
 }

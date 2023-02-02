@@ -50,8 +50,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-
-
   @override
   void initState() {
     super.initState();
@@ -849,12 +847,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         left: 0.0,
         curve: Curves.ease,
         bottom: _value.value,
-        child: CancelTaxi().cancelTaxiRequest(
-            context: context,
-            userIdProvider: userProvider,
-            voidCallback: () async {
-              Tools().restApp(context);
-            }));
+        child: CancelTaxi()
+            .cancelTaxiRequest(context: context, userIdProvider: userProvider));
   }
 
 // this widget for driverInfoBord to display driver info after he accepted
@@ -867,8 +861,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         bottom: _value.positionDriverInfo,
         curve: Curves.ease,
         child: DriverInfo().driverInfoContainer(
-            context: context,
-            userIdProvider: userProvider));
+            context: context, userIdProvider: userProvider));
   }
 
   Widget btnDrawer() {
@@ -1276,6 +1269,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
+
 
   ///================================End==================================
 }

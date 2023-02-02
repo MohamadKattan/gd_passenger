@@ -1,5 +1,8 @@
 // this class will include geoFire method list for add available drivers/delete from list and etc...
 
+import 'package:gd_passenger/model/driver_head.dart';
+
+import '../config.dart';
 import '../model/nearest _driver_ available.dart';
 
 class GeoFireMethods {
@@ -20,6 +23,11 @@ class GeoFireMethods {
         .indexWhere((element) => element.key == driver.key);
     listOfNearestDriverAvailable[index].latitude = driver.latitude;
     listOfNearestDriverAvailable[index].longitude = driver.longitude;
-    // listOfNearestDriverAvailable.contains(driver);
+  }
+
+  static void updateHeadDriver(DriverHead driverHead) {
+    int index =
+        headDriverList.indexWhere((element) => element.key == driverHead.key);
+   headDriverList[index].heading = driverHead.heading;
   }
 }

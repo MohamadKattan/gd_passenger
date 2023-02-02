@@ -2,15 +2,13 @@
 
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:gd_passenger/model/driver_head.dart';
 import 'package:gd_passenger/repo/api_srv_dir.dart';
 import 'package:gd_passenger/repo/api_srv_geo.dart';
 import 'package:gd_passenger/tools/geoFire_methods_tools.dart';
 import 'package:gd_passenger/tools/get_url.dart';
-import 'package:gd_passenger/tools/math_methods.dart';
 import 'package:gd_passenger/tools/tools.dart';
 import 'package:gd_passenger/widget/custom_widgets.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,7 +25,6 @@ import 'my_provider/app_data.dart';
 import 'my_provider/google_set_provider.dart';
 import 'my_provider/placeDetails_drop_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'my_provider/position_v_chnge.dart';
 
 var uuid = const Uuid();
@@ -35,8 +32,6 @@ var uuid = const Uuid();
 class LogicGoogleMap {
   final GetUrl _getUrl = GetUrl();
   final ApiSrvGeo _apiMethods = ApiSrvGeo();
-
-
   final Completer<GoogleMapController> controllerGoogleMap =
       Completer<GoogleMapController>();
 
@@ -102,11 +97,10 @@ class LogicGoogleMap {
   }
 
   // this method for display nearest driver available from rider in list by using geoFire
-  Future<void> geoFireInitialize(
-      BuildContext context) async {
-    final currentPositionPro =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
+  Future<void> geoFireInitialize(BuildContext context) async {
     try {
+      final currentPositionPro =
+          Provider.of<AppData>(context, listen: false).pickUpLocation;
       Geofire.queryAtLocation(currentPositionPro.latitude ?? 0.0,
               currentPositionPro.longitude ?? 0.0, geoFireRadios)
           ?.listen((map) async {
@@ -121,10 +115,6 @@ class LogicGoogleMap {
               nearestDriverAvailable.longitude = map['longitude'];
               GeoFireMethods.listOfNearestDriverAvailable
                   .add(nearestDriverAvailable);
-              if (kDebugMode) {
-                print(
-                    "hhh${GeoFireMethods.listOfNearestDriverAvailable.length}");
-              }
               break;
             case Geofire.onKeyExited:
               GeoFireMethods.removeDriverFromList(map["key"]);
@@ -144,93 +134,96 @@ class LogicGoogleMap {
               break;
           }
         }
-        // setState(() {});
-      }).onError((er) {
-        if (kDebugMode) {
-          print(er.toString());
-        }
       });
-    } on PlatformException {
-      if (kDebugMode) {
-        print('PlatformException geo fire');
-      }
+    } catch (ex) {
+      throw Exception("Geo fire add :::${ex.toString()}");
     }
-    // if (!mounted) return;
   }
 
-  void updateAvailableDriverOnMap(
-      BuildContext context) async {
-    if (updateDriverOnMap == true) {
-      if (kDebugMode) {
-        print('update drivers on Map');
-      }
-      late String driverPhoneOneOnMap;
-      late String phone;
-      for (NearestDriverAvailable driver
-          in GeoFireMethods.listOfNearestDriverAvailable) {
-        DatabaseReference ref =
-            FirebaseDatabase.instance.ref().child("driver").child(driver.key);
-        await ref.once().then((value) {
-          final snap = value.snapshot.value;
-          if (snap == null) {
-            return;
-          }
-          Map<String, dynamic> map = Map<String, dynamic>.from(snap as Map);
-          if (map["firstName"] != null) {
-            fNameIcon = map["firstName"].toString();
-          }
-          if (map["lastName"] != null) {
-            lNameIcon = map["lastName"].toString();
-          }
-          if (map["rating"] != null) {
-            ratDriverRead = double.parse(map["rating"].toString());
-          }
-          if (map["carInfo"]["carType"] != null) {
-            carTypeOnUpdateGeo = map["carInfo"]["carType"].toString();
-          }
-          if (map["phoneNumber"] != null) {
-            driverPhoneOneOnMap = map["phoneNumber"].toString();
-          }
-        });
+  void updateAvailableDriverOnMap(BuildContext context) async {
+    DriverHead _driverHead = DriverHead();
 
-        LatLng driverPosititon = LatLng(driver.latitude, driver.longitude);
-        final double bearing = MathMethods().getBearing(
-            LatLng(driverPosititon.latitude, driverPosititon.longitude),
-            LatLng(driver.latitude +1, driver.longitude +1));
-        Marker marker = Marker(
-            markerId: MarkerId("driver${driver.key}"),
-            position: driverPosititon,
-            icon: carTypeOnUpdateGeo == "Taxi-4 seats"
-                ? Provider.of<GoogleMapSet>(context, listen: false).driversNearIcon
-                : Provider.of<GoogleMapSet>(context, listen: false).driversNearIcon1,
-            infoWindow: InfoWindow(
-                onTap: () async {
-                  await ref.child('phoneNumber').once().then((value) {
-                    if (value.snapshot.value != null) {
-                      phone = value.snapshot.value.toString();
-                    }
-                  });
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (_) =>
-                          CustomWidgets().callDriverOnMap(context, phone));
-                },
-                title: " $fNameIcon $lNameIcon",
-                snippet:
-                    ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
-            anchor: const Offset(0.5, 0.5),
-            flat: true,
-            rotation: (bearing+MathMethods.createRandomNumber(180)),
-            draggable: false);
-        Provider.of<GoogleMapSet>(context, listen: false)
-            .updateMarkerOnMap(marker);
+    try {
+      if (updateDriverOnMap == true) {
+        late String driverPhoneOneOnMap;
+        late String phone;
+        double? _heading;
+        for (NearestDriverAvailable driver
+            in GeoFireMethods.listOfNearestDriverAvailable) {
+          DatabaseReference ref =
+              FirebaseDatabase.instance.ref().child("driver").child(driver.key);
+          await ref.once().then((value) {
+            final snap = value.snapshot.value;
+            if (snap == null) {
+              return;
+            }
+            Map<String, dynamic> map = Map<String, dynamic>.from(snap as Map);
+            if (map["firstName"] != null) {
+              fNameIcon = map["firstName"].toString();
+            }
+            if (map["lastName"] != null) {
+              lNameIcon = map["lastName"].toString();
+            }
+            if (map["rating"] != null) {
+              ratDriverRead = double.parse(map["rating"].toString());
+            }
+            if (map["carInfo"]["carType"] != null) {
+              carTypeOnUpdateGeo = map["carInfo"]["carType"].toString();
+            }
+            if (map["phoneNumber"] != null) {
+              driverPhoneOneOnMap = map["phoneNumber"].toString();
+            }
+          });
+          LatLng driverPosition = LatLng(driver.latitude, driver.longitude);
+
+          ref.child("heading").onValue.listen((val) {
+            if (val.snapshot.value != null) {
+              _driverHead.key = driver.key;
+              _driverHead.heading = num.parse(val.snapshot.value.toString());
+              headDriverList.add(_driverHead);
+              GeoFireMethods.updateHeadDriver(_driverHead);
+            }
+          });
+
+          for (var i in headDriverList) {
+            _heading = i.heading?.toDouble() ?? 0.0;
+          }
+          Marker marker = Marker(
+              markerId: MarkerId("driver${driver.key}"),
+              position: driverPosition,
+              icon: carTypeOnUpdateGeo == "Taxi-4 seats"
+                  ? Provider.of<GoogleMapSet>(context, listen: false)
+                      .driversNearIcon
+                  : Provider.of<GoogleMapSet>(context, listen: false)
+                      .driversNearIcon1,
+              infoWindow: InfoWindow(
+                  onTap: () async {
+                    await ref.child('phoneNumber').once().then((value) {
+                      if (value.snapshot.value != null) {
+                        phone = value.snapshot.value.toString();
+                      }
+                    });
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) =>
+                            CustomWidgets().callDriverOnMap(context, phone));
+                  },
+                  title: " $fNameIcon $lNameIcon",
+                  snippet:
+                      ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
+              anchor: const Offset(0.5, 0.5),
+              flat: true,
+              rotation: _heading ?? 0.0,
+              draggable: false);
+          Provider.of<GoogleMapSet>(context, listen: false)
+              .updateMarkerOnMap(marker);
+        }
+      } else {
+        return;
       }
-    } else {
-      if (kDebugMode) {
-        print('No update drivers on Map');
-      }
-      return;
+    } catch (ex) {
+      throw Exception("Update Driver On Map :: ${ex.toString()}");
     }
   }
 
@@ -291,7 +284,7 @@ class LogicGoogleMap {
     }
   }
 
-  //this them main logic for diretion + marker+ polline conect with class api
+  //this them main logic for direction + marker+ PloyLine connect with class api
   Future<void> getPlaceDirection(BuildContext context) async {
     /// current position
     final initialPos =
@@ -330,7 +323,7 @@ class LogicGoogleMap {
     audioCache.play("gift.mp3");
     Provider.of<PositionChang>(context, listen: false)
         .updateDisCountBoxPosition(80.0);
-     audioPlayer.stop();
+    audioPlayer.stop();
     await Future.delayed(const Duration(seconds: 3));
     Provider.of<PositionChang>(context, listen: false)
         .updateDisCountBoxPosition(-600.0);

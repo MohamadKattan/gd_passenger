@@ -77,7 +77,6 @@ class _RatingWidgetState extends State<RatingWidget> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () async {
-                  bool isClicked = true;
                   if(isClicked){
                     isClicked=false;
                     await DataBaseSrv().rateTODateBase(widget.id, context);

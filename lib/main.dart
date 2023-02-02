@@ -52,7 +52,7 @@ void main() async {
   runApp(const MyApp());
 }
 
-// last update 16-1-2023
+// last update 28-1-2023
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
       ],
       builder: (context, _) {
         return const MaterialApp(
-          debugShowCheckedModeBanner: false,
+            debugShowCheckedModeBanner: false,
             title: 'GD Passenger',
             localizationsDelegates: [
               AppLocalizations.delegate,

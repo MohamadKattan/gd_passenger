@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'model/driverPreBook.dart';
+import 'model/driver_head.dart';
 import 'model/nearest _driver_ available.dart';
 
 final TextEditingController phoneNumber = TextEditingController();
@@ -44,8 +45,10 @@ String waitDriver = "wait";
 List<DriverPreBook> driverPreBookList = [];
 List<NearestDriverAvailable> driverAvailable = [];
 List<String> keyDriverAvailable = [];
+List<DriverHead>headDriverList = [];
 LatLng driverNewLocation = const LatLng(0.0, 0.0);
 double rating = 0.0;
+double? headDriverInTrip;
 double ratDriverRead = 0.0;
 double geoFireRadios = 2;
 int autoChangeColor = 0;
@@ -59,6 +62,7 @@ bool openCollectMoney = false;
 bool noChangeToTaxi = false;
 bool updateDriverOnMap = true;
 bool isTimeRequsteTrip = false;
+bool isClicked = true;
 
 // rm -rf Pods
 // rm -rf Podfile.lock
