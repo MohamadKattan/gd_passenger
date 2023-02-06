@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../config.dart';
+import '../google_map_methods.dart';
 import '../my_provider/position_v_chnge.dart';
 import '../my_provider/positon_driver_info_provide.dart';
 import '../repo/data_base_srv.dart';
@@ -77,12 +78,12 @@ class _RatingWidgetState extends State<RatingWidget> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () async {
-                  if(isClicked){
-                    isClicked=false;
+                  if (isClicked) {
+                    isClicked = false;
                     await DataBaseSrv().rateTODateBase(widget.id, context);
                     await DataBaseSrv().deleteRideRequest(context);
                     Provider.of<PositionDriverInfoProvider>(context,
-                        listen: false)
+                            listen: false)
                         .updateState(-400.0);
                     Provider.of<PositionChang>(context, listen: false)
                         .changValue(0.0);

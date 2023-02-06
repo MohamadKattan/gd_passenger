@@ -61,13 +61,13 @@ class CustomWidgets {
                     ),
                     IconButton(
                         onPressed: () async {
-                          var googleMapState =
-                              Provider.of<GoogleMapSet>(context, listen: false);
-                          noChangeToTaxi = false;
-                          GeoFireMethods.listOfNearestDriverAvailable.clear();
-                          googleMapState.markersSet.clear();
-                          geoFireRadios = 2;
-                          await LogicGoogleMap().geoFireInitialize(context);
+                          // var googleMapState =
+                          //     Provider.of<GoogleMapSet>(context, listen: false);
+                          // noChangeToTaxi = false;
+                          // GeoFireMethods.listOfNearestDriverAvailable.clear();
+                          // googleMapState.markersSet.clear();
+                          // geoFireRadios = 2;
+                          // await LogicGoogleMap().geoFireInitialize(context);
                           Navigator.pop(context);
                         },
                         icon: const Icon(

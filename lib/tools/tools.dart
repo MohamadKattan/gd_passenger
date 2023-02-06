@@ -1,5 +1,6 @@
 // this class include tools will use many times in our app
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -307,6 +308,7 @@ class Tools {
 
   // this method for clean req after cancel
   Future<void> restApp(BuildContext context) async {
+    await Geofire.stopListener();
     var trueFalseState = Provider.of<TrueFalse>(context, listen: false);
     var lineTaxiState = Provider.of<LineTaxi>(context, listen: false);
     var opacityChangState = Provider.of<OpacityChang>(context, listen: false);
@@ -363,7 +365,7 @@ class Tools {
     driverId = "";
     titleRate = "";
     rating = 0.0;
-    headDriverInTrip=0.0;
+    headDriverInTrip = 0.0;
     carRideType = "";
     carOrderType = "Taxi-4 seats";
     tourismCityName = "";

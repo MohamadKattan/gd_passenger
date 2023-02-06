@@ -51,6 +51,8 @@ class NotifyDriver {
       UserIdProvider userProvider, BuildContext context) async {
     DatabaseReference _ref = FirebaseDatabase.instance.ref().child("driver");
     if (keyDriverAvailable.isEmpty) {
+      await Geofire.stopListener();
+      geoFireRadios = 2;
       final res = await showDialog(
           context: context,
           barrierDismissible: false,
@@ -65,8 +67,8 @@ class NotifyDriver {
         Provider.of<PositionCancelReq>(context, listen: false)
             .updateValue(-400.0);
         Provider.of<PositionChang>(context, listen: false).changValue(0.0);
-        LogicGoogleMap().locationPosition(context);
-        await LogicGoogleMap().geoFireInitialize(context);
+       // await LogicGoogleMap().locationPosition(context);
+       await LogicGoogleMap().geoFireInitialize(context);
         Navigator.pop(context);
       }
     } else if (keyDriverAvailable.isNotEmpty) {
@@ -213,7 +215,7 @@ class NotifyDriver {
         }
         if (map["heading"] != null) {
           num val = map["heading"];
-          headDriverInTrip = val.toDouble();
+          headDriverInTrip = val.roundToDouble();
         }
         if (map["driverLocation"] != null) {
           final driverLatitude =

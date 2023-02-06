@@ -68,24 +68,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _asyncMethod() async {
-    await Geofire.initialize("availableDrivers");
-    var googleMapState = Provider.of<GoogleMapSet>(context, listen: false);
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => CustomWidgets().circularInductorCostem(context));
-    await LogicGoogleMap().locationPosition(context).whenComplete(() async {
+      await LogicGoogleMap().locationPosition(context).whenComplete(() async {
       await LogicGoogleMap().geoFireInitialize(context);
-      audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
-      Navigator.pop(context);
-      await trickMyTripAfterKilled();
       await DataBaseSrv().currentOnlineUserInfo(context);
-    });
-    Future.delayed(const Duration(seconds: 3)).whenComplete(() async {
-      geoFireRadios = 2;
-      googleMapState.markersSet.clear();
-      GeoFireMethods.listOfNearestDriverAvailable.clear();
-      await LogicGoogleMap().geoFireInitialize(context);
+      Navigator.pop(context);
+      audioCache = AudioCache(fixedPlayer: audioPlayer, prefix: "assets/");
+      await trickMyTripAfterKilled();
     });
   }
 
@@ -1027,6 +1019,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // this method for open tourism cites
   Future<void> startOpenTripCity() async {
+    await Geofire.stopListener();
     var googleMapState = Provider.of<GoogleMapSet>(context, listen: false);
     noChangeToTaxi = true;
     GeoFireMethods.listOfNearestDriverAvailable.clear();
@@ -1163,10 +1156,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         };
         break;
       default:
+        await Geofire.stopListener();
+        Tools().toastMsg('No Map trip available now ', Colors.red);
         GeoFireMethods.listOfNearestDriverAvailable.clear();
         googleMapState.markersSet.clear();
         geoFireRadios = 2;
-        LogicGoogleMap().geoFireInitialize(context);
+        await LogicGoogleMap().geoFireInitialize(context);
         Tools().changeAllProClickTaxiBox(context);
         break;
     }
@@ -1183,11 +1178,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if (_res == 'data') {
         await LogicGoogleMap().getPlaceDirection(context);
       } else {
+        await Geofire.stopListener();
         Tools().toastMsg('No trip available now ', Colors.red);
         GeoFireMethods.listOfNearestDriverAvailable.clear();
         googleMapState.markersSet.clear();
         geoFireRadios = 2;
-        LogicGoogleMap().geoFireInitialize(context);
+       await LogicGoogleMap().geoFireInitialize(context);
         Tools().changeAllProClickTaxiBox(context);
       }
     }
@@ -1269,7 +1265,5 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
-
   ///================================End==================================
 }

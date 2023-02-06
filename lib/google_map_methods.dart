@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gd_passenger/model/driver_head.dart';
@@ -98,6 +99,7 @@ class LogicGoogleMap {
 
   // this method for display nearest driver available from rider in list by using geoFire
   Future<void> geoFireInitialize(BuildContext context) async {
+    Geofire.initialize("availableDrivers");
     try {
       final currentPositionPro =
           Provider.of<AppData>(context, listen: false).pickUpLocation;
@@ -134,17 +136,19 @@ class LogicGoogleMap {
               break;
           }
         }
+      }).onError((e) {
+        throw Exception("on Error Geo Fire ${e.toString()}");
       });
-    } catch (ex) {
-      throw Exception("Geo fire add :::${ex.toString()}");
+    } on PlatformException catch (err) {
+      throw Exception("PlatformException geoFire : ${err.toString()}");
     }
   }
 
   void updateAvailableDriverOnMap(BuildContext context) async {
-    DriverHead _driverHead = DriverHead();
-
     try {
       if (updateDriverOnMap == true) {
+        DriverHead _driverHead = DriverHead();
+        Provider.of<GoogleMapSet>(context, listen: false).markersSet.clear();
         late String driverPhoneOneOnMap;
         late String phone;
         double? _heading;
@@ -173,6 +177,9 @@ class LogicGoogleMap {
             if (map["phoneNumber"] != null) {
               driverPhoneOneOnMap = map["phoneNumber"].toString();
             }
+          }).onError((error, stackTrace) {
+            throw Exception(
+                "on error update driver on Map ${error.toString()}");
           });
           LatLng driverPosition = LatLng(driver.latitude, driver.longitude);
 
@@ -183,10 +190,17 @@ class LogicGoogleMap {
               headDriverList.add(_driverHead);
               GeoFireMethods.updateHeadDriver(_driverHead);
             }
+          }).onError((err) {
+            throw Exception("heading in update driver on Map${err.toString()}");
           });
 
           for (var i in headDriverList) {
-            _heading = i.heading?.toDouble() ?? 0.0;
+            var valHead = i.heading?.ceilToDouble() ?? 152.0;
+            if (valHead <= 0.0) {
+              _heading = 152.0;
+            } else {
+              _heading = valHead;
+            }
           }
           Marker marker = Marker(
               markerId: MarkerId("driver${driver.key}"),
@@ -214,7 +228,7 @@ class LogicGoogleMap {
                       ' ${AppLocalizations.of(context)!.callDriver} : $driverPhoneOneOnMap'),
               anchor: const Offset(0.5, 0.5),
               flat: true,
-              rotation: _heading ?? 0.0,
+              rotation: _heading ?? 152.0,
               draggable: false);
           Provider.of<GoogleMapSet>(context, listen: false)
               .updateMarkerOnMap(marker);
@@ -222,8 +236,9 @@ class LogicGoogleMap {
       } else {
         return;
       }
-    } catch (ex) {
-      throw Exception("Update Driver On Map :: ${ex.toString()}");
+    } on PlatformException catch (ex) {
+      throw Exception(
+          "PlatformException Update Driver On Map :: ${ex.toString()}");
     }
   }
 
@@ -238,49 +253,64 @@ class LogicGoogleMap {
         builder: (context) => CustomWidgets().circularInductorCostem(context));
     final addressModle =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
-    if (tourismCityName.length > 1) {
-      //apiFindPlace
-      final autocompleteUrl = Uri.parse(
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$tourismCityName&key=$mapKey&sessiontoken=${uuid.v4()}&location=${addressModle.latitude ?? 0.0},${addressModle.longitude ?? 0.0}&radius=${50.000}");
-      final response = await _getUrl.getUrlMethod(autocompleteUrl);
-      if (response == "failed") {
-        return;
-      } else {
-        if (response["status"] == "OK") {
-          final predictions = response["predictions"][0];
+    try {
+      if (tourismCityName.length > 1) {
+        //apiFindPlace
+        final autocompleteUrl = Uri.parse(
+            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$tourismCityName&key=$mapKey&sessiontoken=${uuid.v4()}&location=${addressModle.latitude ?? 0.0},${addressModle.longitude ?? 0.0}&radius=${50.000}");
+        final response = await _getUrl
+            .getUrlMethod(autocompleteUrl)
+            .onError((error, stackTrace) {
+          throw Exception("on Error autocomplete api ::${error.toString()}");
+        });
+        if (response == "failed") {
+          return;
+        } else {
+          if (response["status"] == "OK") {
+            final predictions = response["predictions"][0];
 
-          String id, mainTile, secondTitle;
-          id = predictions["place_id"];
-          mainTile = predictions["structured_formatting"]["main_text"];
-          secondTitle = predictions["structured_formatting"]["secondary_text"];
-          PlacePredictions pre = PlacePredictions("", "", "");
-          pre.placeId = id;
-          pre.mainText = mainTile;
-          pre.secondaryText = secondTitle;
+            String id, mainTile, secondTitle;
+            id = predictions["place_id"];
+            mainTile = predictions["structured_formatting"]["main_text"];
+            secondTitle =
+                predictions["structured_formatting"]["secondary_text"];
+            PlacePredictions pre = PlacePredictions("", "", "");
+            pre.placeId = id;
+            pre.mainText = mainTile;
+            pre.secondaryText = secondTitle;
 
-          await Future.delayed(const Duration(milliseconds: 300))
-              .whenComplete(() async {
-            final placeDetailsUrl = Uri.parse(
-                "https://maps.googleapis.com/maps/api/place/details/json?place_id=${pre.placeId}&key=$mapKey");
-            final res = await _getUrl.getUrlMethod(placeDetailsUrl);
-            if (res == "failed") {
-              return;
-            }
-            if (res["status"] == "OK") {
-              Address address = Address();
-              address.placeFormattedAddress = "";
-              address.placeId = pre.placeId;
-              address.placeName = res["result"]["name"];
-              address.latitude = res["result"]["geometry"]["location"]["lat"];
-              address.longitude = res["result"]["geometry"]["location"]["lng"];
-              Provider.of<PlaceDetailsDropProvider>(context, listen: false)
-                  .updateDropOfLocation(address);
-              Navigator.pop(context);
-              Navigator.pop(context, 'data');
-            }
-          });
+            await Future.delayed(const Duration(milliseconds: 300))
+                .whenComplete(() async {
+              final placeDetailsUrl = Uri.parse(
+                  "https://maps.googleapis.com/maps/api/place/details/json?place_id=${pre.placeId}&key=$mapKey");
+              final res = await _getUrl
+                  .getUrlMethod(placeDetailsUrl)
+                  .onError((error, stackTrace) {
+                throw Exception(
+                    "on Error place details api ::${error.toString()}");
+              });
+              if (res == "failed") {
+                return;
+              }
+              if (res["status"] == "OK") {
+                Address address = Address();
+                address.placeFormattedAddress = "";
+                address.placeId = pre.placeId;
+                address.placeName = res["result"]["name"];
+                address.latitude = res["result"]["geometry"]["location"]["lat"];
+                address.longitude =
+                    res["result"]["geometry"]["location"]["lng"];
+                Provider.of<PlaceDetailsDropProvider>(context, listen: false)
+                    .updateDropOfLocation(address);
+                Navigator.pop(context);
+                Navigator.pop(context, 'data');
+              }
+            });
+          }
         }
       }
+    } on PlatformException catch (er) {
+      throw Exception("tourismCities PlatformException${er.toString()}");
     }
   }
 

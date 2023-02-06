@@ -14,7 +14,6 @@ class GeoFireMethods {
     int index = listOfNearestDriverAvailable
         .indexWhere((element) => element.key == key);
     listOfNearestDriverAvailable.removeAt(index);
-    // listOfNearestDriverAvailable.remove(driver);
   }
 
   // this method fpr update live driver location  for rider got the best result
