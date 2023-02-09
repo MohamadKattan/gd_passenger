@@ -808,5 +808,9 @@
   "from":"From",
   "@from": {
     "description": "from"
+  },
+  "noTrip":"No tourism trip available",
+  "@noTrip": {
+    "description": "no trip"
   }
 }

@@ -1157,7 +1157,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         break;
       default:
         await Geofire.stopListener();
-        Tools().toastMsg('No Map trip available now ', Colors.red);
+        Tools().toastMsg(AppLocalizations.of(context)!.noTrip, Colors.red);
         GeoFireMethods.listOfNearestDriverAvailable.clear();
         googleMapState.markersSet.clear();
         geoFireRadios = 2;
@@ -1179,7 +1179,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         await LogicGoogleMap().getPlaceDirection(context);
       } else {
         await Geofire.stopListener();
-        Tools().toastMsg('No trip available now ', Colors.red);
+        Tools().toastMsg(AppLocalizations.of(context)!.noTrip, Colors.red);
         GeoFireMethods.listOfNearestDriverAvailable.clear();
         googleMapState.markersSet.clear();
         geoFireRadios = 2;

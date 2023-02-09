@@ -43,43 +43,29 @@ class ApiSrvGeo {
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey");
     var response = await GetUrl().getUrlMethod(url);
     if (response != "failed") {
-      if (response["results"][1]["address_components"][3]["types"][0] != null) {
-        type1 = response["results"][1]["address_components"][3]["types"][0];
-        if (type1 == 'administrative_area_level_1') {
-          city = response["results"][1]["address_components"][3]["long_name"];
-          country =
-              response["results"][1]["address_components"][4]["long_name"];
-        } else if (response["results"][1]["address_components"][4]["types"]
-                [0] !=
-            null) {
-          type2 = response["results"][1]["address_components"][4]["types"][0];
-          if (type2 == 'administrative_area_level_1') {
-            city = response["results"][1]["address_components"][4]["long_name"];
-            country =
-                response["results"][1]["address_components"][5]["long_name"];
-          } else if (response["results"][1]["address_components"][5]["types"]
-                  [0] !=
-              null) {
-            type3 = response["results"][1]["address_components"][5]["types"][0];
-            if (type3 == 'administrative_area_level_1') {
-              city =
-                  response["results"][1]["address_components"][5]["long_name"];
-              country =
-                  response["results"][1]["address_components"][6]["long_name"];
-            } else if (response["results"][1]["address_components"][6]["types"]
-                    [0] !=
-                null) {
-              type4 =
-                  response["results"][1]["address_components"][6]["types"][0];
-              if (type4 == 'administrative_area_level_1') {
-                city = response["results"][1]["address_components"][6]
-                    ["long_name"];
-                country = response["results"][1]["address_components"][7]
-                    ["long_name"];
-              }
-            }
-          }
-        }
+      type1 = response["results"][1]["address_components"][3]["types"][0]??"global";
+      type2 = response["results"][1]["address_components"][4]["types"][0]??"global";
+      type3 = response["results"][1]["address_components"][5]["types"][0]??"global";
+      type4 = response["results"][1]["address_components"][6]["types"][0]??"global";
+      if (type1 == 'administrative_area_level_1') {
+        city = response["results"][1]["address_components"][3]["long_name"]??"global";
+        country = response["results"][1]["address_components"][4]["long_name"]??"global";
+      }
+      else if (type2 == 'administrative_area_level_1') {
+        city = response["results"][1]["address_components"][4]["long_name"]??"global";
+        country = response["results"][1]["address_components"][5]["long_name"]??"global";
+      }
+      else if (type3 == 'administrative_area_level_1') {
+        city = response["results"][1]["address_components"][5]["long_name"]??"global";
+        country = response["results"][1]["address_components"][6]["long_name"]??"global";
+      }
+      else if (type4 == 'administrative_area_level_1') {
+        city = response["results"][1]["address_components"][6]["long_name"]??"global";
+        country = response["results"][1]["address_components"][7]["long_name"]??"global";
+      }
+      else{
+        city ="globule";
+        country = "globule";
       }
       ref.child(userId!).update(
           {"country": city ?? 'globule', "country0": country ?? 'globule'});

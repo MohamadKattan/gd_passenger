@@ -197,5 +197,6 @@
   "discount":"İndirim!!",
   "noGps":"Konum servisleri devre dışı.!!",
   "sendReq":"Yeni yolculuk isteği",
-  "from":"dan"
+  "from":"dan",
+  "noTrip":"Turizm gezisi mevcut değil"
 }
